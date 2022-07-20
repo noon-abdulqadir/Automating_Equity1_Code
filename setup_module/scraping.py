@@ -846,8 +846,9 @@ def get_sector_df_from_cbs(
     if save_enabled is True:
         df_sectors_all.to_csv(f'{tables_file_path}Sectors Output from scrip.csv', index=False)
         df_sectors_all.to_pickle(f'{tables_file_path}Sectors Output from scrip.pkl')
-        df_sectors_all.to_latex(f'{tables_file_path}Sectors Output from scrip.tex', index=True, longtable=True, escape=False, multicolumn=True, multicolumn_format='c', caption='Sectoral Gender and Age Composition and Segregation, Keywords, Counts, and Percentages', label='Jobs Count per Sector (x 1000)')
-        df_sectors_all.to_markdown(f'{tables_file_path}Sectors Output from scrip.md', index=False)
+        with pd.option_context("max_colwidth", 10000000000):
+            df_sectors_all.to_latex(f'{tables_file_path}Sectors Output from scrip.tex', index=False, longtable=True, escape=True, multicolumn=True, multicolumn_format='c', position='H', caption='Sectoral Gender and Age Composition and Segregation, Keywords, Counts, and Percentages', label='Jobs Count per Sector (x 1000)')
+        df_sectors_all.to_markdown(f'{tables_file_path}Sectors Output from scrip.md', index=True)
         save_sector_excel(df_sectors_all, tables_file_path)
 
     return df_sectors_all
@@ -1888,6 +1889,7 @@ def clean_df(
     gender: str = 'Gender',
     age: str = 'Age',
     language: str = 'en',
+    reset=False,
     args=get_args(),
 ) -> pd.DataFrame:
 
@@ -1906,17 +1908,17 @@ def clean_df(
 
     # Drop subset list and add variables
     if any(df_jobs.columns.isin(['Gender', 'Age'])):
-        if df_jobs['Gender'].isnull().values.any() or df_jobs['Age'].isnull().values.any():
+        if reset == True or df_jobs['Gender'].isnull().values.any() or df_jobs['Age'].isnull().values.any():
             df_jobs = set_gender_age(df_jobs)
         subset_list=[int_variable, str_variable, gender, age]
     else:
         subset_list=[int_variable, str_variable]
 
     if any(df_jobs.columns.isin(['Sector Code', '% Female', '% Male', '% Older', '% Younger'])):
-        if df_jobs['Sector'].isnull().values.any() or df_jobs['Sector Code'].isnull().values.any() or df_jobs['% Female'].isnull().values.any() or df_jobs['% Male'].isnull().values.any() or df_jobs['% Older'].isnull().values.any() or df_jobs['% Younger'].isnull().values.any():
+        if reset == True or df_jobs['Sector'].isnull().values.any() or df_jobs['Sector Code'].isnull().values.any() or df_jobs['% Female'].isnull().values.any() or df_jobs['% Male'].isnull().values.any() or df_jobs['% Older'].isnull().values.any() or df_jobs['% Younger'].isnull().values.any():
             df_jobs = set_sector_and_percentage(df_jobs)
     if any(df_jobs.columns.isin(['English Requirement', 'Dutch Requirement'])):
-        if df_jobs['English Requirement'].isnull().values.any() or df_jobs['Dutch Requirement'].isnull().values.any():
+        if reset == True or df_jobs['English Requirement'].isnull().values.any() or df_jobs['Dutch Requirement'].isnull().values.any(:
             df_jobs = set_language_requirement(df_jobs)
 
     df_jobs.drop_duplicates(
@@ -2000,7 +2002,7 @@ def categorize_df_gender_age(
     # Arrange Categories
     try:
         df['Gender'] = (
-            df['Gender'].astype('category').cat.reorder_categories(gender_order)
+            df['Gender'].astype('category').cat.reorder_categories(gender_order, ordered=True)
         )
 
         df['Gender'] = pd.Categorical(
@@ -2009,7 +2011,7 @@ def categorize_df_gender_age(
     except ValueError as e:
         print(e)
     try:
-        df['Age'] = df['Age'].astype('category').cat.reorder_categories(age_order)
+        df['Age'] = df['Age'].astype('category').cat.reorder_categories(age_order, ordered=True)
 
         df['Age'] = pd.Categorical(df['Age'], categories=age_order, ordered=True)
     except ValueError as e:
@@ -2424,6 +2426,8 @@ def save_df(
         except KeyError:
             df_jobs.reset_index(drop=True, inplace=True)
             search_keyword = df_jobs['Search Keyword'].iloc[0].lower().replace("-Noon's MacBook Pro",'')
+        except IndexError:
+            print(len(df_jobs))
 
         # Save df to csv
         if print_enabled == True:
@@ -3694,7 +3698,7 @@ def open_and_clean_excel(
                 if df_coder.columns.str.contains('^Unnamed').all():
                     break
                 else:
-                    df_coder = clean_df(df_coder, str_variable='Sentence')
+                    df_coder = clean_df(df_coder, str_variable='Sentence', reset=True)
                     df_coder.drop(
                         df_coder.columns[
                             df_coder.columns.str.contains('Coder Remarks', case=False)
@@ -3736,7 +3740,7 @@ def open_and_clean_excel(
                 .swifter.progress_bar(args['print_enabled'])
                 .apply(pd.to_numeric, downcast='integer', errors='coerce')
             )
-            df_concat_coder_all = clean_df(df_concat_coder_all, str_variable='Sentence')
+            df_concat_coder_all = clean_df(df_concat_coder_all, str_variable='Sentence', reset=True)
             df_concat_coder_all.index = range(df_concat_coder_all.shape[0])
             if args['print_enabled'] is True:
                 print(f'Total of {len(df_concat_coder_all)} sentences in the dataset.')
