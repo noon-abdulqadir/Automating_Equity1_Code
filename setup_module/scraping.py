@@ -2420,10 +2420,10 @@ def save_df(
 
         # Search keyword
         try:
-            search_keyword = df_jobs.loc[0, 'Search Keyword'].lower().replace("-Noon's MacBook Pro",'')
+            search_keyword = df_jobs['Search Keyword'].iloc[0].lower().replace("-Noon's MacBook Pro",'')
         except KeyError:
             df_jobs.reset_index(drop=True, inplace=True)
-            search_keyword = df_jobs.loc[0, 'Search Keyword'].lower().replace("-Noon's MacBook Pro",'')
+            search_keyword = df_jobs['Search Keyword'].iloc[0].lower().replace("-Noon's MacBook Pro",'')
 
         # Save df to csv
         if print_enabled == True:
@@ -2935,7 +2935,7 @@ def split_to_sentences(df_jobs, df_sentence_list=[], args=get_args()):
                     try:
                         if args['print_enabled'] is True:
                             print(
-                                f'Processing DF from platform: {df_jobs.loc[0, "Platform"]}'
+                                f'Processing DF from platform: {df_jobs["Platform"].iloc[0]}'
                             )
                         (
                             search_keyword,
@@ -2951,13 +2951,13 @@ def split_to_sentences(df_jobs, df_sentence_list=[], args=get_args()):
                         if args['txt_save'] == True:
                             if args['print_enabled'] is True:
                                 print(
-                                    f'Saving {df_jobs.loc[0, "Search Keyword"]} DF to txt.'
+                                    f'Saving {df_jobs["Search Keyword"].iloc[0]} DF to txt.'
                                 )
                             write_all_to_txt(search_keyword, job_id, age, df_jobs, args)
                         elif args['txt_save'] == False:
                             if args['print_enabled'] is True:
                                 print(
-                                    f'No txt save enabled for DF {df_jobs.loc[0, "Search Keyword"]}.'
+                                    f'No txt save enabled for DF {df_jobs["Search Keyword"].iloc[0]}.'
                                 )
                     except Exception:
                         pass
@@ -2972,7 +2972,7 @@ def split_to_sentences(df_jobs, df_sentence_list=[], args=get_args()):
                     elif all(df_jobs['Language'] != str(args['language'])):
                         if args['print_enabled'] is True:
                             print(
-                                f'No valid language found in {df_jobs.loc[0, "Search Keyword"]} DF.'
+                                f'No valid language found in {df_jobs["Search Keyword"].iloc[0]} DF.'
                             )
             elif isinstance(df_jobs, list):
                 df_sentence, df_sentence_list = split_to_sentences(df_jobs)
@@ -2988,7 +2988,7 @@ def split_to_sentences(df_jobs, df_sentence_list=[], args=get_args()):
                 print(f'DF OF LENGTH {len(df_jobs)} passed.')
             try:
                 if args['print_enabled'] is True:
-                    print(f'Processing DF from platform: {df_jobs.loc[0, "Platform"]}')
+                    print(f'Processing DF from platform: {df_jobs["Platform"].iloc[0]}')
                     (
                         search_keyword,
                         job_id,
@@ -3002,12 +3002,12 @@ def split_to_sentences(df_jobs, df_sentence_list=[], args=get_args()):
                 df_sentence_list.append(df_sentence)
                 if args['txt_save'] == True:
                     if args['print_enabled'] is True:
-                        print(f'Saving {df_jobs.loc[0, "Search Keyword"]} DF to txt.')
+                        print(f'Saving {df_jobs["Search Keyword"].iloc[0]} DF to txt.')
                     write_all_to_txt(search_keyword, job_id, age, df_jobs, args)
                 elif args['txt_save'] == False:
                     if args['print_enabled'] is True:
                         print(
-                            f'No txt save enabled for DF {df_jobs.loc[0, "Search Keyword"]}.'
+                            f'No txt save enabled for DF {df_jobs["Search Keyword"].iloc[0]}.'
                         )
             except Exception:
                 pass
@@ -3022,7 +3022,7 @@ def split_to_sentences(df_jobs, df_sentence_list=[], args=get_args()):
             elif all(df_jobs['Language'] != str(args['language'])):
                 if args['print_enabled'] is True:
                     print(
-                        f'No valid language found in {df_jobs.loc[0, "Search Keyword"]} DF.'
+                        f'No valid language found in {df_jobs["Search Keyword"].iloc[0]} DF.'
                     )
 
     try:
@@ -3045,20 +3045,44 @@ def split_to_sentences_helper(df_jobs, args=get_args()):
     if (not df_jobs.empty) and (len(df_jobs != 0)):
         if args['print_enabled'] is True:
             print(
-                f'DF {str(df_jobs.loc[0, "Search Keyword"])} of length {df_jobs.shape[0]} passed.'
+                f'DF {str(df_jobs["Search Keyword"].iloc[0])} of length {df_jobs.shape[0]} passed.'
             )
         try:
             search_keyword = '_'.join(
-                str(df_jobs.loc[0, 'Search Keyword']).lower().split(' ').replace("-Noon's MacBook Pro",'')
+                str(df_jobs['Search Keyword'].iloc[0]).lower().split(' ').replace("-Noon's MacBook Pro",'')
             )
-            job_id = str(df_jobs.loc[0, 'Job ID'])
-            age = str(df_jobs.loc[0, 'Age'])
-            (
-                sentence_list,
-                sentence_dict,
-                df_sentence,
-                df_sentence_all,
-            ) = sent_tokenize_and_save_df(search_keyword, job_id, age, df_jobs, args)
+            if (df_jobs['Job ID'] == df_jobs['Job ID'].iloc[0]).all():
+                job_id = str(df_jobs['Job ID'].iloc[0])
+                age = str(df_jobs['Age'].iloc[0])
+                (
+                    sentence_list,
+                    sentence_dict,
+                    df_sentence,
+                    df_sentence_all,
+                ) = sent_tokenize_and_save_df(search_keyword, job_id, age, df_jobs, args)
+            else:
+                job_ids = list(df_jobs['Job ID'].unique())
+                ages = list(df_jobs['Age'].unique())
+                for job_id in job_ids:
+                    for age in ages:
+                        (
+                            sentence_list,
+                            sentence_dict,
+                            df_sentence,
+                            df_sentence_all,
+                        ) = sent_tokenize_and_save_df(search_keyword, job_id, age, df_jobs, args)
+
+                        yield (
+                            search_keyword,
+                            job_id,
+                            age,
+                            args,
+                            sentence_list,
+                            sentence_dict,
+                            df_sentence,
+                            df_sentence_all,
+                        )
+
         except pydantic.ValidationError as e:
             if args['print_enabled'] is True:
                 print(e.json())
@@ -3149,11 +3173,11 @@ def sent_tokenize_and_save_df(search_keyword, job_id, age, df_jobs, args=get_arg
                 if not df_sentence.empty:
                     if args['print_enabled'] is True:
                         print(
-                            f'Saving sentences DF {sentence_dict["Search Keyword"]} of length {df_sentence.shape[0]} and job ID {df_sentence.loc[0, "Job ID"]} to csv.'
+                            f'Saving sentences DF {sentence_dict["Search Keyword"]} of length {df_sentence.shape[0]} and job ID {df_sentence["Job ID"].iloc[0]} to csv.'
                         )
                     df_sentence.to_csv(
                         path_to_csv
-                        + f'/Job ID - {df_sentence.loc[0, "Job ID"]}_sentences_df.csv',
+                        + f'/Job ID - {df_sentence["Job ID"].iloc[0]}_sentences_df.csv',
                         mode='w',
                         sep=',',
                         header=True,
@@ -3163,7 +3187,7 @@ def sent_tokenize_and_save_df(search_keyword, job_id, age, df_jobs, args=get_arg
                     if args['excel_save'] == True:
                         if args['print_enabled'] is True:
                             print(
-                                f'Saving {df_jobs.loc[0, "Search Keyword"]} DF to excel.'
+                                f'Saving {df_jobs["Search Keyword"].iloc[0]} DF to excel.'
                             )
                         write_sentences_to_excel(
                             search_keyword, job_id, age, df_sentence, args
@@ -3194,7 +3218,7 @@ def sent_tokenize_and_save_df(search_keyword, job_id, age, df_jobs, args=get_arg
             if not df_sentence_all.empty:
                 if args['print_enabled'] is True:
                     print(
-                        f'Saving ALL sentences DF {sentence_dict["Search Keyword"]} of length {df_sentence_all.shape[0]} and job ID {df_sentence_all.loc[0, "Job ID"]} to csv.'
+                        f'Saving ALL sentences DF {sentence_dict["Search Keyword"]} of length {df_sentence_all.shape[0]} and job ID {df_sentence_all["Job ID"].iloc[0]} to csv.'
                     )
                 df_sentence_all.to_csv(
                     path_to_csv + f'/ALL_{search_keyword}_sentences_df.{file_save_format_backup}',
@@ -3224,7 +3248,7 @@ def sent_tokenize_and_save_df(search_keyword, job_id, age, df_jobs, args=get_arg
         elif all(df_jobs['Language'] != str(args['language'])):
             if args['print_enabled'] is True:
                 print(
-                    f'No valid language found in {df_jobs.loc[0, "Search Keyword"]} DF.'
+                    f'No valid language found in {df_jobs["Search Keyword"].iloc[0]} DF.'
                 )
         sentence_list, sentence_dict, df_sentence, df_sentence_all = assign_all(4, None)
 
@@ -3246,7 +3270,7 @@ def write_sentences_to_excel(search_keyword, job_id, age, df_sentence, args=get_
         # Create a Pandas Excel writer using XlsxWriter as the engine.
         writer = pd.ExcelWriter(
             path_to_txt
-            + f'/Job ID - {df_sentence.loc[0, "Job ID"]}_Coder_Name - Codebook (Automating Equity).xlsx',
+            + f'/Job ID - {df_sentence["Job ID"].iloc[0]}_Coder_Name - Codebook (Automating Equity).xlsx',
             engine='xlsxwriter',
         )
 
@@ -3328,7 +3352,7 @@ def write_all_to_txt(search_keyword, job_id, age, df_jobs, args=get_args()):
                     elif all(df_jobs['Language'] != str(args['language'])):
                         if args['print_enabled'] is True:
                             print(
-                                f'No valid language found in {df_jobs.loc[0, "Search Keyword"]} DF.'
+                                f'No valid language found in {df_jobs["Search Keyword"].iloc[0]} DF.'
                             )
             elif isinstance(df_jobs, list):
                 write_all_to_txt(search_keyword, job_id, age, df_jobs, args)
@@ -3343,7 +3367,7 @@ def write_all_to_txt(search_keyword, job_id, age, df_jobs, args=get_args()):
             elif all(df_jobs['Language'] != str(args['language'])):
                 if args['print_enabled'] is True:
                     print(
-                        f'No valid language found in {df_jobs.loc[0, "Search Keyword"]} DF.'
+                        f'No valid language found in {df_jobs["Search Keyword"].iloc[0]} DF.'
                     )
 
 
@@ -3351,7 +3375,7 @@ def write_all_to_txt(search_keyword, job_id, age, df_jobs, args=get_args()):
 def write_all_to_txt_helper(search_keyword, job_id, age, df_jobs, args=get_args()):
     path_to_txt = (
         str(args['parent_dir'])
-        + f'Jobs TXT/{args["language"]}/{age}/{" ".join(df_jobs.loc[0, "Search Keyword"].split("_"))}'
+        + f'Jobs TXT/{args["language"]}/{age}/{" ".join(df_jobs["Search Keyword"].iloc[0].split("_"))}'
     )
     pathlib.Path(path_to_txt).mkdir(parents=True, exist_ok=True)
 
