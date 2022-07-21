@@ -1918,7 +1918,7 @@ def clean_df(
         if reset == True or df_jobs['Sector'].isnull().values.any() or df_jobs['Sector Code'].isnull().values.any() or df_jobs['% Female'].isnull().values.any() or df_jobs['% Male'].isnull().values.any() or df_jobs['% Older'].isnull().values.any() or df_jobs['% Younger'].isnull().values.any():
             df_jobs = set_sector_and_percentage(df_jobs)
     if any(df_jobs.columns.isin(['English Requirement', 'Dutch Requirement'])):
-        if reset == True or df_jobs['English Requirement'].isnull().values.any() or df_jobs['Dutch Requirement'].isnull().values.any(:
+        if reset == True or df_jobs['English Requirement'].isnull().values.any() or df_jobs['Dutch Requirement'].isnull().values.any():
             df_jobs = set_language_requirement(df_jobs)
 
     df_jobs.drop_duplicates(
