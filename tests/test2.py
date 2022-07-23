@@ -11,8 +11,7 @@ for _ in range(5):
 
     parent_path = str(Path.cwd().parents[_]).split('/')[-1]
 
-    if (code_dir_name in parent_path) and (
-        unwanted_subdir_name not in parent_path):
+    if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
 
         code_dir = str(Path.cwd().parents[_])
 

@@ -20,8 +20,7 @@
 # unwanted_subdir_name = 'Analysis'
 # for _ in range(5):
 #     parent_path = str(Path.cwd().parents[_]).split('/')[-1]
-#     if (code_dir_name in parent_path) and (
-#         unwanted_subdir_name not in parent_path):
+#     if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
 #         code_dir = str(Path.cwd().parents[_])
 #         if code_dir is not None:
 #             break
@@ -48,8 +47,7 @@ for _ in range(5):
 
     parent_path = str(Path.cwd().parents[_]).split('/')[-1]
 
-    if (code_dir_name in parent_path) and (
-        unwanted_subdir_name not in parent_path):
+    if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
 
         code_dir = str(Path.cwd().parents[_])
 
@@ -63,7 +61,6 @@ sys.path.append(code_dir)
 from setup_module.imports import *
 
 warnings.filterwarnings('ignore', category=DeprecationWarning)
-
 
 # %%
 def get_main_path(
@@ -88,8 +85,7 @@ def get_main_path(
 
         parent_path = str(Path.cwd().parents[_]).split('/')[-1]
 
-        if (code_dir_name in parent_path) and (
-            unwanted_subdir_name not in parent_path):
+        if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
 
             code_dir = str(Path.cwd().parents[_])
 
@@ -563,10 +559,13 @@ def get_sbi_sectors_list(
     df_sbi_sectors = df_sbi_sectors.loc[df_sbi_sectors['Level'] == 1]
     df_sbi_sectors.drop(columns=['Level', 'Parent', 'This item includes', 'This item also includes', 'Rulings', 'This item excludes', 'Reference to ISIC Rev. 4'], inplace=True)
 
-    df_sectors_all = pd.read_pickle(f'{trans_keyword_save_loc}Sectors Output from scrip.pkl')[('SBI Sector Titles')].droplevel('Categories', axis=1)
+    df_sectors_all = pd.read_pickle(f'{trans_keyword_save_loc}Sectors Output from scrip.pkl')[[('SBI Sector Titles'), ('Gender'), ('Age')]].droplevel('Categories', axis=1)[[('SBI Sector Titles', 'Code'), ('SBI Sector Titles', 'Sector Name'), ('SBI Sector Titles', 'Keywords'), ('Gender', 'Dominant Category'), ('Age', 'Dominant Category')]].droplevel('Variables', axis=1)
+    df_sectors_all.columns = ['Code', 'Sector Name', 'Keywords', 'Gender Dominant Category', 'Age Dominant Category']
     df_sbi_sectors = df_sbi_sectors.merge(df_sectors_all, how='inner', on='Code')
-    df_sbi_sectors.rename(columns = {'Sector Name': 'Sector_Name', 'Keywords': 'Used_Sector_Keywords'}, inplace=True)
+    df_sbi_sectors.rename(columns = {'Sector Name': 'Sector_Name', 'Keywords': 'Used_Sector_Keywords', 'Gender Dominant Category': 'Gender_Dominant_Category', 'Age Dominant Category': 'Age_Dominant_Category'}, inplace=True)
     df_sbi_sectors['Sector_Name'] = df_sbi_sectors['Sector_Name'].apply(lambda x: x.strip().lower() if isinstance(x, str) else np.nan)
+    # df_sbi_sectors['Gender_Dominant_Category'] = df_sbi_sectors['Gender_Dominant_Category'].apply(lambda x: x.strip().lower() if isinstance(x, str) else np.nan)
+    # df_sbi_sectors['Age_Dominant_Category'] = df_sbi_sectors['Age_Dominant_Category'].apply(lambda x: x.strip().lower() if isinstance(x, str) else np.nan)
     df_sbi_sectors['Used_Sector_Keywords'] = df_sbi_sectors['Used_Sector_Keywords'].apply(lambda x: clean_and_translate_keyword_list(x) if isinstance(x, list) else np.nan)
     df_sbi_sectors.set_index(df_sbi_sectors['Code'], inplace=True)
 
@@ -575,18 +574,22 @@ def get_sbi_sectors_list(
     df_sbi_sectors.to_pickle(f'{trans_keyword_save_loc}SBI-5_Sectors.pkl')
 
     sbi_english_keyword_list = [i for index, row in df_sbi_sectors['Used_Sector_Keywords'].iteritems() if isinstance(row, list) for i in row]
+    sbi_english_keyword_list = clean_and_translate_keyword_list(sbi_english_keyword_list)
     if len(list(set(trans_keyword_list) - set(sbi_english_keyword_list))) > 0:
         trans_keyword_list = clean_and_translate_keyword_list(trans_keyword_list)
         if len(list(set(trans_keyword_list) - set(sbi_english_keyword_list))) > 0:
             trans_keyword_list = save_trans_keyword_list(trans_keyword_list)
             print('Unknown keyword found. Check trans_keyword_list.')
 
-    sbi_english_keyword_list = clean_and_translate_keyword_list(sbi_english_keyword_list)
     sbi_english_keyword_dict = df_sbi_sectors['Used_Sector_Keywords'].to_dict()
     sbi_sectors_dict = df_sbi_sectors.to_dict('index')
     sbi_sectors_dict_full = {}
+    sbi_sectors_dom_gen = {}
+    sbi_sectors_dom_age = {}
     for index, row in df_sbi_sectors.iterrows():
         sbi_sectors_dict_full[row['Sector_Name']] = row['Used_Sector_Keywords']
+        sbi_sectors_dom_gen[row['Sector_Name']] = row['Gender_Dominant_Category']
+        sbi_sectors_dom_age[row['Sector_Name']] = row['Age_Dominant_Category']
 
     if save_enabled is True:
         with open(f'{parent_dir}sbi_english_keyword_list.txt', 'w', encoding='utf8') as f:
@@ -597,7 +600,7 @@ def get_sbi_sectors_list(
         with open(f'{parent_dir}sbi_sectors_dict.json', 'w', encoding='utf8') as f:
             json.dump(sbi_sectors_dict, f)
 
-    return sbi_english_keyword_list, sbi_english_keyword_dict, sbi_sectors_dict, sbi_sectors_dict_full, trans_keyword_list
+    return sbi_english_keyword_list, sbi_english_keyword_dict, sbi_sectors_dict, sbi_sectors_dict_full, sbi_sectors_dom_gen, sbi_sectors_dom_age, trans_keyword_list
 
 
 # %% CBS Data request
@@ -715,7 +718,7 @@ def get_sector_df_from_cbs(
 ):
     # with open(f'{code_dir}/data/content analysis + ids + sectors/sbi_sectors_dict.json', 'r', encoding='utf8') as f:
     #     sbi_sectors_dict = json.load(f)
-    sbi_english_keyword_list, sbi_english_keyword_dict, sbi_sectors_dict, sbi_sectors_dict_full, trans_keyword_list = get_sbi_sectors_list()
+    sbi_english_keyword_list, sbi_english_keyword_dict, sbi_sectors_dict, sbi_sectors_dict_full, sbi_sectors_dom_gen, sbi_sectors_dom_age, trans_keyword_list = get_sbi_sectors_list()
 
     try:
         df_sectors = get_odata()
@@ -1207,8 +1210,9 @@ def get_keyword_list(
     keywords_agevsect = clean_and_translate_keyword_list(keywords_agevsect)
 
     # All Sector
-    sbi_english_keyword_list, sbi_english_keyword_dict, sbi_sectors_dict, sbi_sectors_dict_full, keywords_sector = get_sbi_sectors_list()
+    sbi_english_keyword_list, sbi_english_keyword_dict, sbi_sectors_dict, sbi_sectors_dict_full, sbi_sectors_dom_gen, sbi_sectors_dom_age, trans_keyword_list = get_sbi_sectors_list()
     # keywords_sector = list(set([y for x in df_sectors.loc['Agriculture and industry': 'Other service activities', ('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')].values.tolist() if isinstance(x, list) for y in x]))
+    keywords_sector = trans_keyword_list
     with open(keywords_file_path + 'keywords_sectors_FROM_SECTOR.txt', 'r') as f:
         keywords_sector_sectors = f.read().splitlines()
     keywords_sector.extend(keywords_sector_sectors)
@@ -1373,6 +1377,8 @@ def get_args(
         sbi_english_keyword_dict,
         sbi_sectors_dict,
         sbi_sectors_dict_full,
+        sbi_sectors_dom_gen,
+        sbi_sectors_dom_age,
         trans_keyword_list,
     ) = get_sbi_sectors_list()
     (
@@ -1425,6 +1431,8 @@ def get_args(
         'sbi_english_keyword_dict': sbi_english_keyword_dict,
         'sbi_sectors_dict': sbi_sectors_dict,
         'sbi_sectors_dict_full': sbi_sectors_dict_full,
+        'sbi_sectors_dom_gen': sbi_sectors_dom_gen,
+        'sbi_sectors_dom_age': sbi_sectors_dom_age,
         'trans_keyword_list': trans_keyword_list,
     }
 
@@ -1852,7 +1860,7 @@ def create_metadata(args=get_args()):
 
 # %%
 # Function to merge metadata
-def save_metadata(df_jobs, df_file_name, save_path, args=get_args(),):
+def save_metadata(df_jobs, df_file_name, save_path, args=get_args()):
 
     if (not df_jobs.empty) and (len(df_jobs != 0)):
         if args['print_enabled'] ==True:
@@ -1906,20 +1914,14 @@ def clean_df(
         inplace=True,
     )
 
-    # Drop subset list and add variables
-    if any(df_jobs.columns.isin(['Gender', 'Age'])):
-        if reset == True or df_jobs['Gender'].isnull().values.any() or df_jobs['Age'].isnull().values.any():
-            df_jobs = set_gender_age(df_jobs)
+    # Set Variables
+    if any(df_jobs.columns.isin(['Gender', 'Age', 'Sector', 'Sector Code', '% Female', '% Male', '% Older', '% Younger', 'English Requirement', 'Dutch Requirement'])):
         subset_list=[int_variable, str_variable, gender, age]
+
+        if reset == True or df_jobs['Gender'].isnull().values.any() or df_jobs['Age'].isnull().values.any() or df_jobs['Sector'].isnull().values.any() or df_jobs['Sector Code'].isnull().values.any() or df_jobs['% Female'].isnull().values.any() or df_jobs['% Male'].isnull().values.any() or df_jobs['% Older'].isnull().values.any() or df_jobs['% Younger'].isnull().values.any() or df_jobs['English Requirement'].isnull().values.any() or df_jobs['Dutch Requirement'].isnull().values.any():
+            df_jobs = set_gender_age_sects_lang(df_jobs)
     else:
         subset_list=[int_variable, str_variable]
-
-    if any(df_jobs.columns.isin(['Sector Code', '% Female', '% Male', '% Older', '% Younger'])):
-        if reset == True or df_jobs['Sector'].isnull().values.any() or df_jobs['Sector Code'].isnull().values.any() or df_jobs['% Female'].isnull().values.any() or df_jobs['% Male'].isnull().values.any() or df_jobs['% Older'].isnull().values.any() or df_jobs['% Younger'].isnull().values.any():
-            df_jobs = set_sector_and_percentage(df_jobs)
-    if any(df_jobs.columns.isin(['English Requirement', 'Dutch Requirement'])):
-        if reset == True or df_jobs['English Requirement'].isnull().values.any() or df_jobs['Dutch Requirement'].isnull().values.any():
-            df_jobs = set_language_requirement(df_jobs)
 
     df_jobs.drop_duplicates(
         subset=subset_list,
@@ -1996,24 +1998,22 @@ def detect_language_helper(x, language='en'):
 # Function to order categories
 def categorize_df_gender_age(
     df,
-    gender_order=order_gender,
-    age_order=order_age,
 ):
     # Arrange Categories
     try:
         df['Gender'] = (
-            df['Gender'].astype('category').cat.reorder_categories(gender_order, ordered=True)
+            df['Gender'].astype('category').cat.reorder_categories(order_gender, ordered=True)
         )
 
         df['Gender'] = pd.Categorical(
-            df['Gender'], categories=gender_order, ordered=True
+            df['Gender'], categories=order_gender, ordered=True
         )
     except ValueError as e:
         print(e)
     try:
-        df['Age'] = df['Age'].astype('category').cat.reorder_categories(age_order, ordered=True)
+        df['Age'] = df['Age'].astype('category').cat.reorder_categories(order_age, ordered=True)
 
-        df['Age'] = pd.Categorical(df['Age'], categories=age_order, ordered=True)
+        df['Age'] = pd.Categorical(df['Age'], categories=order_age, ordered=True)
     except ValueError as e:
         print(e)
 
@@ -2146,6 +2146,33 @@ def get_viz(df_name, df_df, dataframes, args=get_args()):
 
 
 # %%
+def set_language_requirement(
+    df_jobs,
+    str_variable = 'Job Description',
+    dutch_requirement_pattern = r'[Ll]anguage: [Dd]utch|[Dd]utch [Pp]referred|[Dd]utch [Re]quired|[Dd]utch [Ll]anguage|[Pp]roficient in [Dd]utch|[Ss]peak [Dd]utch|[Kk]now [Dd]utch',
+    english_requirement_pattern = r'[Ll]anguage: [Ee]nglish|[Ee]nglish [Pp]referred|[Ee]nglish [Re]quired|[Ee]nglish [Ll]anguage|[Pp]roficient in [Ee]nglish|[Ss]peak [Ee]nglish|[Kk]now [Ee]nglish',
+    ):
+    # Language requirements
+    # Dutch
+    print('Setting Dutch language requirements.')
+    df_jobs['Dutch Requirement'] = np.where(
+        df_jobs[str_variable].str.contains(dutch_requirement_pattern),
+        'Yes',
+        'No',
+    )
+
+    # English
+    print('Setting English language requirements.')
+    df_jobs['English Requirement'] = np.where(
+        df_jobs[str_variable].str.contains(english_requirement_pattern),
+        'Yes',
+        'No',
+    )
+
+    return df_jobs
+
+
+# %%
 def set_sector_and_percentage(
     df_jobs,
     sector_dict_new=False,
@@ -2160,6 +2187,8 @@ def set_sector_and_percentage(
     sbi_english_keyword_dict = args['sbi_english_keyword_dict']
     sbi_sectors_dict = args['sbi_sectors_dict']
     sbi_sectors_dict_full = args['sbi_sectors_dict_full']
+    sbi_sectors_dom_gen = args['sbi_sectors_dom_gen']
+    sbi_sectors_dom_age = args['sbi_sectors_dom_age']
     trans_keyword_list = args['trans_keyword_list']
 
     if sector_dict_new == True:
@@ -2172,8 +2201,7 @@ def set_sector_and_percentage(
     print('Setting sector.')
     for sect, sect_dict in sector_vs_job_id_dict.items():
         for keyword, job_ids in sect_dict.items():
-            for job_id in job_ids:
-                df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()) == str(job_id).lower().strip(), 'Sector'] = str(sect).lower().strip()
+            df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin(job_ids), 'Sector'] = str(sect).lower().strip()
 
     print('Setting sector code and percentages.')
     # Add gender and age columns
@@ -2223,6 +2251,14 @@ def set_gender_age(
     args=get_args(),
 ):
 
+    sbi_english_keyword_list = args['sbi_english_keyword_list']
+    sbi_english_keyword_dict = args['sbi_english_keyword_dict']
+    sbi_sectors_dict = args['sbi_sectors_dict']
+    sbi_sectors_dict_full = args['sbi_sectors_dict_full']
+    sbi_sectors_dom_gen = args['sbi_sectors_dom_gen']
+    sbi_sectors_dom_age = args['sbi_sectors_dom_age']
+    trans_keyword_list = args['trans_keyword_list']
+
     if id_dict_new == True:
         job_id_dict = make_job_id_v_gender_key_dict()
 
@@ -2238,52 +2274,21 @@ def set_gender_age(
             df_jobs.drop(columns=col, inplace=True)
     df_jobs = df_jobs.reindex(columns=[*df_jobs.columns, *gen_age_cols], fill_value=np.nan)
 
-    # # Gender
-    # if (df_jobs['Gender'].str.contains('Mixed Gender', na=False) == False).all() or (df_jobs['Gender'].str.contains('Male', na=False) == False).all() or (df_jobs['Gender'].str.contains('Female', na=False) == False).all() or (df_jobs['Gender'].str.contains('', na=False) == False).all():
-    #     gender_conditions = [
-    #         df_jobs['Job ID'].astype(str).isin(job_id_dict['Mixed Gender']),
-    #         df_jobs['Job ID'].astype(str).isin(job_id_dict['Male']),
-    #         df_jobs['Job ID'].astype(str).isin(job_id_dict['Female']),
-    #     ]
-    #     gender_choices = ['Mixed Gender', 'Male', 'Female']
-
-    #     df_jobs['Gender'] = np.select(gender_conditions, gender_choices, default='Mixed Gender')
-    # print('Done setting gender.')
-
-    # # Age
-    # if (df_jobs['Age'].str.contains('Mixed Age', na=False) == False).all() or (df_jobs['Age'].str.contains('Older Worker', na=False) == False).all() or (df_jobs['Age'].str.contains('Younger Worker', na=False) == False).all() or (df_jobs['Age'].str.contains('', na=False) == False).all():
-    #     age_conditions = [
-    #         df_jobs['Job ID'].astype(str).isin(job_id_dict['Mixed Age']),
-    #         df_jobs['Job ID'].astype(str).isin(job_id_dict['Younger Worker']),
-    #         df_jobs['Job ID'].astype(str).isin(job_id_dict['Older Worker']),
-    #     ]
-    #     age_choices = ['Mixed Age', 'Younger Worker', 'Older Worker']
-
-    #     df_jobs['Age'] = np.select(age_conditions, age_choices, default='Mixed Age')
-    # print('Done setting age.')
-
     # Gender
-    # if (df_jobs['Gender'].str.contains('Mixed Gender', na=False) == False).all():
-    for job_id in job_id_dict['Mixed Gender']:
-        df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()) == str(job_id).lower().strip(), 'Gender'] = 'Mixed Gender'
-    # if (df_jobs['Gender'].str.contains('Male', na=False) == False).all():
-    for job_id in job_id_dict['Male']:
-        df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()) == str(job_id).lower().strip(), 'Gender'] = 'Male'
-    # if (df_jobs['Gender'].str.contains('Female', na=False) == False).all():
-    for job_id in job_id_dict['Female']:
-        df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()) == str(job_id).lower().strip(), 'Gender'] = 'Female'
+    print('Setting gender.')
+    for cat in ['Mixed Gender', 'Male', 'Female']:
+        df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin(job_id_dict[cat]), 'Gender'] = str(cat)
+    for sect, cat in sbi_sectors_dom_gen.items():
+        df_jobs.loc[df_jobs['Sector'].astype(str).apply(lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Gender'] = str(cat)
 
     # Age
-    # if (df_jobs['Age'].str.contains('Mixed Age', na=False) == False).all():
-    for job_id in job_id_dict['Mixed Age']:
-        df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()) == str(job_id).lower().strip(), 'Age'] = 'Mixed Age'
-    # if (df_jobs['Age'].str.contains('Younger Worker', na=False) == False).all():
-    for job_id in job_id_dict['Younger Worker']:
-        df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()) == str(job_id).lower().strip(), 'Age'] = 'Younger Worker'
-    # if (df_jobs['Age'].str.contains('Older Worker', na=False) == False).all():
-    for job_id in job_id_dict['Older Worker']:
-        df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()) == str(job_id).lower().strip(), 'Age'] = 'Older Worker'
+    print('Setting age.')
+    for cat in ['Mixed Age', 'Younger Worker', 'Older Worker']:
+        df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin(job_id_dict[cat]), 'Age'] = str(cat)
+    for sect, cat in sbi_sectors_dom_age.items():
+        df_jobs.loc[df_jobs['Sector'].astype(str).apply(lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Age'] = str(cat)
 
+    print('Categorizing gender and age')
     df_jobs = categorize_df_gender_age(df_jobs)
     df_jobs = dummy_code_df_gender_age(df_jobs)
 
@@ -2293,28 +2298,15 @@ def set_gender_age(
 
 
 # %%
-def set_language_requirement(
-    df_jobs,
-    str_variable = 'Job Description',
-    dutch_requirement_pattern = r'[Ll]anguage: [Dd]utch|[Dd]utch [Pp]referred|[Dd]utch [Re]quired|[Dd]utch [Ll]anguage|[Pp]roficient in [Dd]utch|[Ss]peak [Dd]utch|[Kk]now [Dd]utch',
-    english_requirement_pattern = r'[Ll]anguage: [Ee]nglish|[Ee]nglish [Pp]referred|[Ee]nglish [Re]quired|[Ee]nglish [Ll]anguage|[Pp]roficient in [Ee]nglish|[Ss]peak [Ee]nglish|[Kk]now [Ee]nglish',
-    ):
-    # Language requirements
-    # Dutch
-    df_jobs['Dutch Requirement'] = np.where(
-        df_jobs[str_variable].str.contains(dutch_requirement_pattern),
-        'Yes',
-        'No',
-    )
+def set_gender_age_sects_lang(df_jobs, args=get_args()):
 
-    # English
-    df_jobs['English Requirement'] = np.where(
-        df_jobs[str_variable].str.contains(english_requirement_pattern),
-        'Yes',
-        'No',
-    )
+    df_jobs=set_language_requirement(df_jobs)
+    df_jobs=set_sector_and_percentage(df_jobs)
+    df_jobs=set_gender_age(df_jobs)
 
     return df_jobs
+
+
 # %%
 # Load and merge existing dict and df
 def load_merge_dict_df(
@@ -2408,6 +2400,7 @@ def save_df(
     keyword_file: str,
     df_file_name: str,
     print_enabled: bool = False,
+    clean_enabled: bool = True,
     args=get_args(),
 ):
     if print_enabled == True:
@@ -2418,7 +2411,8 @@ def save_df(
             print(f'Cleaning {keyword} df.')
 
         # Drop duplicates and -1 for job description
-        df_jobs = clean_df(df_jobs)
+        if clean_enabled == True:
+            df_jobs = clean_df(df_jobs)
 
         # Search keyword
         try:
@@ -2649,18 +2643,22 @@ def clean_from_old(
     site=None,
     site_list=['Indeed', 'Glassdoor', 'LinkedIn'],
     files = [],
+    exten_to_find = ['.json','csv','.xlsx'],
     args=get_args(),
 ):
 
     if site is None and files == []:
-        for site in site_list:
-            for file in glob.glob(f'{code_dir}/{site}/Data/*.json')+glob.glob(f'{code_dir}/{site}/Data/*.csv')+glob.glob(f'{code_dir}/{site}/Data/*.xlsx'):
-                files.append(file)
+        try:
+            for site in site_list:
+                for file_ in glob.glob(f'{code_dir}/{site}/Data/*.json')+glob.glob(f'{code_dir}/{site}/Data/*.csv')+glob.glob(f'{code_dir}/{site}/Data/*.xlsx'):
+                    files.append(file)
+        except:
+            for file_ in glob.glob(f'{code_dir}/*/Data/*.json')+glob.glob(f'{code_dir}/*/Data/*.csv')+glob.glob(f'{code_dir}/*/Data/*.xlsx'):
+                files.append(file_)
 
     elif site is not None and files == []:
-        glob.glob(f'{code_dir}/*/Data/*.csv')
-        for file in glob.glob(f'{code_dir}/{site}/Data/*.json')+glob.glob(f'{code_dir}/{site}/Data/*.csv')+glob.glob(f'{code_dir}/{site}/Data/*.xlsx'):
-            files.append(file)
+        for file_ in glob.glob(f'{code_dir}/{site}/Data/*.json')+glob.glob(f'{code_dir}/{site}/Data/*.csv')+glob.glob(f'{code_dir}/{site}/Data/*.xlsx'):
+            files.append(file_)
 
     for file in tqdm.tqdm(files):
         if site == None:
@@ -2671,10 +2669,14 @@ def clean_from_old(
             keyword = file.split('df_')[1].split('.')[0].replace("-Noon's MacBook Pro",'')
         if '_' in keyword:
             keyword = ' '.join(keyword.split('_'))
+
         for w_keyword, r_keyword in keyword_trans_dict.items():
             if str(keyword.lower()) == w_keyword.lower():
-                keyword = r_keyword.lower()
-        if keyword in args['keywords_list'] or keyword in args['trans_keyword_list']:
+                trans_keyword = r_keyword.lower()
+            else:
+                trans_keyword = keyword
+
+        if trans_keyword in args['keywords_list'] or keyword in args['trans_keyword_list']:
             (
                 keyword_url,
                 keyword_file,
@@ -2684,6 +2686,16 @@ def clean_from_old(
                 logs_file_name,
                 filemode,
             ) = main_info(keyword, site)
+            if trans_keyword != keyword:
+                (
+                    trans_keyword_url,
+                    trans_keyword_file,
+                    trans_save_path,
+                    trans_json_file_name,
+                    trans_df_file_name,
+                    trans_logs_file_name,
+                    trans_filemode,
+                ) = main_info(trans_keyword, site)
 
             if os.path.isfile(file):
                 df_jobs = pd.DataFrame()
@@ -2691,14 +2703,30 @@ def clean_from_old(
                 if file.endswith('.json'):
                     df_jobs_json = pd.read_json(file, orient='records')
                     df_jobs = df_jobs.append(df_jobs_json, ignore_index=True)
+                    if trans_keyword != keyword:
+                        if os.path.isfile(trans_save_path + trans_json_file_name.lower()):
+                            trans_df_jobs_json = pd.read_json(trans_save_path + trans_json_file_name.lower(), orient='records')
+                            df_jobs = df_jobs.append(trans_df_jobs_json, ignore_index=True)
+
                 if file.endswith('.csv'):
                     df_jobs_csv = pd.read_csv(file)
                     df_jobs = df_jobs.append(df_jobs_csv, ignore_index=True)
+                    if trans_keyword != keyword:
+                        if os.path.isfile(trans_save_path + trans_df_file_name.lower()):
+                            trans_df_jobs_csv = pd.read_csv(trans_save_path + trans_df_file_name.lower())
+                            df_jobs = df_jobs.append(trans_df_jobs_csv, ignore_index=True)
+
                 if file.endswith('.xlsx'):
                     df_jobs_xlsx = pd.read_excel(file)
                     df_jobs = df_jobs.append(df_jobs_xlsx, ignore_index=True)
+                    if trans_keyword != keyword:
+                        if os.path.isfile(trans_save_path + trans_df_file_name.lower()):
+                            trans_df_jobs_xlsx = pd.read_excel(trans_save_path + trans_df_file_name.lower().replace('csv', 'xlsx'))
+                            df_jobs = df_jobs.append(trans_df_jobs_xlsx, ignore_index=True)
 
                 if (not df_jobs.empty) and (len(df_jobs != 0)):
+                    df_jobs = clean_df(df_jobs)
+
                     jobs = df_jobs.to_dict(orient='records')
                     if (os.path.isfile(save_path + df_file_name.lower())) or (
                         os.path.isfile(save_path + json_file_name.lower())
@@ -2707,11 +2735,12 @@ def clean_from_old(
                             json.dump(jobs, f)
 
                     df_jobs = save_df(
-                        keyword,
-                        df_jobs,
-                        save_path,
-                        keyword_file.lower(),
-                        df_file_name.lower(),
+                        keyword=keyword,
+                        df_jobs=df_jobs,
+                        save_path=save_path,
+                        keyword_file=keyword_file.lower(),
+                        df_file_name=df_file_name.lower(),
+                        clean_enabled = False,
                     )
 
 
@@ -2759,6 +2788,8 @@ def make_job_id_v_sector_key_dict_helper(
     sbi_english_keyword_dict = args['sbi_english_keyword_dict']
     sbi_sectors_dict = args['sbi_sectors_dict']
     sbi_sectors_dict_full = args['sbi_sectors_dict_full']
+    sbi_sectors_dom_gen = args['sbi_sectors_dom_gen']
+    sbi_sectors_dom_age = args['sbi_sectors_dom_age']
     trans_keyword_list = args['trans_keyword_list']
 
     for path in df_jobs_paths:
@@ -2834,6 +2865,8 @@ def make_job_id_v_gender_key_dict_helper(
     sbi_english_keyword_dict = args['sbi_english_keyword_dict']
     sbi_sectors_dict = args['sbi_sectors_dict']
     sbi_sectors_dict_full = args['sbi_sectors_dict_full']
+    sbi_sectors_dom_gen = args['sbi_sectors_dom_gen']
+    sbi_sectors_dom_age = args['sbi_sectors_dom_age']
     trans_keyword_list = args['trans_keyword_list']
 
     for path in df_jobs_paths:

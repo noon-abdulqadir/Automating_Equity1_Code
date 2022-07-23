@@ -20,8 +20,7 @@
 # unwanted_subdir_name = 'Analysis'
 # for _ in range(5):
 #     parent_path = str(Path.cwd().parents[_]).split('/')[-1]
-#     if (code_dir_name in parent_path) and (
-#         unwanted_subdir_name not in parent_path):
+#     if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
 #         code_dir = str(Path.cwd().parents[_])
 #         if code_dir is not None:
 #             break
@@ -48,8 +47,7 @@ for _ in range(5):
 
     parent_path = str(Path.cwd().parents[_]).split('/')[-1]
 
-    if (code_dir_name in parent_path) and (
-        unwanted_subdir_name not in parent_path):
+    if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
 
         code_dir = str(Path.cwd().parents[_])
 
@@ -120,19 +118,13 @@ def open_and_clean_labeled_excel(
         print(f'Number of DF words: {word_count}')
 
     # Set Age and Gender IVs
-    df_jobs_labeled = set_gender_age(df_jobs = df_jobs_labeled, id_dict_new = id_dict_new)
-
-    # Set Sector
-    df_jobs_labeled = set_sector_and_percentage(df_jobs = df_jobs_labeled, sector_dict_new=True)
+    df_jobs_labeled = set_gender_age_sects_lang(df_jobs = df_jobs_labeled, id_dict_new = id_dict_new)
 
     # Gender and Age Info
     df_gender_age_info(df_jobs_labeled, print_info=True)
 
     # Detect Language
     df_jobs_labeled = detect_language(df_jobs_labeled)
-
-    # Set Language Requirements
-    df_jobs_labeled = set_language_requirement(df_jobs_labeled)
 
     # profile = ProfileReport(df_jobsn, title='Pandas Profiling Report', explorative=True)
     # print(profile.to_json())

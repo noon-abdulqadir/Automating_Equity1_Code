@@ -20,8 +20,7 @@
 # unwanted_subdir_name = 'Analysis'
 # for _ in range(5):
 #     parent_path = str(Path.cwd().parents[_]).split('/')[-1]
-#     if (code_dir_name in parent_path) and (
-#         unwanted_subdir_name not in parent_path):
+#     if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
 #         code_dir = str(Path.cwd().parents[_])
 #         if code_dir is not None:
 #             break
@@ -48,8 +47,7 @@ for _ in range(5):
 
     parent_path = str(Path.cwd().parents[_]).split('/')[-1]
 
-    if (code_dir_name in parent_path) and (
-            unwanted_subdir_name not in parent_path):
+    if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
 
         code_dir = str(Path.cwd().parents[_])
 
@@ -98,7 +96,7 @@ task_enabled = False
 # language_model_enabled = False
 
 ### CHANGE THIS TO GET NEW DATA FROM JSON FILES
-start_new_preprocessing = True
+start_new_preprocessing = False
 ###
 id_dict_new = start_new_preprocessing
 from_processing_function = start_new_preprocessing
