@@ -2537,7 +2537,14 @@ def post_cleanup(
                 trans_keyword = keyword.lower()
 
             if detect(trans_keyword) != 'en':
-                trans_keyword_list.append(translator.translate(trans_keyword, lang_tgt='en'))
+                try:
+                    trans_keyword_list.append(translator.translate(c, lang_tgt='en'))
+                except:
+                    for w_keyword, r_keyword in keyword_trans_dict.items():
+                        if str(trans_keyword.lower()) == w_keyword.lower():
+                            trans_keyword_list.append(r_keyword.lower())
+                except:
+                    pass
 
             try:
                 df_jobs = post_cleanup_helper(keyword, site)
@@ -2546,7 +2553,7 @@ def post_cleanup(
                 if df_jobs.empty and args['print_enabled'] == True:
                     print(f'DF {keyword.title()} not collected yet.')
 
-            except Exception:
+            except Exception:r_keyword.lower()
                 if args['print_enabled'] is True:
                     print(f'An error occured with finding DF {keyword}.')
                 df_jobs = pd.DataFrame()
@@ -2663,13 +2670,13 @@ def clean_from_old(
         for file_ in glob.glob(f'{code_dir}/{site}/Data/*.json')+glob.glob(f'{code_dir}/{site}/Data/*.csv')+glob.glob(f'{code_dir}/{site}/Data/*.xlsx'):
             files.append(file_)
 
-    for file in tqdm.tqdm(files):
+    for file_ in tqdm.tqdm(files):
         if site == None:
-            site = file.split(f'{code_dir}/')[1].split('/Data')[0]
-        if 'dict_' in file:
-            keyword = file.split('dict_')[1].split('.')[0].replace("-Noon's MacBook Pro",'')
-        elif 'df_' in file:
-            keyword = file.split('df_')[1].split('.')[0].replace("-Noon's MacBook Pro",'')
+            site = file_.split(f'{code_dir}/')[1].split('/Data')[0]
+        if 'dict_' in file_:
+            keyword = file_.split('dict_')[1].split('.')[0].replace("-Noon's MacBook Pro",'')
+        elif 'df_' in file_:
+            keyword = file_.split('df_')[1].split('.')[0].replace("-Noon's MacBook Pro",'')
         if '_' in keyword:
             keyword = ' '.join(keyword.split('_'))
 
@@ -2679,6 +2686,7 @@ def clean_from_old(
             else:
                 trans_keyword = keyword
 
+        print(f'Getting data for {trans_keyword}')
         if trans_keyword in args['keywords_list'] or keyword in args['trans_keyword_list']:
             (
                 keyword_url,
@@ -2704,23 +2712,27 @@ def clean_from_old(
                 df_jobs = pd.DataFrame()
 
                 if file.endswith('.json'):
-                    df_jobs_json = pd.read_json(file, orient='records')
+                    try:
+                        df_jobs_json = pd.read_json(file_, orient='records')
+                    except ValueError:
+                        with open(file_) as f:
+                            df_jobs_json = pd.DataFrame(json.load(f))
                     df_jobs = df_jobs.append(df_jobs_json, ignore_index=True)
                     if trans_keyword != keyword:
                         if os.path.isfile(trans_save_path + trans_json_file_name.lower()):
                             trans_df_jobs_json = pd.read_json(trans_save_path + trans_json_file_name.lower(), orient='records')
                             df_jobs = df_jobs.append(trans_df_jobs_json, ignore_index=True)
 
-                if file.endswith('.csv'):
-                    df_jobs_csv = pd.read_csv(file)
+                if file_.endswith('.csv'):
+                    df_jobs_csv = pd.read_csv(file_)
                     df_jobs = df_jobs.append(df_jobs_csv, ignore_index=True)
                     if trans_keyword != keyword:
                         if os.path.isfile(trans_save_path + trans_df_file_name.lower()):
                             trans_df_jobs_csv = pd.read_csv(trans_save_path + trans_df_file_name.lower())
                             df_jobs = df_jobs.append(trans_df_jobs_csv, ignore_index=True)
 
-                if file.endswith('.xlsx'):
-                    df_jobs_xlsx = pd.read_excel(file)
+                if file_.endswith('.xlsx'):
+                    df_jobs_xlsx = pd.read_excel(file_)
                     df_jobs = df_jobs.append(df_jobs_xlsx, ignore_index=True)
                     if trans_keyword != keyword:
                         if os.path.isfile(trans_save_path + trans_df_file_name.lower()):
