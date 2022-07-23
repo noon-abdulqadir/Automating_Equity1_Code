@@ -1897,7 +1897,7 @@ def clean_df(
     gender: str = 'Gender',
     age: str = 'Age',
     language: str = 'en',
-    reset=False,
+    reset=True,
     args=get_args(),
 ) -> pd.DataFrame:
 
@@ -1914,15 +1914,18 @@ def clean_df(
         inplace=True,
     )
 
-    # Set Variables
-    if any(df_jobs.columns.isin(['Gender', 'Age', 'Sector', 'Sector Code', '% Female', '% Male', '% Older', '% Younger', 'English Requirement', 'Dutch Requirement'])):
-        subset_list=[int_variable, str_variable, gender, age]
+    # # Set Variables
+    # if all(df_jobs.columns.isin(['Gender', 'Age'])):
+    #     subset_list=[int_variable, str_variable, gender, age]
+    # else:
+    #     subset_list=[int_variable, str_variable]
 
-        if reset == True or df_jobs['Gender'].isnull().values.any() or df_jobs['Age'].isnull().values.any() or df_jobs['Sector'].isnull().values.any() or df_jobs['Sector Code'].isnull().values.any() or df_jobs['% Female'].isnull().values.any() or df_jobs['% Male'].isnull().values.any() or df_jobs['% Older'].isnull().values.any() or df_jobs['% Younger'].isnull().values.any() or df_jobs['English Requirement'].isnull().values.any() or df_jobs['Dutch Requirement'].isnull().values.any():
-            df_jobs = set_gender_age_sects_lang(df_jobs)
-    else:
-        subset_list=[int_variable, str_variable]
+    if reset == True:
+        # , 'Sector', 'Sector Code', '% Female', '% Male', '% Older', '% Younger', 'English Requirement', 'Dutch Requirement'
+        # or df_jobs['Gender'].isnull().values.any() or df_jobs['Age'].isnull().values.any() or df_jobs['Sector'].isnull().values.any() or df_jobs['Sector Code'].isnull().values.any() or df_jobs['% Female'].isnull().values.any() or df_jobs['% Male'].isnull().values.any() or df_jobs['% Older'].isnull().values.any() or df_jobs['% Younger'].isnull().values.any() or df_jobs['English Requirement'].isnull().values.any() or df_jobs['Dutch Requirement'].isnull().values.any():
+        df_jobs = set_gender_age_sects_lang(df_jobs)
 
+    subset_list=[int_variable, str_variable, gender, age]
     df_jobs.drop_duplicates(
         subset=subset_list,
         keep='first',
