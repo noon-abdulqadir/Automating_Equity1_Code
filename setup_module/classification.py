@@ -201,6 +201,7 @@ def open_and_clean_unlabeled_excel(
                 and 'Job ID - ' in file
                 and '.xlsx' in file
                 and os.path.isfile(f'{stable_folder}/{file}')
+                and os.stat(f'{stable_folder}/{file}').st_size > 0
             ]
         if len(EXCEL_PATHS) != 0:
             for path in EXCEL_PATHS:

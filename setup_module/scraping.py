@@ -108,7 +108,7 @@ def validate_path(file: str, file_extensions=['.*', 'chromedriver']) -> str:
 
     if file.endswith(tuple(file_extensions)):
         if not os.path.isdir(file):
-            if not os.path.isfile(file):
+            if (not os.path.isfile(file)) and (os.stat(file).st_size == 0):
                 # file = input(f'No file found at {file}.\nPlease enter correct path.')
                 try:
                     print(f'File {file} not found.')
@@ -116,7 +116,7 @@ def validate_path(file: str, file_extensions=['.*', 'chromedriver']) -> str:
                     print(e.json())
     elif not file.endswith(tuple(file_extensions)):
         if not os.path.isdir(file):
-            if not os.path.isfile(file):
+            if (not os.path.isfile(file)) and (os.stat(file).st_size == 0):
                 # file = input(f'No file found at {file}.\nPlease enter correct path.')
                 try:
                     print(f'File {file} not found.')
@@ -1458,7 +1458,7 @@ def main_info(keyword: str, site: str, save_path: str = validate_path(f'{main_di
     json_file_name = f'{site.lower()}_jobs_dict_{keyword_file.lower()}.json'.replace("-Noon's MacBook Pro",'')
     df_file_name = f'{site.lower()}_jobs_df_{keyword_file.lower()}.{args["file_save_format_backup"]}'.replace("-Noon's MacBook Pro",'')
     logs_file_name = f'{site.lower()}_jobs_logs_{keyword_file.lower()}.log'.replace("-Noon's MacBook Pro",'')
-    filemode = 'a+' if os.path.isfile(logs_file_name.lower()) else 'w+'
+    filemode = 'a+' if (os.path.isfile(logs_file_name.lower())) and (os.stat(logs_file_name.lower()).st_size > 0) else 'w+'
 
     return (
         keyword_url,
@@ -2279,17 +2279,22 @@ def set_gender_age(
 
     # Gender
     print('Setting gender.')
-    for cat in ['Mixed Gender', 'Male', 'Female']:
-        df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin(job_id_dict[cat]), 'Gender'] = str(cat)
-    for sect, cat in sbi_sectors_dom_gen.items():
-        df_jobs.loc[df_jobs['Sector'].astype(str).apply(lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Gender'] = str(cat)
+    try:
+        for sect, cat in sbi_sectors_dom_gen.items():
+            df_jobs.loc[df_jobs['Sector'].astype(str).apply(lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Gender'] = str(cat)
+    except:
+        for cat in ['Mixed Gender', 'Male', 'Female']:
+            df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin(job_id_dict[cat]), 'Gender'] = str(cat)
+
 
     # Age
     print('Setting age.')
-    for cat in ['Mixed Age', 'Younger Worker', 'Older Worker']:
-        df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin(job_id_dict[cat]), 'Age'] = str(cat)
-    for sect, cat in sbi_sectors_dom_age.items():
-        df_jobs.loc[df_jobs['Sector'].astype(str).apply(lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Age'] = str(cat)
+    try:
+        for sect, cat in sbi_sectors_dom_age.items():
+            df_jobs.loc[df_jobs['Sector'].astype(str).apply(lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Age'] = str(cat)
+    except:
+        for cat in ['Mixed Age', 'Younger Worker', 'Older Worker']:
+            df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin(job_id_dict[cat]), 'Age'] = str(cat)
 
     print('Categorizing gender and age')
     df_jobs = categorize_df_gender_age(df_jobs)
@@ -2320,7 +2325,7 @@ def load_merge_dict_df(
     args=get_args()
 ):
     # df_jobs
-    if os.path.isfile(save_path + df_file_name.lower()):
+    if (os.path.isfile(save_path + df_file_name.lower())) and (os.stat(save_path + df_file_name.lower()).st_size > 0):
         if args['print_enabled'] == True:
             print(
                 f'A DF with the name "{df_file_name.lower()}" already exists at {save_path}.\nNew data will be appended to the file.'
@@ -2329,7 +2334,7 @@ def load_merge_dict_df(
         if not df_old_jobs.empty:
             df_old_jobs = clean_df(df_old_jobs)
 
-    elif not os.path.isfile(save_path + df_file_name.lower()):
+    elif (not os.path.isfile(save_path + df_file_name.lower())) or (os.stat(save_path + df_file_name.lower()).st_size == 0):
         if args['print_enabled'] == True:
             print(f'No DF with the name "{df_file_name.lower()}" found.')
         df_old_jobs = pd.DataFrame()
@@ -2337,7 +2342,7 @@ def load_merge_dict_df(
         print(f'Old jobs DF of length: {df_old_jobs.shape[0]}.')
 
     # jobs
-    if os.path.isfile(save_path + json_file_name.lower()):
+    if (os.path.isfile(save_path + json_file_name.lower())) and (os.stat(save_path + json_file_name.lower()).st_size > 0):
         if args['print_enabled'] == True:
             print(
                 f'A list of dicts with the name "{json_file_name.lower()}" already exists at {save_path}.\nNew data will be appended to this file.'
@@ -2345,7 +2350,7 @@ def load_merge_dict_df(
         with open(save_path + json_file_name, encoding='utf8') as f:
             old_jobs = json.load(f)
         # old_jobs = remove_dupe_dicts(old_jobs)
-    elif not os.path.isfile(save_path + json_file_name.lower()):
+    elif (not os.path.isfile(save_path + json_file_name.lower())) or (os.stat(save_path + json_file_name.lower()).st_size == 0):
         if args['print_enabled'] == True:
             print(f'No list of dicts with the name "{json_file_name.lower()}" found.')
         old_jobs = []
@@ -2372,9 +2377,7 @@ def load_merge_dict_df(
             if myDict not in jobs:
                 jobs.append(myDict)
 
-        if (os.path.isfile(save_path + df_file_name.lower())) or (
-            os.path.isfile(save_path + json_file_name.lower())
-        ):
+        if (((os.path.isfile(save_path + df_file_name.lower()))) and (os.stat(save_path + df_file_name.lower()).st_size > 0)) or ((os.path.isfile(save_path + json_file_name.lower())) and (os.stat(save_path + json_file_name.lower()).st_size > 0)):
             with open(save_path + json_file_name, 'w', encoding='utf8') as f:
                 json.dump(jobs, f)
     elif df_old_jobs is None:
@@ -2538,13 +2541,13 @@ def post_cleanup(
 
             if detect(trans_keyword) != 'en':
                 try:
-                    trans_keyword_list.append(translator.translate(c, lang_tgt='en'))
+                    trans_keyword = translator.translate(c, lang_tgt='en')
+                    trans_keyword_list.append(trans_keyword)
                 except:
                     for w_keyword, r_keyword in keyword_trans_dict.items():
                         if str(trans_keyword.lower()) == w_keyword.lower():
-                            trans_keyword_list.append(r_keyword.lower())
-                except:
-                    pass
+                            trans_keyword = r_keyword.lower()
+                            trans_keyword_list.append(trans_keyword)
 
             try:
                 df_jobs = post_cleanup_helper(keyword, site)
@@ -2553,7 +2556,7 @@ def post_cleanup(
                 if df_jobs.empty and args['print_enabled'] == True:
                     print(f'DF {keyword.title()} not collected yet.')
 
-            except Exception:r_keyword.lower()
+            except Exception:
                 if args['print_enabled'] is True:
                     print(f'An error occured with finding DF {keyword}.')
                 df_jobs = pd.DataFrame()
@@ -2608,9 +2611,7 @@ def post_cleanup_helper(keyword, site, args=get_args()):
         keyword, save_path, df_file_name, json_file_name
     )
 
-    if (os.path.isfile(save_path + df_file_name.lower())) or (
-        os.path.isfile(save_path + json_file_name.lower())
-    ):
+    if (((os.path.isfile(save_path + df_file_name.lower()))) and (os.stat(save_path + df_file_name.lower()).st_size > 0)) or ((os.path.isfile(save_path + json_file_name.lower())) and (os.stat(save_path + json_file_name.lower()).st_size > 0)):
         with open(save_path + json_file_name, 'w', encoding='utf8') as f:
             json.dump(jobs, f)
         df_jobs = pd.DataFrame(jobs)
@@ -2630,9 +2631,7 @@ def post_cleanup_helper(keyword, site, args=get_args()):
                     f'Jobs DataFrame is empty since no jobs results were found for {str(keyword)}.'
                 )
 
-    elif (not os.path.isfile(save_path + df_file_name.lower())) or (
-        not os.path.isfile(save_path + json_file_name.lower())
-    ):
+    elif ((not os.path.isfile(save_path + df_file_name.lower())) or (os.stat(save_path + df_file_name.lower()).st_size == 0)) or ((not os.path.isfile(save_path + json_file_name.lower())) or (os.stat(save_path + json_file_name.lower()).st_size == 0)):
         if args['print_enabled'] is True:
             print(f'No jobs file found for {keyword} in path: {save_path}.')
         df_jobs = pd.DataFrame()
@@ -2686,7 +2685,7 @@ def clean_from_old(
             else:
                 trans_keyword = keyword
 
-        print(f'Getting data for {trans_keyword}')
+        print(f'Getting data for {trans_keyword}.')
         if trans_keyword in args['keywords_list'] or keyword in args['trans_keyword_list']:
             (
                 keyword_url,
@@ -2708,44 +2707,39 @@ def clean_from_old(
                     trans_filemode,
                 ) = main_info(trans_keyword, site)
 
-            if os.path.isfile(file):
+            if os.path.isfile(file_) and os.stat(file_).st_size > 0:
                 df_jobs = pd.DataFrame()
 
-                if file.endswith('.json'):
+                if file_.endswith('.json'):
                     try:
                         df_jobs_json = pd.read_json(file_, orient='records')
                     except ValueError:
                         with open(file_) as f:
                             df_jobs_json = pd.DataFrame(json.load(f))
                     df_jobs = df_jobs.append(df_jobs_json, ignore_index=True)
-                    if trans_keyword != keyword:
-                        if os.path.isfile(trans_save_path + trans_json_file_name.lower()):
-                            trans_df_jobs_json = pd.read_json(trans_save_path + trans_json_file_name.lower(), orient='records')
-                            df_jobs = df_jobs.append(trans_df_jobs_json, ignore_index=True)
+                    if trans_keyword != keyword and (os.path.isfile(trans_save_path + trans_json_file_name.lower())) and (os.stat(trans_save_path + trans_json_file_name.lower()).st_size > 0):
+                        trans_df_jobs_json = pd.read_json(trans_save_path + trans_json_file_name.lower(), orient='records')
+                        df_jobs = df_jobs.append(trans_df_jobs_json, ignore_index=True)
 
                 if file_.endswith('.csv'):
                     df_jobs_csv = pd.read_csv(file_)
                     df_jobs = df_jobs.append(df_jobs_csv, ignore_index=True)
-                    if trans_keyword != keyword:
-                        if os.path.isfile(trans_save_path + trans_df_file_name.lower()):
-                            trans_df_jobs_csv = pd.read_csv(trans_save_path + trans_df_file_name.lower())
-                            df_jobs = df_jobs.append(trans_df_jobs_csv, ignore_index=True)
+                    if trans_keyword != keyword and (os.path.isfile(trans_save_path + trans_df_file_name.lower())) and (os.stat(trans_save_path + trans_df_file_name.lower()).st_size > 0):
+                        trans_df_jobs_csv = pd.read_csv(trans_save_path + trans_df_file_name.lower())
+                        df_jobs = df_jobs.append(trans_df_jobs_csv, ignore_index=True)
 
                 if file_.endswith('.xlsx'):
                     df_jobs_xlsx = pd.read_excel(file_)
                     df_jobs = df_jobs.append(df_jobs_xlsx, ignore_index=True)
-                    if trans_keyword != keyword:
-                        if os.path.isfile(trans_save_path + trans_df_file_name.lower()):
-                            trans_df_jobs_xlsx = pd.read_excel(trans_save_path + trans_df_file_name.lower().replace('csv', 'xlsx'))
-                            df_jobs = df_jobs.append(trans_df_jobs_xlsx, ignore_index=True)
+                    if trans_keyword != keyword and (os.path.isfile(trans_save_path + trans_df_file_name.lower())) and (os.stat(trans_save_path + trans_df_file_name.lower()).st_size > 0):
+                        trans_df_jobs_xlsx = pd.read_excel(trans_save_path + trans_df_file_name.lower().replace('csv', 'xlsx'))
+                        df_jobs = df_jobs.append(trans_df_jobs_xlsx, ignore_index=True)
 
                 if (not df_jobs.empty) and (len(df_jobs != 0)):
                     df_jobs = clean_df(df_jobs)
 
                     jobs = df_jobs.to_dict(orient='records')
-                    if (os.path.isfile(save_path + df_file_name.lower())) or (
-                        os.path.isfile(save_path + json_file_name.lower())
-                    ):
+                    if ((os.path.isfile(save_path + df_file_name.lower())) and os.stat(save_path + df_file_name.lower()).st_size > 0) or (os.path.isfile(save_path + json_file_name.lower()) and (os.stat(save_path + json_file_name.lower()).st_size > 0)):
                         with open(save_path + json_file_name, 'w', encoding='utf8') as f:
                             json.dump(jobs, f)
 
@@ -3490,9 +3484,7 @@ def send_new_excel_to_gdrive(
                     )
                 for done_job_excel_name in done_job_excel:
                     if ('Job ID - ') and ('.xlsx') in done_job_excel_name:
-                        if os.path.isfile(
-                            coder_dest_folder_path + '/' + done_job_excel_name
-                        ):
+                        if os.path.isfile(coder_dest_folder_path + '/' + done_job_excel_name) and (os.stat(coder_dest_folder_path + '/' + done_job_excel_name).st_size > 0):
                             done_job_excel_list.append(
                                 validate_path(
                                     coder_dest_folder_path + '/' + done_job_excel_name
@@ -3517,9 +3509,8 @@ def send_new_excel_to_gdrive(
                 for new_job_excel_name in new_job_excel:
                     if ('Job ID - ') and ('.xlsx') in new_job_excel_name:
                         if (
-                            os.path.isfile(
-                                gender_occ_source_dir_path + '/' + new_job_excel_name
-                            )
+                            (os.path.isfile(gender_occ_source_dir_path + '/' + new_job_excel_name))
+                            and (os.stat(gender_occ_source_dir_path + '/' + new_job_excel_name).st_size > 0)
                             and (
                                 new_job_excel
                                 != any(
@@ -3683,11 +3674,8 @@ def open_and_clean_excel(
                         and ('Job ID - ' in done_job_excel_name)
                         and ('.xlsx' in done_job_excel_name)
                         and ('.txt' not in done_job_excel_name)
-                        and (
-                            os.path.isfile(
-                                coder_dest_folder_path + '/' + done_job_excel_name
-                            )
-                        )
+                        and (os.path.isfile(coder_dest_folder_path + '/' + done_job_excel_name))
+                        and (os.stat(coder_dest_folder_path + '/' + done_job_excel_name).st_size > 0)
                     ):
                         EXCEL_PATHS[coder_name].append(
                             validate_path(
@@ -3702,9 +3690,10 @@ def open_and_clean_excel(
                             and ('.txt' in done_job_excel_name)
                         )
                         and (
-                            not os.path.isfile(
-                                coder_dest_folder_path + '/' + done_job_excel_name
-                            )
+                            not os.path.isfile(coder_dest_folder_path + '/' + done_job_excel_name)
+                        )
+                        and (
+                            os.stat(coder_dest_folder_path + '/' + done_job_excel_name).st_size == 0
                         )
                     ):
                         del coders_dict[coder_number]

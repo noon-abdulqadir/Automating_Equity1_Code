@@ -1,5 +1,6 @@
 ---
 title: "Bias in Candidate Sourcing Communication"
+# bibliography: "/Users/nyxinsane/Library/CloudStorage/OneDrive-UvA/Automating Equity/Study 1/Study1_Code/Bias in Candidate Sourcing Typeset/Bias in Candidate Sourcing APA7/references.bib"
 output:
     html_document:
     df_print: paged
@@ -41,6 +42,7 @@ library(broom)
 library(broom.mixed)
 library(AICcmodavg)
 library(reticulate)
+library(citr)
 ```
 
 ```{r Set.Python, message=TRUE, warning=FALSE, paged.print=TRUE}
