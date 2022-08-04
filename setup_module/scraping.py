@@ -108,7 +108,7 @@ def validate_path(file: str, file_extensions=['.*', 'chromedriver']) -> str:
 
     if file.endswith(tuple(file_extensions)):
         if not os.path.isdir(file):
-            if (not os.path.isfile(file)) and (os.stat(file).st_size == 0):
+            if (not os.path.isfile(file)) or (os.stat(file).st_size == 0):
                 # file = input(f'No file found at {file}.\nPlease enter correct path.')
                 try:
                     print(f'File {file} not found.')
@@ -116,7 +116,7 @@ def validate_path(file: str, file_extensions=['.*', 'chromedriver']) -> str:
                     print(e.json())
     elif not file.endswith(tuple(file_extensions)):
         if not os.path.isdir(file):
-            if (not os.path.isfile(file)) and (os.stat(file).st_size == 0):
+            if (not os.path.isfile(file)) or (os.stat(file).st_size == 0):
                 # file = input(f'No file found at {file}.\nPlease enter correct path.')
                 try:
                     print(f'File {file} not found.')
@@ -510,7 +510,7 @@ def save_trans_keyword_list(trans_keyword_list, parent_dir=validate_path(f'{code
         for w_keyword, r_keyword in keyword_trans_dict.items():
             if keyword.strip().lower() == w_keyword.strip().lower():
                 trans_keyword_list.remove(keyword)
-                trans_keyword_list.append(r_keyword)
+                trans_keyword_list.append(r_keyword.strip().lower())
 
     trans_keyword_list = clean_and_translate_keyword_list(list(
         set(
@@ -579,7 +579,7 @@ def get_sbi_sectors_list(
         trans_keyword_list = clean_and_translate_keyword_list(trans_keyword_list)
         if len(list(set(trans_keyword_list) - set(sbi_english_keyword_list))) > 0:
             trans_keyword_list = save_trans_keyword_list(trans_keyword_list)
-            print('Unknown keyword found. Check trans_keyword_list.')
+            print(f'Unknown keyword found. Check trans_keyword_list for {list(set(trans_keyword_list) - set(sbi_english_keyword_list))} len {len(list(set(trans_keyword_list) - set(sbi_english_keyword_list)))}.')
 
     sbi_english_keyword_dict = df_sbi_sectors['Used_Sector_Keywords'].to_dict()
     sbi_sectors_dict = df_sbi_sectors.to_dict('index')
@@ -1445,11 +1445,11 @@ def main_info(keyword: str, site: str, save_path: str = validate_path(f'{main_di
     if site not in str(save_path):
         save_path = validate_path(f'{code_dir}/{site}/Data/')
 
-    if site == 'Indeed':
+    if site.lower().strip() == 'indeed':
         keyword_url = '+'.join(keyword.lower().split(' '))
-    elif site == 'Glassdoor':
+    elif site.lower().strip() == 'glassdoor':
         keyword_url = '-'.join(keyword.lower().split(' '))
-    elif site == 'LinkedIn':
+    elif site.lower().strip() == 'linkedin':
         keyword_url = '%20'.join(keyword.lower().split(' '))
     elif not site:
         keyword_url = ''
@@ -1731,7 +1731,6 @@ def id_check(
 # %% [markdown]
 # post_collection_processing
 # %%
-# %%
 # Function to create a metadata dict
 def create_metadata(args=get_args()):
 
@@ -1892,6 +1891,7 @@ def save_metadata(df_jobs, df_file_name, save_path, args=get_args()):
 # Clean df and drop duplicates and -1 for job description
 def clean_df(
     df_jobs: pd.DataFrame,
+    id_dict_new = False,
     int_variable: str = 'Job ID',
     str_variable: str = 'Job Description',
     gender: str = 'Gender',
@@ -1923,9 +1923,10 @@ def clean_df(
     if reset == True:
         # , 'Sector', 'Sector Code', '% Female', '% Male', '% Older', '% Younger', 'English Requirement', 'Dutch Requirement'
         # or df_jobs['Gender'].isnull().values.any() or df_jobs['Age'].isnull().values.any() or df_jobs['Sector'].isnull().values.any() or df_jobs['Sector Code'].isnull().values.any() or df_jobs['% Female'].isnull().values.any() or df_jobs['% Male'].isnull().values.any() or df_jobs['% Older'].isnull().values.any() or df_jobs['% Younger'].isnull().values.any() or df_jobs['English Requirement'].isnull().values.any() or df_jobs['Dutch Requirement'].isnull().values.any():
-        df_jobs = set_gender_age_sects_lang(df_jobs)
+        df_jobs = set_gender_age_sects_lang(df_jobs, str_variable=str_variable, id_dict_new=id_dict_new)
 
     subset_list=[int_variable, str_variable, gender, age]
+    print('Cleaning DF')
     df_jobs.drop_duplicates(
         subset=subset_list,
         keep='first',
@@ -1948,6 +1949,7 @@ def clean_df(
         & (df_jobs[str_variable] != 'nan')
     ]
 
+    print('Detecting Language.')
     df_jobs = detect_language(df_jobs, str_variable)
     if 'Language' in df_jobs.columns:
         df_jobs = df_jobs.loc[(df_jobs['Language'] == str(language))]
@@ -2306,11 +2308,11 @@ def set_gender_age(
 
 
 # %%
-def set_gender_age_sects_lang(df_jobs, args=get_args()):
+def set_gender_age_sects_lang(df_jobs, str_variable, id_dict_new=False, args=get_args()):
 
-    df_jobs=set_language_requirement(df_jobs)
-    df_jobs=set_sector_and_percentage(df_jobs)
-    df_jobs=set_gender_age(df_jobs)
+    df_jobs=set_language_requirement(df_jobs, str_variable=str_variable)
+    df_jobs=set_sector_and_percentage(df_jobs, sector_dict_new=id_dict_new)
+    df_jobs=set_gender_age(df_jobs, id_dict_new=id_dict_new)
 
     return df_jobs
 
@@ -2450,7 +2452,6 @@ def save_df(
 
 # %%
 # Post collection cleanup
-# %%
 def site_loop(site, site_list, site_from_list, args, df_list_from_site=None):
 
     if site_from_list == True:
@@ -2459,17 +2460,16 @@ def site_loop(site, site_list, site_from_list, args, df_list_from_site=None):
             if args['print_enabled'] is True:
                 print('-' * 20)
                 print(f'Cleaning up LIST OF DFs for {site}.')
-            glob_paths = glob.glob(f'{code_dir}/{str(site)}/Data/*.json')
+            glob_paths = glob.glob(f'{code_dir}/{site}/Data/*.json')+glob.glob(f'{code_dir}/{site}/Data/*.csv')+glob.glob(f'{code_dir}/{site}/Data/*.xlsx')
 
             yield site, df_list_from_site, glob_paths
 
     elif site_from_list == False:
-        site=site
         df_list_from_site = None
         if args['print_enabled'] is True:
             print('-' * 20)
             print('Cleaning up LIST OF DFs from all sites.')
-        glob_paths = glob.glob(f'{code_dir}/*/Data/*.json')
+        glob_paths = glob.glob(f'{code_dir}/*/Data/*.json')+glob.glob(f'{code_dir}/*/Data/*.csv')+glob.glob(f'{code_dir}/*/Data/*.xlsx')
 
         yield site, df_list_from_site, glob_paths
 
@@ -2487,7 +2487,12 @@ def keyword_loop(keyword, keywords_from_list, glob_paths, args, translator, df_l
     if keywords_from_list == True:
         df_list_from_keyword = []
         for glob_path in glob_paths:
-            keyword = glob_path.split('dict_')[1].split('.json')[0].replace("-Noon's MacBook Pro",'')
+            if 'dict_' in glob_path:
+                keyword = glob_path.split('dict_')[1].split('.')[0].replace("-Noon's MacBook Pro",'').strip().lower()
+            elif 'df_' in glob_path:
+                keyword = glob_path.split('df_')[1].split('.')[0].replace("-Noon's MacBook Pro",'').strip().lower()
+            if '_' in keyword:
+                keyword = ' '.join(keyword.split('_')).strip().lower()
 
             if args['print_enabled'] is True:
                 print(f'Post collection cleanup for {keyword}.')
@@ -2534,20 +2539,15 @@ def post_cleanup(
     for site, df_list_from_site, glob_paths in tqdm.tqdm(site_loop(site=site, site_list=site_list, site_from_list=site_from_list, args=args)):
         for keyword, df_list_from_keyword in tqdm.tqdm(keyword_loop(keyword=keyword, keywords_from_list=keywords_from_list, glob_paths=glob_paths, args=args, translator=translator)):
 
-            if '_' in keyword:
-                trans_keyword = ' '.join(keyword.lower().split('_'))
-            else:
-                trans_keyword = keyword.lower()
+            trans_keyword = keyword.strip().lower()
 
             if detect(trans_keyword) != 'en':
-                try:
-                    trans_keyword = translator.translate(c, lang_tgt='en')
-                    trans_keyword_list.append(trans_keyword)
-                except:
-                    for w_keyword, r_keyword in keyword_trans_dict.items():
-                        if str(trans_keyword.lower()) == w_keyword.lower():
-                            trans_keyword = r_keyword.lower()
-                            trans_keyword_list.append(trans_keyword)
+                trans_keyword = translator.translate(trans_keyword, lang_tgt='en').strip().lower()
+
+            for w_keyword, r_keyword in keyword_trans_dict.items():
+                if str(trans_keyword.lower()) == w_keyword.lower():
+                    trans_keyword = r_keyword.strip().lower()
+                trans_keyword_list.append(trans_keyword)
 
             try:
                 df_jobs = post_cleanup_helper(keyword, site)
@@ -2653,6 +2653,7 @@ def clean_from_old(
     site_list=['Indeed', 'Glassdoor', 'LinkedIn'],
     files = [],
     exten_to_find = ['.json','csv','.xlsx'],
+    translator = google_translator(),
     args=get_args(),
 ):
 
@@ -2671,86 +2672,102 @@ def clean_from_old(
 
     for file_ in tqdm.tqdm(files):
         if site == None:
-            site = file_.split(f'{code_dir}/')[1].split('/Data')[0]
+            site = file_.split(f'{code_dir}/')[1].split('/Data')[0].strip()
         if 'dict_' in file_:
-            keyword = file_.split('dict_')[1].split('.')[0].replace("-Noon's MacBook Pro",'')
+            keyword = file_.split('dict_')[1].split('.')[0].replace("-Noon's MacBook Pro",'').strip().lower()
         elif 'df_' in file_:
-            keyword = file_.split('df_')[1].split('.')[0].replace("-Noon's MacBook Pro",'')
+            keyword = file_.split('df_')[1].split('.')[0].replace("-Noon's MacBook Pro",'').strip().lower()
         if '_' in keyword:
-            keyword = ' '.join(keyword.split('_'))
+            keyword = ' '.join(keyword.split('_')).strip().lower()
+
+        if detect(keyword) != 'en':
+            try:
+                trans_keyword = translator.translate(keyword, lang_tgt='en').strip().lower()
+            except:
+                trans_keyword = keyword
+        else:
+            trans_keyword = keyword
 
         for w_keyword, r_keyword in keyword_trans_dict.items():
-            if str(keyword.lower()) == w_keyword.lower():
-                trans_keyword = r_keyword.lower()
-            else:
-                trans_keyword = keyword
+            if trans_keyword and trans_keyword != keyword:
+                if str(trans_keyword.strip().lower()) == w_keyword.strip().lower():
+                    trans_keyword = r_keyword.strip().lower()
+                else:
+                    trans_keyword = trans_keyword.strip().lower()
 
         print(f'Getting data for {trans_keyword}.')
-        if trans_keyword in args['keywords_list'] or keyword in args['trans_keyword_list']:
+        if trans_keyword != keyword:
+            print(f'Translated from: {keyword}.')
+
+        (
+            keyword_url,
+            keyword_file,
+            save_path,
+            json_file_name,
+            df_file_name,
+            logs_file_name,
+            filemode,
+        ) = main_info(keyword, site)
+        if trans_keyword != keyword:
             (
-                keyword_url,
-                keyword_file,
-                save_path,
-                json_file_name,
-                df_file_name,
-                logs_file_name,
-                filemode,
-            ) = main_info(keyword, site)
-            if trans_keyword != keyword:
-                (
-                    trans_keyword_url,
-                    trans_keyword_file,
-                    trans_save_path,
-                    trans_json_file_name,
-                    trans_df_file_name,
-                    trans_logs_file_name,
-                    trans_filemode,
-                ) = main_info(trans_keyword, site)
+                trans_keyword_url,
+                trans_keyword_file,
+                trans_save_path,
+                trans_json_file_name,
+                trans_df_file_name,
+                trans_logs_file_name,
+                trans_filemode,
+            ) = main_info(trans_keyword, site)
 
-            if os.path.isfile(file_) and os.stat(file_).st_size > 0:
-                df_jobs = pd.DataFrame()
+        if os.path.isfile(file_) and os.stat(file_).st_size > 0:
+            df_jobs = pd.DataFrame()
 
-                if file_.endswith('.json'):
-                    try:
-                        df_jobs_json = pd.read_json(file_, orient='records')
-                    except ValueError:
-                        with open(file_) as f:
-                            df_jobs_json = pd.DataFrame(json.load(f))
-                    df_jobs = df_jobs.append(df_jobs_json, ignore_index=True)
-                    if trans_keyword != keyword and (os.path.isfile(trans_save_path + trans_json_file_name.lower())) and (os.stat(trans_save_path + trans_json_file_name.lower()).st_size > 0):
-                        trans_df_jobs_json = pd.read_json(trans_save_path + trans_json_file_name.lower(), orient='records')
-                        df_jobs = df_jobs.append(trans_df_jobs_json, ignore_index=True)
+            if file_.endswith('.json'):
+                try:
+                    df_jobs_json = pd.read_json(file_, orient='records')
+                except ValueError:
+                    with open(file_) as f:
+                        df_jobs_json = pd.DataFrame(json.load(f))
+                df_jobs = df_jobs.append(df_jobs_json, ignore_index=True)
+                if trans_keyword != keyword and (os.path.isfile(trans_save_path + trans_json_file_name.lower())) and (os.stat(trans_save_path + trans_json_file_name.lower()).st_size > 0):
+                    trans_df_jobs_json = pd.read_json(trans_save_path + trans_json_file_name.lower(), orient='records')
+                    df_jobs = df_jobs.append(trans_df_jobs_json, ignore_index=True)
 
-                if file_.endswith('.csv'):
-                    df_jobs_csv = pd.read_csv(file_)
-                    df_jobs = df_jobs.append(df_jobs_csv, ignore_index=True)
-                    if trans_keyword != keyword and (os.path.isfile(trans_save_path + trans_df_file_name.lower())) and (os.stat(trans_save_path + trans_df_file_name.lower()).st_size > 0):
-                        trans_df_jobs_csv = pd.read_csv(trans_save_path + trans_df_file_name.lower())
-                        df_jobs = df_jobs.append(trans_df_jobs_csv, ignore_index=True)
+            if file_.endswith('.csv'):
+                df_jobs_csv = pd.read_csv(file_)
+                df_jobs = df_jobs.append(df_jobs_csv, ignore_index=True)
+                if trans_keyword != keyword and (os.path.isfile(trans_save_path + trans_df_file_name.lower())) and (os.stat(trans_save_path + trans_df_file_name.lower()).st_size > 0):
+                    trans_df_jobs_csv = pd.read_csv(trans_save_path + trans_df_file_name.lower())
+                    df_jobs = df_jobs.append(trans_df_jobs_csv, ignore_index=True)
 
-                if file_.endswith('.xlsx'):
-                    df_jobs_xlsx = pd.read_excel(file_)
-                    df_jobs = df_jobs.append(df_jobs_xlsx, ignore_index=True)
-                    if trans_keyword != keyword and (os.path.isfile(trans_save_path + trans_df_file_name.lower())) and (os.stat(trans_save_path + trans_df_file_name.lower()).st_size > 0):
-                        trans_df_jobs_xlsx = pd.read_excel(trans_save_path + trans_df_file_name.lower().replace('csv', 'xlsx'))
-                        df_jobs = df_jobs.append(trans_df_jobs_xlsx, ignore_index=True)
+            if file_.endswith('.xlsx'):
+                df_jobs_xlsx = pd.read_excel(file_)
+                df_jobs = df_jobs.append(df_jobs_xlsx, ignore_index=True)
+                if trans_keyword != keyword and (os.path.isfile(trans_save_path + trans_df_file_name.lower())) and (os.stat(trans_save_path + trans_df_file_name.lower()).st_size > 0):
+                    trans_df_jobs_xlsx = pd.read_excel(trans_save_path + trans_df_file_name.lower().replace('csv', 'xlsx'))
+                    df_jobs = df_jobs.append(trans_df_jobs_xlsx, ignore_index=True)
 
-                if (not df_jobs.empty) and (len(df_jobs != 0)):
-                    df_jobs = clean_df(df_jobs)
+            if (not df_jobs.empty) and (len(df_jobs != 0)):
+                df_jobs = clean_df(df_jobs)
+                jobs = df_jobs.to_dict(orient='records')
 
-                    jobs = df_jobs.to_dict(orient='records')
-                    if ((os.path.isfile(save_path + df_file_name.lower())) and os.stat(save_path + df_file_name.lower()).st_size > 0) or (os.path.isfile(save_path + json_file_name.lower()) and (os.stat(save_path + json_file_name.lower()).st_size > 0)):
-                        with open(save_path + json_file_name, 'w', encoding='utf8') as f:
-                            json.dump(jobs, f)
+                if ((os.path.isfile(save_path + df_file_name.lower())) and os.stat(save_path + df_file_name.lower()).st_size > 0) or (os.path.isfile(save_path + json_file_name.lower()) and (os.stat(save_path + json_file_name.lower()).st_size > 0)):
+                    with open(save_path + json_file_name, 'w', encoding='utf8') as f:
+                        json.dump(jobs, f)
 
-                    df_jobs = save_df(
-                        keyword=keyword,
-                        df_jobs=df_jobs,
-                        save_path=save_path,
-                        keyword_file=keyword_file.lower(),
-                        df_file_name=df_file_name.lower(),
-                        clean_enabled = False,
-                    )
+                df_jobs = save_df(
+                    keyword=keyword,
+                    df_jobs=df_jobs,
+                    save_path=save_path,
+                    keyword_file=keyword_file.lower(),
+                    df_file_name=df_file_name.lower(),
+                    clean_enabled = False,
+                )
+
+        else:
+            print(f'Data for {site} {keyword} is empty.')
+
+    return df_jobs
 
 
 # %%
@@ -2806,10 +2823,10 @@ def make_job_id_v_sector_key_dict_helper(
 
         for index, row in df_jobs.iterrows():
             if row['Search Keyword'] not in [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']:
-                search_keyword = row['Search Keyword'].strip().lower().replace("-Noon's MacBook Pro",'')
+                search_keyword = row['Search Keyword'].strip().lower().replace("-Noon's MacBook Pro",'').strip().lower()
                 for w_keyword, r_keyword in keyword_trans_dict.items():
                     if search_keyword == w_keyword.lower():
-                        df_jobs.loc[index, 'Search Keyword'] = r_keyword
+                        df_jobs.loc[index, 'Search Keyword'] = r_keyword.strip().lower()
                         df_jobs.to_csv(path)
                 trans_keyword_list.append(search_keyword)
 
@@ -2883,10 +2900,10 @@ def make_job_id_v_gender_key_dict_helper(
         for index, row in df_jobs.iterrows():
 
             if row['Search Keyword'] not in [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']:
-                search_keyword = row['Search Keyword'].strip().lower().replace("-Noon's MacBook Pro",'')
+                search_keyword = row['Search Keyword'].replace("-Noon's MacBook Pro",'').strip().lower()
                 for w_keyword, r_keyword in keyword_trans_dict.items():
                     if search_keyword == w_keyword.lower():
-                        df_jobs.loc[index, 'Search Keyword'] = r_keyword
+                        df_jobs.loc[index, 'Search Keyword'] = r_keyword.strip().lower()
                         df_jobs.to_csv(path)
                 trans_keyword_list.append(search_keyword)
 
@@ -4141,3 +4158,5 @@ def IR_all_final(
     print('-' * 20)
 
     return ir_all_dict
+
+# %%

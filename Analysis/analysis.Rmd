@@ -13,6 +13,7 @@ editor_options:
 
 ```{r Import libraries, message=TRUE, warning=FALSE, paged.print=TRUE}
 # Load libraries
+chooseCRANmirror(ind=56)
 library(knitr)
 library(tidyverse)
 library(plyr)
@@ -42,7 +43,7 @@ library(broom)
 library(broom.mixed)
 library(AICcmodavg)
 library(reticulate)
-library(citr)
+# library(citr)
 ```
 
 ```{r Set.Python, message=TRUE, warning=FALSE, paged.print=TRUE}
@@ -65,13 +66,10 @@ set.seed(42)
 if (analysis_df_from_manual == TRUE) {
   df_name = 'df_manual'
   df_file = 'outliers'
-
 } else if (analysis_df_from_manual == FALSE) {
   df_name = 'df'
   df_file = glue('outliers_age_limit-{age_limit}_age_ratio-{age_ratio}_gender_ratio-{gender_ratio}')
-
 }
-
 df <- pd$read_pickle(glue("{df_dir}{df_name}_{df_file}.{file_save_format}"))
 df_mean <- pd$read_pickle(glue("{df_dir}{df_name}_mean_{df_file}.{file_save_format}"))
 # dataframes[[1]] <- pd$read_pickle(glue("{df_dir}{df_name}_{df_file}.{file_save_format}"))
@@ -110,20 +108,17 @@ if (!exists("dataframes[[2]]")) {
   print(glue("DF MEAN ALREADY EXISTS."))
   print(glue("USING DF FROM FILE: {df_dir}{df_name}_mean_outliers_age_limit-{age_limit}_age_ratio-{age_ratio}_gender_ratio-{gender_ratio}.pkl"))
 }
-
 ```
 
 ```{r Dataframe overview, message=TRUE, warning=FALSE, paged.print=TRUE}
 df_names <- names(df) %>% as.data.frame()
 colnames(df_names) <- c("Variable Names")
-
 DT::datatable(df_names)
 ```
 
 ```{r MEAN Dataframe overview, message=TRUE, warning=FALSE, paged.print=TRUE}
 df_mean_names <- names(df_mean) %>% as.data.frame()
 colnames(df_mean_names) <- c("MEAN Variable Names")
-
 DT::datatable(df_mean_names)
 ```
 
@@ -172,17 +167,14 @@ for (dv in dv_cols){
   if (outliers_remove == FALSE){
       assign(paste(glue('{tolower(dv)}'), 'dv', sep = "_"), dv)
       assign(paste(glue('{tolower(dv)}'), 'proba', sep = "_"), paste(dv, 'Probability', sep = "_"))
-
     } else if (outliers_remove == TRUE){
       assign(paste(glue('{tolower(dv)}'), 'dv', sep = "_"), paste(dv, 'Outliers_Removed', sep = "_"))
       assign(paste(glue('{tolower(dv)}'), 'proba', sep = "_"), paste(dv, 'Probability_Outliers_Removed', sep = "_"))
   }
 }
-
 for (iv in ivs){
   for (dv in dv_cols){
     assign(paste(glue('{tolower(iv)}'), glue('{tolower(dv)}_mean'), sep = "_"), aggregate(data[[dv]], list(data[[iv]]), FUN=mean))
-
   }
 }
 ```
@@ -191,7 +183,6 @@ for (iv in ivs){
 
 ```{r Visualize, message=TRUE, warning=FALSE, paged.print=TRUE}
 for (dv in dv_cols){
-
   strrep("=",80)
   print(glue('Density plot for {iv} x {dv}:'))
   density_plot = ggdensity(data,
@@ -205,7 +196,6 @@ for (dv in dv_cols){
                             ggtheme = theme_minimal()) +
   stat_central_tendency(type = "mean", color = "red", linetype = 2, show.legend = TRUE)
   # stat_central_tendency(type = "median", color = "blue", linetype = 2, show.legend = TRUE)
-
   print(density_plot)
   #### Save density plot
   ggplot2::ggsave(
@@ -217,7 +207,6 @@ for (dv in dv_cols){
       height = 10,
       units = "cm"
   )
-
   for (iv in ivs){
     strrep("=",80)
     print(glue('Density plot for {iv} x {dv}:'))
@@ -233,7 +222,6 @@ for (dv in dv_cols){
                               ggtheme = theme_minimal()) +
     stat_central_tendency(type = "mean", color = "red", linetype = 2, show.legend = TRUE)
     # stat_central_tendency(type = "median", color = "blue", linetype = 2, show.legend = TRUE)
-
     print(density_plot)
     #### Save density plot
     ggplot2::ggsave(
@@ -247,7 +235,6 @@ for (dv in dv_cols){
     )
   }
 }
-
 ```
 
 ## Function to conduct ANOVA and OLS regression on mean-aggregated data
@@ -262,7 +249,6 @@ analysis_func <- function(df, iv, dv){
   strrep("-",20)
   ## Levene's Test
   lev = leveneTest(data = df, data[[dv]] ~ data[[iv]])
-
   if (lev["group", 3] <= 0.05){
       lev_not_sig = FALSE
       print(glue("Levene's test is NOT significant at {lev['group', 3]}"))
@@ -270,7 +256,6 @@ analysis_func <- function(df, iv, dv){
       lev_not_sig = TRUE
       print(glue("Levene's test is significant at {lev['group', 3]}"))
   }
-
   ## One-way Welch's ANOVA
   strrep("-",20)
   print(glue("One-way Welch's ANOVA for {iv} x {dv}"))
@@ -283,7 +268,6 @@ analysis_func <- function(df, iv, dv){
   res <- gamesHowellTest(one_way)
   summaryGroup(res)
   summary(res)
-
   ## OLS Regression
   strrep("-",20)
   print(glue('Regression for {iv} x {dv}'))
@@ -295,7 +279,6 @@ analysis_func <- function(df, iv, dv){
   plot(lm)
   return(lev_not_sig)
   strrep("=",80)
-
 }
 ```
 
@@ -518,12 +501,6 @@ ggplot2::ggsave(
     height = 10,
     units = "cm"
 )
-```
-
-### Save file
-
-```{r Save as .r file, message=TRUE, warning=FALSE, paged.print=TRUE}
-knitr::purl(glue("{code_dir}/Analysis/analysis.Rmd"))
 ```
 
 ## Multi-level Model - Hierarchical Regressions
@@ -782,3 +759,10 @@ z_scores[!rowSums(z_scores\>3.29),])
 )
 
 \`\`\`
+
+
+### Save file
+
+```{r Save as .r file, message=TRUE, warning=FALSE, paged.print=TRUE}
+knitr::purl(glue("{code_dir}/Analysis/analysis.Rmd"))
+```

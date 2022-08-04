@@ -121,7 +121,7 @@ def open_and_clean_labeled_excel(
     df_jobs_labeled = set_gender_age_sects_lang(df_jobs = df_jobs_labeled, id_dict_new = id_dict_new)
 
     # Gender and Age Info
-    df_gender_age_info(df_jobs_labeled, print_info=True)
+    df_gender_age_info(df_jobs_labeled)
 
     # Detect Language
     df_jobs_labeled = detect_language(df_jobs_labeled)

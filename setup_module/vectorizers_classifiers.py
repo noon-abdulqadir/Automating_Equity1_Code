@@ -332,7 +332,7 @@ params_nb_pipe = {
 
 ### Bernoulli Naive Bayes
 bnb = BernoulliNB()
-params_nb = {'alpha': 0.1, 'fit_prior': True, 'class_prior': None}
+params_bnb = {'alpha': 0.1, 'fit_prior': True, 'class_prior': None}
 
 params_bnb_pipe = {
     'BernoulliNB__fit_prior': [True, False],
@@ -486,7 +486,6 @@ params_pa_pipe = {
 ### Stochastic Gradient Descent Aggressive
 sgd = SGDClassifier()
 params_sgd = {
-    'C': 1.0,
     'fit_intercept': True,
     'max_iter': 1000,
     'tol': 0.0001,
@@ -517,18 +516,6 @@ params_sgd_pipe = {
         4000,
         4500,
         5000,
-    ],
-    'SGDClassifier__C': [
-        0.1,
-        0.2,
-        0.3,
-        0.4,
-        0.5,
-        0.6,
-        0.7,
-        0.8,
-        0.9,
-        1.0,
     ],
 }
 

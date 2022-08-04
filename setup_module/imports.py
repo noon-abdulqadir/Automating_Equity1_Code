@@ -63,7 +63,7 @@ sys.path.append(code_dir)
 # %autoreload 2
 
 # %%
-env_name = 'study1_venv_python3_9'
+env_name = 'study1'
 from_file = False
 
 # os.system('source /opt/homebrew/Caskroom/miniforge/base/bin/activate')
@@ -87,6 +87,7 @@ if from_file:
                     os.system(f'python -m pip install {module}')
 
 try:
+
     import argparse
     import ast
     import collections
@@ -108,7 +109,9 @@ try:
     import operator
     import pathlib
     import pickle
+    import pipe
     import platform
+    import plotnine
     import pprint
     import random
     import re
@@ -498,4 +501,6 @@ cat_list = [
 ]
 
 # %%
-keyword_trans_dict={'gas for': 'gas', 'gas vooraad': 'gas', 'productie': 'production', 'sociologen': 'sociologist', 'ere leraren': 'honorary teacher', 'buyinging': 'buying', 'accommodatie': 'accommodation', 'vissen': 'fishing', 'grooth':'great', 'opleiding':'education', 'managers of care institution': 'manager of care institution', 'ingenieur': 'engineer', 'communicatie': 'communication', 'auteur': 'author', 'publieke administratie': 'public administration', 'verkoop onroerend goed': 'selling real estate', 'educational': 'education', 'marketingmanager': 'marketing manager', 'food servin': 'food serving', 'voedsel dienen': 'food serving', 'etensservin': 'food serving', 'verkoop': 'sale', 'sold': 'sale', 'sell': 'sale', 'uitverkoop': 'sale', 'pedagoog': 'educationalist', 'educatie': 'education', 'educator': 'education', 'psycholoog': 'psychologist', 'logistieke manager': 'logistics manager', 'logistieke managers': 'logistics manager', 'logistic': 'logistics', 'koop': 'buying', 'buy': 'buying', 'ere serviceactiviteiten': 'honorary service activity', 'directeur': 'director', 'informatie': 'information', 'serve accommodation': 'accommodation', 'psychologen': 'psychologist', 'linguïsten': 'linguist', 'linguïst': 'linguist', 'sales of real estate': 'selling real estate', 'socioloog': 'sociologist', 'opslag': 'storage', 'educatief': 'education', 'elektrotechnische ingenieur': 'electrical engineer', 'elektrotechnische ingenieurs': 'electrical engineer', 'toepassings ontwikkelaar': 'application developer', 'toepassings ontwikkelaars': 'application developer', 'water voorraad': 'water supply', 'fysiotherapeuten': 'physiotherapist', 'cultuur': 'culture', 'career developmentsspecialist': 'career development specialist', 'ict-manager': 'ict manager', 'ict-managers': 'ict manager', 'ict managers': 'ict manager', 'managers care institution': 'manager of healthcare institution', 'managers healthcare institution': 'manager of healthcare institution', 'manager healthcare institution': 'manager of healthcare institution', 'manager of care institution': 'manager of healthcare institution', 'manager healthcare institution': 'managers of healthcare institution', 'managers of healthcare institution': 'manager of healthcare institution', 'manager care institution': 'manager of healthcare institution', 'sports': 'sport', 'groothandel': 'wholesale', 'andere serviceactiviteiten': 'other service activity', 'specialized services manager': 'specialised services manager', 'specialized business service': 'specialised business service', 'specialized nurse': 'specialised nurse', 'recreatie': 'recreation', 'netwerk specialisten': 'network specialist', 'netwerkspecialisten': 'network specialist', 'adverse': 'staff', 'bulletin': 'staff', 'afvalbeheer': 'waste management'}
+keyword_trans_dict={'gas for': 'gas', 'gas vooraad': 'gas', 'productie': 'production', 'sociologen': 'sociologist', 'ere leraren': 'honorary teacher', 'buyinging': 'buying', 'accommodatie': 'accommodation', 'vissen': 'fishing', 'grooth':'great', 'opleiding':'education', 'managers of care institution': 'manager of care institution', 'ingenieur': 'engineer', 'engineers': 'engineer', 'communicatie': 'communication', 'auteur': 'author', 'publieke administratie': 'public administration', 'verkoop onroerend goed': 'selling real estate', 'educational': 'education', 'marketingmanager': 'marketing manager', 'food servin': 'food serving', 'voedsel dienen': 'food serving', 'etensservin': 'food serving', 'verkoop': 'sale', 'sold': 'sale', 'sell': 'sale', 'uitverkoop': 'sale', 'pedagoog': 'educationalist', 'educationalists': 'educationalist', 'educatie': 'education', 'educator': 'education', 'psycholoog': 'psychologist', 'logistieke manager': 'logistics manager', 'logistieke managers': 'logistics manager', 'logistic': 'logistics', 'koop': 'buying', 'buy': 'buying', 'ere serviceactiviteiten': 'honorary service activity', 'serviceactiviteiten': 'service activity', 'directeur': 'director', 'informatie': 'information', 'serve accommodation': 'accommodation', 'psychologen': 'psychologist', 'linguïsten': 'linguist', 'linguïst': 'linguist', 'sales of real estate': 'selling real estate', 'socioloog': 'sociologist', 'opslag': 'storage', 'educatief': 'education', 'elektrotechnische ingenieur': 'electrical engineer', 'elektrotechnische ingenieurs': 'electrical engineer', 'toepassings ontwikkelaar': 'application developer', 'toepassings ontwikkelaars': 'application developer', 'water voorraad': 'water supply', 'fysiotherapeuten': 'physiotherapist', 'cultuur': 'culture', 'career developmentsspecialist': 'career development specialist', 'carrière ontwikkelingspecialisten': 'career development specialist', 'carrière ontwikkelingspecialist': 'career development specialist', 'ict-manager': 'ict manager', 'ict-managers': 'ict manager', 'ict managers': 'ict manager', 'managers care institution': 'manager of healthcare institution', 'managers healthcare institution': 'manager of healthcare institution', 'manager healthcare institution': 'manager of healthcare institution', 'manager of care institution': 'manager of healthcare institution', 'manager healthcare institution': 'managers of healthcare institution', 'managers of healthcare institution': 'manager of healthcare institution', 'manager care institution': 'manager of healthcare institution', 'doctors': 'doctor', 'sociale werkzaamheden': 'social work', 'sports': 'sport', 'groothandel': 'wholesale', 'andere serviceactiviteiten': 'other service activity', 'specialized services manager': 'specialised services manager', 'specialized business service': 'specialised business service', 'specialized nurse': 'specialised nurse', 'recreatie': 'recreation', 'netwerk specialisten': 'network specialist', 'netwerkspecialisten': 'network specialist', 'adverse': 'staff', 'bulletin': 'staff', 'afvalbeheer': 'waste management'}
+
+# %%
