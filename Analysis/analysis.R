@@ -7,7 +7,7 @@ file.path(R.home("bin"), "R")
 
 ## ----Import libraries, message=TRUE, warning=FALSE, paged.print=TRUE----------
 # Load libraries
-chooseCRANmirror(ind=58)
+# chooseCRANmirror(ind=58)
 library(knitr)
 library(tidyverse)
 library(plyr)
