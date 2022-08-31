@@ -1,0 +1,880 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  12pt,
+  letterpaper,
+  DIV=11,
+  numbers=noendperiod]{scrartcl}
+
+\usepackage{amsmath,amssymb}
+\usepackage{lmodern}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+  \setmainfont[]{Times New Roman}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage{xcolor}
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+% Make \paragraph and \subparagraph free-standing
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newlength{\cslentryspacingunit} % times entry-spacing
+\setlength{\cslentryspacingunit}{\parskip}
+\newenvironment{CSLReferences}[2] % #1 hanging-ident, #2 entry spacing
+ {% don't indent paragraphs
+  \setlength{\parindent}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+  \let\oldpar\par
+  \def\par{\hangindent=\cslhangindent\oldpar}
+  \fi
+  % set entry spacing
+  \setlength{\parskip}{#2\cslentryspacingunit}
+ }%
+ {}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{#1\hfill\break}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{#1}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{#1}\break}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
+
+\KOMAoption{captions}{tableheading,figureheading}
+\makeatletter
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+\makeatletter
+\@ifpackageloaded{tcolorbox}{}{\usepackage[many]{tcolorbox}}
+\makeatother
+\makeatletter
+\@ifundefined{shadecolor}{\definecolor{shadecolor}{rgb}{.97, .97, .97}}
+\makeatother
+\makeatletter
+\makeatother
+\ifLuaTeX
+\usepackage[bidi=basic]{babel}
+\else
+\usepackage[bidi=default]{babel}
+\fi
+\babelprovide[main,import]{american}
+% get rid of language-specific shorthands (see #6817):
+\let\LanguageShortHands\languageshorthands
+\def\languageshorthands#1{}
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={Bias in Candidate Sourcing Communication},
+  pdflang={en-US},
+  pdfkeywords={Stereotype content model, social categorization
+frames, horizontal occupational segregation, supervised content
+analysis},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{Bias in Candidate Sourcing Communication}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{Investigating Stereotypical Gender- And Age-Related Frames in
+Online Job Advertisements at the Sectoral Level}
+\author{true}
+\date{}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+Studies show that the extent to which job advertisements contain
+stereotypical wordings correlates with the level of segregation in an
+occupational domain. However, limited research links the framing of job
+ads to social category-based occupational segregation at the macro
+sectoral level. Guided by the stereotype content model, the present
+study operationalizes stereotypical social categorization frames in
+candidate sourcing communication and investigates their presence in job
+ads from occupational sectors with varying gender and age segregation.
+An automated (supervised) content analysis was conducted on a dataset of
+online job ads (\emph{n}=17,050). Results indicate warmth-related frames
+are most observed in ads from female-dominated (vs.~male-dominated and
+mixed-gender) sectors. Conversely, competence-related frames are most
+observed in ads from male-dominated (vs.~female-dominated) and younger
+worker-dominated (vs.~older worker-dominated and mixed-age) sectors.
+Taken together, we present an operationalization of stereotypical
+warmth- and competence-related frames in early employer communication
+and posit that social categorization framing may be at play.
+\end{abstract}
+\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[borderline west={3pt}{0pt}{shadecolor}, boxrule=0pt, frame hidden, interior hidden, breakable, sharp corners, enhanced]}{\end{tcolorbox}}\fi
+
+Scholars have long documented the influence of interpersonal bias in
+candidate recruitment, particularly with regard to job seekers' gender
+and age
+(\protect\hyperlink{ref-beattie2012PossibleUnconsciousBias}{Beattie \&
+Johnson, 2012};
+\protect\hyperlink{ref-heilman2012GenderStereotypesWorkplace}{Heilman,
+2012}; \protect\hyperlink{ref-paleari2019WhenPrejudiceYou}{Paleari et
+al., 2019}). This influence is observable during active candidate
+sourcing where job advertisements represent the first touchpoint in
+employer communication (\protect\hyperlink{ref-RynesS.1989}{Rynes,
+1989}). These job ads can signal essential value-related information
+about an organization
+(\protect\hyperlink{ref-decooman2012PortrayingFittingValues}{De Cooman
+\& Pepermans, 2012}) but can also determine the pool of potential
+candidates who apply for an advertised position and reinforce existing
+interpersonal biases. On the micro-level, job ads and the HR decisions
+that dictate their content are informed by the type of candidate
+employers explicitly or implicitly envision as ``ideal'' for a position
+(\protect\hyperlink{ref-kelly2010GenderedChallengeGendered}{Kelly et
+al., 2010}). van Selm \& van den Heijkant
+(\protect\hyperlink{ref-vanselm2021SearchOlderWorker}{2021}), for
+instance, found that job ads targeting older workers contained frames
+consistent with general stereotypes of older individuals. On the
+meso-level, the content of job ads can also reflect the level of
+segregation (homogeneity), or lack thereof (heterogeneity), in an
+occupation. Gaucher et al.
+(\protect\hyperlink{ref-gaucher2011EvidenceThatGendered}{2011}) found,
+job ads from traditionally male-dominated occupations such as engineer,
+plumber, and security guard tend to contain terms such as competitive,
+leader, ambitious, and similar wordings that are culturally related to
+masculinity, consequently making such ads less appealing to female
+candidates.
+
+Thus far, limited research has explored the relationship between the
+content of job advertisements and macro-level occupational segregation,
+i.e., at the sectoral level, demarcated specifically by social category
+composition (with the exception of
+\protect\hyperlink{ref-garcia-retamero2006PrejudiceWomenMalecongenial}{Garcia-Retamero
+\& López-Zafra, 2006}; as cited in
+\protect\hyperlink{ref-clarke2020GenderStereotypesGenderTyped}{Clarke,
+2020}). Although career changes across sectors are more common than ones
+across occupations
+(\protect\hyperlink{ref-carrillo-tudela_extent_2016}{Carrillo-Tudela et
+al., 2016}), studies show workers generally tend to stay within social
+category-typed job domains due to a backlash effect
+(\protect\hyperlink{ref-fritsch_horizontal_2020}{Fritsch et al., 2020}).
+Sectoral segregation demarcated based on social category composition may
+thus be more persistent and present a higher social barrier to entry
+than segregation demarcated based on other occupational factors, thus
+becoming key to understanding possible inequity in candidate sourcing.
+
+Given this, the present study makes three main contributions. First, it
+investigates candidate sourcing in Dutch intranational sectors that are
+heterogeneous and homogenous in gender and age composition, i.e.,
+female- and male-dominated vs.~mixed-gender sectors and older worker-
+and younger worker-dominated vs.~mixed-age sectors respectively (see
+Table 10). We take a communication perspective and specifically examine
+the extent to which framed gender- and age-related stereotypes are
+present in online job ads from heterogeneous and homogenous sectors.
+Second, it presents a systematic operationalization of broad-level
+gender- and age-related stereotypical frames in job ads. Employing the
+social categorization framing hypothesis
+(\protect\hyperlink{ref-Yang2015a}{Yang, 2015}), we adopt the
+conceptualization of pancultural and generalizable warmth- and
+competence-related social category stereotypes put forth in the
+stereotype content model {[}SCM; Fiske et al.
+(\protect\hyperlink{ref-fiske2002ModelOftenMixed}{2002}){]}. Third, we
+utilize a rigorous automated content analysis method that leverages
+holistic singular assessment coding and word vector representations as
+embeddings for supervised binary classification
+(\protect\hyperlink{ref-carducci_twitpersonality_2018}{Carducci et al.,
+2018}). This study thus seeks to answer the question: \emph{to what
+extent are job advertisements from different occupational sectors framed
+in terms of warmth- and competence-based gender and age stereotypes?}
+
+\hypertarget{framing}{%
+\subsection{Framing Theory and Stereotypical Frames}\label{framing}}
+
+Framing a message constrains its audiences to desired and meaningful
+interpretations by directing attention to information judged to be
+important by the message sender. Frames make salient some aspects or
+subset of possible considerations about a subject over others
+(\protect\hyperlink{ref-entman1993FramingClarificationFractured}{Entman,
+1993}), typically through strategic ``selection, emphasis, exclusion,
+and elaboration''
+(\protect\hyperlink{ref-reese2001FramingPublicLife}{Reese et al., 2001,
+p. 10}). Within framing theory, stereotypes are a powerful framing
+device underscored by culturally embedded implicit reasoning devices
+(\protect\hyperlink{ref-vangorp2005WhereFrameVictims}{Van Gorp, 2005}),
+i.e., they draw on and activate culturally shared (consensual) cognitive
+schemata. In their capacity as framing devices, stereotypes draw
+attention to a particular assessment of social categories, their roles,
+and their distance from the reader, thus stereotypes may come to define
+a frame.
+
+Expounding on the use of stereotypes in framing,
+(\protect\hyperlink{ref-Yang2015a}{Yang, 2015}) presents a typology of
+stereotypical frame genres differentiated through their effects on
+individual cognition, and the pathway by which they make salient the
+perceived social distance between categories, i.e., degree of emphasis
+on the self-to-other differences. \emph{Social categorization} frames in
+particular are germane to the current study as their usage centers
+around ownership of cultural objects such as social roles or certain
+jobs and occupational sectors. By emphasizing the belongingness of
+cultural objects to select social categories, social categorization
+frames activate distinct social identities, otherization, and make
+salient the social distance between social categories. This frame genre
+thus conveys the reasoning that ``certain groups are outgroups and their
+members are not qualified for ingroup activities''
+(\protect\hyperlink{ref-Yang2015a}{Yang, 2015, p. 261}). Likewise,
+social categorization frames may activate self-stereotyping and lead to
+ingroup members assuming the characteristics stereotypically associated
+with their category, increasing conformity and deindividuation
+(\protect\hyperlink{ref-brown2003BlackwellHandbookSocial}{Brown \&
+Gaertner, 2003}).
+
+Social categorization frames are also applied differently to different
+categories depending on whether they are dominant or non-dominant in a
+domain. When addressing dominant social categories, emphasis is placed
+on ingroup characteristics and their complementarity to features of the
+cultural object. When addressing outgroups, the information also tends
+to be stereotype-consistent, however, the emphasis is on the mismatch
+between the cultural object and the categories' characteristics.
+Examples of social categorization framing include female political
+candidates being framed as intruders and a novelty in political races by
+the news media (\protect\hyperlink{ref-meeks_all_2013}{Meeks, 2013};
+\protect\hyperlink{ref-sullivan19891984VicePresidential}{Sullivan,
+1989}) and female athletes being depicted as aliens and given minor
+roles in the sports coverage
+(\protect\hyperlink{ref-hardin2002FramingSexualDifference}{Hardin et
+al., 2002}). Applied to job ads wherein messages are targeted to
+perceived ideal candidates, frames in job ads from sectors that are
+``owned'' by a single social category, i.e., from a homogeneous sector,
+are likely to emphasize characteristics perceived as essential to the
+dominant social category.
+
+\hypertarget{scm}{%
+\subsection{Stereotype Content Model (SCM)}\label{scm}}
+
+Examining consensual stereotypes, i.e., stereotypes that are (perceived
+to be) shared by the wider culture
+(\protect\hyperlink{ref-Zanna2013}{Gardner, 1994}), Beukeboom \& Burgers
+(\protect\hyperlink{ref-beukeboom2019HowStereotypesAre}{2019}) describe
+stereotype content as the ``{[}cognitive{]} representation people hold
+about a social category, consisting of beliefs and expectancies about
+probable behaviors, features, and traits'' (p.~9). The extent to which
+stereotype content is endorsed depends on the strength of individual
+essentialist beliefs about the stereotyped category
+(\protect\hyperlink{ref-bastian2006PsychologicalEssentialismStereotype}{Bastian
+\& Haslam, 2006}; for perceived category essentialism and stereotyping,
+see \protect\hyperlink{ref-beukeboom2019HowStereotypesAre}{Beukeboom \&
+Burgers, 2019}).
+
+Specific stereotypes about both gender and age categories can vary
+across cultures and within different strata of the same culture. One
+model that circumvents this barrier is the \emph{stereotype content
+model} (SCM) as it is suitable for investigating pancultural,
+superordinate, and broad-level stereotypes. Developed by Fiske et al.
+(\protect\hyperlink{ref-fiske2002ModelOftenMixed}{2002}), the SCM
+provides a universal principle determining predictors of stereotypes and
+sets up a framework to comparatively and systematically investigate
+stereotype content
+(\protect\hyperlink{ref-kroon2018ReliableUnproductiveStereotypes}{Kroon
+et al., 2018}; \protect\hyperlink{ref-vanselm2021SearchOlderWorker}{van
+Selm \& van den Heijkant, 2021}). Due to its generalizability and
+intuitiveness, the SCM has been routinely used by scholars to analyze
+intergroup communication, media, and text for markers of other- as well
+as self-stereotyping
+(\protect\hyperlink{ref-westerhof2010FillingMissingLink}{Westerhof et
+al., 2010}; \protect\hyperlink{ref-white2009ThinkWomenThink}{White \&
+Gardner, 2009}). In recruitment, Hofhuis et al.
+(\protect\hyperlink{ref-hofhuis2016DealingDifferencesImpact}{2016})
+relate warmth and competence perceptions to social and task-performance
+ratings HR managers assigned to job candidates. In textual data
+analysis, the SCM's applications have extended into computational
+research as a framework for stereotype- and bias-detection natural
+language models
+(\protect\hyperlink{ref-nicolas2020ComprehensiveStereotypeContent}{Nicolas
+et al., 2020}).
+
+The SCM differentiates pancultural stereotype content along two
+perceptual dimensions: \emph{warmth} and \emph{competence}
+(\protect\hyperlink{ref-cuddy2009StereotypeContentModel}{Cuddy et al.,
+2009}). Perceived warmth is related to compassion, kindness,
+helpfulness, and interpersonal sensitivity whereas perceived competence
+is associated with self-assertion, leadership, analytical thinking, and
+independence (for a list of traits, see
+\protect\hyperlink{ref-bruckmuller2013DensityBigTwo}{Bruckmüller \&
+Abele, 2013}; \protect\hyperlink{ref-Carli2016}{Carli et al., 2016};
+\protect\hyperlink{ref-hummert1990MultipleStereotypesElderly}{Hummert,
+1990}). The assessments of outgroup members along these two dimensions
+form the core of social category stereotypes including ingroup
+self-stereotypes
+(\protect\hyperlink{ref-hinton2019ExploringRelationshipGay}{Hinton et
+al., 2019}).
+
+According to the SCM, gender groups are social categories that are
+subject to cross-cultural stereotyping along the dimensions of warmth
+and competence (\protect\hyperlink{ref-fiske2002ModelOftenMixed}{Fiske
+et al., 2002}). Females (and women generally) are linked to warmth
+traits but perceived as low in competence whereas males (and men
+generally) are linked to competence traits but perceived as low in
+warmth (\protect\hyperlink{ref-Eagly1997}{Eagly, 1997};
+\protect\hyperlink{ref-suh2004GenderRelationshipsInfluences}{Suh et al.,
+2004}). Different age groups also have associated warmth- and
+competence-related stereotypes: older individuals are perceived as
+lacking in competence compared to their younger counterparts but
+generally rated higher on warmth whereas younger individuals are
+perceived as lacking in warmth but consistently rated higher on
+competence (\protect\hyperlink{ref-cuddy2005ThisOldStereotype}{Cuddy et
+al., 2005}; \protect\hyperlink{ref-vanselm2021SearchOlderWorker}{van
+Selm \& van den Heijkant, 2021}).
+
+\hypertarget{gender}{%
+\subsubsection{Gender Stereotypes in the Occupational
+Domain}\label{gender}}
+
+The stereotypical attribution of warmth and competence to females and
+males also form the basis for stereotypes about female and male workers
+(\protect\hyperlink{ref-froehlich2020GenderWorkNations}{Froehlich et
+al., 2020}) and is further generalizable to gendered occupational
+domains. Various studies point to the observability of gendered warmth
+and competence stereotype differences in different contexts and when
+employing different analytical approaches
+(\protect\hyperlink{ref-aaldering2020PoliticalLeadershipMedia}{Aaldering
+\& Van Der Pas, 2020}; \protect\hyperlink{ref-harmer_are_2017}{Harmer et
+al., 2017}). Smith et al.
+(\protect\hyperlink{ref-smith2019PowerLanguageGender}{2019}) found that
+positive attribute assignments to female and male leaders were aligned
+with the SCM, however, female leaders were also attributed more negative
+warmth characteristics compared to their male counterparts. These
+findings implicitly provide evidence for social categorization framing.
+Dominant social groups with stereotyped characteristics matching (and
+seen as essential to) a social role are appraised based on said
+characteristics whereas non-dominant groups with mismatching stereotyped
+characteristics are appraised via both characteristics of the social
+role and the social group -- the latter often resulting in unfavorable
+appraisal.
+
+Particular to occupational segregation, a survey by He et al.
+(\protect\hyperlink{ref-he2019StereotypesWorkOccupational}{2019}) on
+warmth and competence perception associated with different occupations
+found a positive correlation between occupational stereotype content and
+the respective level of gender segregation. Nursing, medical assistance,
+childcare, and secretarial work were the highest-rated occupations on
+warmth, and women made up the majority in these occupations: 89.4\%,
+90.7\%, 94.9\%, and 94.5\% respectively. Similarly, Strinić et al.
+(\protect\hyperlink{ref-strinic2021OccupationalStereotypesProfessionals}{2021}),
+in a survey using a sample of 130 HR professionals, found that
+stereotypical perceptions of warmth and competence are in fact attached
+to occupations and sectors.
+
+In light of the reviewed literature, we expect similar differences in
+the presence of warmth- and competence-related stereotypical frames in
+job ads at the sectoral level:
+
+\begin{quote}
+\textbf{Hypothesis 1:} Job advertisements from female-dominated sectors
+will include more warmth-related frames when compared to job
+advertisements from male-dominated sectors \textbf{(H1a)} or
+mixed-gender sectors \textbf{(H1b)}.
+\end{quote}
+
+\begin{quote}
+\textbf{Hypothesis 2:} Job advertisements from male-dominated sectors
+will include more competence-related frames when compared to job
+advertisements from female-dominated sectors \textbf{(H2a)} or
+mixed-gender sectors \textbf{(H2b)}.
+\end{quote}
+
+\hypertarget{age}{%
+\subsubsection{Age Stereotypes in the Occupational Domain}\label{age}}
+
+Stereotypical attribution of warmth and competence to workers from
+different age groups also aligns with the general stereotypes of
+individuals in those categories. In a frame analysis study of Dutch
+media texts published over the span of six years, Kroon et al.
+(\protect\hyperlink{ref-kroon2018ReliableUnproductiveStereotypes}{2018})
+found that both corporate and news media portray older workers as
+trustworthy, involved, and committed (warmth characteristics) but
+lacking in aptitudes related to productivity, adaptability, and
+technological skills (competence characteristics). Krings et al.
+(\protect\hyperlink{ref-krings2011StereotypicalInferencesMediators}{2011})
+also found that good-naturedness, amicability, benevolence, and
+sincerity formed the content of warmth-related stereotypes for older
+workers while capability, efficiency, and skill formed the content of
+competence-related stereotypes for younger workers.
+
+In job ads, different contextual factors seem to be at play. van Selm \&
+van den Heijkant
+(\protect\hyperlink{ref-vanselm2021SearchOlderWorker}{2021}) found hard
+abilities requirements for general job seekers (e.g., business
+operations, leadership, and professional development abilities) were
+more pronounced compared to soft abilities requirements for older
+workers (e.g., customer service ability). This emphasis on competence
+over warmth was also noted in a study by Abrams et al.
+(\protect\hyperlink{ref-abrams2016OldUnemployableHow}{2016}) where role
+congruity between a job's age-type and an older candidate's stereotyped
+characteristics did not increase older candidate selection. Findings
+point to an undervaluing of older workers' warmth characteristics and
+indicate warmth-primacy -- wherein proneness to evaluate others
+positively is predicted primarily by warmth perceptions
+(\protect\hyperlink{ref-cuddy2008WarmthCompetenceUniversal}{Cuddy et
+al., 2008};
+\protect\hyperlink{ref-ponsi2016InfluenceWarmthCompetence}{Ponsi et al.,
+2016}) -- functions differently in the context of age-typed recruitment.
+
+Literature thus suggests that when comparing job ads from
+older-worker-dominated and younger-worker-dominated sectors, the
+presence of competence-related frames may be more relevant to
+determining whether bias against older workers (or in favor of younger
+workers) may exist. Notwithstanding, as social stereotypes about older
+individuals form the basis for older-worker stereotypes, we expect:
+
+\begin{quote}
+\textbf{Hypothesis 3:} Job advertisements from sectors dominated by
+older workers will include more warmth-related frames when compared to
+job advertisements from sectors dominated by younger workers
+\textbf{(H3a)} or mixed-age sectors \textbf{(H3b)}.
+\end{quote}
+
+\begin{quote}
+\textbf{Hypothesis 4:} Job advertisements from sectors dominated by
+younger workers will include more competence-related frames when
+compared to job advertisements from sectors dominated by older workers
+\textbf{(H4a)} or mixed-age sectors \textbf{(H4b)}.
+\end{quote}
+
+\hypertarget{method}{%
+\subsection{Methodology}\label{method}}
+
+\hypertarget{sampling}{%
+\subsubsection{Data Collection and Sample}\label{sampling}}
+
+Job ads were collected based on searches for sectors keywords from three
+online job search platforms: LinkedIn.nl, Indeed.nl, and Glassdoor.nl .
+Search keywords for sectors were obtained from the one-digit
+International Standard Industrial Classifications
+(\protect\hyperlink{ref-centraal_bureau_voor_de_statistiek_standard_2018}{Centraal
+Bureau voor de Statistiek, 2018}). Some of the original 29 SBI sector
+titles were a combination of multiple independent sector designations,
+e.g., ``agriculture, forestry and fishing''. These sector titles
+returned imprecise search results and were thus divided into distinct
+sector search keywords and the resultant list of sectors keywords was
+supplemented with data from the more detailed standardized 5-digit SBI
+codes and the Dutch Labour Force Survey
+(\protect\hyperlink{ref-centraal_bureau_voor_de_statistiek_dutch_2021}{Centraal
+Bureau voor de Statistiek, 2021}). This gave a total of 97
+sector-keywords, and all returned job postings were automatically
+retrieved using Python 3.9 (see Table 9 in Appendix A).
+
+\hypertarget{references}{%
+\subsection*{References}\label{references}}
+\addcontentsline{toc}{subsection}{References}
+
+\hypertarget{refs}{}
+\begin{CSLReferences}{1}{0}
+\leavevmode\vadjust pre{\hypertarget{ref-aaldering2020PoliticalLeadershipMedia}{}}%
+Aaldering, L., \& Van Der Pas, D. J. (2020). Political {Leadership} in
+the {Media}: {Gender Bias} in {Leader Stereotypes} during {Campaign} and
+{Routine Times}. \emph{British Journal of Political Science},
+\emph{50}(3), 911--931. \url{https://doi.org/10.1017/S0007123417000795}
+
+\leavevmode\vadjust pre{\hypertarget{ref-abrams2016OldUnemployableHow}{}}%
+Abrams, D., Swift, H. J., \& Drury, L. (2016). Old and {Unemployable}?
+{How Age-Based Stereotypes Affect Willingness} to {Hire Job Candidates}.
+\emph{Journal of Social Issues}, \emph{72}(1), 105--121.
+\url{https://doi.org/10.1111/josi.12158}
+
+\leavevmode\vadjust pre{\hypertarget{ref-bastian2006PsychologicalEssentialismStereotype}{}}%
+Bastian, B., \& Haslam, N. (2006). Psychological essentialism and
+stereotype endorsement. \emph{Journal of Experimental Social
+Psychology}, \emph{42}(2), 228--235.
+\url{https://doi.org/10.1016/j.jesp.2005.03.003}
+
+\leavevmode\vadjust pre{\hypertarget{ref-beattie2012PossibleUnconsciousBias}{}}%
+Beattie, G., \& Johnson, P. (2012). Possible unconscious bias in
+recruitment and promotion and the need to promote equality.
+\emph{Perspectives: Policy and Practice in Higher Education},
+\emph{16}(1), 7--13. \url{https://doi.org/10.1080/13603108.2011.611833}
+
+\leavevmode\vadjust pre{\hypertarget{ref-beukeboom2019HowStereotypesAre}{}}%
+Beukeboom, C. J., \& Burgers, C. (2019). How stereotypes are shared
+through language: {A} review and introduction of the {Social Categories}
+and {Stereotypes Communication} ({SCSC}) framework. \emph{Review of
+Communication Research}, \emph{7}(2019), 1--37.
+\url{https://doi.org/10.12840/issn.2255-4165.017}
+
+\leavevmode\vadjust pre{\hypertarget{ref-brown2003BlackwellHandbookSocial}{}}%
+Brown, R., \& Gaertner, S. L. (Eds.). (2003). \emph{Blackwell {Handbook}
+of {Social Psychology}: {Intergroup Processes}}. {Blackwell Publishers
+Ltd}. \url{https://doi.org/10.1002/9780470693421}
+
+\leavevmode\vadjust pre{\hypertarget{ref-bruckmuller2013DensityBigTwo}{}}%
+Bruckmüller, S., \& Abele, A. (2013). The {Density} of the {Big Two How
+Are Agency} and {Communion Structurally Represented}? \emph{Social
+Psychology}, \emph{44}(2, 2), 63--74.
+\url{https://doi.org/10.1027/1864-9335/a000145}
+
+\leavevmode\vadjust pre{\hypertarget{ref-carducci_twitpersonality_2018}{}}%
+Carducci, G., Rizzo, G., Monti, D., Palumbo, E., \& Morisio, M. (2018).
+{TwitPersonality}: {Computing Personality Traits} from {Tweets Using
+Word Embeddings} and {Supervised Learning}. \emph{Information},
+\emph{9}(5, 5), 127. \url{https://doi.org/10.3390/info9050127}
+
+\leavevmode\vadjust pre{\hypertarget{ref-Carli2016}{}}%
+Carli, L. L., Alawa, L., Lee, Y. A., Zhao, B., \& Kim, E. (2016).
+Stereotypes {About Gender} and {Science}: {Women} ≠ {Scientists}.
+\emph{Psychology of Women Quarterly}, \emph{40}(2), 244--260.
+\url{https://doi.org/10.1177/0361684315622645}
+
+\leavevmode\vadjust pre{\hypertarget{ref-carrillo-tudela_extent_2016}{}}%
+Carrillo-Tudela, C., Hobijn, B., She, P., \& Visschers, L. (2016). The
+extent and cyclicality of career changes: {Evidence} for the {U}.{K}.
+\emph{European Economic Review}, \emph{84}, 18--41.
+\url{https://doi.org/10.1016/j.euroecorev.2015.09.008}
+
+\leavevmode\vadjust pre{\hypertarget{ref-centraal_bureau_voor_de_statistiek_standard_2018}{}}%
+Centraal Bureau voor de Statistiek. (2018). \emph{Standard {Industrial
+Classifications} ({Dutch SBI} 2008, {NACE} and {ISIC})} {[}Database{]}.
+{Centraal Bureau voor de Statistiek (CBS)}.
+\url{https://www.cbs.nl/en-gb/onze-diensten/methods/classifications/activiteiten/standard-industrial-classifications--dutch-sbi-2008-nace-and-isic--}
+
+\leavevmode\vadjust pre{\hypertarget{ref-centraal_bureau_voor_de_statistiek_dutch_2021}{}}%
+Centraal Bureau voor de Statistiek. (2021). \emph{Dutch {Labour Force
+Survey} ({LFS})} {[}Database{]}. {Centraal Bureau voor de Statistiek
+(CBS)}.
+\url{https://www.cbs.nl/en-gb/onze-diensten/methods/surveys/korte-onderzoeksbeschrijvingen/dutch-labour-force-survey--lfs--}
+
+\leavevmode\vadjust pre{\hypertarget{ref-clarke2020GenderStereotypesGenderTyped}{}}%
+Clarke, H. M. (2020). Gender {Stereotypes} and {Gender-Typed Work}. In
+K. F. Zimmermann (Ed.), \emph{Handbook of {Labor}, {Human Resources} and
+{Population Economics}} (pp. 1--23). {Springer International
+Publishing}. \url{https://doi.org/10.1007/978-3-319-57365-6_21-1}
+
+\leavevmode\vadjust pre{\hypertarget{ref-cuddy2008WarmthCompetenceUniversal}{}}%
+Cuddy, A. J. C., Fiske, S. T., \& Glick, P. (2008). Warmth and
+{Competence} as {Universal Dimensions} of {Social Perception}: {The
+Stereotype Content Model} and the {BIAS Map}. In \emph{Advances in
+{Experimental Social Psychology}} (Vol. 40, pp. 61--149). {Academic
+Press}. \url{https://doi.org/10.1016/S0065-2601(07)00002-0}
+
+\leavevmode\vadjust pre{\hypertarget{ref-cuddy2009StereotypeContentModel}{}}%
+Cuddy, A. J. C., Fiske, S. T., Kwan, V. S. Y., Glick, P., Demoulin, S.,
+Leyens, J.-P., Bond, M. H., Croizet, J.-C., Ellemers, N., Sleebos, E.,
+Htun, T. T., Kim, H.-J., Maio, G., Perry, J., Petkova, K., Todorov, V.,
+Rodríguez‐Bailón, R., Morales, E., Moya, M., \ldots{} Ziegler, R.
+(2009). Stereotype content model across cultures: {Towards} universal
+similarities and some differences. \emph{British Journal of Social
+Psychology}, \emph{48}(1), 1--33.
+\url{https://doi.org/10.1348/014466608x314935}
+
+\leavevmode\vadjust pre{\hypertarget{ref-cuddy2005ThisOldStereotype}{}}%
+Cuddy, A. J. C., Norton, M. I., \& Fiske, S. T. (2005). This {Old
+Stereotype}: {The Pervasiveness} and {Persistence} of the {Elderly
+Stereotype}. \emph{Journal of Social Issues}, \emph{61}(2), 267--285.
+\url{https://doi.org/10.1111/j.1540-4560.2005.00405.x}
+
+\leavevmode\vadjust pre{\hypertarget{ref-decooman2012PortrayingFittingValues}{}}%
+De Cooman, R., \& Pepermans, R. (2012). Portraying fitting values in job
+advertisements. \emph{Personnel Review}, \emph{41}(2), 216--232.
+\url{https://doi.org/10.1108/00483481211200042}
+
+\leavevmode\vadjust pre{\hypertarget{ref-Eagly1997}{}}%
+Eagly, A. H. (1997). Sex differences in social behavior: Comparing
+social role theory and evolutionary psychology. \emph{The American
+Psychologist}, \emph{52}(12), 1380--1383.
+\url{https://doi.org/10.1037/0003-066X.52.12.1380.b}
+
+\leavevmode\vadjust pre{\hypertarget{ref-entman1993FramingClarificationFractured}{}}%
+Entman, R. M. (1993). Framing: {Toward Clarification} of a {Fractured
+Paradigm}. \emph{Journal of Communication}, \emph{43}(4), 51--58.
+\url{https://doi.org/10.1111/j.1460-2466.1993.tb01304.x}
+
+\leavevmode\vadjust pre{\hypertarget{ref-fiske2002ModelOftenMixed}{}}%
+Fiske, S. T., Cuddy, A. J. C., Glick, P., \& Xu, J. (2002). A model of
+(often mixed) stereotype content: {Competence} and warmth respectively
+follow from perceived status and competition. \emph{Journal of
+Personality and Social Psychology}, \emph{82}(6), 878--902.
+\url{https://doi.org/10.1037/0022-3514.82.6.878}
+
+\leavevmode\vadjust pre{\hypertarget{ref-fritsch_horizontal_2020}{}}%
+Fritsch, N.-S., Liedl, B., \& Paulinger, G. (2020). Horizontal and
+vertical labour market movements in {Austria}: {Do} occupational
+transitions take women across gendered lines? \emph{Current Sociology},
+0011392120969767. \url{https://doi.org/10.1177/0011392120969767}
+
+\leavevmode\vadjust pre{\hypertarget{ref-froehlich2020GenderWorkNations}{}}%
+Froehlich, L., Olsson, M. I. T., Dorrough, A. R., \& Martiny, S. E.
+(2020). Gender at {Work Across Nations}: {Men} and {Women Working} in
+{Male-Dominated} and {Female-Dominated Occupations} are {Differentially
+Associated} with {Agency} and {Communion}. \emph{Journal of Social
+Issues}, \emph{76}(3), 484--511.
+\url{https://doi.org/10.1111/josi.12390}
+
+\leavevmode\vadjust pre{\hypertarget{ref-garcia-retamero2006PrejudiceWomenMalecongenial}{}}%
+Garcia-Retamero, R., \& López-Zafra, E. (2006). Prejudice against
+{Women} in {Male-congenial Environments}: {Perceptions} of {Gender Role
+Congruity} in {Leadership}. \emph{Sex Roles}, \emph{55}(1), 51--61.
+\url{https://doi.org/10.1007/s11199-006-9068-1}
+
+\leavevmode\vadjust pre{\hypertarget{ref-Zanna2013}{}}%
+Gardner, R. (1994). Stereotypes as consensual beliefs. In M. P. Zanna \&
+J. M. Olson (Eds.), \emph{The {Psychology} of {Prejudice}: {The Ontario
+Symposium}, {Volume} 7} (pp. 1--31).
+\url{https://doi.org/10.4324/9780203763377}
+
+\leavevmode\vadjust pre{\hypertarget{ref-gaucher2011EvidenceThatGendered}{}}%
+Gaucher, D., Friesen, J., \& Kay, A. C. (2011). Evidence {That Gendered
+Wording} in {Job Advertisements Exists} and {Sustains Gender
+Inequality}. \emph{Journal of Personality and Social Psychology},
+\emph{101}(1), 109--128. \url{https://doi.org/10.1037/a0022530}
+
+\leavevmode\vadjust pre{\hypertarget{ref-hardin2002FramingSexualDifference}{}}%
+Hardin, M., Lynn, S., Walsdorf, K., \& Hardin, B. (2002). The {Framing}
+of {Sexual Difference} in {SI} for {Kids Editorial Photos}. \emph{Mass
+Communication and Society}, \emph{5}(3), 341--359.
+\url{https://doi.org/10.1207/S15327825MCS0503_6}
+
+\leavevmode\vadjust pre{\hypertarget{ref-harmer_are_2017}{}}%
+Harmer, E., Savigny, H., \& Ward, O. (2017). {``{Are} you tough
+enough?''} {Performing} gender in the {UK} leadership debates 2015.
+\emph{Media, Culture \& Society}, \emph{39}(7), 960--975.
+\url{https://doi.org/10.1177/0163443716682074}
+
+\leavevmode\vadjust pre{\hypertarget{ref-he2019StereotypesWorkOccupational}{}}%
+He, J. C., Kang, S. K., Tse, K., \& Toh, S. M. (2019). Stereotypes at
+work: {Occupational} stereotypes predict race and gender segregation in
+the workforce. \emph{Journal of Vocational Behavior}, \emph{115},
+103318. \url{https://doi.org/10.1016/j.jvb.2019.103318}
+
+\leavevmode\vadjust pre{\hypertarget{ref-heilman2012GenderStereotypesWorkplace}{}}%
+Heilman, M. E. (2012). Gender stereotypes and workplace bias.
+\emph{Research in Organizational Behavior}, \emph{32}, 113--135.
+\url{https://doi.org/10.1016/j.riob.2012.11.003}
+
+\leavevmode\vadjust pre{\hypertarget{ref-hinton2019ExploringRelationshipGay}{}}%
+Hinton, J. D. X., Anderson, J. R., \& Koc, Y. (2019). Exploring the
+relationship between gay men's self- and meta-stereotype endorsement
+with well-being and self-worth. \emph{Psychology \& Sexuality},
+\emph{10}(2), 169--182.
+\url{https://doi.org/10.1080/19419899.2019.1577013}
+
+\leavevmode\vadjust pre{\hypertarget{ref-hofhuis2016DealingDifferencesImpact}{}}%
+Hofhuis, J., van der Zee, K. I., \& Otten, S. (2016). Dealing with
+differences: The impact of perceived diversity outcomes on selection and
+assessment of minority candidates. \emph{The International Journal of
+Human Resource Management}, \emph{27}(12), 1319--1339.
+\url{https://doi.org/10.1080/09585192.2015.1072100}
+
+\leavevmode\vadjust pre{\hypertarget{ref-hummert1990MultipleStereotypesElderly}{}}%
+Hummert, M. L. (1990). Multiple stereotypes of elderly and young adults:
+{A} comparison of structure and evaluations. \emph{Psychology and
+Aging}, \emph{5}(2), 182--193.
+\url{https://doi.org/10.1037/0882-7974.5.2.182}
+
+\leavevmode\vadjust pre{\hypertarget{ref-kelly2010GenderedChallengeGendered}{}}%
+Kelly, E. L., Ammons, S. K., Chermack, K., \& Moen, P. (2010). Gendered
+{Challenge}, {Gendered Response}: {Confronting} the {Ideal Worker Norm}
+in a {White-Collar Organization}. \emph{Gender \& Society},
+\emph{24}(3), 281--303. \url{https://doi.org/10.1177/0891243210372073}
+
+\leavevmode\vadjust pre{\hypertarget{ref-krings2011StereotypicalInferencesMediators}{}}%
+Krings, F., Sczesny, S., \& Kluge, A. (2011). Stereotypical {Inferences}
+as {Mediators} of {Age Discrimination}: {The Role} of {Competence} and
+{Warmth}. \emph{British Journal of Management}, \emph{22}(2), 187--201.
+\url{https://doi.org/10.1111/j.1467-8551.2010.00721.x}
+
+\leavevmode\vadjust pre{\hypertarget{ref-kroon2018ReliableUnproductiveStereotypes}{}}%
+Kroon, A. C., Van Selm, M., ter HOEVEN, C. L., \& Vliegenthart, R.
+(2018). Reliable and unproductive? {Stereotypes} of older employees in
+corporate and news media. \emph{Ageing and Society}, \emph{38}(1),
+166--191. \url{https://doi.org/10.1017/S0144686X16000982}
+
+\leavevmode\vadjust pre{\hypertarget{ref-meeks_all_2013}{}}%
+Meeks, L. (2013). All the {Gender That}'s {Fit} to {Print}: {How} the
+{New York Times Covered Hillary Clinton} and {Sarah Palin} in 2008.
+\emph{Journalism \& Mass Communication Quarterly}, \emph{90}(3),
+520--539. \url{https://doi.org/10.1177/1077699013493791}
+
+\leavevmode\vadjust pre{\hypertarget{ref-nicolas2020ComprehensiveStereotypeContent}{}}%
+Nicolas, G., Bai, X., \& Fiske, S. T. (2020). Comprehensive {Stereotype
+Content Dictionaries Using} a {Semi}‐{Automated Method}. \emph{European
+Journal of Social Psychology}.
+
+\leavevmode\vadjust pre{\hypertarget{ref-paleari2019WhenPrejudiceYou}{}}%
+Paleari, F. G., Brambilla, M., \& Fincham, F. D. (2019). When prejudice
+against you hurts others and me: {The} case of ageism at work.
+\emph{Journal of Applied Social Psychology}, \emph{49}(11), 704--720.
+\url{https://doi.org/10.1111/jasp.12628}
+
+\leavevmode\vadjust pre{\hypertarget{ref-ponsi2016InfluenceWarmthCompetence}{}}%
+Ponsi, G., Panasiti, M. S., Scandola, M., \& Aglioti, S. M. (2016).
+Influence of warmth and competence on the promotion of safe in-group
+selection: {Stereotype} content model and social categorization of
+faces. \emph{Quarterly Journal of Experimental Psychology},
+\emph{69}(8), 1464--1479.
+\url{https://doi.org/10.1080/17470218.2015.1084339}
+
+\leavevmode\vadjust pre{\hypertarget{ref-reese2001FramingPublicLife}{}}%
+Reese, S. D., Jr, O. H. G., \& Grant, A. E. (2001). \emph{Framing
+{Public Life}: {Perspectives} on {Media} and {Our Understanding} of the
+{Social World}}. {Routledge}.
+\url{https://books.google.com?id=LhaQAgAAQBAJ}
+
+\leavevmode\vadjust pre{\hypertarget{ref-RynesS.1989}{}}%
+Rynes, S. L. (1989). Recruitment, job choice, and post-hire
+consequences: {A} call for new research directions. In M. D. Dunnette \&
+L. M. Hough (Eds.), \emph{Handbook of {Industrial} and {Organizational
+Psychology}} (Vol. 2, pp. 399--444). {Consulting Psychologists Press}.
+\url{https://psycnet.apa.org/record/1993-97200-007}
+
+\leavevmode\vadjust pre{\hypertarget{ref-smith2019PowerLanguageGender}{}}%
+Smith, D. G., Rosenstein, J. E., Nikolov, M. C., \& Chaney, D. A.
+(2019). The {Power} of {Language}: {Gender}, {Status}, and {Agency} in
+{Performance Evaluations}. \emph{Sex Roles}, \emph{80}(3), 159--171.
+\url{https://doi.org/10.1007/s11199-018-0923-7}
+
+\leavevmode\vadjust pre{\hypertarget{ref-strinic2021OccupationalStereotypesProfessionals}{}}%
+Strinić, A., Carlsson, M., \& Agerström, J. (2021). Occupational
+stereotypes: Professionals´ warmth and competence perceptions of
+occupations. \emph{Personnel Review}, \emph{ahead-of-print}.
+\url{https://doi.org/10.1108/PR-06-2020-0458}
+
+\leavevmode\vadjust pre{\hypertarget{ref-suh2004GenderRelationshipsInfluences}{}}%
+Suh, E. J., Moskowitz, D. S., Fournier, M. A., \& Zuroff, D. C. (2004).
+Gender and relationships: {Influences} on agentic and communal
+behaviors. \emph{Personal Relationships}, \emph{11}(1), 41--60.
+\url{https://doi.org/10.1111/j.1475-6811.2004.00070.x}
+
+\leavevmode\vadjust pre{\hypertarget{ref-sullivan19891984VicePresidential}{}}%
+Sullivan, P. A. (1989). The 1984 vice‐presidential debate: {A} case
+study of female and male framing in political campaigns.
+\emph{Communication Quarterly}, \emph{37}(4), 329--343.
+\url{https://doi.org/10.1080/01463378909385554}
+
+\leavevmode\vadjust pre{\hypertarget{ref-vangorp2005WhereFrameVictims}{}}%
+Van Gorp, B. (2005). Where is the {Frame}?: {Victims} and {Intruders} in
+the {Belgian Press Coverage} of the {Asylum Issue}. \emph{European
+Journal of Communication}, \emph{20}(4), 484--507.
+\url{https://doi.org/10.1177/0267323105058253}
+
+\leavevmode\vadjust pre{\hypertarget{ref-vanselm2021SearchOlderWorker}{}}%
+van Selm, M., \& van den Heijkant, L. (2021). In {Search} of the {Older
+Worker}: {Framing Job Requirements} in {Recruitment Advertisements}.
+\emph{Work, Aging and Retirement}, \emph{7}(4), 288--302.
+\url{https://doi.org/10.1093/workar/waaa026}
+
+\leavevmode\vadjust pre{\hypertarget{ref-westerhof2010FillingMissingLink}{}}%
+Westerhof, G. J., Harink, K., Selm, M. V., Strick, M., \& Baaren, R. V.
+(2010). Filling a missing link: The influence of portrayals of older
+characters in television commercials on the memory performance of older
+adults. \emph{Ageing \& Society}, \emph{30}(5), 897--912.
+\url{https://doi.org/10.1017/S0144686X10000152}
+
+\leavevmode\vadjust pre{\hypertarget{ref-white2009ThinkWomenThink}{}}%
+White, J. B., \& Gardner, W. L. (2009). Think {Women}, {Think Warm}:
+{Stereotype Content Activation} in {Women} with a {Salient Gender
+Identity}, {Using} a {Modified Stroop Task}. \emph{Sex Roles},
+\emph{60}(3-4), 247--260.
+\url{https://doi.org/10.1007/s11199-008-9526-z}
+
+\leavevmode\vadjust pre{\hypertarget{ref-Yang2015a}{}}%
+Yang, A. (2015). Building a {Cognitive-Sociological Model} of
+{Stereotypes}: {Stereotypical Frames}, {Social Distance} and {Framing
+Effects}. \emph{Howard Journal of Communications}, \emph{26}(3),
+254--274. \url{https://doi.org/10.1080/10646175.2015.1049757}
+
+\end{CSLReferences}
+
+
+
+\end{document}

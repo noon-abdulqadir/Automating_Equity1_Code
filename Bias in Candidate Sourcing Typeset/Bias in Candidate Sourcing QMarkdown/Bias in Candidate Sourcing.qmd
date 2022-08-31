@@ -1,217 +1,224 @@
 ---
-doctype: jou
+# doctype: jou
+# documentclass: article
+format: pdf
 # editor: visual
 # jupyter: study1
-lang: en-US
-indent: true
-font: Times New Roman
-mainfont: Times New Roman
-fontsize: 12pt
-text-align: right
-date: "`r format(Sys.time(), '%B %d, %Y')`"
+# lang: en-US
+# indent: true
+# font: Times New Roman
+# mainfont: Times New Roman
+# fontsize: 12pt
+# text-align: right
+# date: "`r format(Sys.time(), '%B %d, %Y')`"
 title: "Bias in Candidate Sourcing Communication"
-subtitle: "Investigating Stereotypical Gender- And Age-Related Frames in Online Job Advertisements at the Sectoral Level"
-shorttitle: "Bias in Candidate Sourcing Communication"
-author:
-    - M.F.A. Noon, PhD:
-        email: "noon.abdulqadir@uva.nl"
-        institute: [UvA]
-        correspondence: true
-        orcid: "0000-0002-6243-9241"
-    # - email: "noon.abdulqadir@uva.nl"
-    # - orcid: "0000-0002-6243-9241"
-    # - url: "https://noon-abdulqadir.com/"
-    # - twitter: "https://twitter.com/NoonAbdulqadir"
-    # - github: "https://github.com/noon-abdulqadir"
-    # - linkedin: "https://www.linkedin.com/in/noon-abdulqadir/"
-    # - researchgate: "https://www.researchgate.net/profile/Noon-Abdulqadir"
-institute:
-    - UvA: "University of Amsterdam, Amsterdam School of Communication Research (ASCoR), Postbus 15791, 1001 NG Amsterdam."
-leftheader: "BIAS IN CANDIDATE SOURCING COMMUNICATION"
-authors_note: |
-    Correspondence concerning this article should be addressed to M.F.A. Noon, Postbus 15791, 1001 NG Amsterdam. Email: noon.abdulqadir@uva.nl
-abstract: "Studies show that the extent to which job advertisements contain stereotypical wordings correlates with the level of segregation in an occupational domain. However, limited research links the framing of job ads to social category-based occupational segregation at the macro sectoral level. Guided by the stereotype content model, the present study operationalizes stereotypical social categorization frames in candidate sourcing communication and investigates their presence in job ads from occupational sectors with varying gender and age segregation. An automated (supervised) content analysis was conducted on a dataset of online job ads (*n*=17,050). Results indicate warmth-related frames are most observed in ads from female-dominated (vs. male-dominated and mixed-gender) sectors. Conversely, competence-related frames are most observed in ads from male-dominated (vs. female-dominated) and younger worker-dominated (vs. older worker-dominated and mixed-age) sectors. Taken together, we present an operationalization of stereotypical warmth- and competence-related frames in early employer communication and posit that social categorization framing may be at play."
-keywords: "Stereotype content model, social categorization frames, horizontal occupational segregation, supervised content analysis"
-format:
-    pdf:
-        mainfont: Times New Roman
-        fontsize: 12pt
-        text-align: right
-        latex_engine: pdflatex
-    docx:
-        mainfont: Times New Roman
-        fontsize: 12pt
-        text-align: right
-    html:
-        mainfont: Times New Roman
-        fontsize: 12pt
-        text-align: right
-        html-math-method: katex
-        html-math-output: eps
-        html-math-style: display
-        html-math-size: "100%"
-        html-math-color: "black"
-        html-math-background-color: "white"
-        code-tools: true
-        code-line-numbers: true
-        self-contained: true
-output:
-    pdf_document:
-        pandoc_args:
-            - --csl=apa.csl
-            - --filter=pandoc-crossref
-            - --reference-doc=word_template_apa7.docx
-            - --csl=Extras/clinical-biochemistry.csl
-            - --citation-abbreviations=Extras/abbreviations.json
-            - --lua-filter=Extras/scholarly-metadata.lua
-            - --lua-filter=Extras/author-info-blocks.lua
-        toc_depth: 0
-        template: "template.tex"
-        extra_dependencies: "subfig"
-        latex_engine: pdflatex
-        keep-ipynb: true
-        keep-md: true
-        keep_tex:  true
-        number_sections: true
-    word_document:
-        pandoc_args:
-            - --csl=apa.csl
-            - --filter=pandoc-crossref
-            - --reference-doc=word_template_apa7.docx
-            - --csl=Extras/clinical-biochemistry.csl
-            - --citation-abbreviations=Extras/abbreviations.json
-            - --lua-filter=Extras/scholarly-metadata.lua
-            - --lua-filter=Extras/author-info-blocks.lua
-        # reference_doc: word_template_apa7.docx
-        keep-ipynb: true
-        keep-md: true
-        keep_tex:  true
-        number_sections: true
-    html_document:
-        pandoc_args:
-            - --csl=apa.csl
-            - --filter=pandoc-crossref
-            - --reference-doc=word_template_apa7.docx
-            - --csl=Extras/clinical-biochemistry.csl
-            - --citation-abbreviations=Extras/abbreviations.json
-            - --lua-filter=Extras/scholarly-metadata.lua
-            - --lua-filter=Extras/author-info-blocks.lua
-        keep-ipynb: true
-        keep-md: true
-        keep_tex:  true
-        number_sections: true
-    latex_document:
-        pandoc_args:
-            - --csl=apa.csl
-            - --filter=pandoc-crossref
-            - --reference-doc=word_template_apa7.docx
-            - --csl=Extras/clinical-biochemistry.csl
-            - --citation-abbreviations=Extras/abbreviations.json
-            - --lua-filter=Extras/scholarly-metadata.lua
-            - --lua-filter=Extras/author-info-blocks.lua
-        keep-ipynb: true
-        keep-md: true
-        keep_tex:  true
-        number_sections: true
-    bookdown::pdf_book:
-        pandoc_args:
-            - --csl=apa.csl
-            - --filter=pandoc-crossref
-            - --reference-doc=word_template_apa7.docx
-            - --csl=Extras/clinical-biochemistry.csl
-            - --citation-abbreviations=Extras/abbreviations.json
-            - --lua-filter=Extras/scholarly-metadata.lua
-            - --lua-filter=Extras/author-info-blocks.lua
-        toc_depth: 1
-        template: "template.tex"
-        extra_dependencies: "subfig"
-        latex_engine: pdflatex
-        keep-ipynb: true
-        keep-md: true
-        keep_tex:  true
-        number_sections: true
-    bookdown::word_document2:
-        pandoc_args:
-            - --csl=apa.csl
-            - --filter=pandoc-crossref
-            - --reference-doc=word_template_apa7.docx
-            - --csl=Extras/clinical-biochemistry.csl
-            - --citation-abbreviations=Extras/abbreviations.json
-            - --lua-filter=Extras/scholarly-metadata.lua
-            - --lua-filter=Extras/author-info-blocks.lua
-        # reference_doc: word_template_apa7.docx
-        keep-ipynb: true
-        keep-md: true
-        keep_tex:  true
-        number_sections: true
-    bookdown::html_document2:
-        pandoc_args:
-            - --csl=apa.csl
-            - --filter=pandoc-crossref
-            - --reference-doc=word_template_apa7.docx
-            - --csl=Extras/clinical-biochemistry.csl
-            - --citation-abbreviations=Extras/abbreviations.json
-            - --lua-filter=Extras/scholarly-metadata.lua
-            - --lua-filter=Extras/author-info-blocks.lua
-        keep-ipynb: true
-        keep-md: true
-        keep_tex:  true
-        number_sections: true
-    bookdown::latex_document2:
-        pandoc_args:
-            - --csl=apa.csl
-            - --filter=pandoc-crossref
-            - --reference-doc=word_template_apa7.docx
-            - --csl=Extras/clinical-biochemistry.csl
-            - --citation-abbreviations=Extras/abbreviations.json
-            - --lua-filter=Extras/scholarly-metadata.lua
-            - --lua-filter=Extras/author-info-blocks.lua
-        keep-ipynb: true
-        keep-md: true
-        keep_tex:  true
-        number_sections: true
-csl: apa.csl
-bibliography: references.bib
-bibtex: references.bib
-link-citations: true
-citations-hover: true
-toc: false
-cap-location: top
-latex-auto-mk: true
-header-includes:
-    - \usepackage{fontspec}
-    - \setmainfont{Times New Roman}
-    - \usepackage{graphicx}
-    - \usepackage{float}
-    - \usepackage{longtable}
-    - \setlength\parindent{24pt}
-    - \usepackage{gb4e} \noautomath
-    - \usepackage[longtable]{multirow}
-    - \usepackage{longtable}[=v4.13]
-    - \usepackage[flushleft]{threeparttable}
-    - \usepackage{lscape}
-    - \usepackage{makecell}
-    - \usepackage{booktabs}
-    - \usepackage{sectsty} \sectionfont{\centering \emph}
-    - \usepackage{fontspec}
-    - \setmainfont{Times New Roman}
-    - \usepackage{booktabs}
-    - \usepackage{array}
-    - \usepackage{multirow}
-    - \usepackage[table]{xcolor}
-    - \usepackage{wrapfig}
-    - \usepackage{colortbl}
-    - \usepackage{pdflscape}
-    - \usepackage{tabu}
-    - \usepackage{threeparttable}
-    - \usepackage[normalem]{ulem}
+# subtitle: "Investigating Stereotypical Gender- And Age-Related Frames in Online Job Advertisements at the Sectoral Level"
+# shorttitle: "Bias in Candidate Sourcing Communication"
+# author:
+#     - M.F.A. Noon, PhD:
+#         email: "noon.abdulqadir@uva.nl"
+#         institute: [UvA]
+#         correspondence: true
+#         orcid: "0000-0002-6243-9241"
+#     # - email: "noon.abdulqadir@uva.nl"
+#     # - orcid: "0000-0002-6243-9241"
+#     # - url: "https://noon-abdulqadir.com/"
+#     # - twitter: "https://twitter.com/NoonAbdulqadir"
+#     # - github: "https://github.com/noon-abdulqadir"
+#     # - linkedin: "https://www.linkedin.com/in/noon-abdulqadir/"
+#     # - researchgate: "https://www.researchgate.net/profile/Noon-Abdulqadir"
+# institute:
+#     - UvA: "University of Amsterdam, Amsterdam School of Communication Research (ASCoR), Postbus 15791, 1001 NG Amsterdam."
+# leftheader: "BIAS IN CANDIDATE SOURCING COMMUNICATION"
+# authors_note: |
+#     Correspondence concerning this article should be addressed to M.F.A. Noon, Postbus 15791, 1001 NG Amsterdam. Email: noon.abdulqadir@uva.nl
+# abstract: "Studies show that the extent to which job advertisements contain stereotypical wordings correlates with the level of segregation in an occupational domain. However, limited research links the framing of job ads to social category-based occupational segregation at the macro sectoral level. Guided by the stereotype content model, the present study operationalizes stereotypical social categorization frames in candidate sourcing communication and investigates their presence in job ads from occupational sectors with varying gender and age segregation. An automated (supervised) content analysis was conducted on a dataset of online job ads (*n*=17,050). Results indicate warmth-related frames are most observed in ads from female-dominated (vs. male-dominated and mixed-gender) sectors. Conversely, competence-related frames are most observed in ads from male-dominated (vs. female-dominated) and younger worker-dominated (vs. older worker-dominated and mixed-age) sectors. Taken together, we present an operationalization of stereotypical warmth- and competence-related frames in early employer communication and posit that social categorization framing may be at play."
+# keywords: "Stereotype content model, social categorization frames, horizontal occupational segregation, supervised content analysis"
+#
+# format:
+#     pdf:
+#         mainfont: Times New Roman
+#         fontsize: 12pt
+#         text-align: right
+#         latex_engine: pdflatex
+#     docx:
+#         mainfont: Times New Roman
+#         fontsize: 12pt
+#         text-align: right
+#     html:
+#         mainfont: Times New Roman
+#         fontsize: 12pt
+#         text-align: right
+#         html-math-method: katex
+#         html-math-output: eps
+#         html-math-style: display
+#         html-math-size: "100%"
+#         html-math-color: "black"
+#         html-math-background-color: "white"
+#         code-tools: true
+#         code-line-numbers: true
+#         self-contained: true
+# output:
+#     pdf_document:
+#         pandoc_args:
+#             - --csl=apa.csl
+#             - --filter=pandoc-crossref
+#             - --reference-doc=word_template_apa7.docx
+#             - --csl=Extras/clinical-biochemistry.csl
+#             - --citation-abbreviations=Extras/abbreviations.json
+#             - --lua-filter=Extras/scholarly-metadata.lua
+#             - --lua-filter=Extras/author-info-blocks.lua
+#         toc_depth: 0
+#         template: "template.tex"
+#         extra_dependencies: "subfig"
+#         latex_engine: pdflatex
+#         keep-ipynb: true
+#         keep-md: true
+#         keep_tex:  true
+#         number_sections: true
+#     word_document:
+#         pandoc_args:
+#             - --csl=apa.csl
+#             - --filter=pandoc-crossref
+#             - --reference-doc=word_template_apa7.docx
+#             - --csl=Extras/clinical-biochemistry.csl
+#             - --citation-abbreviations=Extras/abbreviations.json
+#             - --lua-filter=Extras/scholarly-metadata.lua
+#             - --lua-filter=Extras/author-info-blocks.lua
+#         # reference_doc: word_template_apa7.docx
+#         keep-ipynb: true
+#         keep-md: true
+#         keep_tex:  true
+#         number_sections: true
+#     html_document:
+#         pandoc_args:
+#             - --csl=apa.csl
+#             - --filter=pandoc-crossref
+#             - --reference-doc=word_template_apa7.docx
+#             - --csl=Extras/clinical-biochemistry.csl
+#             - --citation-abbreviations=Extras/abbreviations.json
+#             - --lua-filter=Extras/scholarly-metadata.lua
+#             - --lua-filter=Extras/author-info-blocks.lua
+#         keep-ipynb: true
+#         keep-md: true
+#         keep_tex:  true
+#         number_sections: true
+#     latex_document:
+#         pandoc_args:
+#             - --csl=apa.csl
+#             - --filter=pandoc-crossref
+#             - --reference-doc=word_template_apa7.docx
+#             - --csl=Extras/clinical-biochemistry.csl
+#             - --citation-abbreviations=Extras/abbreviations.json
+#             - --lua-filter=Extras/scholarly-metadata.lua
+#             - --lua-filter=Extras/author-info-blocks.lua
+#         keep-ipynb: true
+#         keep-md: true
+#         keep_tex:  true
+#         number_sections: true
+#     bookdown::pdf_book:
+#         pandoc_args:
+#             - --csl=apa.csl
+#             - --filter=pandoc-crossref
+#             - --reference-doc=word_template_apa7.docx
+#             - --csl=Extras/clinical-biochemistry.csl
+#             - --citation-abbreviations=Extras/abbreviations.json
+#             - --lua-filter=Extras/scholarly-metadata.lua
+#             - --lua-filter=Extras/author-info-blocks.lua
+#         toc_depth: 1
+#         template: "template.tex"
+#         extra_dependencies: "subfig"
+#         latex_engine: pdflatex
+#         keep-ipynb: true
+#         keep-md: true
+#         keep_tex:  true
+#         number_sections: true
+#     bookdown::word_document2:
+#         pandoc_args:
+#             - --csl=apa.csl
+#             - --filter=pandoc-crossref
+#             - --reference-doc=word_template_apa7.docx
+#             - --csl=Extras/clinical-biochemistry.csl
+#             - --citation-abbreviations=Extras/abbreviations.json
+#             - --lua-filter=Extras/scholarly-metadata.lua
+#             - --lua-filter=Extras/author-info-blocks.lua
+#         # reference_doc: word_template_apa7.docx
+#         keep-ipynb: true
+#         keep-md: true
+#         keep_tex:  true
+#         number_sections: true
+#     bookdown::html_document2:
+#         pandoc_args:
+#             - --csl=apa.csl
+#             - --filter=pandoc-crossref
+#             - --reference-doc=word_template_apa7.docx
+#             - --csl=Extras/clinical-biochemistry.csl
+#             - --citation-abbreviations=Extras/abbreviations.json
+#             - --lua-filter=Extras/scholarly-metadata.lua
+#             - --lua-filter=Extras/author-info-blocks.lua
+#         keep-ipynb: true
+#         keep-md: true
+#         keep_tex:  true
+#         number_sections: true
+#     bookdown::latex_document2:
+#         pandoc_args:
+#             - --csl=apa.csl
+#             - --filter=pandoc-crossref
+#             - --reference-doc=word_template_apa7.docx
+#             - --csl=Extras/clinical-biochemistry.csl
+#             - --citation-abbreviations=Extras/abbreviations.json
+#             - --lua-filter=Extras/scholarly-metadata.lua
+#             - --lua-filter=Extras/author-info-blocks.lua
+#         keep-ipynb: true
+#         keep-md: true
+#         keep_tex:  true
+#         number_sections: true
+# csl: apa.csl
+bibliography: bibliography.bib
+# citation_package: biblatex
+# use-biblatex: true
+# # bibtex: bibliography.bib
+# bib-latex-options: "style=apa, sorting=nyt, backend=biber, maxcitenames=2, useprefix, doi=true, isbn=false, uniquename=false"
+# link-citations: true
+# citations-hover: true
+# toc: false
+# cap-location: top
+# latex-auto-mk: true
+#  header-includes:
+#      - \documentclass[jou]{apa}
+#      - \usepackage{fontspec}
+#      - \setmainfont{Times New Roman}
+#     - \usepackage{graphicx}
+#     - \usepackage{float}
+#     - \usepackage{longtable}
+#     - \setlength\parindent{24pt}
+#     - \usepackage{gb4e} \noautomath
+#     - \usepackage[longtable]{multirow}
+#     - \usepackage{longtable}[=v4.13]
+#     - \usepackage[flushleft]{threeparttable}
+#     - \usepackage{lscape}
+#     - \usepackage{makecell}
+#     - \usepackage{booktabs}
+#     - \usepackage{sectsty} \sectionfont{\centering \emph}
+#     - \usepackage{fontspec}
+#     - \setmainfont{Times New Roman}
+#     - \usepackage{booktabs}
+#     - \usepackage{array}
+#     - \usepackage{multirow}
+#     # - \usepackage[table]{xcolor}
+#     - \usepackage{wrapfig}
+#     - \usepackage{colortbl}
+#     - \usepackage{pdflscape}
+#     - \usepackage{tabu}
+#     - \usepackage{threeparttable}
+#     - \usepackage[normalem]{ulem}
 ---
 
 Scholars have long documented the influence of interpersonal bias in candidate recruitment, particularly with regard to job seekers' gender and age [@beattie2012PossibleUnconsciousBias; @heilman2012GenderStereotypesWorkplace; @paleari2019WhenPrejudiceYou]. This influence is observable during active candidate sourcing where job advertisements represent the first touchpoint in employer communication [@RynesS.1989]. These job ads can signal essential value-related information about an organization [@decooman2012PortrayingFittingValues] but can also determine the pool of potential candidates who apply for an advertised position and reinforce existing interpersonal biases. On the micro-level, job ads and the HR decisions that dictate their content are informed by the type of candidate employers explicitly or implicitly envision as "ideal" for a position [@kelly2010GenderedChallengeGendered]. @vanselm2021SearchOlderWorker, for instance, found that job ads targeting older workers contained frames consistent with general stereotypes of older individuals. On the meso-level, the content of job ads can also reflect the level of segregation (homogeneity), or lack thereof (heterogeneity), in an occupation. @gaucher2011EvidenceThatGendered found, job ads from traditionally male-dominated occupations such as engineer, plumber, and security guard tend to contain terms such as competitive, leader, ambitious, and similar wordings that are culturally related to masculinity, consequently making such ads less appealing to female candidates.
 
 Thus far, limited research has explored the relationship between the content of job advertisements and macro-level occupational segregation, i.e., at the sectoral level, demarcated specifically by social category composition [with the exception of @garcia-retamero2006PrejudiceWomenMalecongenial; as cited in @clarke2020GenderStereotypesGenderTyped]. Although career changes across sectors are more common than ones across occupations [@carrillo-tudela_extent_2016], studies show workers generally tend to stay within social category-typed job domains due to a backlash effect [@fritsch_horizontal_2020]. Sectoral segregation demarcated based on social category composition may thus be more persistent and present a higher social barrier to entry than segregation demarcated based on other occupational factors, thus becoming key to understanding possible inequity in candidate sourcing.
 
-Given this, the present study makes three main contributions. First, it investigates candidate sourcing in Dutch intranational sectors that are heterogeneous and homogenous in gender and age composition, i.e., female- and male-dominated vs. mixed-gender sectors and older worker- and younger worker-dominated vs. mixed-age sectors respectively (see Table 10). We take a communication perspective and specifically examine the extent to which framed gender- and age-related stereotypes are present in online job ads from heterogeneous and homogenous sectors. Second, it presents a systematic operationalization of broad-level gender- and age-related stereotypical frames in job ads. Employing the social categorization framing hypothesis [@Yang2015a], we adopt the conceptualization of pancultural and generalizable warmth- and competence-related social category stereotypes put forth in the stereotype content model [SCM\; @fiske2002ModelOftenMixed]. Third, we utilize a rigorous automated content analysis method that leverages holistic singular assessment coding and word vector representations as embeddings for supervised binary classification [@carducci_twitpersonality_2018]. This study thus seeks to answer the question: *to what extent are job advertisements from different occupational sectors framed in terms of warmth- and competence-based gender and age stereotypes?*
+Given this, the present study makes three main contributions. First, it investigates candidate sourcing in Dutch intranational sectors that are heterogeneous and homogenous in gender and age composition, i.e., female- and male-dominated vs. mixed-gender sectors and older worker- and younger worker-dominated vs. mixed-age sectors respectively (see Table 10). We take a communication perspective and specifically examine the extent to which framed gender- and age-related stereotypes are present in online job ads from heterogeneous and homogenous sectors. Second, it presents a systematic operationalization of broad-level gender- and age-related stereotypical frames in job ads. Employing the social categorization framing hypothesis [@Yang2015a], we adopt the conceptualization of pancultural and generalizable warmth- and competence-related social category stereotypes put forth in the stereotype content model [SCM; @fiske2002ModelOftenMixed]. Third, we utilize a rigorous automated content analysis method that leverages holistic singular assessment coding and word vector representations as embeddings for supervised binary classification [@carducci_twitpersonality_2018]. This study thus seeks to answer the question: *to what extent are job advertisements from different occupational sectors framed in terms of warmth- and competence-based gender and age stereotypes?*
 
 ## Framing Theory and Stereotypical Frames {#framing}
 

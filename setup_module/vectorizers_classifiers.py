@@ -57,11 +57,12 @@ for _ in range(5):
 main_dir = str(Path(code_dir).parents[0])
 sys.path.append(code_dir)
 
+from setup_module.classification import *
+
 # %%
 from setup_module.imports import *
 from setup_module.params import *
 from setup_module.scraping import *
-from setup_module.classification import *
 
 warnings.filterwarnings('ignore', category=DeprecationWarning)
 

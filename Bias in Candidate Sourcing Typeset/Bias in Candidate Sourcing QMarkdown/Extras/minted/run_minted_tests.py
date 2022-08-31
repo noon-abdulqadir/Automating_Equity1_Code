@@ -469,7 +469,9 @@ def run_html_tests(args):
     ``args`` (list of str)
         The base list of arguments to forward to pandoc.
     """
-    def verify(test_name, md, attrs=[]):
+    def verify(test_name, md, attrs=None):
+        if attrs is None:
+            attrs = []
         """Verify minted and any strings in attrs not produced"""
         output = run_pandoc(args + ["-t", "html5"], md)
         ensure_not_present(test_name, "mint", output)

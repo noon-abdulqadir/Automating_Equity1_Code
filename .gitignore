@@ -139,6 +139,11 @@ cython_debug/
 .Rhistory
 .RData
 
+# Stylesheet
+.css
+.cls
+.lua
+
 # directories
 Glassdoor/Data/
 Glassdoor/Data with nl/

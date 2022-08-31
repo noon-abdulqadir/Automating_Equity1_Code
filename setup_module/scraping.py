@@ -322,12 +322,20 @@ def get_driver(
         print('No proxy browsing enabled.')
         pass
 
-    driver = webdriver.Chrome(
-        executable_path=select_driver(),
-        options=options,
-        desired_capabilities=caps,
-        # service_args=[f'--verbose", "--log-path={MyWriter.LOGS_PATH}'],
-    )
+    try:
+        driver = webdriver.Chrome(
+            executable_path=select_driver(),
+            options=options,
+            desired_capabilities=caps,
+            # service_args=[f'--verbose", "--log-path={MyWriter.LOGS_PATH}'],
+        )
+    except:
+        driver = webdriver.Chrome(
+            service=Service(ChromeDriverManager().install()),
+            options=options,
+            desired_capabilities=caps,
+            # service_args=[f'--verbose", "--log-path={MyWriter.LOGS_PATH}'],
+        )
     # http = urllib3.PoolManager(num_pools=500)
     warnings.filterwarnings(
         'ignore', message='Connection pool is full, discarding connection: 127.0.0.1'
@@ -407,9 +415,10 @@ def check_window_back(driver, main_window, window_before, new_window):
 # keywords_main_info
 
 # %%
-def remove_code(keywords_lst: list) -> list:
+def remove_code(keywords_lst: list, keyword_clean_lst=None) -> list:
 
-    keyword_clean_lst = []
+    if keyword_clean_lst is None:
+        keyword_clean_lst = []
 
     for s in keywords_lst:
         lst = s.split()
@@ -782,8 +791,8 @@ def get_sector_df_from_cbs(
     df_sectors_all.reset_index(inplace=True, drop=True)
 
     # Take out "All economic activities" row
-    au = df_sectors_all[df_sectors_all['Sector Name'] == 'All economic activities']
-    au['Code'] = 'A-U'
+    au = df_sectors_all.loc[df_sectors_all['Sector Name'] == 'All economic activities']
+    au.loc[au['Code'] != 'A-U', 'Code'] = 'A-U'
     df_sectors_all = df_sectors_all[df_sectors_all['Sector Name'] != 'All economic activities']
     df_sectors_all.reset_index(inplace=True, drop=True)
     df_sectors_all = df_sectors_all.groupby(['Code'], as_index=True).agg({'Sector Name': 'first', **dict.fromkeys(df_sectors_all.loc[:, ~df_sectors_all.columns.isin(['Code', 'Sector Name'])].columns.to_list(), 'sum')})
@@ -1534,7 +1543,13 @@ def flatten(x: dict) -> dict:
 
 # %%
 # Remove duplicates from dict
-def remove_dupe_dicts(l, jobs = [], seen_ad = set(), seen_id = set()):
+def remove_dupe_dicts(l, jobs = None, seen_ad = None, seen_id = None):
+    if jobs is None:
+        jobs = []
+    if seen_ad is None:
+        seen_ad = set()
+    if seen_id is None:
+        seen_id = set()
 
     for n, i in enumerate(l):
         if i not in l[n + 1:] and l['Job Description'] not in [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan'] and len(l['Job Description']) != 0:
@@ -1648,7 +1663,7 @@ def act_cool_thread(driver, act_cool, act_cool_checker):
 
 # %%
 # Function to convert bs4 to xpath
-def xpath_soup(element):
+def xpath_soup(element, components=None):
 
     components = []
     child = element if element.name else element.parent
@@ -2522,7 +2537,7 @@ def post_cleanup(
     job_sector_save_enabled=False,
     keyword='',
     site='',
-    keywords_list=[],
+    keywords_list=None,
     all_save_path = f'job_id_vs_all.json',
     args=get_args(),
     translator = google_translator(),
@@ -2532,6 +2547,9 @@ def post_cleanup(
         f'NOTE: The function "post_cleanup" contains the following optional (default) arguments:\n{get_default_args(post_cleanup)}'
     )
     print('-' * 20)
+
+    if keywords_list is None:
+        keywords_list = []
 
     # Get original collected sectors
     trans_keyword_list = get_trans_keyword_list()
@@ -2651,11 +2669,13 @@ def chunks(lst, n):
 def clean_from_old(
     site=None,
     site_list=['Indeed', 'Glassdoor', 'LinkedIn'],
-    files = [],
+    files = None,
     exten_to_find = ['.json','csv','.xlsx'],
     translator = google_translator(),
     args=get_args(),
 ):
+    if files is None:
+        files = []
 
     if site is None and files == []:
         try:
@@ -2974,12 +2994,15 @@ def split_df_jobs_to_df_sent(
 
 # %%
 # Function to split job descriptions to sentences
-def split_to_sentences(df_jobs, df_sentence_list=[], args=get_args()):
+def split_to_sentences(df_jobs, df_sentence_list=None, args=get_args()):
     print('-' * 20)
     print(
         f'NOTE: The function "get_args" which is used by the "split_to_sentences" function contains the following optional (default) arguments:\n{get_default_args(get_args)}\nYou can change these arguments by calling "get_args",  passing the desired variable values to "get_args" then passing "get_args" to "split_to_sentences".'
     )
     print('-' * 20)
+
+    if df_sentence_list is None:
+        df_sentence_list = []
 
     if isinstance(df_jobs, list):
         df_list = df_jobs
@@ -3466,9 +3489,9 @@ def send_new_excel_to_gdrive(
     language='en',
     move_txt_file=True,
     gender_list=['Female', 'Male', 'Mixed Gender'],
-    done_job_excel_list=[],
-    new_job_excel_list=[],
-    new_batch_job_txt_list=[],
+    done_job_excel_list=None,
+    new_job_excel_list=None,
+    new_batch_job_txt_list=None,
     args=get_args(),
 ):
     dest_path=validate_path(f'{args["content_analysis_dir"]}')
@@ -3478,6 +3501,13 @@ def send_new_excel_to_gdrive(
         f'NOTE: The function "send_new_excel_to_gdrive" contains the following optional (default) arguments:\n{get_default_args(send_new_excel_to_gdrive)}.'
     )
     print('-' * 20)
+
+    if done_job_excel_list is None:
+        done_job_excel_list = []
+    if new_job_excel_list is None:
+        new_job_excel_list = []
+    if new_batch_job_txt_list is None:
+        new_batch_job_txt_list = []
 
     if coders_from_dict == True:
         with open(f'{args["parent_dir"]}coders_dict.json', encoding='utf8') as f:
@@ -3842,12 +3872,15 @@ def IR_kalpha(
         'Task_Warmth',
         'Task_Competence',
     ],
-    k_alpha_dict={},
+    k_alpha_dict=None,
     args=get_args(),
 ):
     print(
         f'NOTE: The function "IR_kalpha" contains the following optional (default) arguments:\n{get_default_args(IR_kalpha)}'
     )
+
+    if k_alpha_dict is None:
+        k_alpha_dict = {}
 
     for column in df_concat_coder_all[cal_columns]:
         k_alpha = simpledorff.calculate_krippendorffs_alpha_for_df(
@@ -3884,12 +3917,15 @@ def IR_all(
         'Task_Competence',
     ],
     coder_score_dict=defaultdict(list),
-    ir_all_dict={},
+    ir_all_dict=None,
     args=get_args(),
 ):
     print(
         f'NOTE: The function "IR_all" contains the following optional (default) arguments:\n{get_default_args(IR_all)}'
     )
+
+    if ir_all_dict is None:
+        ir_all_dict = {}
 
     for column in df_concat_coder_all[cal_columns]:
         for index, coder_number in enumerate(coders_numbers):
@@ -3937,8 +3973,8 @@ def IR_all(
 # %%
 def IR_all_final(
     coder,
-    k_alpha_dict={},
-    ir_all_dict={},
+    k_alpha_dict=None,
+    ir_all_dict=None,
     coders_numbers=[1, 2],
     coder_score_dict=defaultdict(list),
     save_enabled=True,
@@ -3952,6 +3988,11 @@ def IR_all_final(
     ],
     args=get_args(),
 ):
+    if k_alpha_dict is None:
+        k_alpha_dict = {}
+    if ir_all_dict is None:
+        ir_all_dict = {}
+
     reliability_dir=f'{args["content_analysis_dir"]}Reliability Checks/'
     print('-' * 20)
     print('\n')

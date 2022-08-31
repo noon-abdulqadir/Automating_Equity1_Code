@@ -66,7 +66,7 @@ sys.path.append(code_dir)
 env_name = 'study1'
 from_file = False
 
-# os.system('source /opt/homebrew/Caskroom/miniforge/base/bin/activate')
+# os.system('source /opt/homebrew/Caskroom/mambaforge/base/bin/activate')
 # os.system(f'conda init zsh')
 # os.system(f'conda activate {env_name}')
 
@@ -101,7 +101,6 @@ try:
     import inspect
     import itertools
     import json
-    import janitor
     import logging
     import logging.handlers
     import math
@@ -109,9 +108,7 @@ try:
     import operator
     import pathlib
     import pickle
-    import pipe
     import platform
-    import plotnine
     import pprint
     import random
     import re
@@ -131,37 +128,45 @@ try:
     from typing import Dict, List, Optional, Set, Tuple
 
     import cardinality
-    import cufflinks as cf
+    # import cufflinks as cf
     import en_core_web_sm
     import gensim
     import gensim.downloader as gensim_api
-    import h5pickle as h5py
-    import import_ipynb
+
+    # import h5pickle as h5py
+    # import import_ipynb
     import IPython
     import IPython.core
+
+    # import janitor
     import joblib
     import langdetect
-    import libmaths as lm
+
+    # import libmaths as lm
     # import lux
     import lxml
     import matplotlib as mpl
     import matplotlib.gridspec as gridspec
     import matplotlib.image as img
     import matplotlib.pyplot as plt
-    import nbimporter
+
+    # import nbimporter
     import nltk
     import nltk.data
     import numpy as np
     import openpyxl
     import pandas as pd
     import pingouin as pg
+    import pipe
+    import plotnine
     import pretty_errors
     import progressbar
     import pyarrow as pa
     import pyarrow.parquet as pq
     import pydantic
-    import pymysql
-    import PyPDF2
+
+    # import pymysql
+    # import PyPDF2
     import requests
     import researchpy as rp
     import scipy
@@ -169,60 +174,86 @@ try:
     import selenium.webdriver as webdriver
     import selenium.webdriver.support.ui as ui
     import session_info
+
     # import sh
     import simpledorff
     import sklearn as sk
     import spacy
-    import sqlalchemy
+
+    # import sqlalchemy
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
     import swifter
-    import tensorflow as tf
-    import toolz
+
+    # import tensorflow as tf
+    # import toolz
     import torch
     import torch.nn as nn
     import tqdm
-    import transformers
+
+    # import transformers
     import urllib3
     import xgboost as xgb
     import xlsxwriter
+
     # from accelerate import Accelerator
     from bs4 import BeautifulSoup
-    from dateutil.parser import parse
+
+    # from dateutil.parser import parse
     from gensim import corpora, models
     from gensim.corpora import Dictionary
-    from gensim.models import (CoherenceModel, FastText, KeyedVectors,
-                               TfidfModel, Word2Vec)
+    from gensim.models import (
+        CoherenceModel,
+        FastText,
+        KeyedVectors,
+        TfidfModel,
+        Word2Vec,
+    )
     from gensim.models.doc2vec import Doc2Vec, TaggedDocument
     from gensim.models.phrases import ENGLISH_CONNECTOR_WORDS, Phraser, Phrases
-    from gensim.parsing.preprocessing import (preprocess_string,
-                                              remove_stopwords)
-    from gensim.similarities import (SoftCosineSimilarity,
-                                     SparseTermSimilarityMatrix,
-                                     WordEmbeddingSimilarityIndex)
+    from gensim.parsing.preprocessing import preprocess_string, remove_stopwords
+    from gensim.similarities import (
+        SoftCosineSimilarity,
+        SparseTermSimilarityMatrix,
+        WordEmbeddingSimilarityIndex,
+    )
     from gensim.test.utils import common_texts, datapath, get_tmpfile
     from gensim.utils import save_as_line_sentence, simple_preprocess
     from google_trans_new import google_translator
-    from http_request_randomizer.requests.proxy.requestProxy import \
-        RequestProxy
+
+    # from http_request_randomizer.requests.proxy.requestProxy import RequestProxy
     from imblearn.combine import SMOTEENN, SMOTETomek
     from imblearn.datasets import make_imbalance
     from imblearn.metrics import classification_report_imbalanced
     from imblearn.over_sampling import SMOTE, RandomOverSampler
-    from imblearn.under_sampling import (EditedNearestNeighbours, NearMiss,
-                                         RandomUnderSampler, TomekLinks)
+    from imblearn.under_sampling import (
+        EditedNearestNeighbours,
+        NearMiss,
+        RandomUnderSampler,
+        TomekLinks,
+    )
     from IPython.core.interactiveshell import InteractiveShell
     from IPython.display import HTML, Image, Markdown, display
     from ipywidgets import FloatSlider, interactive
-    from joblib import parallel_backend
-    from keras.layers import Activation, Dense
-    from keras.models import Sequential
+
+    # from joblib import parallel_backend
+    # from keras.layers import Activation, Dense
+    # from keras.models import Sequential
     from langdetect import DetectorFactory, detect, detect_langs
-    from matplotlib.animation import FuncAnimation
-    from mpl_toolkits.mplot3d import Axes3D
-    from nltk import (WordNetLemmatizer, agreement, bigrams, pos_tag,
-                      regexp_tokenize, sent_tokenize, trigrams, word_tokenize,
-                      wordpunct_tokenize)
+
+    # from matplotlib.animation import FuncAnimation
+    # from mpl_toolkits.mplot3d import Axes3D
+    from nltk import (
+        WordNetLemmatizer,
+        agreement,
+        bigrams,
+        pos_tag,
+        regexp_tokenize,
+        sent_tokenize,
+        trigrams,
+        word_tokenize,
+        wordpunct_tokenize,
+    )
     from nltk.corpus import abc
     from nltk.corpus import stopwords as sw
     from nltk.corpus import wordnet as wn
@@ -230,27 +261,36 @@ try:
     from nltk.stem import LancasterStemmer, PorterStemmer, SnowballStemmer
     from nltk.tokenize import WordPunctTokenizer
     from numpy import arange, argmax, cumsum
-    from pandas.api.types import (is_numeric_dtype, is_object_dtype,
-                                  is_string_dtype)
+    from pandas.api.types import is_numeric_dtype, is_object_dtype, is_string_dtype
     from pandas_confusion import ConfusionMatrix
     from plot_metric.functions import BinaryClassification
     from scipy import spatial, stats
-    from scipy.stats import (anderson, chi2_contingency, f_oneway,
-                             mannwhitneyu, normaltest, shapiro, stats)
+    from scipy.stats import (
+        anderson,
+        chi2_contingency,
+        f_oneway,
+        mannwhitneyu,
+        normaltest,
+        shapiro,
+        stats,
+    )
     from selenium.common.exceptions import *
-    from selenium.common.exceptions import (ElementClickInterceptedException,
-                                            ElementNotVisibleException,
-                                            NoAlertPresentException,
-                                            NoSuchElementException,
-                                            TimeoutException)
+    from selenium.common.exceptions import (
+        ElementClickInterceptedException,
+        ElementNotVisibleException,
+        NoAlertPresentException,
+        NoSuchElementException,
+        TimeoutException,
+    )
     from selenium.webdriver import ActionChains, Chrome
     from selenium.webdriver.chrome.options import Options
+    from selenium.webdriver.chrome.service import Service
     from selenium.webdriver.common.by import By
-    from selenium.webdriver.common.desired_capabilities import \
-        DesiredCapabilities
+    from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
     from selenium.webdriver.common.keys import Keys
     from selenium.webdriver.support import expected_conditions as EC
     from selenium.webdriver.support.ui import Select, WebDriverWait
+
     # from sentence_transformers import SentenceTransformer, losses, util
     from sklearn import feature_selection, metrics, set_config, svm, utils
     from sklearn.base import BaseEstimator, TransformerMixin
@@ -259,58 +299,102 @@ try:
     from sklearn.datasets import load_files
     from sklearn.decomposition import PCA, TruncatedSVD
     from sklearn.dummy import DummyClassifier
-    from sklearn.ensemble import (AdaBoostClassifier, BaggingClassifier,
-                                  BaggingRegressor, ExtraTreesClassifier,
-                                  GradientBoostingClassifier,
-                                  RandomForestClassifier, StackingClassifier,
-                                  StackingRegressor, VotingClassifier,
-                                  VotingRegressor)
-    from sklearn.feature_extraction.text import (CountVectorizer,
-                                                 FeatureHasher,
-                                                 TfidfVectorizer)
-    from sklearn.feature_selection import (SelectFdr, SelectFpr,
-                                           SelectFromModel, SelectFwe,
-                                           SelectKBest, SelectPercentile, chi2,
-                                           f_classif, f_regression,
-                                           mutual_info_classif,
-                                           mutual_info_regression)
+    from sklearn.ensemble import (
+        AdaBoostClassifier,
+        BaggingClassifier,
+        BaggingRegressor,
+        ExtraTreesClassifier,
+        GradientBoostingClassifier,
+        RandomForestClassifier,
+        StackingClassifier,
+        StackingRegressor,
+        VotingClassifier,
+        VotingRegressor,
+    )
+    from sklearn.feature_extraction.text import (
+        CountVectorizer,
+        FeatureHasher,
+        TfidfVectorizer,
+    )
+    from sklearn.feature_selection import (
+        SelectFdr,
+        SelectFpr,
+        SelectFromModel,
+        SelectFwe,
+        SelectKBest,
+        SelectPercentile,
+        chi2,
+        f_classif,
+        f_regression,
+        mutual_info_classif,
+        mutual_info_regression,
+    )
     from sklearn.impute import SimpleImputer
     from sklearn.kernel_ridge import KernelRidge
-    from sklearn.linear_model import (LogisticRegression,
-                                      PassiveAggressiveClassifier, SGDClassifier, Perceptron)
+    from sklearn.linear_model import (
+        LogisticRegression,
+        PassiveAggressiveClassifier,
+        Perceptron,
+        SGDClassifier,
+    )
     from sklearn.manifold import TSNE
-    from sklearn.metrics import (ConfusionMatrixDisplay, accuracy_score,
-                                 balanced_accuracy_score, brier_score_loss,
-                                 classification_report, cohen_kappa_score,
-                                 confusion_matrix, f1_score, log_loss,
-                                 make_scorer, matthews_corrcoef,
-                                 precision_recall_curve, precision_score,
-                                 recall_score, roc_auc_score)
+    from sklearn.metrics import (
+        ConfusionMatrixDisplay,
+        accuracy_score,
+        balanced_accuracy_score,
+        brier_score_loss,
+        classification_report,
+        cohen_kappa_score,
+        confusion_matrix,
+        f1_score,
+        log_loss,
+        make_scorer,
+        matthews_corrcoef,
+        precision_recall_curve,
+        precision_score,
+        recall_score,
+        roc_auc_score,
+    )
     from sklearn.metrics.pairwise import cosine_similarity
-    from sklearn.model_selection import (GridSearchCV, KFold, LeaveOneOut,
-                                         RandomizedSearchCV,
-                                         RepeatedStratifiedKFold, ShuffleSplit,
-                                         StratifiedKFold,
-                                         StratifiedShuffleSplit,
-                                         cross_val_score, cross_validate,
-                                         learning_curve, train_test_split)
+    from sklearn.model_selection import (
+        GridSearchCV,
+        KFold,
+        LeaveOneOut,
+        RandomizedSearchCV,
+        RepeatedStratifiedKFold,
+        ShuffleSplit,
+        StratifiedKFold,
+        StratifiedShuffleSplit,
+        cross_val_score,
+        cross_validate,
+        learning_curve,
+        train_test_split,
+    )
     from sklearn.multiclass import OneVsOneClassifier, OneVsRestClassifier
     from sklearn.multioutput import MultiOutputClassifier
-    from sklearn.naive_bayes import GaussianNB, MultinomialNB, BernoulliNB
+    from sklearn.naive_bayes import BernoulliNB, GaussianNB, MultinomialNB
     from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
     from sklearn.neural_network import MLPClassifier, MLPRegressor
     from sklearn.pipeline import FeatureUnion, Pipeline, make_pipeline
-    from sklearn.preprocessing import (Binarizer, FunctionTransformer,
-                                       LabelBinarizer, LabelEncoder,
-                                       MinMaxScaler, OneHotEncoder,
-                                       StandardScaler, scale)
+    from sklearn.preprocessing import (
+        Binarizer,
+        FunctionTransformer,
+        LabelBinarizer,
+        LabelEncoder,
+        MinMaxScaler,
+        OneHotEncoder,
+        StandardScaler,
+        scale,
+    )
     from sklearn.svm import SVC, LinearSVC
     from sklearn.tree import DecisionTreeClassifier
-    from sklearn.utils import (check_consistent_length, check_random_state,
-                               check_X_y)
+    from sklearn.utils import check_consistent_length, check_random_state, check_X_y
     from sklearn.utils.estimator_checks import check_estimator
-    from sklearn.utils.validation import (check_is_fitted, column_or_1d,
-                                          has_fit_parameter)
+    from sklearn.utils.validation import (
+        check_is_fitted,
+        column_or_1d,
+        has_fit_parameter,
+    )
     from sklearn_pandas import DataFrameMapper, gen_features
     from sklearn_pandas.dataframe_mapper import add_column_names_to_exception
     from specification_curve import specification_curve as specy
@@ -319,26 +403,29 @@ try:
     from statsmodels.graphics.factorplots import interaction_plot
     from statsmodels.stats.diagnostic import het_white
     from statsmodels.stats.outliers_influence import variance_inflation_factor
-    from stop_words import get_stop_words
-    from tensorflow import keras
-    from tensorflow.keras import backend as K
-    from tensorflow.keras import layers, models
-    from tensorflow.keras import preprocessing
-    from tensorflow.keras import preprocessing as kprocessing
+
+    # from stop_words import get_stop_words
+    # from tensorflow import keras
+    # from tensorflow.keras import backend as K
+    # from tensorflow.keras import layers, models
+    # from tensorflow.keras import preprocessing
+    # from tensorflow.keras import preprocessing as kprocessing
     from textblob import TextBlob, Word
     from textblob.en.inflect import pluralize, singularize
-    from transformers import (AutoConfig, AutoModel, AutoTokenizer, BertConfig,
-                              BertModel, BertPreTrainedModel, BertTokenizer,
-                              TFBertModel)
-    from transformers.trainer_pt_utils import get_parameter_names
-    from whatthelang import WhatTheLang
+    from webdriver_manager.chrome import ChromeDriverManager
+
+    # from transformers import (AutoConfig, AutoModel, AutoTokenizer, BertConfig,
+    #                           BertModel, BertPreTrainedModel, BertTokenizer,
+    #                           TFBertModel)
+    # from transformers.trainer_pt_utils import get_parameter_names
+    # from whatthelang import WhatTheLang
     from xgboost import XGBClassifier
     from yellowbrick.text import TSNEVisualizer
 
 except ImportError as error:
     module_name = str(error).split('named')[1]
     print(f'The library {module_name} is not installed. Installing now.')
-    # %conda install {module_name}
+    # %mamba install --yes {module_name}
 
 # %%
 # Tweak Settings
@@ -394,7 +481,7 @@ mpl.rcParams['text.usetex'] = False
 font = {'family': 'arial', 'weight': 'normal', 'size': 10}
 mpl.rc('font', **font)
 plt.style.use('ggplot')
-cf.set_config_file(theme='pearl', sharing='public', offline=True)
+# cf.set_config_file(theme='pearl', sharing='public', offline=True)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 5000)
@@ -414,7 +501,8 @@ pd.set_option('display.float_format', '{:.3f}'.format)
 # nltk.download('vader_lexicon', download_dir = nltk_path)
 # nltk.download_shell()
 
-nlp = spacy.load('en_core_web_sm')
+nlp = en_core_web_sm.load()
+# nlp = spacy.load('en_core_web_sm')
 # nlp = spacy.load('en_core_web_trf')
 
 

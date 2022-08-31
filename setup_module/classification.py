@@ -160,8 +160,8 @@ def open_and_clean_labeled_excel(
 # Open unlabled excel files
 def open_and_clean_unlabeled_excel(
     main_from_file=True,
-    EXCEL_PATHS=[],
-    df_unlabeled_list=[],
+    EXCEL_PATHS=None,
+    df_unlabeled_list=None,
     language='en',
     get_new_data_enabled=True,
     cleanup_return_enabled=True,
@@ -175,6 +175,11 @@ def open_and_clean_unlabeled_excel(
     ],
     args=get_args(),
 ):
+    if EXCEL_PATHS is None:
+        EXCEL_PATHS = []
+    if df_unlabeled_list is None:
+        df_unlabeled_list = []
+
     if get_new_data_enabled == True:
         print('Running post cleanup and splitting sentences.')
         if cleanup_return_enabled == True:
@@ -1461,212 +1466,212 @@ def optimization(
 
     return y_test_pred_new, df_ROC_plot
 
-# %%
-def load_glove_with_vocabulary(vocabulary_map, feature_names, print_enabled, glove_file = validate_path(f'{glove_path}glove.840B.300d.txt')):
+# # %%
+# def load_glove_with_vocabulary(vocabulary_map, feature_names, print_enabled, glove_file = validate_path(f'{glove_path}glove.840B.300d.txt')):
 
-    unique_words = set(feature_names)
-    if print_enabled:
-        print(f'Number of unique words: {len(unique_words)}')
+#     unique_words = set(feature_names)
+#     if print_enabled:
+#         print(f'Number of unique words: {len(unique_words)}')
 
-    glove = open(glove_file, 'r', encoding='utf8')
+#     glove = open(glove_file, 'r', encoding='utf8')
 
-    emb_list = [None] * len(vocabulary_map)
+#     emb_list = [None] * len(vocabulary_map)
 
-    if print_enabled:
-        print(f'Length of vocabulary: {len(vocabulary_map)}')
+#     if print_enabled:
+#         print(f'Length of vocabulary: {len(vocabulary_map)}')
 
-    found_words = 0
-    for i, line in enumerate(glove):
-        splitLine = line.split(' ')
-        word = splitLine[0]
-        if word in vocabulary_map:
-            found_words += 1
-            embedding = np.array([float(val) for val in splitLine[1:]], dtype=np.float32)
-            emb_list[vocabulary_map[word]] = embedding
+#     found_words = 0
+#     for i, line in enumerate(glove):
+#         splitLine = line.split(' ')
+#         word = splitLine[0]
+#         if word in vocabulary_map:
+#             found_words += 1
+#             embedding = np.array([float(val) for val in splitLine[1:]], dtype=np.float32)
+#             emb_list[vocabulary_map[word]] = embedding
 
-    if print_enabled:
-        print(f'Loaded GloVe vectors for {found_words} words. Generating random vectors for the rest.')
+#     if print_enabled:
+#         print(f'Loaded GloVe vectors for {found_words} words. Generating random vectors for the rest.')
 
-    full_emb_list = []
-    glove_mean = -0.00584
-    glove_std = 0.452
-    full_emb_list = [np.random.normal(glove_mean, glove_std, (1, 300)) if emb is None else emb for emb in emb_list ]
+#     full_emb_list = []
+#     glove_mean = -0.00584
+#     glove_std = 0.452
+#     full_emb_list = [np.random.normal(glove_mean, glove_std, (1, 300)) if emb is None else emb for emb in emb_list ]
 
-    if print_enabled:
-        print(f'Done. Vectors loaded : {len(full_emb_list)}')
+#     if print_enabled:
+#         print(f'Done. Vectors loaded : {len(full_emb_list)}')
 
-    return np.vstack(full_emb_list)
-
-
-# %%
-# this function creates a normalized vector for the whole sentence
-def sent2vec(sentences, embeddings_index=None, external_glove=True, extra_preprocessing_enabled=False):
-
-    if external_glove == False and embeddings_index is None:
-        embeddings_index= get_glove()
-
-    if extra_preprocessing_enabled == False:
-        words = sentences
-
-    elif extra_preprocessing_enabled == True:
-        stop_words = set(sw.words('english'))
-        words = str(sentences).lower()
-        words = word_tokenize(words)
-        words = [w for w in words if (w not in stop_words) and (w.isalpha())]
-
-    M = []
-
-    try:
-        for w in words:
-            try:
-                M.append(embeddings_index[w])
-            except Exception:
-                continue
-
-        M = np.array(M)
-        v = M.sum(axis=0)
-        if type(v) != np.ndarray:
-            return np.zeros(300)
-
-        return v / np.sqrt((v ** 2).sum())
-
-    except Exception:
-        return np.zeros(300)
+#     return np.vstack(full_emb_list)
 
 
-# %%
-def get_feature_name_and_refit_X_train_on_chi_test(train, X_train, vectorizer, refit_vectorizer, p_value_limit = 0.95):
+# # %%
+# # this function creates a normalized vector for the whole sentence
+# def sent2vec(sentences, embeddings_index=None, external_glove=True, extra_preprocessing_enabled=False):
 
-    feature_names = vectorizer.get_feature_names_out()
-    y = train[str(col)].astype('int64')
-    X_names = feature_names
+#     if external_glove == False and embeddings_index is None:
+#         embeddings_index= get_glove()
 
-    dtf_features = pd.DataFrame()
+#     if extra_preprocessing_enabled == False:
+#         words = sentences
 
-    for cat in np.unique(y):
-        chi2, p = feature_selection.chi2(X_train, y==cat)
-        dtf_features = dtf_features.append(pd.DataFrame({'feature':X_names, 'score':1-p, 'y':cat}))
-        dtf_features = dtf_features.sort_values(['y','score'], ascending=[True,False])
-        dtf_features = dtf_features[dtf_features['score']>p_value_limit]
+#     elif extra_preprocessing_enabled == True:
+#         stop_words = set(sw.words('english'))
+#         words = str(sentences).lower()
+#         words = word_tokenize(words)
+#         words = [w for w in words if (w not in stop_words) and (w.isalpha())]
 
-    X_names = dtf_features['feature'].unique().tolist()
+#     M = []
 
-    vectorizer = refit_vectorizer(vocabulary=X_names)
-    X_train = vectorizer.fit_transform(train[f'{str(text_col)}'].astype('str'))
+#     try:
+#         for w in words:
+#             try:
+#                 M.append(embeddings_index[w])
+#             except Exception:
+#                 continue
 
-    return X_train, vectorizer, dtf_features, X_names, feature_names
+#         M = np.array(M)
+#         v = M.sum(axis=0)
+#         if type(v) != np.ndarray:
+#             return np.zeros(300)
+
+#         return v / np.sqrt((v ** 2).sum())
+
+#     except Exception:
+#         return np.zeros(300)
 
 
-# %%
-def train_offset(X, data_type):
+# # %%
+# def get_feature_name_and_refit_X_train_on_chi_test(train, X_train, vectorizer, refit_vectorizer, p_value_limit = 0.95):
 
-    word_indices_list = []
-    offsets_list = []
+#     feature_names = vectorizer.get_feature_names_out()
+#     y = train[str(col)].astype('int64')
+#     X_names = feature_names
 
-    offset = 0
-    for i in range(0, X.shape[0]):
-        offsets_list.append(offset)
-        row, col = X.getrow(i).nonzero()
-        word_indices_list.append(torch.tensor(torch.from_numpy(col), dtype=torch.int64))
-        offset += len(row)
+#     dtf_features = pd.DataFrame()
 
-    words = torch.cat(word_indices_list)
-    offsets = torch.tensor(offsets_list, dtype=torch.int64)
+#     for cat in np.unique(y):
+#         chi2, p = feature_selection.chi2(X_train, y==cat)
+#         dtf_features = dtf_features.append(pd.DataFrame({'feature':X_names, 'score':1-p, 'y':cat}))
+#         dtf_features = dtf_features.sort_values(['y','score'], ascending=[True,False])
+#         dtf_features = dtf_features[dtf_features['score']>p_value_limit]
 
-    print(f'{str(data_type).title()} words shape: {words.shape}')
-    print(f'{str(data_type).title()} offsets shape: {offsets.shape}')
-    print(f'Created words and offsets for {str(data_type)} data')
+#     X_names = dtf_features['feature'].unique().tolist()
 
-    return words, offsets
+#     vectorizer = refit_vectorizer(vocabulary=X_names)
+#     X_train = vectorizer.fit_transform(train[f'{str(text_col)}'].astype('str'))
 
-# %%
-class BagOfEmbeddings(nn.Module):
-    def __init__(self, embedding_weights, hidden_dim=100, dropout=0.5, embedding_mode='mean'):
-        super(BagOfEmbeddings, self).__init__()
-        self.hidden_dim = hidden_dim
-        self.dropout = nn.Dropout(p=dropout)
-        embedding_size = embedding_weights.shape[1]
-        self.embedding = nn.EmbeddingBag(embedding_weights.shape[0], embedding_size, mode=embedding_mode)
-        self.embedding.weight = nn.Parameter(torch.from_numpy(embedding_weights).float())
-        self.embedding.weight.requires_grad = False
-        self.final_layer = nn.Sequential(
-            nn.Dropout(p=dropout),
-            nn.Linear(embedding_size, hidden_dim),
-            nn.ReLU(),
-            nn.Dropout(p=dropout),
-            nn.Linear(hidden_dim, 1)
-        )
+#     return X_train, vectorizer, dtf_features, X_names, feature_names
 
-    def forward(self, words, offsets):
-        x = self.embedding(words, offsets)
 
-        return self.final_layer(x)
+# # %%
+# def train_offset(X, data_type):
+
+#     word_indices_list = []
+#     offsets_list = []
+
+#     offset = 0
+#     for i in range(0, X.shape[0]):
+#         offsets_list.append(offset)
+#         row, col = X.getrow(i).nonzero()
+#         word_indices_list.append(torch.tensor(torch.from_numpy(col), dtype=torch.int64))
+#         offset += len(row)
+
+#     words = torch.cat(word_indices_list)
+#     offsets = torch.tensor(offsets_list, dtype=torch.int64)
+
+#     print(f'{str(data_type).title()} words shape: {words.shape}')
+#     print(f'{str(data_type).title()} offsets shape: {offsets.shape}')
+#     print(f'Created words and offsets for {str(data_type)} data')
+
+#     return words, offsets
 
 # %%
-def get_batch(words, offsets, targets, start_index, size):
-    first_word_index = offsets[start_index]
-    offsets_end_index = start_index + size
-    if offsets_end_index > offsets.shape[0]:
-        offsets_end_index = offsets.shape[0]
-        last_word_index = words.shape[0]
-    else:
-        last_word_index = offsets[offsets_end_index]
-    if targets is not None:
-        return words[first_word_index:last_word_index], offsets[start_index:offsets_end_index] - offsets[start_index], targets[start_index:offsets_end_index]
-    else:
-        return words[first_word_index:last_word_index], offsets[start_index:offsets_end_index] - offsets[start_index], None
+# class BagOfEmbeddings(nn.Module):
+#     def __init__(self, embedding_weights, hidden_dim=100, dropout=0.5, embedding_mode='mean'):
+#         super(BagOfEmbeddings, self).__init__()
+#         self.hidden_dim = hidden_dim
+#         self.dropout = nn.Dropout(p=dropout)
+#         embedding_size = embedding_weights.shape[1]
+#         self.embedding = nn.EmbeddingBag(embedding_weights.shape[0], embedding_size, mode=embedding_mode)
+#         self.embedding.weight = nn.Parameter(torch.from_numpy(embedding_weights).float())
+#         self.embedding.weight.requires_grad = False
+#         self.final_layer = nn.Sequential(
+#             nn.Dropout(p=dropout),
+#             nn.Linear(embedding_size, hidden_dim),
+#             nn.ReLU(),
+#             nn.Dropout(p=dropout),
+#             nn.Linear(hidden_dim, 1)
+#         )
 
-# %%
-def run_training(epochs, emb_model, optimizer, loss_fn,
-                all_words, all_offsets,
-                all_targets, batch_size=32):
+#     def forward(self, words, offsets):
+#         x = self.embedding(words, offsets)
 
-    print(f'Training samples: {all_offsets.shape[0]}')
-    batch_losses = []
-    for e in range(epochs):
-        emb_model.train()
-        start_index = 0
-        batch_nr = 0
-        print(f'Starting epoch {(e + 1)}')
-        while start_index < all_offsets.shape[0]:
-            batch_nr += 1
-            words, offsets, target = get_batch(all_words, all_offsets, all_targets, start_index, batch_size)
-            start_index += batch_size
-            optimizer.zero_grad()
-            output = emb_model(words, offsets)
-            loss = loss_fn(output.squeeze(), target)
-            loss.backward()
-            optimizer.step()
-            if batch_nr % 1000 == 0:
-                batch_losses.append(loss.item())
-                print(f'Epoch: {e + 1}, batch: {batch_nr}, loss: {loss.item():.5f}')
+#         return self.final_layer(x)
 
-    return batch_losses
+# # %%
+# def get_batch(words, offsets, targets, start_index, size):
+#     first_word_index = offsets[start_index]
+#     offsets_end_index = start_index + size
+#     if offsets_end_index > offsets.shape[0]:
+#         offsets_end_index = offsets.shape[0]
+#         last_word_index = words.shape[0]
+#     else:
+#         last_word_index = offsets[offsets_end_index]
+#     if targets is not None:
+#         return words[first_word_index:last_word_index], offsets[start_index:offsets_end_index] - offsets[start_index], targets[start_index:offsets_end_index]
+#     else:
+#         return words[first_word_index:last_word_index], offsets[start_index:offsets_end_index] - offsets[start_index], None
 
-# %%
-def run_test(emb_model, loss_fn,
-                all_words, all_offsets,
-                all_targets, batch_size=256):
+# # %%
+# def run_training(epochs, emb_model, optimizer, loss_fn,
+#                 all_words, all_offsets,
+#                 all_targets, batch_size=32):
 
-    print('Test samples: ', all_offsets.shape[0])
-    batch_losses = []
-    outputs = []
-    emb_model.eval()
-    start_index = 0
-    batch_nr = 0
-    print('Starting testing')
-    while start_index < all_offsets.shape[0]:
-        batch_nr += 1
-        words, offsets, target = get_batch(all_words, all_offsets, all_targets, start_index, batch_size)
-        start_index += batch_size
-        output = emb_model(words, offsets)
-        outputs.append(torch.sigmoid(output))
-        if loss_fn:
-            loss = loss_fn(output.squeeze(), target)
-            if batch_nr % 100 == 0:
-                batch_losses.append(loss.item())
-                print(f'Batch: {batch_nr}, loss: {loss.item():.5f}')
+#     print(f'Training samples: {all_offsets.shape[0]}')
+#     batch_losses = []
+#     for e in range(epochs):
+#         emb_model.train()
+#         start_index = 0
+#         batch_nr = 0
+#         print(f'Starting epoch {(e + 1)}')
+#         while start_index < all_offsets.shape[0]:
+#             batch_nr += 1
+#             words, offsets, target = get_batch(all_words, all_offsets, all_targets, start_index, batch_size)
+#             start_index += batch_size
+#             optimizer.zero_grad()
+#             output = emb_model(words, offsets)
+#             loss = loss_fn(output.squeeze(), target)
+#             loss.backward()
+#             optimizer.step()
+#             if batch_nr % 1000 == 0:
+#                 batch_losses.append(loss.item())
+#                 print(f'Epoch: {e + 1}, batch: {batch_nr}, loss: {loss.item():.5f}')
 
-    return batch_losses, torch.cat(outputs)
+#     return batch_losses
+
+# # %%
+# def run_test(emb_model, loss_fn,
+#                 all_words, all_offsets,
+#                 all_targets, batch_size=256):
+
+#     print('Test samples: ', all_offsets.shape[0])
+#     batch_losses = []
+#     outputs = []
+#     emb_model.eval()
+#     start_index = 0
+#     batch_nr = 0
+#     print('Starting testing')
+#     while start_index < all_offsets.shape[0]:
+#         batch_nr += 1
+#         words, offsets, target = get_batch(all_words, all_offsets, all_targets, start_index, batch_size)
+#         start_index += batch_size
+#         output = emb_model(words, offsets)
+#         outputs.append(torch.sigmoid(output))
+#         if loss_fn:
+#             loss = loss_fn(output.squeeze(), target)
+#             if batch_nr % 100 == 0:
+#                 batch_losses.append(loss.item())
+#                 print(f'Batch: {batch_nr}, loss: {loss.item():.5f}')
+
+#     return batch_losses, torch.cat(outputs)
 
 # %%
