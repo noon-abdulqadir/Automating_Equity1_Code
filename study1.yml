@@ -128,8 +128,6 @@ dependencies:
   - libgfortran5=11.0.1.dev0=hf114ba7_23
   - libiconv=1.16=h642e427_0
   - liblapack=3.9.0=15_osxarm64_openblas
-  - libmamba=0.25.0=h65ddd87_2
-  - libmambapy=0.25.0=py38h73ac263_2
   - libnghttp2=1.47.0=h232270b_1
   - libopenblas=0.3.20=openmp_h2209c59_0
   - libpng=1.6.37=h2c9beb0_3
@@ -153,7 +151,6 @@ dependencies:
   - lz4=4.0.0=py38h6b08218_2
   - lz4-c=1.9.3=hbdafb3b_1
   - lzo=2.10=h642e427_1000
-  - mamba=0.25.0=py38h3ce6457_2
   - markupsafe=2.1.1=py38h33210d7_1
   - matplotlib-base=3.5.2=py38hd7f6e49_0
   - matplotlib-inline=0.1.3=pyhd8ed1ab_0
@@ -382,4 +379,4 @@ dependencies:
     - whatthelang==1.0.1
 variables:
   CONDA_SUBDIR: osx-arm64
-prefix: /opt/homebrew/Caskroom/mambaforge/base/envs/study1
+prefix: /opt/homebrew/Caskroom/miniforge/base/envs/study1
