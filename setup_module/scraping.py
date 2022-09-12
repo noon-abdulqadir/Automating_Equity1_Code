@@ -112,7 +112,7 @@ def validate_path(file: str, file_extensions=['.*', 'chromedriver']) -> str:
                 # file = input(f'No file found at {file}.\nPlease enter correct path.')
                 try:
                     print(f'File {file} not found.')
-                except pydantic.ValidationError as e:
+                except Exception as e:
                     print(e.json())
     elif not file.endswith(tuple(file_extensions)):
         if not os.path.isdir(file):
@@ -120,7 +120,7 @@ def validate_path(file: str, file_extensions=['.*', 'chromedriver']) -> str:
                 # file = input(f'No file found at {file}.\nPlease enter correct path.')
                 try:
                     print(f'File {file} not found.')
-                except pydantic.ValidationError as e:
+                except Exception as e:
                     print(e.json())
 
     return file
@@ -811,10 +811,10 @@ def get_sector_df_from_cbs(
     for index, row in df_sectors_all.iteritems():
         if ('Total' not in index[0]) and ('%' not in index[1]) and ('n' in index[1]) and (not isinstance(row[0], str)) and (not math.isnan(row[0])):
             df_sectors_all[(index[0], '% per Sector')] = row/df_sectors_all[('Total Workforce', 'n')]#*100
-            df_sectors_all[(index[0], '% per Social Category')] = row/df_sectors_all.loc[df_sectors_all[df_sectors_all[('Industry class / branch (SIC2008)', 'Sector Name')] == 'Total (excluding A-U)'].index.values.astype(int)[0], index]#*100
-            df_sectors_all[(index[0], '% per Workforce')] = row/df_sectors_all.loc[df_sectors_all[df_sectors_all[('Industry class / branch (SIC2008)', 'Sector Name')] == 'Total (excluding A-U)'].index.values.astype(int)[0], ('Total Workforce', 'n')]#*100
+            df_sectors_all[(index[0], '% per Social Category')] = row/df_sectors_all.at[df_sectors_all[df_sectors_all[('Industry class / branch (SIC2008)', 'Sector Name')] == 'Total (excluding A-U)'].index.values.astype(int)[0], index]#*100
+            df_sectors_all[(index[0], '% per Workforce')] = row/df_sectors_all.at[df_sectors_all[df_sectors_all[('Industry class / branch (SIC2008)', 'Sector Name')] == 'Total (excluding A-U)'].index.values.astype(int)[0], ('Total Workforce', 'n')]#*100
         if ('Total' in index[0]):
-            df_sectors_all[(index[0], '% Sector per Workforce')] = row/df_sectors_all.loc[df_sectors_all[df_sectors_all[('Industry class / branch (SIC2008)', 'Sector Name')] == 'Total (excluding A-U)'].index.values.astype(int)[0], ('Total Workforce', 'n')]#*100
+            df_sectors_all[(index[0], '% Sector per Workforce')] = row/df_sectors_all.at[df_sectors_all[df_sectors_all[('Industry class / branch (SIC2008)', 'Sector Name')] == 'Total (excluding A-U)'].index.values.astype(int)[0], ('Total Workforce', 'n')]#*100
 
     # Set cut-off
     # Gender
@@ -2237,11 +2237,11 @@ def set_sector_and_percentage(
     for index, row in df_jobs.iterrows():
         for idx, r in df_sectors.iterrows():
             if str(row['Sector']).strip().lower() == r[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Sector Name')].strip().lower():
-                df_jobs.loc[index, 'Sector Code'] = r[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Code')]
-                df_jobs.loc[index, '% Female'] = r[('Gender', 'Female', '% per Sector')]
-                df_jobs.loc[index, '% Male'] = r[('Gender', 'Male', '% per Sector')]
-                df_jobs.loc[index, '% Older'] = r[('Age', f'Older (>= {age_limit} years)', '% per Sector')]
-                df_jobs.loc[index, '% Younger'] = r[('Age', f'Younger (< {age_limit} years)', '% per Sector')]
+                df_jobs.at[index, 'Sector Code'] = r[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Code')]
+                df_jobs.at[index, '% Female'] = r[('Gender', 'Female', '% per Sector')]
+                df_jobs.at[index, '% Male'] = r[('Gender', 'Male', '% per Sector')]
+                df_jobs.at[index, '% Older'] = r[('Age', f'Older (>= {age_limit} years)', '% per Sector')]
+                df_jobs.at[index, '% Younger'] = r[('Age', f'Younger (< {age_limit} years)', '% per Sector')]
 
     print('Done setting sector percentages.')
 
@@ -2846,7 +2846,7 @@ def make_job_id_v_sector_key_dict_helper(
                 search_keyword = row['Search Keyword'].strip().lower().replace("-Noon's MacBook Pro",'').strip().lower()
                 for w_keyword, r_keyword in keyword_trans_dict.items():
                     if search_keyword == w_keyword.lower():
-                        df_jobs.loc[index, 'Search Keyword'] = r_keyword.strip().lower()
+                        df_jobs.at[index, 'Search Keyword'] = r_keyword.strip().lower()
                         df_jobs.to_csv(path)
                 trans_keyword_list.append(search_keyword)
 
@@ -2923,7 +2923,7 @@ def make_job_id_v_gender_key_dict_helper(
                 search_keyword = row['Search Keyword'].replace("-Noon's MacBook Pro",'').strip().lower()
                 for w_keyword, r_keyword in keyword_trans_dict.items():
                     if search_keyword == w_keyword.lower():
-                        df_jobs.loc[index, 'Search Keyword'] = r_keyword.strip().lower()
+                        df_jobs.at[index, 'Search Keyword'] = r_keyword.strip().lower()
                         df_jobs.to_csv(path)
                 trans_keyword_list.append(search_keyword)
 
@@ -3169,7 +3169,7 @@ def split_to_sentences_helper(df_jobs, args=get_args()):
                             df_sentence_all,
                         )
 
-        except pydantic.ValidationError as e:
+        except Exception as e:
             if args['print_enabled'] is True:
                 print(e.json())
             (
@@ -3228,10 +3228,10 @@ def sent_tokenize_and_save_df(search_keyword, job_id, age, df_jobs, args=get_arg
             for index, row in df_jobs.iterrows():
                 pattern = r'[\n\r]+|(?<=[a-z]\.)(?=\s*[A-Z])|(?<=[a-z])(?=[A-Z])'
                 # sentence_list = []
-                if row.loc['Language'] == str(args['language']):
+                if row.at['Language'] == str(args['language']):
                     sentence_list = [re.split(pattern, sent) for sent in list(sent_tokenize(row['Job Description']))]
                     sentence_list = [re.split(pattern, sent) for sent in list(nlp(row['Job Description']).sents)]
-                    sentence_dict[str(row.loc['Job ID'])] = list(sentence_list)
+                    sentence_dict[str(row.at['Job ID'])] = list(sentence_list)
                     sentence_dict['Search Keyword'] = row['Search Keyword']
                     sentence_dict['Gender'] = row['Gender']
                     sentence_dict['Age'] = row['Age']
@@ -3404,7 +3404,7 @@ def write_sentences_to_excel_helper(i, writer, df_sentence, args=get_args()):
             first_row, first_col, last_row, last_col, args['validation_props']
         )
 
-    except pydantic.ValidationError as e:
+    except Exception as e:
         if args['print_enabled'] is True:
             print(e.json())
 
@@ -3426,7 +3426,7 @@ def write_all_to_txt(search_keyword, job_id, age, df_jobs, args=get_args()):
                         write_all_to_txt_helper(
                             search_keyword, job_id, age, df_jobs, args
                         )
-                    except pydantic.ValidationError as e:
+                    except Exception as e:
                         if args['print_enabled'] is True:
                             print(e.json())
                 elif (df_jobs.empty) or all(
