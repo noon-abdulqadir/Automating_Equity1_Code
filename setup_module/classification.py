@@ -118,7 +118,7 @@ def open_and_clean_labeled_excel(
         print(f'Number of DF words: {word_count}')
 
     # Set Age and Gender IVs
-    df_jobs_labeled = set_gender_age_sects_lang(df_jobs = df_jobs_labeled, id_dict_new = id_dict_new)
+    df_jobs_labeled = set_gender_age_sects_lang(df_jobs = df_jobs_labeled, id_dict_new = id_dict_new, str_variable = 'Job Description')
 
     # Gender and Age Info
     df_gender_age_info(df_jobs_labeled)
@@ -709,7 +709,27 @@ def simple_preprocess_df(
     stem_lem=stem_lem,
     args=get_args(),
 ):
-    from setup_module.params import text_col, id_dict_new, stop_words, pattern, preprocessing_enabled, stemming_enabled, lemmatization_enabled, numbers_cleaned, main_from_function, n_gram, preprocessed_from_function, n_grams_from_funtion, embedding_from_function, embedding_libraries_list, embedding_models_dict, n_grams_enabled, n_grams_list, nltk_n_grams_dict, drop_cols_enabled
+    from setup_module.params import (
+        drop_cols_enabled,
+        embedding_from_function,
+        embedding_libraries_list,
+        embedding_models_dict,
+        id_dict_new,
+        lemmatization_enabled,
+        main_from_function,
+        n_gram,
+        n_grams_enabled,
+        n_grams_from_funtion,
+        n_grams_list,
+        nltk_n_grams_dict,
+        numbers_cleaned,
+        pattern,
+        preprocessed_from_function,
+        preprocessing_enabled,
+        stemming_enabled,
+        stop_words,
+        text_col,
+    )
 
     if embedding_from_function == True:
         print('df_jobs_labeled from embedding function.')
@@ -1675,3 +1695,4 @@ def optimization(
 #     return batch_losses, torch.cat(outputs)
 
 # %%
+

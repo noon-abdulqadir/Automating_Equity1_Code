@@ -499,9 +499,13 @@ def clean_and_translate_keyword_list(
     # Translate to Dutch
     if translate_enabled == True:
         for english_keyword in keywords_list:
-            dutch_keyword = translator.translate(
-                english_keyword, lang_src='en', lang_tgt='nl'
-            )
+            while True:
+                try:
+                    dutch_keyword = translator.translate(english_keyword, lang_src='en', lang_tgt='nl')
+                except requests.ConnectTimeout:
+                    time.sleep(5)
+                    continue
+                break
             keywords_list.append(dutch_keyword.lower())
 
         # Remove duplicates
@@ -613,21 +617,69 @@ def get_sbi_sectors_list(
 
 
 # %% CBS Data request
-def get_odata(
-    table_url = 'https://opendata.cbs.nl/ODataApi/OData/81434ENG',
-    addition_url = '/Observations'
+def get_cbs_odata(
+    tables_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Age and Gender Composition of Industires and Jobs/Output CSVs for Occupational Sectors/',
+    sectors_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Age and Gender Composition of Industires and Jobs/Found Data for Specific Occupations/',
+    table_url='https://opendata.cbs.nl/ODataAPI/OData/',
+    table_id='81434ENG',
+    addition_url='/UntypedDataSet',
+    select=['SexOfEmployee', 'TypeOfEmploymentContract', 'OtherCharacteristicsEmployee', 'IndustryClassBranchSIC2008', 'Periods', 'Jobs_1'],
 ):
-    target_url = table_url + '/Observations'
+    # data: https://opendata.cbs.nl/#/CBS/en/dataset/81434ENG/table?ts=1663627369191
+    # instruction: https://data.overheid.nl/dataset/410-bevolking-op-eerste-van-de-maand--geslacht--leeftijd--migratieachtergrond
+    # github: https://github.com/statistiekcbs/CBS-Open-Data-v4
 
-    data = pd.DataFrame()
-    while target_url:
-        r = requests.get(target_url).json()
-        data = data.append(pd.DataFrame(r['value']))
+    tables = cbsodata.get_table_list()
+    for table in tables:
+        if table['Identifier'] == table_id:
+            data_info = table
+    info = cbsodata.get_info(table_id)
+    diffs = list(set(info.keys()) - set(data_info.keys()))
+    for i in diffs:
+        data_info[i] = info[i]
 
-        if '@odata.nextLink' in r:
-            target_url = r['@odata.nextLink']
-        else:
-            target_url = None
+    with open(f'{tables_file_path}cbs_data_info.json', 'w', encoding='utf8') as f:
+        json.dump(data_info, f)
+
+    dimensions = defaultdict(dict)
+    for sel in select:
+        if sel != 'Jobs_1':
+            meta_data = pd.DataFrame(cbsodata.get_meta('81434ENG', sel))
+        if sel == 'TypeOfEmploymentContract':
+            meta_data = meta_data.loc[~meta_data['Title'].str.contains('Type of employment contract:')]
+        if sel == 'OtherCharacteristicsEmployee':
+            meta_data = meta_data.loc[~meta_data['Key'].str.contains('NAT')]
+        if sel == 'Periods':
+            meta_data = meta_data.loc[meta_data['Title'].astype(str) == '2020']
+
+        for title, key in zip(meta_data['Title'].tolist(), meta_data['Key'].tolist()):
+            if sel != 'Jobs_1':
+                dimensions[sel][title] = key
+    with open(f'{tables_file_path}cbs_data_dimensions.json', 'w', encoding='utf8') as f:
+        json.dump(dimensions, f)
+
+    while True:
+        try:
+            data = pd.DataFrame(cbsodata.get_data(table_id, select=select))
+            break
+        except ConnectionError:
+            time.sleep(5)
+
+    data = data.loc[~data['TypeOfEmploymentContract'].str.contains('Type of employment contract:') & ~data['OtherCharacteristicsEmployee'].str.contains('Nationality:') & data['Periods'].str.contains('2020')]
+
+    data.to_csv(f'{sectors_file_path}Sectors Tables/FINAL/Gender x Age_CBS_DATA_from_code.csv')
+
+    # target_url = table_url + table_id + addition_url
+
+    # data = pd.DataFrame()
+    # while target_url:
+    #     r = requests.get(target_url).json()
+    #     data = data.append(pd.DataFrame(r['value']))
+
+    #     if '@odata.nextLink' in r:
+    #         target_url = r['@odata.nextLink']
+    #     else:
+    #         target_url = None
 
     return data
 
@@ -730,11 +782,18 @@ def get_sector_df_from_cbs(
     sbi_english_keyword_list, sbi_english_keyword_dict, sbi_sectors_dict, sbi_sectors_dict_full, sbi_sectors_dom_gen, sbi_sectors_dom_age, trans_keyword_list = get_sbi_sectors_list()
 
     try:
-        df_sectors = get_odata()
+        select = ['SexOfEmployee', 'TypeOfEmploymentContract', 'OtherCharacteristicsEmployee', 'IndustryClassBranchSIC2008', 'Periods', 'Jobs_1']
+        odata_colnames_normalized = {'IndustryClassBranchSIC2008': 'Industry class / branch (SIC2008)', 'SexOfEmployee': 'Sex of employee', 'OtherCharacteristicsEmployee': 'Other characteristics employee', 'Jobs_1': 'Employment/Jobs (x 1 000)'}
+        df_sectors = get_cbs_odata()
+        df_sectors.rename(columns=odata_colnames_normalized, inplace=True)
     except Exception:
         # print(f'Error getting data from CBS Statline OData. Using the following file:\n{sectors_file_path}Sectors Tables/FINAL/Gender x Age_CBS_DATA.csv')
         # Read, clean, create code variable
-        df_sectors = pd.read_csv(f'{sectors_file_path}Sectors Tables/FINAL/Gender x Age_CBS_DATA.csv', delimiter=';')
+        try:
+            df_sectors = pd.read_csv(f'{sectors_file_path}Sectors Tables/FINAL/Gender x Age_CBS_DATA.csv', delimiter=';')
+        except Exception:
+            df_sectors = pd.read_csv(f'{sectors_file_path}Sectors Tables/FINAL/Gender x Age_CBS_DATA_from_code.csv', delimiter=';')
+
 
     df_sectors = df_sectors[cols]
     df_sectors.rename({'Sex of employee': 'Gender', 'Other characteristics employee': 'Age Range (in years)', 'Industry class / branch (SIC2008)': 'Sector Name', 'Employment/Jobs (x 1 000)': 'n'}, inplace=True, axis = 1)
@@ -811,10 +870,10 @@ def get_sector_df_from_cbs(
     for index, row in df_sectors_all.iteritems():
         if ('Total' not in index[0]) and ('%' not in index[1]) and ('n' in index[1]) and (not isinstance(row[0], str)) and (not math.isnan(row[0])):
             df_sectors_all[(index[0], '% per Sector')] = row/df_sectors_all[('Total Workforce', 'n')]#*100
-            df_sectors_all[(index[0], '% per Social Category')] = row/df_sectors_all.at[df_sectors_all[df_sectors_all[('Industry class / branch (SIC2008)', 'Sector Name')] == 'Total (excluding A-U)'].index.values.astype(int)[0], index]#*100
-            df_sectors_all[(index[0], '% per Workforce')] = row/df_sectors_all.at[df_sectors_all[df_sectors_all[('Industry class / branch (SIC2008)', 'Sector Name')] == 'Total (excluding A-U)'].index.values.astype(int)[0], ('Total Workforce', 'n')]#*100
+            df_sectors_all[(index[0], '% per Social Category')] = row/df_sectors_all.loc[df_sectors_all[df_sectors_all[('Industry class / branch (SIC2008)', 'Sector Name')] == 'Total (excluding A-U)'].index.values.astype(int)[0], index]#*100
+            df_sectors_all[(index[0], '% per Workforce')] = row/df_sectors_all.loc[df_sectors_all[df_sectors_all[('Industry class / branch (SIC2008)', 'Sector Name')] == 'Total (excluding A-U)'].index.values.astype(int)[0], ('Total Workforce', 'n')]#*100
         if ('Total' in index[0]):
-            df_sectors_all[(index[0], '% Sector per Workforce')] = row/df_sectors_all.at[df_sectors_all[df_sectors_all[('Industry class / branch (SIC2008)', 'Sector Name')] == 'Total (excluding A-U)'].index.values.astype(int)[0], ('Total Workforce', 'n')]#*100
+            df_sectors_all[(index[0], '% Sector per Workforce')] = row/df_sectors_all.loc[df_sectors_all[df_sectors_all[('Industry class / branch (SIC2008)', 'Sector Name')] == 'Total (excluding A-U)'].index.values.astype(int)[0], ('Total Workforce', 'n')]#*100
 
     # Set cut-off
     # Gender
@@ -2005,10 +2064,11 @@ def detect_language_helper(x, language='en'):
 
     if not x or x in [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan'] or x.isspace() or x.replace(' ', '').isdigit():
         return 'NO LANGUAGE DETECTED'
+    # try:
+    #     lang = WhatTheLang().predict_lang(x)
+    #     return lang if lang not in ['CANT_PREDICT', 'nl', language] else detect(x)
+    # except ValueError:
     try:
-        lang = WhatTheLang().predict_lang(x)
-        return lang if lang not in ['CANT_PREDICT', 'nl', language] else detect(x)
-    except ValueError:
         return detect(x)
     except langdetect.LangDetectException:
         return 'NO LANGUAGE DETECTED'
@@ -2237,11 +2297,11 @@ def set_sector_and_percentage(
     for index, row in df_jobs.iterrows():
         for idx, r in df_sectors.iterrows():
             if str(row['Sector']).strip().lower() == r[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Sector Name')].strip().lower():
-                df_jobs.at[index, 'Sector Code'] = r[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Code')]
-                df_jobs.at[index, '% Female'] = r[('Gender', 'Female', '% per Sector')]
-                df_jobs.at[index, '% Male'] = r[('Gender', 'Male', '% per Sector')]
-                df_jobs.at[index, '% Older'] = r[('Age', f'Older (>= {age_limit} years)', '% per Sector')]
-                df_jobs.at[index, '% Younger'] = r[('Age', f'Younger (< {age_limit} years)', '% per Sector')]
+                df_jobs.loc[index, 'Sector Code'] = r[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Code')]
+                df_jobs.loc[index, '% Female'] = r[('Gender', 'Female', '% per Sector')]
+                df_jobs.loc[index, '% Male'] = r[('Gender', 'Male', '% per Sector')]
+                df_jobs.loc[index, '% Older'] = r[('Age', f'Older (>= {age_limit} years)', '% per Sector')]
+                df_jobs.loc[index, '% Younger'] = r[('Age', f'Younger (< {age_limit} years)', '% per Sector')]
 
     print('Done setting sector percentages.')
 
@@ -2442,7 +2502,7 @@ def save_df(
             search_keyword = df_jobs['Search Keyword'].iloc[0].lower().replace("-Noon's MacBook Pro",'')
         except KeyError:
             df_jobs.reset_index(drop=True, inplace=True)
-            search_keyword = df_jobs['Search Keyword'].iloc[0].lower().replace("-Noon's MacBook Pro",'')
+            search_keyword = df_jobs['Search Keyword'].iloc[0].lower().replace("-Noon's MacBo an and.  ok Pro",'')
         except IndexError:
             print(len(df_jobs))
 
@@ -2451,6 +2511,7 @@ def save_df(
             print(f'Saving {keyword.lower()} jobs df of length {len(df_jobs.index)} to csv as {df_file_name.lower()} in location {save_path}')
 
         df_jobs.to_csv(save_path + df_file_name, mode='w', sep=',', header=True, index=True)
+        df_jobs.to_csv(save_path + df_file_name.split(args["file_save_format_backup"])[0]+'txt', mode='w', sep=',', header=True, index=True)
 
         if (not df_jobs.empty) and (len(df_jobs != 0)):
             try:
@@ -2541,6 +2602,7 @@ def post_cleanup(
     all_save_path = f'job_id_vs_all.json',
     args=get_args(),
     translator = google_translator(),
+    translate_keywords=False,
 ):
 
     print(
@@ -2559,8 +2621,14 @@ def post_cleanup(
 
             trans_keyword = keyword.strip().lower()
 
-            if detect(trans_keyword) != 'en':
-                trans_keyword = translator.translate(trans_keyword, lang_tgt='en').strip().lower()
+            if translate_keywords is True and detect(trans_keyword) != 'en':
+                while True:
+                    try:
+                        trans_keyword = translator.translate(trans_keyword, lang_tgt='en').strip().lower()
+                    except (requests.ConnectTimeout, requests.HTTPError):
+                        time.sleep(5)
+                        continue
+                    break
 
             for w_keyword, r_keyword in keyword_trans_dict.items():
                 if str(trans_keyword.lower()) == w_keyword.lower():
@@ -2607,7 +2675,8 @@ def post_cleanup(
     if job_sector_save_enabled is True:
         sector_vs_job_id_dict = make_job_id_v_sector_key_dict()
 
-    trans_keyword_list = save_trans_keyword_list(trans_keyword_list)
+    if translate_keywords is True:
+        trans_keyword_list = save_trans_keyword_list(trans_keyword_list)
 
     return df_jobs
 
@@ -2701,10 +2770,14 @@ def clean_from_old(
             keyword = ' '.join(keyword.split('_')).strip().lower()
 
         if detect(keyword) != 'en':
-            try:
-                trans_keyword = translator.translate(keyword, lang_tgt='en').strip().lower()
-            except:
-                trans_keyword = keyword
+            while True:
+                try:
+                    trans_keyword = translator.translate(keyword, lang_tgt='en').strip().lower()
+                except requests.ConnectTimeout:
+                    time.sleep(5)
+                    continue
+                break
+
         else:
             trans_keyword = keyword
 
@@ -2846,7 +2919,7 @@ def make_job_id_v_sector_key_dict_helper(
                 search_keyword = row['Search Keyword'].strip().lower().replace("-Noon's MacBook Pro",'').strip().lower()
                 for w_keyword, r_keyword in keyword_trans_dict.items():
                     if search_keyword == w_keyword.lower():
-                        df_jobs.at[index, 'Search Keyword'] = r_keyword.strip().lower()
+                        df_jobs.loc[index, 'Search Keyword'] = r_keyword.strip().lower()
                         df_jobs.to_csv(path)
                 trans_keyword_list.append(search_keyword)
 
@@ -2923,7 +2996,7 @@ def make_job_id_v_gender_key_dict_helper(
                 search_keyword = row['Search Keyword'].replace("-Noon's MacBook Pro",'').strip().lower()
                 for w_keyword, r_keyword in keyword_trans_dict.items():
                     if search_keyword == w_keyword.lower():
-                        df_jobs.at[index, 'Search Keyword'] = r_keyword.strip().lower()
+                        df_jobs.loc[index, 'Search Keyword'] = r_keyword.strip().lower()
                         df_jobs.to_csv(path)
                 trans_keyword_list.append(search_keyword)
 
@@ -3228,10 +3301,10 @@ def sent_tokenize_and_save_df(search_keyword, job_id, age, df_jobs, args=get_arg
             for index, row in df_jobs.iterrows():
                 pattern = r'[\n\r]+|(?<=[a-z]\.)(?=\s*[A-Z])|(?<=[a-z])(?=[A-Z])'
                 # sentence_list = []
-                if row.at['Language'] == str(args['language']):
+                if row.loc['Language'] == str(args['language']):
                     sentence_list = [re.split(pattern, sent) for sent in list(sent_tokenize(row['Job Description']))]
                     sentence_list = [re.split(pattern, sent) for sent in list(nlp(row['Job Description']).sents)]
-                    sentence_dict[str(row.at['Job ID'])] = list(sentence_list)
+                    sentence_dict[str(row.loc['Job ID'])] = list(sentence_list)
                     sentence_dict['Search Keyword'] = row['Search Keyword']
                     sentence_dict['Gender'] = row['Gender']
                     sentence_dict['Age'] = row['Age']

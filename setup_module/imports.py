@@ -82,7 +82,7 @@ if from_file:
             except ImportError:
                 print(f'Installing {module}')
                 try:
-                    os.system(f'conda install {module} -y')
+                    os.system(f'conda install --channel apple --yes {module} ')
                 except Exception:
                     os.system(f'python -m pip install {module}')
 
@@ -128,6 +128,7 @@ try:
     from typing import Dict, List, Optional, Set, Tuple
 
     import cardinality
+    import cbsodata
     import en_core_web_sm
     import gensim
     import gensim.downloader as gensim_api
@@ -147,7 +148,6 @@ try:
     import openpyxl
     import pandas as pd
     import pingouin as pg
-    import plotnine
     import pretty_errors
     import progressbar
     import pyarrow as pa
@@ -170,11 +170,9 @@ try:
     import torch
     import torch.nn as nn
     import tqdm
-
-    # import transformers
+    import transformers
     import urllib3
-
-    # import xgboost as xgb
+    import xgboost as xgb
     import xlsxwriter
 
     # from accelerate import Accelerator
@@ -199,8 +197,7 @@ try:
     from gensim.test.utils import common_texts, datapath, get_tmpfile
     from gensim.utils import save_as_line_sentence, simple_preprocess
     from google_trans_new import google_translator
-
-    # from http_request_randomizer.requests.proxy.requestProxy import RequestProxy
+    from http_request_randomizer.requests.proxy.requestProxy import RequestProxy
     from imblearn.combine import SMOTEENN, SMOTETomek
     from imblearn.datasets import make_imbalance
     from imblearn.metrics import classification_report_imbalanced
@@ -371,15 +368,12 @@ try:
         column_or_1d,
         has_fit_parameter,
     )
-    from sklearn_pandas import DataFrameMapper, gen_features
-    from sklearn_pandas.dataframe_mapper import add_column_names_to_exception
     from specification_curve import specification_curve as specy
     from statannotations.Annotator import Annotator
     from statsmodels.formula.api import ols
     from statsmodels.graphics.factorplots import interaction_plot
     from statsmodels.stats.diagnostic import het_white
     from statsmodels.stats.outliers_influence import variance_inflation_factor
-    from stop_words import get_stop_words
     from tensorflow import keras
     from tensorflow.keras import backend as K
     from tensorflow.keras import layers, models
@@ -387,12 +381,19 @@ try:
     from tensorflow.keras import preprocessing as kprocessing
     from textblob import TextBlob, Word
     from textblob.en.inflect import pluralize, singularize
+    from transformers import (
+        AutoConfig,
+        AutoModel,
+        AutoTokenizer,
+        BertConfig,
+        BertModel,
+        BertPreTrainedModel,
+        BertTokenizer,
+        TFBertModel,
+    )
+    from transformers.trainer_pt_utils import get_parameter_names
     from webdriver_manager.chrome import ChromeDriverManager
 
-    # from transformers import (AutoConfig, AutoModel, AutoTokenizer, BertConfig,
-    #                           BertModel, BertPreTrainedModel, BertTokenizer,
-    #                           TFBertModel)
-    # from transformers.trainer_pt_utils import get_parameter_names
     # from whatthelang import WhatTheLang
     from xgboost import XGBClassifier
     from yellowbrick.text import TSNEVisualizer
@@ -400,7 +401,7 @@ try:
 except ImportError as error:
     module_name = str(error).split('named')[1]
     print(f'The library {module_name} is not installed. Installing now.')
-    # !poetry add {module_name}
+    # !conda install --channel apple --yes {module_name}
 
 # %%
 # Tweak Settings
@@ -414,7 +415,7 @@ gensim_api.base_dir = os.path.dirname(gensim_path)
 gensim_api.BASE_DIR = os.path.dirname(gensim_path)
 gensim_api.GENSIM_DATA_DIR = os.path.dirname(gensim_path)
 glove_path = f'{gensim_path}glove/'
-# fasttext_path = os.path.abspath(f'{gensim_path}fasttext-wiki-news-subwords-300')
+fasttext_path = os.path.abspath(f'{gensim_path}fasttext-wiki-news-subwords-300')
 
 IPython.core.page = print
 IPython.display.clear_output
