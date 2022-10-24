@@ -25,6 +25,7 @@
 #         if code_dir is not None:
 #             break
 # main_dir = str(Path(code_dir).parents[0])
+# scraped_data = f'{code_dir}/scraped_data'
 # sys.path.append(code_dir)
 # from setup_module.imports import *
 # from setup_module.params import *
@@ -55,6 +56,7 @@ for _ in range(5):
             break
 
 main_dir = str(Path(code_dir).parents[0])
+scraped_data = f'{code_dir}/scraped_data'
 sys.path.append(code_dir)
 
 # %%
@@ -69,7 +71,7 @@ warnings.filterwarnings('ignore', category=DeprecationWarning)
 def get_new_data(cleanup_return_enabled=True):
     df_jobs = post_cleanup(keywords_from_list=True, site_from_list=True)
     df_sentence = split_to_sentences(df_jobs)
-    if cleanup_return_enabled == True:
+    if cleanup_return_enabled is True:
 
         return df_jobs, df_sentence
 
@@ -141,7 +143,7 @@ def open_and_clean_labeled_excel(
                 ['Job Description', 'Gender', 'Age', str(column)]
             ]
 
-    if dict_save == True:
+    if dict_save is True:
 
         with open(f'{args["parent_dir"]}df_labeled_dict.{args["file_save_format"]}', 'wb') as f:
             pickle.dump(df_labeled_dict, f, protocol=pickle.HIGHEST_PROTOCOL)
@@ -180,16 +182,16 @@ def open_and_clean_unlabeled_excel(
     if df_unlabeled_list is None:
         df_unlabeled_list = []
 
-    if get_new_data_enabled == True:
+    if get_new_data_enabled is True:
         print('Running post cleanup and splitting sentences.')
-        if cleanup_return_enabled == True:
+        if cleanup_return_enabled is True:
             df_jobs, df_sentence = get_new_data(cleanup_return_enabled)
-        elif cleanup_return_enabled == False:
+        elif cleanup_return_enabled is False:
             get_new_data(cleanup_return_enabled)
-    elif get_new_data_enabled == False:
+    elif get_new_data_enabled is False:
         print('Using older version of df_jobs.')
 
-    if main_from_file == False:
+    if main_from_file is False:
         stable_path = validate_path(
             validate_path(args['parent_dir'] + stable_path_excel + f'{language}/')
         )
@@ -205,8 +207,7 @@ def open_and_clean_unlabeled_excel(
                 if len(files_list) != 0
                 and 'Job ID - ' in file
                 and '.xlsx' in file
-                and os.path.isfile(f'{stable_folder}/{file}')
-                and os.stat(f'{stable_folder}/{file}').st_size > 0
+                and is_non_zero_file(f'{stable_folder}/{file}') is True
             ]
         if len(EXCEL_PATHS) != 0:
             for path in EXCEL_PATHS:
@@ -239,7 +240,7 @@ def open_and_clean_unlabeled_excel(
                 )
                 df_jobs_unlabeled_full = open_and_clean_unlabeled_excel_helper(df_jobs_unlabeled_full)
                 df_unlabeled_list.append(df_jobs_unlabeled_full)
-    elif main_from_file == True:
+    elif main_from_file is True:
         df_jobs_temp = []
         for jobs_list in df_jobs:
             if isinstance(jobs_list, list):
@@ -323,10 +324,10 @@ def stem_lem(
     stemmer=SnowballStemmer('english'),
     lemmatizer=WordNetLemmatizer(),
 ):
-    if (lemmatization_enabled == True):
+    if (lemmatization_enabled is True):
         word = lemmatizer.lemmatize(word)
 
-    if (stemming_enabled == True):
+    if (stemming_enabled is True):
         word = stemmer.stem(word)
 
     return word
@@ -341,9 +342,9 @@ def custom_tokenizer(row, stemming_enabled, lemmatization_enabled, numbers_clean
                 for word in simple_preprocess(re.sub(pattern[str(numbers_cleaned)], ' ', row.lower()), deacc=True)
                 if (word not in stop_words) and (word.isalpha())
             ]
-    if return_tokens == True:
+    if return_tokens is True:
         return tokens
-    elif return_tokens == False:
+    elif return_tokens is False:
         return ' '.join(tokens)
 
 # %%
@@ -449,7 +450,7 @@ def build_train_word2vec(
     )
 
     w2v_model.build_vocab(sentences, progress_per=10000)
-    if sectors_enabled == True and sector != None and print_enabled == True:
+    if sectors_enabled is True and sector != None and print_enabled is True:
         print(f'Time to train the model for {sector} {size}: {round((time.time() - t) / 60, 2)} mins')
 
     w2v_model.train(
@@ -459,7 +460,7 @@ def build_train_word2vec(
         report_delay=1,
     )
 
-    if sectors_enabled == True and sector != None and print_enabled == True:
+    if sectors_enabled is True and sector != None and print_enabled is True:
         print(f'Time to build w2v_vocab for {sector} {size}: {round((time.time() - t) / 60, 2)} mins')
     w2v_vocab = list(w2v_model.wv.index_to_key)
 
@@ -467,7 +468,7 @@ def build_train_word2vec(
         print(f'Checking words form list of length {len(words)}')
         print(f'WORDS LIST: {words}')
 
-        if sectors_enabled == True and sector != None:
+        if sectors_enabled is True and sector != None:
             for word in words:
                 print(f'Checking word:\n{word.upper()}:')
                 try:
@@ -512,7 +513,7 @@ def word2vec_embeddings(sentences, w2v_vocab, w2v_model, size=300):
 #     )
 
 #     glove_model.build_vocab(sentences, progress_per=10000)
-#     if sectors_enabled == True and sector != None and print_enabled == True:
+#     if sectors_enabled is True and sector != None and print_enabled is True:
 #         print(f"Time to train the model for {sector} {size}: {round((time.time() - t) / 60, 2)} mins")
 
 #     glove_model.train(
@@ -522,7 +523,7 @@ def word2vec_embeddings(sentences, w2v_vocab, w2v_model, size=300):
 #         report_delay=1,
 #     )
 
-#     if sectors_enabled == True and sector != None and print_enabled == True:
+#     if sectors_enabled is True and sector != None and print_enabled is True:
 #         print(f"Time to build vocab for {sector} {size}: {round((time.time() - t) / 60, 2)} mins")
 #     vocab = list(glove_model.wv.index_to_key)
 
@@ -530,7 +531,7 @@ def word2vec_embeddings(sentences, w2v_vocab, w2v_model, size=300):
 #         print(f'Checking words form list of length {len(words)}')
 #         print(f'WORDS LIST: {words}')
 
-#         if sectors_enabled == True and sector != None:
+#         if sectors_enabled is True and sector != None:
 #             for word in words:
 #                 print(f'Checking word:\n{word.upper()}:')
 #                 try:
@@ -576,7 +577,7 @@ def build_train_fasttext(
     )
 
     ft_model.build_vocab(sentences, progress_per=10000)
-    if sectors_enabled == True and sector != None and print_enabled == True:
+    if sectors_enabled is True and sector != None and print_enabled is True:
         print(f'Time to train the model for {sector} {size}: {round((time.time() - t) / 60, 2)} mins')
 
     ft_model.train(
@@ -586,7 +587,7 @@ def build_train_fasttext(
         report_delay=1,
     )
 
-    if sectors_enabled == True and sector != None and print_enabled == True:
+    if sectors_enabled is True and sector != None and print_enabled is True:
         print(f'Time to build vocab for {sector} {size}: {round((time.time() - t) / 60, 2)} mins')
     ft_vocab = list(ft_model.wv.index_to_key)
 
@@ -594,7 +595,7 @@ def build_train_fasttext(
         print(f'Checking words form list of length {len(words)}')
         print(f'WORDS LIST: {words}')
 
-        if sectors_enabled == True and sector != None:
+        if sectors_enabled is True and sector != None:
             for word in words:
                 print(f'Checking word:\n{word.upper()}:')
                 try:
@@ -731,18 +732,18 @@ def simple_preprocess_df(
         text_col,
     )
 
-    if embedding_from_function == True:
+    if embedding_from_function is True:
         print('df_jobs_labeled from embedding function.')
-        if n_grams_from_funtion == True:
+        if n_grams_from_funtion is True:
             print('df_jobs_labeled from n_grams function.')
-            if preprocessed_from_function == True:
+            if preprocessed_from_function is True:
                 print('df_jobs_labeled from preprocessed function.')
-                if main_from_function == True:
+                if main_from_function is True:
                     print('df_jobs_labeled from main function.')
                     if args['print_enabled'] is True:
                         print('Opening df_jobs_to_be_processed from file.')
                     df_jobs_to_be_processed, df_labeled_dict = open_and_clean_labeled_excel(id_dict_new = id_dict_new)
-                elif main_from_function == False:
+                elif main_from_function is False:
                     print('Using given version of main df_jobs_labeled.')
 
                     if df_jobs_to_be_processed.empty:
@@ -762,7 +763,7 @@ def simple_preprocess_df(
                             df_jobs_to_be_processed.drop(['Unnamed: 0'], axis=1, inplace=True)
 
                 # Remove stopwords
-                if preprocessing_enabled == True:
+                if preprocessing_enabled is True:
                     df_jobs_to_be_processed['Job Description_cleaned'] = (
                         df_jobs_to_be_processed['Job Description']
                         .reset_index(drop=True)
@@ -783,7 +784,7 @@ def simple_preprocess_df(
                         df_jobs_to_be_processed.to_pickle(f'{args["df_dir"]}df_jobs_labeled_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format"]}')
                         df_jobs_to_be_processed.to_csv(f'{args["df_dir"]}df_jobs_labeled_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format_backup"]}')
 
-            elif preprocessed_from_function == False:
+            elif preprocessed_from_function is False:
                 print('Using given version of preprocessed df_jobs_labeled.')
 
                 try:
@@ -802,7 +803,7 @@ def simple_preprocess_df(
                     df_jobs_to_be_processed.drop(['Unnamed: 0'], axis=1, inplace=True)
 
             # Tokenize on Ngrams
-            if n_grams_enabled == True:
+            if n_grams_enabled is True:
 
                 # Tokenize
                 ## Custom
@@ -877,7 +878,7 @@ def simple_preprocess_df(
                     df_jobs_to_be_processed.to_pickle(f'{args["df_dir"]}df_jobs_labeled_corpus_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format"]}')
                     df_jobs_to_be_processed.to_csv(f'{args["df_dir"]}df_jobs_labeled_corpus_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format_backup"]}')
 
-        elif n_grams_from_funtion == False:
+        elif n_grams_from_funtion is False:
             print('Using given version of corpus df_jobs_labeled.')
 
             try:
@@ -939,7 +940,7 @@ def simple_preprocess_df(
                 df_jobs_to_be_processed.to_pickle(f'{args["df_dir"]}df_jobs_labeled_embeddings_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format"]}')
                 df_jobs_to_be_processed.to_csv(f'{args["df_dir"]}df_jobs_labeled_embeddings_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format_backup"]}')
 
-    elif embedding_from_function == False:
+    elif embedding_from_function is False:
         print('Using given version of embeddings df_jobs_labeled.')
 
         try:
@@ -957,7 +958,7 @@ def simple_preprocess_df(
         if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
             df_jobs_to_be_processed.drop(['Unnamed: 0'], axis=1, inplace=True)
 
-    if drop_cols_enabled == True:
+    if drop_cols_enabled is True:
         df_jobs_to_be_processed.drop(['Gender', 'Age'], axis=1, inplace=True)
 
     if args['save_enabled'] is True:
@@ -1018,7 +1019,7 @@ def get_and_viz_df_dict(dataframes, df_loc, args=get_args()):
 
 # %%
 def resample_data(X_train, y_train, col, resampling_enabled, resampling_method):
-    if (resampling_enabled == True) and (col == 'Warmth'):
+    if (resampling_enabled is True) and (col == 'Warmth'):
         print(f'Resampling {col} to fix imbalance.')
         print('=' * 20)
         print('-' * 20)
@@ -1527,13 +1528,13 @@ def optimization(
 # # this function creates a normalized vector for the whole sentence
 # def sent2vec(sentences, embeddings_index=None, external_glove=True, extra_preprocessing_enabled=False):
 
-#     if external_glove == False and embeddings_index is None:
+#     if external_glove is False and embeddings_index is None:
 #         embeddings_index= get_glove()
 
-#     if extra_preprocessing_enabled == False:
+#     if extra_preprocessing_enabled is False:
 #         words = sentences
 
-#     elif extra_preprocessing_enabled == True:
+#     elif extra_preprocessing_enabled is True:
 #         stop_words = set(sw.words('english'))
 #         words = str(sentences).lower()
 #         words = word_tokenize(words)

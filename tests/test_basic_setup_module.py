@@ -27,6 +27,7 @@
 #     if code_dir:
 #         break
 # main_dir = str(Path(code_dir).parents[0])
+# scraped_data = f'{code_dir}/scraped_data'
 # sys.path.append(code_dir)
 # from setup_module.imports import *
 # from setup_module.params import *
@@ -59,12 +60,13 @@ for _ in range(5):
         break
 
 main_dir = str(Path(code_dir).parents[0])
+scraped_data = f'{code_dir}/scraped_data'
 sys.path.append(code_dir)
 
+from setup_module.classification import *
 from setup_module.imports import *
 from setup_module.params import *
 from setup_module.scraping import *
-from setup_module.classification import *
 from setup_module.vectorizers_classifiers import *
 
 warnings.filterwarnings('ignore', category=DeprecationWarning)
@@ -107,7 +109,7 @@ class EstimatorSelectionHelper:
                     self.classifier_params = classifier_and_params[1]
 
                     # Pipeline
-                    if select_best_enabled == True:
+                    if select_best_enabled is True:
                         ## Steps
                         self.steps = [
                             (self.vectorizer_name, self.vectorizer),
@@ -128,7 +130,7 @@ class EstimatorSelectionHelper:
                         self.selector = self.pipe[:-1]
                         self.classifier = self.pipe[:]
 
-                    elif select_best_enabled == False:
+                    elif select_best_enabled is False:
                         ## Steps
                         self.steps = [
                             (self.vectorizer_name, self.vectorizer),

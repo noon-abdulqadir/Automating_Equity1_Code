@@ -57,10 +57,10 @@ for _ in range(5):
 main_dir = str(Path(code_dir).parents[0])
 sys.path.append(code_dir)
 
+from setup_module.classification import *
 from setup_module.imports import *
 from setup_module.params import *
 from setup_module.scraping import *
-from setup_module.classification import *
 from setup_module.vectorizers_classifiers import *
 
 warnings.filterwarnings('ignore')
@@ -345,7 +345,7 @@ for column in cal_columns:
     print(f"Scott's pi ({str(column)}): ", ratingtask.pi())
     print('-' * 20, '\n')
 
-    if save_enabled == True:
+    if save_enabled is True:
         with open(parent_dir + f'{column}_FINAL_IR_all_{ir_file_name}.json', 'w', encoding='utf8') as f:
             json.dump(ir_all_dict, f)
 print('-' * 20)

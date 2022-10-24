@@ -25,6 +25,7 @@
 #         if code_dir is not None:
 #             break
 # main_dir = str(Path(code_dir).parents[0])
+# scraped_data = f'{code_dir}/scraped_data'
 # sys.path.append(code_dir)
 # from setup_module.imports import *
 # from setup_module.params import *
@@ -55,6 +56,7 @@ for _ in range(5):
             break
 
 main_dir = str(Path(code_dir).parents[0])
+scraped_data = f'{code_dir}/scraped_data'
 sys.path.append(code_dir)
 
 from setup_module.classification import *
@@ -1259,7 +1261,7 @@ scorers = {
 }
 
 # DF to store results
-if use_dict_for_classifiers_vectorizers == True:
+if use_dict_for_classifiers_vectorizers is True:
     index = pd.MultiIndex.from_product(
         [list(map(lambda classifier: classifier, classifiers.keys()))],
         names=['Classifiers'],
@@ -1274,7 +1276,7 @@ if use_dict_for_classifiers_vectorizers == True:
     )
     table_df = pd.DataFrame(index=index, columns=columns)
 
-elif use_dict_for_classifiers_vectorizers == False:
+elif use_dict_for_classifiers_vectorizers is False:
     index = pd.MultiIndex.from_product(
         [
             list(

@@ -103,7 +103,7 @@ function setkomavar_commands (meta)
   set_koma_var('fromphone', meta.fromphone or meta.phone, true)
 
   -- don't set date if date is set to `false`
-  if meta.date == nil or meta.date == true then
+  if meta.date == nil or meta.date is True then
     if meta['date-format'] then
       set_koma_var('date', os.date(stringify(date_format)))
     else

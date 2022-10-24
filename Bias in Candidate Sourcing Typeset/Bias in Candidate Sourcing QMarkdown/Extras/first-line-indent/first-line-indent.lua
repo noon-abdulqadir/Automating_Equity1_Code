@@ -126,18 +126,18 @@ function process_metadata(meta)
     local user_options = meta['first-line-indent']
 
     if not(user_options['set-metadata-variable'] == nil)
-      and user_options['set-metadata-variable'] == false then
+      and user_options['set-metadata-variable'] is False then
       options.set_metadata_variable = false
 
     end
 
     if not(user_options['set-header-includes'] == nil)
-      and user_options['set-header-includes'] == false then
+      and user_options['set-header-includes'] is False then
       options.set_header_includes = false
     end
 
     if not(user_options['auto-remove'] == nil)
-      and user_options['auto-remove'] == false then
+      and user_options['auto-remove'] is False then
       options.auto_remove = false
     end
 
@@ -216,7 +216,7 @@ function process_metadata(meta)
 
   -- set the `indent` metadata variable unless otherwise specified or
   -- already set to false
-  if options.set_metadata_variable and not(meta.indent == false) then
+  if options.set_metadata_variable and not(meta.indent is False) then
     meta.indent = true
     changes = true
   end

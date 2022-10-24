@@ -27,6 +27,7 @@
 #     if code_dir:
 #         break
 # main_dir = str(Path(code_dir).parents[0])
+# scraped_data = f'{code_dir}/scraped_data'
 # sys.path.append(code_dir)
 # from setup_module.imports import *
 # from setup_module.params import *
@@ -59,6 +60,7 @@ for _ in range(5):
         break
 
 main_dir = str(Path(code_dir).parents[0])
+scraped_data = f'{code_dir}/scraped_data'
 sys.path.append(code_dir)
 
 from setup_module.imports import *
@@ -91,16 +93,16 @@ class PostCleanUp:
 
     def get_site_from_list(self):
 
-        if self.site_from_list  == True:
-            self.glob_paths = [x for self.site in self.site_list for x in glob.glob(f'{code_dir}/{str(self.site)}/Data/*.json')]
-        elif self.site_from_list == False:
-            self.glob_paths = glob.glob(f'{code_dir}/*/Data/*.json')
+        if self.site_from_list  is True:
+            self.glob_paths = [x for self.site in self.site_list for x in glob.glob(f'{scraped_data}/{str(self.site)}/Data/*.json')]
+        elif self.site_from_list is False:
+            self.glob_paths = glob.glob(f'{scraped_data}/*/Data/*.json')
 
         yield self.glob_paths
 
     def get_keyword_from_list(self):
 
-        if self.keyword_from_list  == True:
+        if self.keyword_from_list  is True:
             self.keyword = ', '.join(glob_path.split('dict_')[1].split('.json')[0] for glob_path in self.glob_paths)
 
         yield self.keyword
@@ -110,7 +112,7 @@ class PostCleanUp:
 
             self.df_list_from_site = []
             self.df_jobs = self.df_list_from_site.append(self.df_list_from_keyword)
-            if self.args['save_enabled'] == True:
+            if self.args['save_enabled'] is True:
                 with open(f'{self.args["df_dir"]}df_{self.site}_all_jobs.{file_save_format}', 'wb') as f:
                     pickle.dump(self.df_jobs, f, protocol=pickle.HIGHEST_PROTOCOL)
 
@@ -120,15 +122,15 @@ class PostCleanUp:
 
             self.df_list_from_keyword = []
             self.df_jobs = self.df_list_from_keyword.append(post_cleanup)
-            if self.args['save_enabled'] == True:
+            if self.args['save_enabled'] is True:
                 with open(self.args['df_dir'] + 'df_all_jobs.p', 'wb') as f:
                     pickle.dump(df_jobs, f, protocol=pickle.HIGHEST_PROTOCOL)
 
             return self.df_jobs
 
-        if site_from_list == True:
+        if site_from_list is True:
             return make_final_site(post_cleanup)
-        if keywords_from_list == True:
+        if keywords_from_list is True:
             return make_final_keyword(post_cleanup)
 
     @make_final
@@ -136,10 +138,10 @@ class PostCleanUp:
         try:
             self.df_jobs = self.post_cleanup_helper(self.keyword, self.site)
 
-            if ((self.df_jobs.empty) or (len(self.df_jobs == 0))) and self.args['print_enabled'] == True:
+            if ((self.df_jobs.empty) or (len(self.df_jobs == 0))) and self.args['print_enabled'] is True:
                 print(f'DF {self.keyword.title()} not collected yet.')
         except Exception:
-            if self.args['print_enabled'] == True:
+            if self.args['print_enabled'] is True:
                 print(f'{keyword} Not found: {Exception}.')
             self.df_jobs = pd.DataFrame()
 
@@ -210,13 +212,13 @@ def post_cleanup(
     )
     print('-' * 20)
 
-    if site_from_list == True:
+    if site_from_list is True:
         df_list_from_site = []
         for site in site_list:
             if args['print_enabled'] is True:
                 print('-' * 20)
                 print(f'Cleaning up LIST OF DFs for {site}.')
-            if keywords_from_list == True:
+            if keywords_from_list is True:
                 df_list_from_keyword = []
                 glob_paths = glob.glob(f'{code_dir}/{str(site)}/Data/*.json')
                 for glob_path in glob_paths:
@@ -241,7 +243,7 @@ def post_cleanup(
                         df_list_from_site.append(df_list_from_keyword)
                         df_jobs = df_list_from_site
                         # pbar.finish()
-            elif keywords_from_list == False:
+            elif keywords_from_list is False:
                 if args['print_enabled'] is True:
                     print(f'Post collection cleanup for {keyword}.')
                 df_jobs = post_cleanup_helper(keyword, site)
@@ -254,10 +256,10 @@ def post_cleanup(
                     pickle.dump(df_jobs, f, protocol=pickle.HIGHEST_PROTOCOL)
     #         pbar.finish()
 
-    elif site_from_list == False:
-        if keywords_from_list == True:
+    elif site_from_list is False:
+        if keywords_from_list is True:
             df_list_from_keyword = []
-            glob_paths = glob.glob(f'{code_dir}/*/Data/*.json')
+            glob_paths = glob.glob(f'{scraped_data}/*/Data/*.json')
             for glob_path in glob_paths:
                 keyword = glob_path.split('dict_')[1].split('.json')[0]
                 if args['print_enabled'] is True:
@@ -278,7 +280,7 @@ def post_cleanup(
                         df_list_from_keyword.append(df_jobs)
                     df_jobs = df_list_from_keyword
         #             pbar.finish()
-        elif keywords_from_list == False:
+        elif keywords_from_list is False:
             if args['print_enabled'] is True:
                 print(f'Post collection cleanup for {keyword}.')
             try:
@@ -299,7 +301,7 @@ def post_cleanup(
         with open(args['df_dir'] + f'df_all_jobs.p', 'wb') as f:
             pickle.dump(df_jobs, f, protocol=pickle.HIGHEST_PROTOCOL)
 
-    if job_id_save_enabled == True:
+    if job_id_save_enabled is True:
         job_id_dict = make_job_id_v_gender_key_dict(site_from_list, site_list)
         sector_vs_job_id_dict = make_job_id_v_sector_key_dict()
 

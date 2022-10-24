@@ -25,6 +25,7 @@
 #         if code_dir is not None:
 #             break
 # main_dir = str(Path(code_dir).parents[0])
+# scraped_data = f'{code_dir}/scraped_data'
 # sys.path.append(code_dir)
 # from setup_module.imports import *
 # from setup_module.params import *
@@ -55,12 +56,14 @@ for _ in range(5):
             break
 
 main_dir = str(Path(code_dir).parents[0])
+scraped_data = f'{code_dir}/scraped_data'
 sys.path.append(code_dir)
+
+from setup_module.classification import *
 
 # %%
 from setup_module.imports import *
 from setup_module.scraping import *
-from setup_module.classification import *
 
 warnings.filterwarnings('ignore', category=DeprecationWarning)
 
@@ -190,27 +193,27 @@ metrics_list = [
     'Confusion Matrix_opt',
 ]
 
-if task_enabled == False:
+if task_enabled is False:
     analysis_columns = ['Warmth', 'Competence']
     # df_jobs_labaled_save_path = f'{args["df_dir"]}df_jobs_labeled_final_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned})'
-    if search_enabled == False:
+    if search_enabled is False:
         pickle_file_name = 'Classifiers Table.pkl'
         csv_file_name = 'Classifiers Table.csv'
         excel_file_name = 'Classifiers Table.xlsx'
         latex_file_name = 'Classifiers Table.tex'
         markdown_file_name = 'Classifiers Table.md'
-    elif search_enabled == True:
+    elif search_enabled is True:
         pickle_file_name = 'Classifiers Table_search.pkl'
         csv_file_name = 'Classifiers Table Search.csv'
         excel_file_name = 'Classifiers Table Search.xlsx'
         latex_file_name = 'Classifiers Table Search.tex'
         markdown_file_name = 'Classifiers Table Search.md'
 
-    # if language_model_enabled == True:
+    # if language_model_enabled is True:
     #     csv_file_name = 'Classifiers Table Language Models.csv'
     #     excel_file_name = 'Classifiers Table Language Models.xlsx'
 
-elif task_enabled == True:
+elif task_enabled is True:
     analysis_columns = [
         'Warmth',
         'Competence',
@@ -219,33 +222,33 @@ elif task_enabled == True:
         'Task_Competence',
     ]
     # df_jobs_labaled_save_path = f'{df_dir}df_jobs_labeled_final_preprocessed_WITH_TASK_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned})'
-    if search_enabled == False:
+    if search_enabled is False:
         csv_file_name = 'Classifiers Table_WITH_TASK.csv'
         excel_file_name = 'Classifiers Table_WITH_TASK.xlsx'
-    elif search_enabled == True:
+    elif search_enabled is True:
         csv_file_name = 'Classifiers Table Search_WITH_TASK.csv'
         excel_file_name = 'Classifiers Table Search_WITH_TASK.xlsx'
 
-    # if language_model_enabled == True:
+    # if language_model_enabled is True:
     #     csv_file_name = 'Classifiers Table Language Models_WITH_TASK.csv'
     #     excel_file_name = 'Classifiers Table Language Models_WITH_TASK.xlsx'
 
-if id_dict_new == True:
+if id_dict_new is True:
     job_id_dict = make_job_id_v_gender_key_dict()
     sector_vs_job_id_dict = make_job_id_v_sector_key_dict()
 
-elif id_dict_new == False:
+elif id_dict_new is False:
     with open(validate_path(f'{parent_dir}job_id_vs_all.json'), encoding='utf-8') as f:
         job_id_dict = json.load(f)
 
     with open(validate_path(f'{parent_dir}job_id_vs_sector_all.json'), encoding='utf-8') as f:
         sector_vs_job_id_dict = json.load(f)
 
-if from_processing_function == True:
+if from_processing_function is True:
 
     df_jobs_labeled = simple_preprocess_df()
 
-elif from_processing_function == False:
+elif from_processing_function is False:
     df_jobs_labaled_save_path = f'{args["df_dir"]}df_jobs_labeled_final_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned})'
 
     try:
@@ -282,13 +285,13 @@ final_competence_classifier = 'VotingClassifier'
 alpha = 0.050
 normality_tests_labels = ['Statistic', 'p-value']
 
-if analysis_df_from_manual == False:
+if analysis_df_from_manual is False:
     df_loc = f'_outliers_age_limit-{age_limit}_age_ratio-{age_ratio}_gender_ratio-{gender_ratio}'
     dataframes = {'df': None, 'df_mean': None}
     dv_cols = ['Warmth', 'Warmth_Probability',
             'Competence', 'Competence_Probability']
 
-elif analysis_df_from_manual == True:
+elif analysis_df_from_manual is True:
     df_loc = '_outliers'
     dataframes = {'df_manual': None, 'df_manual_mean': None}
     dv_cols = ['Warmth', 'Competence']
@@ -298,7 +301,7 @@ zscores_list = [0, 1.96, 2.58, 3.29]
 outliers_remove = True
 
 # for dv in dv_cols:
-#     if outliers_remove == False:
+#     if outliers_remove is False:
 #         zscores_list = [0]
 
 #         for zscores in zscores_list:
@@ -307,7 +310,7 @@ outliers_remove = True
 #             elif 'Probability' in dv:
 #                 dvs_probas[f'{dv}_Probability_Zscore{zscores}'] = f'{dv}'
 
-#     elif outliers_remove == True:
+#     elif outliers_remove is True:
 
 #         for zscores in zscores_list:
 #             if 'Probability' not in dv:

@@ -22,8 +22,9 @@ cachetools==5.2.0
 cardinality==0.1.1
 catalogue @ file:///Users/runner/miniforge3/conda-bld/catalogue_1661366575592/work
 cbsodata==1.3.4
-certifi==2022.9.14
+certifi==2022.9.24
 cffi @ file:///Users/runner/miniforge3/conda-bld/cffi_1656782892388/work
+chardet==3.0.4
 charset-normalizer @ file:///home/conda/feedstock_root/build_artifacts/charset-normalizer_1661170624537/work
 click @ file:///Users/runner/miniforge3/conda-bld/click_1651215424788/work
 cloudpickle @ file:///home/conda/feedstock_root/build_artifacts/cloudpickle_1662587369221/work
@@ -59,15 +60,21 @@ gensim @ file:///Users/runner/miniforge3/conda-bld/gensim_1659080235332/work
 google-auth==2.11.0
 google-auth-oauthlib==0.4.6
 google-pasta==0.2.0
-google-trans-new==1.1.9
+googletrans==4.0.0rc1
 grpcio @ file:///Users/runner/miniforge3/conda-bld/grpcio_1653138938320/work
-h11 @ file:///home/conda/feedstock_root/build_artifacts/h11_1652727116927/work
+h11==0.9.0
+h2==3.2.0
 h5py @ file:///Users/runner/miniforge3/conda-bld/h5py_1637964045648/work
 HeapDict==1.0.1
+hpack==3.0.0
+hstspreload==2022.10.1
 httmock==1.4.0
 http-request-randomizer==1.3.2
+httpcore==0.9.1
+httpx==0.13.3
 huggingface-hub @ file:///home/conda/feedstock_root/build_artifacts/huggingface_hub_1661450389316/work
-idna @ file:///home/conda/feedstock_root/build_artifacts/idna_1663625384323/work
+hyperframe==5.2.0
+idna==2.10
 imbalanced-learn @ file:///home/conda/feedstock_root/build_artifacts/imbalanced-learn_1652728311148/work
 importlib-metadata==4.12.0
 importlib-resources @ file:///home/conda/feedstock_root/build_artifacts/importlib_resources_1658604161399/work
@@ -161,13 +168,7 @@ pylint @ file:///home/conda/feedstock_root/build_artifacts/pylint_1662578808318/
 pynndescent @ file:///home/conda/feedstock_root/build_artifacts/pynndescent_1652648933546/work
 pyOpenSSL @ file:///home/conda/feedstock_root/build_artifacts/pyopenssl_1643496850550/work
 pyparsing @ file:///home/conda/feedstock_root/build_artifacts/pyparsing_1652235407899/work
-PyQt6==6.3.1
-PyQt6-3D==6.3.0
-PyQt6-Charts==6.3.1
-PyQt6-DataVisualization==6.3.1
-PyQt6-NetworkAuth==6.3.0
 PyQt6-sip==13.4.0
-PyQt6-WebEngine==6.3.1
 pyrsistent @ file:///Users/runner/miniforge3/conda-bld/pyrsistent_1649013408545/work
 PySocks @ file:///home/conda/feedstock_root/build_artifacts/pysocks_1661604839144/work
 python-dateutil @ file:///home/conda/feedstock_root/build_artifacts/python-dateutil_1626286286081/work
@@ -180,6 +181,7 @@ requests @ file:///home/conda/feedstock_root/build_artifacts/requests_1661872987
 requests-oauthlib==1.3.1
 researchpy==0.3.5
 responses @ file:///home/conda/feedstock_root/build_artifacts/responses_1643839609465/work
+rfc3986==1.5.0
 rsa==4.9
 sacremoses @ file:///home/conda/feedstock_root/build_artifacts/sacremoses_1651557636210/work
 scikit-learn @ file:///Users/runner/miniforge3/conda-bld/scikit-learn_1659726157499/work

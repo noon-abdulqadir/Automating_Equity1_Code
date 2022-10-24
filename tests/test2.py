@@ -19,6 +19,7 @@ for _ in range(5):
             break
 
 main_dir = str(Path(code_dir).parents[0])
+scraped_data = f'{code_dir}/scraped_data'
 sys.path.append(code_dir)
 
 # %%

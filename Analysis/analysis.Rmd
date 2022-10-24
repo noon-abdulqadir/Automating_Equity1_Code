@@ -64,10 +64,10 @@ set.seed(42)
 ```{r Read dataframes, message=TRUE, warning=FALSE, paged.print=TRUE}
 ## Read dfset with outliers removed
 ## READ PICKLE
-if (analysis_df_from_manual == TRUE) {
+if (analysis_df_from_manual is True) {
   df_name = 'df_manual'
   df_file = 'outliers'
-} else if (analysis_df_from_manual == FALSE) {
+} else if (analysis_df_from_manual is False) {
   df_name = 'df'
   df_file = glue('outliers_age_limit-{age_limit}_age_ratio-{age_ratio}_gender_ratio-{gender_ratio}')
 }
@@ -165,10 +165,10 @@ gender_iv = "Gender"
 age_iv = "Age"
 outliers_remove <- FALSE
 for (dv in dv_cols){
-  if (outliers_remove == FALSE){
+  if (outliers_remove is False){
       assign(paste(glue('{tolower(dv)}'), 'dv', sep = "_"), dv)
       assign(paste(glue('{tolower(dv)}'), 'proba', sep = "_"), paste(dv, 'Probability', sep = "_"))
-    } else if (outliers_remove == TRUE){
+    } else if (outliers_remove is True){
       assign(paste(glue('{tolower(dv)}'), 'dv', sep = "_"), paste(dv, 'Outliers_Removed', sep = "_"))
       assign(paste(glue('{tolower(dv)}'), 'proba', sep = "_"), paste(dv, 'Probability_Outliers_Removed', sep = "_"))
   }
@@ -760,7 +760,6 @@ z_scores[!rowSums(z_scores\>3.29),])
 )
 
 \`\`\`
-
 
 ### Save file
 

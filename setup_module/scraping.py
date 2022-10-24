@@ -25,6 +25,7 @@
 #         if code_dir is not None:
 #             break
 # main_dir = str(Path(code_dir).parents[0])
+# scraped_data = f'{code_dir}/scraped_data'
 # sys.path.append(code_dir)
 # from setup_module.imports import *
 # from setup_module.params import *
@@ -55,6 +56,7 @@ for _ in range(5):
             break
 
 main_dir = str(Path(code_dir).parents[0])
+scraped_data = f'{code_dir}/scraped_data'
 sys.path.append(code_dir)
 
 # %%
@@ -103,12 +105,24 @@ def get_main_path(
 # driver_browser_window
 
 # %%
+# Function to to check file exists and not empty
+def is_non_zero_file(fpath):
+
+    # check = (os.path.isfile(fpath) and os.path.getsize(fpath) > 0)
+    # if check is True:
+    #     print(f'File {fpath.split("/")[-1]} exists.')
+    # elif check is False:
+    #     print(f'File {fpath.split("/")[-1]} does not exist.')
+    return (os.path.isfile(fpath) and os.path.getsize(fpath) > 0)
+
+
+# %%
 # Function to validate path or file
 def validate_path(file: str, file_extensions=['.*', 'chromedriver']) -> str:
 
     if file.endswith(tuple(file_extensions)):
         if not os.path.isdir(file):
-            if (not os.path.isfile(file)) or (os.stat(file).st_size == 0):
+            if is_non_zero_file(file) is False:
                 # file = input(f'No file found at {file}.\nPlease enter correct path.')
                 try:
                     print(f'File {file} not found.')
@@ -116,7 +130,7 @@ def validate_path(file: str, file_extensions=['.*', 'chromedriver']) -> str:
                     print(e.json())
     elif not file.endswith(tuple(file_extensions)):
         if not os.path.isdir(file):
-            if (not os.path.isfile(file)) or (os.stat(file).st_size == 0):
+            if is_non_zero_file(file) is False:
                 # file = input(f'No file found at {file}.\nPlease enter correct path.')
                 try:
                     print(f'File {file} not found.')
@@ -287,22 +301,22 @@ def get_driver(
     options.add_experimental_option('excludeSwitches', ['enable-automation'])
     options.add_experimental_option('useAutomationExtension', False)
 
-    if incognito_enabled == True:
+    if incognito_enabled is True:
         print('Incognito mode enabled.')
         options.add_argument('--incognito')
-    elif incognito_enabled == False:
+    elif incognito_enabled is False:
         print('No incognito mode enabled.')
 
-    if headless_enabled == True:
+    if headless_enabled is True:
         print('Headless driver enabled.')
         # options.add_argument('--headless')
         options.headless = True
-    elif headless_enabled == False:
+    elif headless_enabled is False:
         print('No headless driver enabled.')
         options.headless = False
 
     # Proxy
-    if proxy_enabled == True:
+    if proxy_enabled is True:
         print('Proxy browsing enabled.')
         ua = UserAgent()
         userAgent = ua.random
@@ -318,7 +332,7 @@ def get_driver(
         }
         options.add_argument(f'--proxy-server= {PROXY}')
         options.add_argument(f'user-agent={userAgent}')
-    elif proxy_enabled == False:
+    elif proxy_enabled is False:
         print('No proxy browsing enabled.')
         pass
 
@@ -392,7 +406,7 @@ def check_window(driver, main_window, window_before):
 def check_window_back(driver, main_window, window_before, new_window):
 
     # Go to main results page
-    if new_window == True:
+    if new_window is True:
         # driver.current_window_handle =! main_window:
         print('Current window is not main window.')
         try:
@@ -407,7 +421,7 @@ def check_window_back(driver, main_window, window_before, new_window):
         else:
             print(f'Going back to first window: {window_before}')
 
-    elif new_window == False:
+    elif new_window is False:
         pass
 
 
@@ -435,7 +449,7 @@ def remove_code(keywords_lst: list, keyword_clean_lst=None) -> list:
 def clean_and_translate_keyword_list(
     keywords_lst: list,
     translate_enabled: bool = False,
-    translator = google_translator(),
+    translator = Translator(),
 ) -> list:
 
     assert all(isinstance(i, str) for i in keywords_lst), 'Keywords must be strings.'
@@ -478,6 +492,9 @@ def clean_and_translate_keyword_list(
         if ' (excl.' in i.lower():
             keywords_list.append(i.lower().split(' (excl.')[0].lower())
             keywords_list.remove(i)
+        if '_(excl' in i.lower():
+            keywords_list.append(i.lower().split('_(excl')[0].lower())
+            keywords_list.remove(i)
     for i in keywords_list:
         if ' (' in i.lower():
             keywords_list.append(i.lower().split(' (')[0].lower())
@@ -497,13 +514,13 @@ def clean_and_translate_keyword_list(
     keywords_list = list(filter(None, list(set(keywords_list))))
 
     # Translate to Dutch
-    if translate_enabled == True:
+    if translate_enabled is True:
         for english_keyword in keywords_list:
             while True:
                 try:
-                    dutch_keyword = translator.translate(english_keyword, lang_src='en', lang_tgt='nl')
-                except requests.ConnectTimeout:
-                    time.sleep(5)
+                    dutch_keyword = translator.translate(english_keyword).text
+                except:
+                    time.sleep(0.3)
                     continue
                 break
             keywords_list.append(dutch_keyword.lower())
@@ -588,6 +605,7 @@ def get_sbi_sectors_list(
 
     sbi_english_keyword_list = [i for index, row in df_sbi_sectors['Used_Sector_Keywords'].iteritems() if isinstance(row, list) for i in row]
     sbi_english_keyword_list = clean_and_translate_keyword_list(sbi_english_keyword_list)
+
     if len(list(set(trans_keyword_list) - set(sbi_english_keyword_list))) > 0:
         trans_keyword_list = clean_and_translate_keyword_list(trans_keyword_list)
         if len(list(set(trans_keyword_list) - set(sbi_english_keyword_list))) > 0:
@@ -773,6 +791,7 @@ def get_sector_df_from_cbs(
     sectors_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Age and Gender Composition of Industires and Jobs/Found Data for Specific Occupations/',
     tables_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Age and Gender Composition of Industires and Jobs/Output CSVs for Occupational Sectors/',
     cols = ['Industry class / branch (SIC2008)', 'Sex of employee', 'Other characteristics employee', 'Employment/Jobs (x 1 000)'],
+    get_cbs_odata_enabled=False,
     age_limit: int = 45,
     age_ratio: int = 10,
     gender_ratio: int = 20,
@@ -781,12 +800,12 @@ def get_sector_df_from_cbs(
     #     sbi_sectors_dict = json.load(f)
     sbi_english_keyword_list, sbi_english_keyword_dict, sbi_sectors_dict, sbi_sectors_dict_full, sbi_sectors_dom_gen, sbi_sectors_dom_age, trans_keyword_list = get_sbi_sectors_list()
 
-    try:
+    if get_cbs_odata_enabled is True:
         select = ['SexOfEmployee', 'TypeOfEmploymentContract', 'OtherCharacteristicsEmployee', 'IndustryClassBranchSIC2008', 'Periods', 'Jobs_1']
         odata_colnames_normalized = {'IndustryClassBranchSIC2008': 'Industry class / branch (SIC2008)', 'SexOfEmployee': 'Sex of employee', 'OtherCharacteristicsEmployee': 'Other characteristics employee', 'Jobs_1': 'Employment/Jobs (x 1 000)'}
         df_sectors = get_cbs_odata()
         df_sectors.rename(columns=odata_colnames_normalized, inplace=True)
-    except Exception:
+    elif get_cbs_odata_enabled is False:
         # print(f'Error getting data from CBS Statline OData. Using the following file:\n{sectors_file_path}Sectors Tables/FINAL/Gender x Age_CBS_DATA.csv')
         # Read, clean, create code variable
         try:
@@ -1020,16 +1039,16 @@ def read_and_save_keyword_list(
         'keywords_youngvocc': keywords_youngvocc,
         'keywords_agevsect': keywords_agevsect,
     }
-    if save_enabled == True:
+    if save_enabled is True:
         with open(
             f'{sectors_file_path}/Analysis and Dataset Used/keywords_dict.json', 'w', encoding='utf8'
         ) as f:
             json.dump(keywords_dict, f)
 
         for key, value in keywords_dict.items():
-            if translate_enabled == False:
+            if translate_enabled is False:
                 save_path_file_name = f'/Analysis and Dataset Used/{str(key)}.txt'
-            elif translate_enabled == True:
+            elif translate_enabled is True:
                 save_path_file_name = (
                     f'/Analysis and Dataset Used/{str(key)}_with_nl.txt'
                 )
@@ -1041,7 +1060,7 @@ def read_and_save_keyword_list(
                 for i in value:
                     f.write(f'{i.lower()}\n')
 
-    elif save_enabled == False:
+    elif save_enabled is False:
         print('No keyword list save enabled.')
 
     return (
@@ -1103,7 +1122,7 @@ def get_keywords_from_cbs(
     all_age_dict = all_age_sectors.to_dict()
 
     # Save lists
-    if save_enabled == True:
+    if save_enabled is True:
         with open(f'{keywords_file_path}keywords_sectors_FROM_SECTOR.txt', 'w') as f:
             for i in sectors_list:
                 f.write(f'{i.lower()}\n')
@@ -1175,7 +1194,7 @@ def get_keyword_list(
         f'{code_dir}/data/content analysis + ids + sectors/Age and Gender Composition of Industires and Jobs/Analysis and Dataset Used/'
     )
 
-    if get_from_cbs == True:
+    if get_from_cbs is True:
         (
             df_sectors,
             female_sectors,
@@ -1338,7 +1357,7 @@ def get_keyword_list(
     mixed_age = list(filter(None, list(set(mixed_age))))
     mixed_age = clean_and_translate_keyword_list(mixed_age)
 
-    if print_enabled == True:
+    if print_enabled is True:
         # Print and save lists
         print(f'All sector total {len(keywords_sector)}:\n{keywords_sector}\n')
         print(
@@ -1509,9 +1528,9 @@ def get_args(
 # Main Data
 def main_info(keyword: str, site: str, save_path: str = validate_path(f'{main_dir}'), args=get_args()):
 
-    save_path = validate_path(f'{code_dir}/{site}/Data/')
+    save_path = validate_path(f'{scraped_data}/{site}/Data/')
     if site not in str(save_path):
-        save_path = validate_path(f'{code_dir}/{site}/Data/')
+        save_path = validate_path(f'{scraped_data}/{site}/Data/')
 
     if site.lower().strip() == 'indeed':
         keyword_url = '+'.join(keyword.lower().split(' '))
@@ -1523,10 +1542,10 @@ def main_info(keyword: str, site: str, save_path: str = validate_path(f'{main_di
         keyword_url = ''
 
     keyword_file = '_'.join(keyword.lower().split(' '))
-    json_file_name = f'{site.lower()}_jobs_dict_{keyword_file.lower()}.json'.replace("-Noon's MacBook Pro",'')
-    df_file_name = f'{site.lower()}_jobs_df_{keyword_file.lower()}.{args["file_save_format_backup"]}'.replace("-Noon's MacBook Pro",'')
-    logs_file_name = f'{site.lower()}_jobs_logs_{keyword_file.lower()}.log'.replace("-Noon's MacBook Pro",'')
-    filemode = 'a+' if (os.path.isfile(logs_file_name.lower())) and (os.stat(logs_file_name.lower()).st_size > 0) else 'w+'
+    json_file_name = f'{site.lower()}_jobs_dict_{keyword_file.lower()}.json'.replace("-Noon's MacBook Pro", '').replace("_(excl", '')
+    df_file_name = f'{site.lower()}_jobs_df_{keyword_file.lower()}.{args["file_save_format_backup"]}'.replace("-Noon's MacBook Pro", '').replace("_(excl", '')
+    logs_file_name = f'{site.lower()}_jobs_logs_{keyword_file.lower()}.log'.replace("-Noon's MacBook Pro", '').replace("_(excl", '')
+    filemode = 'a+' if is_non_zero_file(save_path + logs_file_name.lower()) is True else 'w+'
 
     return (
         keyword_url,
@@ -1576,13 +1595,13 @@ def recurse(lst: list, function):
 def recursive_items(dictionary: dict, return_value_enabled: bool = False):
     for key, value in dictionary.items():
         yield (key)
-        if return_value_enabled == True:
+        if return_value_enabled is True:
             yield (value)
         if type(value) is dict:
             yield from recursive_items(value)
         else:
             yield (key)
-            if return_value_enabled == True:
+            if return_value_enabled is True:
                 yield (value)
 
 
@@ -1657,7 +1676,7 @@ def stale_element_checker(driver, stale_element) -> None:
 # %%
 def act_cool(min_time: int, max_time: int, be_visibly_cool: bool = False) -> None:
     seconds = round(random.uniform(min_time, max_time), 2)
-    if be_visibly_cool == True:
+    if be_visibly_cool is True:
         logging.info(f'\tActing cool for {seconds} seconds'.format(**locals()))
     print(f'Acting cool for {seconds} seconds'.format(**locals()))
     time.sleep(seconds)
@@ -1994,7 +2013,7 @@ def clean_df(
     # else:
     #     subset_list=[int_variable, str_variable]
 
-    if reset == True:
+    if reset is True:
         # , 'Sector', 'Sector Code', '% Female', '% Male', '% Older', '% Younger', 'English Requirement', 'Dutch Requirement'
         # or df_jobs['Gender'].isnull().values.any() or df_jobs['Age'].isnull().values.any() or df_jobs['Sector'].isnull().values.any() or df_jobs['Sector Code'].isnull().values.any() or df_jobs['% Female'].isnull().values.any() or df_jobs['% Male'].isnull().values.any() or df_jobs['% Older'].isnull().values.any() or df_jobs['% Younger'].isnull().values.any() or df_jobs['English Requirement'].isnull().values.any() or df_jobs['Dutch Requirement'].isnull().values.any():
         df_jobs = set_gender_age_sects_lang(df_jobs, str_variable=str_variable, id_dict_new=id_dict_new)
@@ -2133,7 +2152,7 @@ def dummy_code_df_gender_age(df, print_info=False, args=get_args()):
     df.loc[df['Age'] == 'Mixed Age', ['Age_Num']] = 2
     df.loc[df['Age'] == 'Younger Worker', ['Age_Num']] = 3
 
-    if print_info == True:
+    if print_info is True:
         df_gender_age_info(df)
 
     return df
@@ -2179,7 +2198,7 @@ def df_warm_comp_info(
     print('\nDF INFO:\n')
     df.info()
 
-    if print_info == True:
+    if print_info is True:
         for dv in dvs_all:
             if '_Probability' not in dv:
                 try:
@@ -2218,7 +2237,7 @@ def get_viz(df_name, df_df, dataframes, args=get_args()):
     warm_comp_count.plot(kind='barh', stacked=True, legend=True, color='blue', ax=ax).grid(
         axis='y'
     )
-    if args['save_enabled'] == True:
+    if args['save_enabled'] is True:
         fig.savefig(f'{args["plot_save_path"]}{df_name} - Warmth and Competence Sentence Counts.{image_save_format}', format=image_save_format, dpi=3000)
 
     fig.show()
@@ -2231,6 +2250,7 @@ def set_language_requirement(
     str_variable = 'Job Description',
     dutch_requirement_pattern = r'[Ll]anguage: [Dd]utch|[Dd]utch [Pp]referred|[Dd]utch [Re]quired|[Dd]utch [Ll]anguage|[Pp]roficient in [Dd]utch|[Ss]peak [Dd]utch|[Kk]now [Dd]utch',
     english_requirement_pattern = r'[Ll]anguage: [Ee]nglish|[Ee]nglish [Pp]referred|[Ee]nglish [Re]quired|[Ee]nglish [Ll]anguage|[Pp]roficient in [Ee]nglish|[Ss]peak [Ee]nglish|[Kk]now [Ee]nglish',
+    args=get_args(),
     ):
     # Language requirements
     # Dutch
@@ -2271,9 +2291,9 @@ def set_sector_and_percentage(
     sbi_sectors_dom_age = args['sbi_sectors_dom_age']
     trans_keyword_list = args['trans_keyword_list']
 
-    if sector_dict_new == True:
+    if sector_dict_new is True:
         sector_vs_job_id_dict = make_job_id_v_sector_key_dict()
-    elif sector_dict_new == False:
+    elif sector_dict_new is False:
         with open(validate_path(f'{args["parent_dir"]}job_id_vs_sector_all.json'), encoding='utf-8') as f:
             sector_vs_job_id_dict = json.load(f)
 
@@ -2339,10 +2359,10 @@ def set_gender_age(
     sbi_sectors_dom_age = args['sbi_sectors_dom_age']
     trans_keyword_list = args['trans_keyword_list']
 
-    if id_dict_new == True:
+    if id_dict_new is True:
         job_id_dict = make_job_id_v_gender_key_dict()
 
-    elif id_dict_new == False:
+    elif id_dict_new is False:
         with open(validate_path(f'{args["parent_dir"]}job_id_vs_all.json'), encoding='utf8') as f:
             job_id_dict = json.load(f)
 
@@ -2402,36 +2422,38 @@ def load_merge_dict_df(
     args=get_args()
 ):
     # df_jobs
-    if (os.path.isfile(save_path + df_file_name.lower())) and (os.stat(save_path + df_file_name.lower()).st_size > 0):
-        if args['print_enabled'] == True:
+    if is_non_zero_file(save_path + df_file_name.lower()) is True:
+        if args['print_enabled'] is True:
             print(
                 f'A DF with the name "{df_file_name.lower()}" already exists at {save_path}.\nNew data will be appended to the file.'
             )
         df_old_jobs = pd.read_csv(save_path + df_file_name.lower())
         if not df_old_jobs.empty:
             df_old_jobs = clean_df(df_old_jobs)
+        else:
+            print(f'{df_file_name} is empty!')
 
-    elif (not os.path.isfile(save_path + df_file_name.lower())) or (os.stat(save_path + df_file_name.lower()).st_size == 0):
-        if args['print_enabled'] == True:
+    elif is_non_zero_file(save_path + df_file_name.lower()) is False:
+        if args['print_enabled'] is True:
             print(f'No DF with the name "{df_file_name.lower()}" found.')
         df_old_jobs = pd.DataFrame()
-    if args['print_enabled'] == True:
+    if args['print_enabled'] is True:
         print(f'Old jobs DF of length: {df_old_jobs.shape[0]}.')
 
     # jobs
-    if (os.path.isfile(save_path + json_file_name.lower())) and (os.stat(save_path + json_file_name.lower()).st_size > 0):
-        if args['print_enabled'] == True:
+    if is_non_zero_file(save_path + json_file_name.lower()) is True:
+        if args['print_enabled'] is True:
             print(
                 f'A list of dicts with the name "{json_file_name.lower()}" already exists at {save_path}.\nNew data will be appended to this file.'
             )
         with open(save_path + json_file_name, encoding='utf8') as f:
             old_jobs = json.load(f)
         # old_jobs = remove_dupe_dicts(old_jobs)
-    elif (not os.path.isfile(save_path + json_file_name.lower())) or (os.stat(save_path + json_file_name.lower()).st_size == 0):
-        if args['print_enabled'] == True:
+    elif is_non_zero_file(save_path + json_file_name.lower()) is False:
+        if args['print_enabled'] is True:
             print(f'No list of dicts with the name "{json_file_name.lower()}" found.')
         old_jobs = []
-    if args['print_enabled'] == True:
+    if args['print_enabled'] is True:
         print(f'Old jobs dict of length: {len(old_jobs)}.')
 
     # Merge dicts and df
@@ -2445,7 +2467,7 @@ def load_merge_dict_df(
             )
 
         # Merge jobs from df to jobs from file
-        if args['print_enabled'] == True:
+        if args['print_enabled'] is True:
             print('Merging DF with jobs into new list.')
         old_jobs.extend(jobs_from_df_old_jobs)
         # old_jobs = remove_dupe_dicts(old_jobs)
@@ -2454,13 +2476,13 @@ def load_merge_dict_df(
             if myDict not in jobs:
                 jobs.append(myDict)
 
-        if (((os.path.isfile(save_path + df_file_name.lower()))) and (os.stat(save_path + df_file_name.lower()).st_size > 0)) or ((os.path.isfile(save_path + json_file_name.lower())) and (os.stat(save_path + json_file_name.lower()).st_size > 0)):
+        if is_non_zero_file(save_path + df_file_name.lower()) is True or is_non_zero_file(save_path + json_file_name.lower()) is True:
             with open(save_path + json_file_name, 'w', encoding='utf8') as f:
                 json.dump(jobs, f)
     elif df_old_jobs is None:
         jobs = old_jobs
 
-    if args['print_enabled'] == True:
+    if args['print_enabled'] is True:
         print('-' * 20)
         if len(jobs) > 0:
             print(
@@ -2486,15 +2508,15 @@ def save_df(
     clean_enabled: bool = True,
     args=get_args(),
 ):
-    if print_enabled == True:
+    if print_enabled is True:
         print(f'Saving {keyword} jobs data to df...')
 
     if (not df_jobs.empty) and (len(df_jobs != 0)):
-        if print_enabled == True:
+        if print_enabled is True:
             print(f'Cleaning {keyword} df.')
 
         # Drop duplicates and -1 for job description
-        if clean_enabled == True:
+        if clean_enabled is True:
             df_jobs = clean_df(df_jobs)
 
         # Search keyword
@@ -2507,7 +2529,7 @@ def save_df(
             print(len(df_jobs))
 
         # Save df to csv
-        if print_enabled == True:
+        if print_enabled is True:
             print(f'Saving {keyword.lower()} jobs df of length {len(df_jobs.index)} to csv as {df_file_name.lower()} in location {save_path}')
 
         df_jobs.to_csv(save_path + df_file_name, mode='w', sep=',', header=True, index=True)
@@ -2520,7 +2542,7 @@ def save_df(
                 pass
 
     elif df_jobs.empty:
-        if print_enabled == True:
+        if print_enabled is True:
             print(f'Jobs DataFrame is empty since no jobs results were found for {str(keyword)}. Moving on to next search.')
 
     return df_jobs
@@ -2530,22 +2552,22 @@ def save_df(
 # Post collection cleanup
 def site_loop(site, site_list, site_from_list, args, df_list_from_site=None):
 
-    if site_from_list == True:
+    if site_from_list is True:
         df_list_from_site = []
         for site in tqdm.tqdm(site_list):
             if args['print_enabled'] is True:
                 print('-' * 20)
                 print(f'Cleaning up LIST OF DFs for {site}.')
-            glob_paths = glob.glob(f'{code_dir}/{site}/Data/*.json')+glob.glob(f'{code_dir}/{site}/Data/*.csv')+glob.glob(f'{code_dir}/{site}/Data/*.xlsx')
+            glob_paths = glob.glob(f'{scraped_data}/{site}/Data/*.json')+glob.glob(f'{scraped_data}/{site}/Data/*.csv')+glob.glob(f'{scraped_data}/{site}/Data/*.xlsx')
 
             yield site, df_list_from_site, glob_paths
 
-    elif site_from_list == False:
+    elif site_from_list is False:
         df_list_from_site = None
         if args['print_enabled'] is True:
             print('-' * 20)
             print('Cleaning up LIST OF DFs from all sites.')
-        glob_paths = glob.glob(f'{code_dir}/*/Data/*.json')+glob.glob(f'{code_dir}/*/Data/*.csv')+glob.glob(f'{code_dir}/*/Data/*.xlsx')
+        glob_paths = glob.glob(f'{scraped_data}/*/Data/*.json')+glob.glob(f'{scraped_data}/*/Data/*.csv')+glob.glob(f'{scraped_data}/*/Data/*.xlsx')
 
         yield site, df_list_from_site, glob_paths
 
@@ -2560,12 +2582,12 @@ def site_save(site, df_jobs, args):
 # %%
 def keyword_loop(keyword, keywords_from_list, glob_paths, args, translator, df_list_from_keyword=None):
 
-    if keywords_from_list == True:
+    if keywords_from_list is True:
         df_list_from_keyword = []
         for glob_path in glob_paths:
-            if 'dict_' in glob_path:
+            if 'dict_' in glob_path and file.endswith('.json'):
                 keyword = glob_path.split('dict_')[1].split('.')[0].replace("-Noon's MacBook Pro",'').strip().lower()
-            elif 'df_' in glob_path:
+            elif 'df_' in glob_path and (file.endswith('.csv') or file.endswith('.xlsx')):
                 keyword = glob_path.split('df_')[1].split('.')[0].replace("-Noon's MacBook Pro",'').strip().lower()
             if '_' in keyword:
                 keyword = ' '.join(keyword.split('_')).strip().lower()
@@ -2574,7 +2596,7 @@ def keyword_loop(keyword, keywords_from_list, glob_paths, args, translator, df_l
                 print(f'Post collection cleanup for {keyword}.')
             yield keyword, df_list_from_keyword
 
-    elif keywords_from_list == False:
+    elif keywords_from_list is False:
         keyword=keyword
         df_list_from_keyword = None
         if args['print_enabled'] is True:
@@ -2601,8 +2623,8 @@ def post_cleanup(
     keywords_list=None,
     all_save_path = f'job_id_vs_all.json',
     args=get_args(),
-    translator = google_translator(),
-    translate_keywords=False,
+    translator = Translator(),
+    translate_keywords=True,
 ):
 
     print(
@@ -2624,9 +2646,9 @@ def post_cleanup(
             if translate_keywords is True and detect(trans_keyword) != 'en':
                 while True:
                     try:
-                        trans_keyword = translator.translate(trans_keyword, lang_tgt='en').strip().lower()
-                    except (requests.ConnectTimeout, requests.HTTPError):
-                        time.sleep(5)
+                        trans_keyword = translator.translate(trans_keyword).text.strip().lower()
+                    except:
+                        time.sleep(0.3)
                         continue
                     break
 
@@ -2639,7 +2661,7 @@ def post_cleanup(
                 df_jobs = post_cleanup_helper(keyword, site)
                 print(f'DF {keyword.title()} collected.')
 
-                if df_jobs.empty and args['print_enabled'] == True:
+                if df_jobs.empty and args['print_enabled'] is True:
                     print(f'DF {keyword.title()} not collected yet.')
 
             except Exception:
@@ -2698,7 +2720,7 @@ def post_cleanup_helper(keyword, site, args=get_args()):
         keyword, save_path, df_file_name, json_file_name
     )
 
-    if (((os.path.isfile(save_path + df_file_name.lower()))) and (os.stat(save_path + df_file_name.lower()).st_size > 0)) or ((os.path.isfile(save_path + json_file_name.lower())) and (os.stat(save_path + json_file_name.lower()).st_size > 0)):
+    if is_non_zero_file(save_path + df_file_name.lower()) is True or is_non_zero_file(save_path + json_file_name.lower()) is True:
         with open(save_path + json_file_name, 'w', encoding='utf8') as f:
             json.dump(jobs, f)
         df_jobs = pd.DataFrame(jobs)
@@ -2718,7 +2740,7 @@ def post_cleanup_helper(keyword, site, args=get_args()):
                     f'Jobs DataFrame is empty since no jobs results were found for {str(keyword)}.'
                 )
 
-    elif ((not os.path.isfile(save_path + df_file_name.lower())) or (os.stat(save_path + df_file_name.lower()).st_size == 0)) or ((not os.path.isfile(save_path + json_file_name.lower())) or (os.stat(save_path + json_file_name.lower()).st_size == 0)):
+    elif is_non_zero_file(save_path + df_file_name.lower()) is False or is_non_zero_file(save_path + json_file_name.lower()) is False:
         if args['print_enabled'] is True:
             print(f'No jobs file found for {keyword} in path: {save_path}.')
         df_jobs = pd.DataFrame()
@@ -2739,8 +2761,8 @@ def clean_from_old(
     site=None,
     site_list=['Indeed', 'Glassdoor', 'LinkedIn'],
     files = None,
-    exten_to_find = ['.json','csv','.xlsx'],
-    translator = google_translator(),
+    exten_to_find = ['.json','.csv','.xlsx'],
+    translator = Translator(),
     args=get_args(),
 ):
     if files is None:
@@ -2749,22 +2771,22 @@ def clean_from_old(
     if site is None and files == []:
         try:
             for site in site_list:
-                for file_ in glob.glob(f'{code_dir}/{site}/Data/*.json')+glob.glob(f'{code_dir}/{site}/Data/*.csv')+glob.glob(f'{code_dir}/{site}/Data/*.xlsx'):
+                for file_ in glob.glob(f'{scraped_data}/{site}/Data/*.json')+glob.glob(f'{scraped_data}/{site}/Data/*.csv')+glob.glob(f'{scraped_data}/{site}/Data/*.xlsx'):
                     files.append(file)
         except:
-            for file_ in glob.glob(f'{code_dir}/*/Data/*.json')+glob.glob(f'{code_dir}/*/Data/*.csv')+glob.glob(f'{code_dir}/*/Data/*.xlsx'):
+            for file_ in glob.glob(f'{scraped_data}/*/Data/*.json')+glob.glob(f'{scraped_data}/*/Data/*.csv')+glob.glob(f'{scraped_data}/*/Data/*.xlsx'):
                 files.append(file_)
 
     elif site is not None and files == []:
-        for file_ in glob.glob(f'{code_dir}/{site}/Data/*.json')+glob.glob(f'{code_dir}/{site}/Data/*.csv')+glob.glob(f'{code_dir}/{site}/Data/*.xlsx'):
+        for file_ in glob.glob(f'{scraped_data}/{site}/Data/*.json')+glob.glob(f'{scraped_data}/{site}/Data/*.csv')+glob.glob(f'{scraped_data}/{site}/Data/*.xlsx'):
             files.append(file_)
 
     for file_ in tqdm.tqdm(files):
-        if site == None:
+        if site is None:
             site = file_.split(f'{code_dir}/')[1].split('/Data')[0].strip()
-        if 'dict_' in file_:
+        if 'dict_' in file_ and file_.endswith('.json'):
             keyword = file_.split('dict_')[1].split('.')[0].replace("-Noon's MacBook Pro",'').strip().lower()
-        elif 'df_' in file_:
+        elif 'df_' in file_ and (file_.endswith('.csv') or file_.endswith('.xlsx')):
             keyword = file_.split('df_')[1].split('.')[0].replace("-Noon's MacBook Pro",'').strip().lower()
         if '_' in keyword:
             keyword = ' '.join(keyword.split('_')).strip().lower()
@@ -2772,9 +2794,9 @@ def clean_from_old(
         if detect(keyword) != 'en':
             while True:
                 try:
-                    trans_keyword = translator.translate(keyword, lang_tgt='en').strip().lower()
-                except requests.ConnectTimeout:
-                    time.sleep(5)
+                    trans_keyword = translator.translate(keyword).text.strip().lower()
+                except:
+                    time.sleep(0.3)
                     continue
                 break
 
@@ -2812,7 +2834,7 @@ def clean_from_old(
                 trans_filemode,
             ) = main_info(trans_keyword, site)
 
-        if os.path.isfile(file_) and os.stat(file_).st_size > 0:
+        if is_non_zero_file(file_) is True:
             df_jobs = pd.DataFrame()
 
             if file_.endswith('.json'):
@@ -2822,21 +2844,21 @@ def clean_from_old(
                     with open(file_) as f:
                         df_jobs_json = pd.DataFrame(json.load(f))
                 df_jobs = df_jobs.append(df_jobs_json, ignore_index=True)
-                if trans_keyword != keyword and (os.path.isfile(trans_save_path + trans_json_file_name.lower())) and (os.stat(trans_save_path + trans_json_file_name.lower()).st_size > 0):
+                if trans_keyword != keyword and is_non_zero_file(trans_save_path + trans_json_file_name.lower()) is True:
                     trans_df_jobs_json = pd.read_json(trans_save_path + trans_json_file_name.lower(), orient='records')
                     df_jobs = df_jobs.append(trans_df_jobs_json, ignore_index=True)
 
             if file_.endswith('.csv'):
                 df_jobs_csv = pd.read_csv(file_)
                 df_jobs = df_jobs.append(df_jobs_csv, ignore_index=True)
-                if trans_keyword != keyword and (os.path.isfile(trans_save_path + trans_df_file_name.lower())) and (os.stat(trans_save_path + trans_df_file_name.lower()).st_size > 0):
+                if trans_keyword != keyword and is_non_zero_file(trans_save_path + trans_df_file_name.lower()) is True:
                     trans_df_jobs_csv = pd.read_csv(trans_save_path + trans_df_file_name.lower())
                     df_jobs = df_jobs.append(trans_df_jobs_csv, ignore_index=True)
 
             if file_.endswith('.xlsx'):
                 df_jobs_xlsx = pd.read_excel(file_)
                 df_jobs = df_jobs.append(df_jobs_xlsx, ignore_index=True)
-                if trans_keyword != keyword and (os.path.isfile(trans_save_path + trans_df_file_name.lower())) and (os.stat(trans_save_path + trans_df_file_name.lower()).st_size > 0):
+                if trans_keyword != keyword and is_non_zero_file(trans_save_path + trans_df_file_name.lower()) is True:
                     trans_df_jobs_xlsx = pd.read_excel(trans_save_path + trans_df_file_name.lower().replace('csv', 'xlsx'))
                     df_jobs = df_jobs.append(trans_df_jobs_xlsx, ignore_index=True)
 
@@ -2844,7 +2866,7 @@ def clean_from_old(
                 df_jobs = clean_df(df_jobs)
                 jobs = df_jobs.to_dict(orient='records')
 
-                if ((os.path.isfile(save_path + df_file_name.lower())) and os.stat(save_path + df_file_name.lower()).st_size > 0) or (os.path.isfile(save_path + json_file_name.lower()) and (os.stat(save_path + json_file_name.lower()).st_size > 0)):
+                if is_non_zero_file(save_path + df_file_name.lower()) is True or is_non_zero_file(save_path + json_file_name.lower()) is True:
                     with open(save_path + json_file_name, 'w', encoding='utf8') as f:
                         json.dump(jobs, f)
 
@@ -2878,16 +2900,16 @@ def make_job_id_v_sector_key_dict(
     sib_5_loc = validate_path(f'{args["parent_dir"]}Age and Gender Composition of Industires and Jobs/Found Data for Specific Occupations/SBI_ALL_NACE_REV2.csv')
 
     # Get keywords and paths to df_jobs
-    if site_from_list == True:
+    if site_from_list is True:
         for site in site_list:
             if args['print_enabled'] is True:
                 print(f'Getting job ids for {site}.')
-            df_jobs_paths = list((glob.glob(f'{code_dir}/{str(site)}/Data/*.csv')))
+            df_jobs_paths = list((glob.glob(f'{scraped_data}/{site}/Data/*.csv')))
             sector_vs_job_id_dict = make_job_id_v_sector_key_dict_helper(
                 df_jobs_paths=df_jobs_paths, all_save_path=f'{all_save_path}_{site}',
             )
-    elif site_from_list == False:
-        df_jobs_paths = glob.glob(f'{code_dir}/*/Data/*.csv')
+    elif site_from_list is False:
+        df_jobs_paths = glob.glob(f'{scraped_data}/*/Data/*.csv')
         sector_vs_job_id_dict = make_job_id_v_sector_key_dict_helper(
             df_jobs_paths=df_jobs_paths, all_save_path=f'{all_save_path}_all',
         )
@@ -2936,7 +2958,7 @@ def make_job_id_v_sector_key_dict_helper(
     if args['save_enabled'] is True:
         with open(f'{args["parent_dir"]}{all_save_path}.json', 'w', encoding='utf8') as f:
             json.dump(sector_vs_job_id_dict, f)
-    elif args['save_enabled'] == False:
+    elif args['save_enabled'] is False:
         print('No job id matching save enabled.')
 
     return sector_vs_job_id_dict
@@ -2955,16 +2977,16 @@ def make_job_id_v_gender_key_dict(
     )
 
     # Get keywords and paths to df_jobs
-    if site_from_list == True:
+    if site_from_list is True:
         for site in site_list:
             if args['print_enabled'] is True:
                 print(f'Getting job ids for {site}.')
-            df_jobs_paths = list((glob.glob(f'{code_dir}/{str(site)}/Data/*.csv')))
+            df_jobs_paths = list((glob.glob(f'{scraped_data}/{site}/Data/*.csv')))
             job_id_dict = make_job_id_v_gender_key_dict_helper(
                 df_jobs_paths=df_jobs_paths, all_save_path=f'{all_save_path}_{site}'
             )
-    elif site_from_list == False:
-        df_jobs_paths = glob.glob(f'{code_dir}/*/Data/*.csv')
+    elif site_from_list is False:
+        df_jobs_paths = glob.glob(f'{scraped_data}/*/Data/*.csv')
         job_id_dict = make_job_id_v_gender_key_dict_helper(
             df_jobs_paths=df_jobs_paths, all_save_path=f'{all_save_path}_all'
         )
@@ -3034,7 +3056,7 @@ def make_job_id_v_gender_key_dict_helper(
         with open(f'{args["parent_dir"]}{all_save_path}.json', 'w', encoding='utf8') as f:
             json.dump(job_id_dict, f)
 
-    elif args['save_enabled'] == False:
+    elif args['save_enabled'] is False:
         print('No job id matching save enabled.')
 
     return job_id_dict
@@ -3107,13 +3129,13 @@ def split_to_sentences(df_jobs, df_sentence_list=None, args=get_args()):
                             df_sentence_all,
                         ) = split_to_sentences_helper(df_jobs, args)
                         df_sentence_list.append(df_sentence)
-                        if args['txt_save'] == True:
+                        if args['txt_save'] is True:
                             if args['print_enabled'] is True:
                                 print(
                                     f'Saving {df_jobs["Search Keyword"].iloc[0]} DF to txt.'
                                 )
                             write_all_to_txt(search_keyword, job_id, age, df_jobs, args)
-                        elif args['txt_save'] == False:
+                        elif args['txt_save'] is False:
                             if args['print_enabled'] is True:
                                 print(
                                     f'No txt save enabled for DF {df_jobs["Search Keyword"].iloc[0]}.'
@@ -3159,11 +3181,11 @@ def split_to_sentences(df_jobs, df_sentence_list=None, args=get_args()):
                         df_sentence_all,
                     ) = split_to_sentences_helper(df_jobs, args)
                 df_sentence_list.append(df_sentence)
-                if args['txt_save'] == True:
+                if args['txt_save'] is True:
                     if args['print_enabled'] is True:
                         print(f'Saving {df_jobs["Search Keyword"].iloc[0]} DF to txt.')
                     write_all_to_txt(search_keyword, job_id, age, df_jobs, args)
-                elif args['txt_save'] == False:
+                elif args['txt_save'] is False:
                     if args['print_enabled'] is True:
                         print(
                             f'No txt save enabled for DF {df_jobs["Search Keyword"].iloc[0]}.'
@@ -3185,10 +3207,10 @@ def split_to_sentences(df_jobs, df_sentence_list=None, args=get_args()):
                     )
 
     try:
-        if (not df_sentence.empty) and (args['save_enabled'] == True):
+        if (not df_sentence.empty) and (args['save_enabled'] is True):
             df_sentence_all.to_pickle(args['parent_dir'] + f'df_sentence_all_jobs.{file_save_format}')
             # pickle.dump(df_sentence_all, f, protocol=pickle.HIGHEST_PROTOCOL)
-        elif args['save_enabled'] == False:
+        elif args['save_enabled'] is False:
             if args['print_enabled'] is True:
                 print('No sentence save enabled.')
     except Exception:
@@ -3343,7 +3365,7 @@ def sent_tokenize_and_save_df(search_keyword, job_id, age, df_jobs, args=get_arg
                         index=True,
                     )
                     # Write DF to excel
-                    if args['excel_save'] == True:
+                    if args['excel_save'] is True:
                         if args['print_enabled'] is True:
                             print(
                                 f'Saving {df_jobs["Search Keyword"].iloc[0]} DF to excel.'
@@ -3582,10 +3604,10 @@ def send_new_excel_to_gdrive(
     if new_batch_job_txt_list is None:
         new_batch_job_txt_list = []
 
-    if coders_from_dict == True:
+    if coders_from_dict is True:
         with open(f'{args["parent_dir"]}coders_dict.json', encoding='utf8') as f:
             coders_dict = json.load(f)
-    elif coders_from_dict == False:
+    elif coders_from_dict is False:
         pass
     with open(f'{args["parent_dir"]}batch_counter_dict.json', encoding='utf8') as f:
         batch_counter_dict = json.load(f)
@@ -3604,7 +3626,7 @@ def send_new_excel_to_gdrive(
                     )
                 for done_job_excel_name in done_job_excel:
                     if ('Job ID - ') and ('.xlsx') in done_job_excel_name:
-                        if os.path.isfile(coder_dest_folder_path + '/' + done_job_excel_name) and (os.stat(coder_dest_folder_path + '/' + done_job_excel_name).st_size > 0):
+                        if is_non_zero_file(coder_dest_folder_path + '/' + done_job_excel_name) is True:
                             done_job_excel_list.append(
                                 validate_path(
                                     coder_dest_folder_path + '/' + done_job_excel_name
@@ -3628,9 +3650,7 @@ def send_new_excel_to_gdrive(
             ) in os.walk(excel_source_folder):
                 for new_job_excel_name in new_job_excel:
                     if ('Job ID - ') and ('.xlsx') in new_job_excel_name:
-                        if (
-                            (os.path.isfile(gender_occ_source_dir_path + '/' + new_job_excel_name))
-                            and (os.stat(gender_occ_source_dir_path + '/' + new_job_excel_name).st_size > 0)
+                        if (is_non_zero_file(gender_occ_source_dir_path + '/' + new_job_excel_name) is True
                             and (
                                 new_job_excel
                                 != any(
@@ -3660,7 +3680,7 @@ def send_new_excel_to_gdrive(
                     f'Less than 12 excel jobs remaining. Moving final {len(new_batch_job_excel_list)} jobs.'
                 )
 
-        if move_txt_file == True:
+        if move_txt_file is True:
             for new_batch_job_excel in new_batch_job_excel_list:
                 new_batch_job_txt_list.append(
                     str(new_batch_job_excel)
@@ -3688,7 +3708,7 @@ def send_new_excel_to_gdrive(
                     ):
                         try:
                             shutil.move(new_batch_job_excel, path_to_next_batch)
-                            if move_txt_file == True:
+                            if move_txt_file is True:
                                 shutil.move(new_batch_job_txt, path_to_next_batch)
                         except Exception:
                             pass
@@ -3714,7 +3734,7 @@ def send_new_excel_to_gdrive(
     if args['save_enabled'] is True:
         with open(f'{args["parent_dir"]}batch_counter_dict.json', 'w', encoding='utf8') as f:
             json.dump(batch_counter_dict, f)
-    elif args['save_enabled'] == False:
+    elif args['save_enabled'] is False:
         if args['print_enabled'] is True:
             print('No batch counter save enabled.')
 
@@ -3794,8 +3814,7 @@ def open_and_clean_excel(
                         and ('Job ID - ' in done_job_excel_name)
                         and ('.xlsx' in done_job_excel_name)
                         and ('.txt' not in done_job_excel_name)
-                        and (os.path.isfile(coder_dest_folder_path + '/' + done_job_excel_name))
-                        and (os.stat(coder_dest_folder_path + '/' + done_job_excel_name).st_size > 0)
+                        and (is_non_zero_file(coder_dest_folder_path + '/' + done_job_excel_name) is True)
                     ):
                         EXCEL_PATHS[coder_name].append(
                             validate_path(
@@ -3810,10 +3829,7 @@ def open_and_clean_excel(
                             and ('.txt' in done_job_excel_name)
                         )
                         and (
-                            not os.path.isfile(coder_dest_folder_path + '/' + done_job_excel_name)
-                        )
-                        and (
-                            os.stat(coder_dest_folder_path + '/' + done_job_excel_name).st_size == 0
+                            is_non_zero_file(coder_dest_folder_path + '/' + done_job_excel_name) is False
                         )
                     ):
                         del coders_dict[coder_number]
@@ -3967,10 +3983,10 @@ def IR_kalpha(
         print(f"Krippendorff's alpha ({str(column)}): ", k_alpha)
     print('-' * 20)
 
-    if save_enabled == True:
+    if save_enabled is True:
         with open(f'{args["parent_dir"]}K-alpha.json', 'w', encoding='utf8') as f:
             json.dump(k_alpha_dict, f)
-    elif save_enabled == False:
+    elif save_enabled is False:
         print('No K-alpha save enabled.')
 
     return k_alpha_dict
@@ -4034,10 +4050,10 @@ def IR_all(
         print(f"Scott's pi ({str(column)}): ", ratingtask.pi())
     print('-' * 20, '\n')
 
-    if save_enabled == True:
+    if save_enabled is True:
         with open(f'{args["parent_dir"]}IR_all.json', 'w', encoding='utf8') as f:
             json.dump(ir_all_dict, f)
-    elif save_enabled == False:
+    elif save_enabled is False:
         print('No IR save enabled.')
 
     return (coder_score_dict, ratingtask, ir_all_dict)
@@ -4265,7 +4281,7 @@ def IR_all_final(
         print(f"Scott's pi ({str(column)}): ", ratingtask.pi())
         print('-' * 20, '\n')
 
-        if save_enabled == True:
+        if save_enabled is True:
             with open(
                 f'{args["parent_dir"]}{column}_FINAL_IR_all_{ir_file_name}.json', 'w', encoding='utf8') as f:
                 json.dump(ir_all_dict, f)
