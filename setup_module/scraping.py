@@ -2585,9 +2585,9 @@ def keyword_loop(keyword, keywords_from_list, glob_paths, args, translator, df_l
     if keywords_from_list is True:
         df_list_from_keyword = []
         for glob_path in glob_paths:
-            if 'dict_' in glob_path and file.endswith('.json'):
+            if 'dict_' in glob_path and glob_path.endswith('.json'):
                 keyword = glob_path.split('dict_')[1].split('.')[0].replace("-Noon's MacBook Pro",'').strip().lower()
-            elif 'df_' in glob_path and (file.endswith('.csv') or file.endswith('.xlsx')):
+            elif 'df_' in glob_path and (glob_path.endswith('.csv') or glob_path.endswith('.xlsx')):
                 keyword = glob_path.split('df_')[1].split('.')[0].replace("-Noon's MacBook Pro",'').strip().lower()
             if '_' in keyword:
                 keyword = ' '.join(keyword.split('_')).strip().lower()
@@ -2607,7 +2607,7 @@ def keyword_loop(keyword, keywords_from_list, glob_paths, args, translator, df_l
 # %%
 def keyword_save(df_jobs, args):
     if args['save_enabled'] is True:
-        with open(args['df_dir'] + f'df_all_jobs.{file_save_format}', 'wb') as f:
+        with open(args['df_dir'] + f'df_all_jobs.{args["file_save_format"]}', 'wb') as f:
             pickle.dump(df_jobs, f, protocol=pickle.HIGHEST_PROTOCOL)
 
 
@@ -2699,6 +2699,13 @@ def post_cleanup(
 
     if translate_keywords is True:
         trans_keyword_list = save_trans_keyword_list(trans_keyword_list)
+
+    with open(f'{args["df_dir"]}/df_jobs_post_cleanup.{args["file_save_format_backup"]}', 'w', newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(df_jobs)
+
+    with open(f'{args["df_dir"]}/df_jobs_post_cleanup.{args["file_save_format"]}', 'wb') as f:
+        pickle.dump(df_jobs, f)
 
     return df_jobs
 
@@ -3208,7 +3215,7 @@ def split_to_sentences(df_jobs, df_sentence_list=None, args=get_args()):
 
     try:
         if (not df_sentence.empty) and (args['save_enabled'] is True):
-            df_sentence_all.to_pickle(args['parent_dir'] + f'df_sentence_all_jobs.{file_save_format}')
+            df_sentence_all.to_pickle(args['parent_dir'] + f'df_sentence_all_jobs.{args["file_save_format"]}')
             # pickle.dump(df_sentence_all, f, protocol=pickle.HIGHEST_PROTOCOL)
         elif args['save_enabled'] is False:
             if args['print_enabled'] is True:
@@ -3402,7 +3409,7 @@ def sent_tokenize_and_save_df(search_keyword, job_id, age, df_jobs, args=get_arg
                         f'Saving ALL sentences DF {sentence_dict["Search Keyword"]} of length {df_sentence_all.shape[0]} and job ID {df_sentence_all["Job ID"].iloc[0]} to csv.'
                     )
                 df_sentence_all.to_csv(
-                    path_to_csv + f'/ALL_{search_keyword}_sentences_df.{file_save_format_backup}',
+                    path_to_csv + f'/ALL_{search_keyword}_sentences_df.{args["file_save_format_backup"]}',
                     mode='w',
                     sep=',',
                     header=True,
