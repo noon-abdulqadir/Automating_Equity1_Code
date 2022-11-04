@@ -115,7 +115,6 @@ env.bak/
 venv.bak/
 
 # Circle
-.circleci
 .circleci/
 
 # Spyder project settings
@@ -160,3 +159,4 @@ data/
 data/*
 setup_module/WebDriver/
 setup_module/apa.mplstyle-main/
+Bias in Candidate Sourcing LaTeX/
