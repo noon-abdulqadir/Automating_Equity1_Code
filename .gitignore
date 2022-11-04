@@ -152,4 +152,5 @@ cython_debug/
 
 # Directories
 scraped_data*/
+scraped_data
 data/
