@@ -152,9 +152,9 @@ cython_debug/
 .Rproj.user
 
 # Directories
-scraped_data
+/scraped_data
 scraped_data/
 scraped_data*/
-data
+/data
 data/
 data/*
