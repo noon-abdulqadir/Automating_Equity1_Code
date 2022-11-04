@@ -115,7 +115,7 @@ env.bak/
 venv.bak/
 
 # Circle
-.circleci/
+.circleci
 
 # Spyder project settings
 .spyderproject
