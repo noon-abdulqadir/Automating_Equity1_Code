@@ -158,5 +158,5 @@ scraped_data*/
 /data
 data/
 data/*
-setup_module/WebDriver
-setup_module/apa.mplstyle-main
+setup_module/WebDriver/
+setup_module/apa.mplstyle-main/
