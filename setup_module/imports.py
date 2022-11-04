@@ -129,6 +129,7 @@ try:
     from threading import Thread
     from typing import Dict, List, Optional, Set, Tuple
 
+    import bokeh
     import cardinality
     import cbsodata
     import en_core_web_sm
@@ -150,6 +151,9 @@ try:
     import openpyxl
     import pandas as pd
     import pingouin as pg
+    import plotly
+    import plotly.express as px
+    import plotly.graph_objects as go
     import pretty_errors
     import progressbar
     import pyarrow as pa
@@ -160,11 +164,11 @@ try:
     import seaborn as sns
     import selenium.webdriver as webdriver
     import selenium.webdriver.support.ui as ui
-
-    # import sh
+    import sh
     import simpledorff
     import sklearn as sk
     import spacy
+    import specification_curve as specy
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
     import swifter
@@ -265,8 +269,7 @@ try:
     from selenium.webdriver.common.keys import Keys
     from selenium.webdriver.support import expected_conditions as EC
     from selenium.webdriver.support.ui import Select, WebDriverWait
-
-    # from sentence_transformers import SentenceTransformer, losses, util
+    from sentence_transformers import SentenceTransformer, losses, util
     from sklearn import feature_selection, metrics, set_config, svm, utils
     from sklearn.base import BaseEstimator, TransformerMixin
     from sklearn.calibration import CalibratedClassifierCV, CalibrationDisplay
@@ -370,7 +373,6 @@ try:
         column_or_1d,
         has_fit_parameter,
     )
-    from specification_curve import specification_curve as specy
     from statannotations.Annotator import Annotator
     from statsmodels.formula.api import ols
     from statsmodels.graphics.factorplots import interaction_plot
@@ -567,6 +569,6 @@ cat_list = [
 ]
 
 # %%
-keyword_trans_dict = {'mijnbouw': 'mining', 'bosbouw': 'forestry', 'gas for': 'gas', 'gas vooraad': 'gas', 'productie': 'production', 'sociologen': 'sociologist', 'leraren van basisschool': 'primary school teacher', 'ere leraren': 'honorary teacher', 'buyinging': 'buying', 'accommodatie': 'accommodation', 'vissen': 'fishing', 'grooth': 'great', 'opleiding':'education', 'managers of care institution': 'manager of care institution', 'ingenieur': 'engineer', 'engineers': 'engineer', 'communicatie': 'communication', 'auteur': 'author', 'publieke administratie': 'public administration', 'verkoop onroerend goed': 'selling real estate', 'educational': 'education', 'marketingmanager': 'marketing manager', 'food servin': 'food serving', 'voedsel dienen': 'food serving', 'etensservin': 'food serving', 'verkoop': 'sale', 'sold': 'sale', 'sell': 'sale', 'uitverkoop': 'sale', 'pedagoog': 'educationalist', 'educationalists': 'educationalist', 'educatie': 'education', 'educator': 'education', 'psycholoog': 'psychologist', 'logistieke manager': 'logistics manager', 'logistieke managers': 'logistics manager', 'logistic': 'logistics', 'koop': 'buying', 'buy': 'buying', 'ere serviceactiviteiten': 'honorary service activity', 'serviceactiviteiten': 'service activity', 'directeur': 'director', 'informatie': 'information', 'serve accommodation': 'accommodation', 'psychologen': 'psychologist', 'linguïsten': 'linguist', 'linguïst':'linguist', 'linguïst': 'linguist', 'sales of real estate': 'selling real estate', 'socioloog': 'sociologist', 'opslag': 'storage', 'educatief': 'education', 'elektriciteit': 'electricity',  'elektrotechnische ingenieur': 'electrical engineer', 'elektrotechnische ingenieurs': 'electrical engineer', 'toepassings ontwikkelaar': 'application developer', 'toepassings ontwikkelaars': 'application developer', 'water voorraad': 'water supply', 'fysiotherapeuten': 'physiotherapist', 'cultuur': 'culture', 'career developmentsspecialist': 'career development specialist', 'carrière ontwikkelingspecialisten': 'career development specialist', 'carrière ontwikkelingspecialist': 'career development specialist', 'ict-manager': 'ict manager', 'ict-managers': 'ict manager', 'ict managers': 'ict manager', 'managers care institution': 'manager of healthcare institution', 'managers healthcare institution': 'manager of healthcare institution', 'manager healthcare institution': 'manager of healthcare institution', 'manager of care institution': 'manager of healthcare institution', 'manager healthcare institution': 'managers of healthcare institution', 'managers of healthcare institution': 'manager of healthcare institution', 'manager care institution': 'manager of healthcare institution', 'gezondheid en maatschappelijk werkactiviteit': 'healthcare', 'doctors': 'doctor', 'sociale werkzaamheden': 'social work', 'sociaal werker': 'social work', 'sports': 'sport', 'groothandel': 'wholesale', 'andere serviceactiviteiten': 'other service activity', 'specialized services manager': 'specialised services manager', 'specialized business service': 'specialised business service', 'specialized nurse': 'specialised nurse', 'recreatie': 'recreation', 'netwerk specialisten': 'network specialist', 'netwerkspecialisten': 'network specialist', 'adverse': 'staff', 'bulletin': 'staff', 'afvalbeheer': 'waste management'}
+keyword_trans_dict = {'mijnbouw': 'mining', 'bosbouw': 'forestry', 'gas for': 'gas', 'gas vooraad': 'gas', 'productie': 'production', 'sociologen': 'sociologist', 'leraren van basisschool': 'primary school teacher', 'ere leraren': 'honorary teacher', 'buyinging': 'buying', 'accommodatie': 'accommodation', 'vissen': 'fishing', 'grooth': 'great', 'opleiding':'education', 'managers of care institution': 'manager of care institution', 'ingenieur': 'engineer', 'engineers': 'engineer', 'communicatie': 'communication', 'auteur': 'author', 'publieke administratie': 'public administration', 'verkoop onroerend goed': 'selling real estate', 'educational': 'education', 'marketingmanager': 'marketing manager', 'food servin': 'food serving', 'voedsel dienen': 'food serving', 'etensservin': 'food serving', 'verkoop': 'sale', 'sold': 'sale', 'sell': 'sale', 'uitverkoop': 'sale', 'pedagoog': 'educationalist', 'educationalists': 'educationalist', 'educatie': 'education', 'educator': 'education', 'psycholoog': 'psychologist', 'logistieke manager': 'logistics manager', 'logistieke managers': 'logistics manager', 'logistic': 'logistics', 'koop': 'buying', 'buy': 'buying', 'ere serviceactiviteiten': 'honorary service activity', 'serviceactiviteiten': 'service activity', 'directeur': 'director', 'informatie': 'information', 'serve accommodation': 'accommodation', 'psychologen': 'psychologist', 'linguïsten': 'linguist', 'linguïst':'linguist', 'linguïst': 'linguist', 'sales of real estate': 'selling real estate', 'socioloog': 'sociologist', 'opslag': 'storage', 'educatief': 'education', 'elektriciteit': 'electricity',  'elektrotechnische ingenieur': 'electrical engineer', 'elektrotechnische ingenieurs': 'electrical engineer', 'toepassings ontwikkelaar': 'application developer', 'toepassings ontwikkelaars': 'application developer', 'water voorraad': 'water supply', 'fysiotherapeuten': 'physiotherapist', 'cultuur': 'culture', 'career developmentsspecialist': 'career development specialist', 'carrière ontwikkelingspecialisten': 'career development specialist', 'carrière ontwikkelingspecialist': 'career development specialist', 'ict-manager': 'ict manager', 'ict-managers': 'ict manager', 'ict managers': 'ict manager', 'managers care institution': 'manager of healthcare institution', 'managers healthcare institution': 'manager of healthcare institution', 'manager healthcare institution': 'manager of healthcare institution', 'manager of care institution': 'manager of healthcare institution', 'manager healthcare institution': 'managers of healthcare institution', 'managers of healthcare institution': 'manager of healthcare institution', 'manager care institution': 'manager of healthcare institution', 'gezondheid en maatschappelijk werkactiviteit': 'healthcare', 'doctors': 'doctor', 'dokter': 'doctor', 'sociale werkzaamheden': 'social work', 'sociaal werker': 'social work', 'sports': 'sport', 'groothandel': 'wholesale', 'andere serviceactiviteiten': 'other service activity', 'specialized services manager': 'specialised services manager', 'specialized business service': 'specialised business service', 'specialized nurse': 'specialised nurse', 'recreatie': 'recreation', 'netwerk specialisten': 'network specialist', 'netwerkspecialisten': 'network specialist', 'adverse': 'staff', 'bulletin': 'staff', 'afvalbeheer': 'waste management'}
 
 # %%

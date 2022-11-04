@@ -343,7 +343,7 @@ def get_driver(
             desired_capabilities=caps,
             # service_args=[f'--verbose", "--log-path={MyWriter.LOGS_PATH}'],
         )
-    except:
+    except Exception as e:
         driver = webdriver.Chrome(
             service=Service(ChromeDriverManager().install()),
             options=options,
@@ -519,7 +519,7 @@ def clean_and_translate_keyword_list(
             while True:
                 try:
                     dutch_keyword = translator.translate(english_keyword).text
-                except:
+                except Exception as e:
                     time.sleep(0.3)
                     continue
                 break
@@ -2066,7 +2066,7 @@ def detect_language(df_jobs: pd.DataFrame, str_variable = 'Job Description', arg
     try:
         df_jobs['Language'] = df_jobs[str_variable].swifter.progress_bar(args['print_enabled']).apply(detect_language_helper)
 
-    except:
+    except Exception as e:
         if args['print_enabled'] is True:
             print('Language not detected.')
     else:
@@ -2218,6 +2218,109 @@ def df_warm_comp_info(
     print('\n')
 
 
+# %%
+# Function to plot df values
+def value_count_df_plot(which_df, main_cols, num_unique_values=100, filter_lt_pct=.05, height=1300, width=1500, align='left'):
+    cols = []
+    nunique = []
+    df = which_df #specify which df you're using
+    which_df = df
+
+    for c in which_df.columns:
+        cols.append(c)
+        nunique.append(which_df[c].nunique())
+    df_cols = pd.DataFrame(nunique)
+    df_cols['cols'] = cols
+    df_cols.columns = ['nunique','column']
+    df_cols = df_cols[['column','nunique']]
+    df_cols_non_unique = df_cols[
+            (df_cols['nunique'] <= df_cols.shape[0])
+            & (df_cols['nunique'] > 1)
+        ].sort_values(by='nunique',ascending=True)
+    merch_cols = list(df_cols_non_unique.column)
+    # print(df_cols_non_unique.shape)
+    df_cols_non_unique.head()
+
+    #lte 30 unique values in any column
+    num_unique_values = num_unique_values
+    df_cols_non_unique = df_cols_non_unique[df_cols_non_unique['nunique'] <= num_unique_values]
+    list_non_unique_cols = list(df_cols_non_unique['column'])
+    print('total number of cols with lte', num_unique_values, 'unique values:', len(list_non_unique_cols))
+
+    #include main cols
+    main_cols = [main_cols]
+    number_of_main_cols = len(main_cols)
+
+    #append main cols with interesting cols
+    interestin_cols = main_cols + list_non_unique_cols
+
+    #specify interesting cols
+    df1 = df.loc[:, df.columns.isin(interestin_cols)]
+    df1 = df1.iloc[:,:-1]
+
+    #get value counts for each value in each col
+    def value_counts_col(df,col):
+        df = df
+        value_counts_df = pd.DataFrame(round(df[col].value_counts(normalize=True),2).reset_index())
+        value_counts_df.columns = ['value','value_counts']
+        value_counts_df['feature'] = col
+        return value_counts_df
+
+    all_cols_df = []
+    for i in df1.columns[number_of_main_cols:]:
+        dfs = value_counts_col(df1,i)
+        all_cols_df.append(dfs)
+
+    #append column values to end of column
+    which_df = pd.concat(all_cols_df)
+    which_df['value'] = which_df['value'].fillna('null')
+    which_df['feature_value'] = which_df['feature'] + "_" + which_df['value'].map(str)
+    which_df = which_df.drop(['value','feature'],axis=1)
+    which_df = which_df[['feature_value','value_counts']]
+    which_df = which_df.sort_values(by='value_counts',ascending=False)
+
+    #filter out less than x% features
+    filter_lt_pct = filter_lt_pct
+    which_df = which_df[which_df['value_counts'] >= filter_lt_pct]
+
+    print('df shape:', which_df.shape,'\n')
+
+    #table plot
+    fig2 = go.Figure(data=[go.Table(
+        header=dict(values=list(which_df.columns)
+                    ,fill_color='black'
+                    ,align=align
+                    ,font=dict(color='white', size=12)
+                    ,line_color=['darkgray','darkgray','darkgray']
+                   )
+        ,cells=dict(values=[which_df['feature_value'],which_df['value_counts']]
+                   ,fill_color='black'
+                   ,align=align
+                   ,font=dict(color='white', size=12)
+                   ,line_color=['darkgray','darkgray','darkgray']
+                   )
+    )
+    ])
+    fig2.update_layout(height=100, margin=dict(r=0, l=0, t=0, b=0))
+    fig2.show()
+
+    #bar plot
+    fig1 = px.bar(which_df
+                     ,y='feature_value'
+                     ,x='value_counts'
+                     ,height=height
+                     ,width=width
+                     ,template='plotly_dark'
+                     ,text='value_counts'
+                     ,title='<b>Outlier Values of Interesting Cols within Dataset'
+                    )
+    fig1.update_xaxes(showgrid=False)
+    fig1.update_yaxes(showgrid=False)
+    fig1.show()
+
+    # return fig1,fig2
+
+
 # %% Function to visaulize
 def get_viz(df_name, df_df, dataframes, args=get_args()):
     from setup_module.params import analysis_columns, image_save_format
@@ -2255,6 +2358,8 @@ def set_language_requirement(
     # Language requirements
     # Dutch
     print('Setting Dutch language requirements.')
+    if 'Dutch Requirement' in df_jobs.columns:
+        df_jobs.drop(columns=['Dutch Requirement'], inplace=True)
     df_jobs['Dutch Requirement'] = np.where(
         df_jobs[str_variable].str.contains(dutch_requirement_pattern),
         'Yes',
@@ -2263,6 +2368,8 @@ def set_language_requirement(
 
     # English
     print('Setting English language requirements.')
+    if 'English Requirement' in df_jobs.columns:
+        df_jobs.drop(columns=['English Requirement'], inplace=True)
     df_jobs['English Requirement'] = np.where(
         df_jobs[str_variable].str.contains(english_requirement_pattern),
         'Yes',
@@ -2299,9 +2406,12 @@ def set_sector_and_percentage(
 
     # Set Sectors
     print('Setting sector.')
+    if 'Sector' in df_jobs.columns:
+        df_jobs.drop(columns=['Sector'], inplace=True)
     for sect, sect_dict in sector_vs_job_id_dict.items():
         for keyword, job_ids in sect_dict.items():
-            df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin(job_ids), 'Sector'] = str(sect).lower().strip()
+            df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin([str(i) for i in job_ids]), 'Sector'] = str(sect).lower().strip()
+
 
     print('Setting sector code and percentages.')
     # Add gender and age columns
@@ -2379,7 +2489,7 @@ def set_gender_age(
     try:
         for sect, cat in sbi_sectors_dom_gen.items():
             df_jobs.loc[df_jobs['Sector'].astype(str).apply(lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Gender'] = str(cat)
-    except:
+    except Exception as e:
         for cat in ['Mixed Gender', 'Male', 'Female']:
             df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin(job_id_dict[cat]), 'Gender'] = str(cat)
 
@@ -2389,7 +2499,7 @@ def set_gender_age(
     try:
         for sect, cat in sbi_sectors_dom_age.items():
             df_jobs.loc[df_jobs['Sector'].astype(str).apply(lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Age'] = str(cat)
-    except:
+    except Exception as e:
         for cat in ['Mixed Age', 'Younger Worker', 'Older Worker']:
             df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin(job_id_dict[cat]), 'Age'] = str(cat)
 
@@ -2573,10 +2683,12 @@ def site_loop(site, site_list, site_from_list, args, df_list_from_site=None):
 
 
 # %%
-def site_save(site, df_jobs, args):
+def site_save(site, df_jobs, args, chunk_size = 1024 * 1024):
     if args['save_enabled'] is True:
-        with open(f'{args["df_dir"]}df_{site}_all_jobs.{args["file_save_format"]}', 'wb') as f:
+        print(f'Saving df_{site}_all_jobs.{args["file_save_format"]}')
+        with open(args["df_dir"] + f'df_{site}_all_jobs.{args["file_save_format"]}', 'wb') as f:
             pickle.dump(df_jobs, f, protocol=pickle.HIGHEST_PROTOCOL)
+        print(f'Done saving df_{site}_all_jobs.{args["file_save_format"]}')
 
 
 # %%
@@ -2605,10 +2717,12 @@ def keyword_loop(keyword, keywords_from_list, glob_paths, args, translator, df_l
 
 
 # %%
-def keyword_save(df_jobs, args):
+def keyword_save(keyword, site, df_jobs, args):
     if args['save_enabled'] is True:
-        with open(args['df_dir'] + f'df_all_jobs.{args["file_save_format"]}', 'wb') as f:
+        print(f'Saving df_{site}_{keyword}_all_jobs.{args["file_save_format"]}')
+        with open(args['df_dir'] + f'df_{site}_{keyword}_all_jobs.{args["file_save_format"]}', 'wb') as f:
             pickle.dump(df_jobs, f, protocol=pickle.HIGHEST_PROTOCOL)
+        print(f'Done saving df_{site}_{keyword}_all_jobs.{args["file_save_format"]}')
 
 
 # %%
@@ -2647,7 +2761,7 @@ def post_cleanup(
                 while True:
                     try:
                         trans_keyword = translator.translate(trans_keyword).text.strip().lower()
-                    except:
+                    except Exception as e:
                         time.sleep(0.3)
                         continue
                     break
@@ -2659,10 +2773,10 @@ def post_cleanup(
 
             try:
                 df_jobs = post_cleanup_helper(keyword, site)
-                print(f'DF {keyword.title()} collected.')
+                print(f'DF {trans_keyword.title()} collected.')
 
                 if df_jobs.empty and args['print_enabled'] is True:
-                    print(f'DF {keyword.title()} not collected yet.')
+                    print(f'DF {trans_keyword.title()} not collected yet.')
 
             except Exception:
                 if args['print_enabled'] is True:
@@ -2678,34 +2792,40 @@ def post_cleanup(
                         df_list_from_keyword.append(df_jobs)
                     df_list_from_site.append(df_list_from_keyword)
                     df_jobs = df_list_from_site
-                    site_save(site, df_jobs, args=args)
+                    # site_save(site, df_jobs, args=args)
                 elif site_from_list is True and keywords_from_list is False:
                     if (not df_jobs.empty) and (len(df_jobs != 0)):
                         df_list_from_site.append(df_jobs)
                     df_jobs = df_list_from_site
-                    site_save(site, df_jobs, args=args)
+                    # site_save(site, df_jobs, args=args)
                 elif site_from_list is False and keywords_from_list is True:
                     if (not df_jobs.empty) and (len(df_jobs != 0)):
                         df_list_from_keyword.append(df_jobs)
                     df_jobs = df_list_from_keyword
-                    keyword_save(df_jobs, args=args)
-                elif site_from_list is False and keywords_from_list is False:
-                    keyword_save(df_jobs, args=args)
-
-    if job_id_save_enabled is True:
-        job_id_dict = make_job_id_v_gender_key_dict()
-    if job_sector_save_enabled is True:
-        sector_vs_job_id_dict = make_job_id_v_sector_key_dict()
+                #     keyword_save(keyword, site, df_jobs, args=args)
+                # elif site_from_list is False and keywords_from_list is False:
+                #     keyword_save(keyword, site, df_jobs, args=args)
 
     if translate_keywords is True:
         trans_keyword_list = save_trans_keyword_list(trans_keyword_list)
 
-    with open(f'{args["df_dir"]}/df_jobs_post_cleanup.{args["file_save_format_backup"]}', 'w', newline="") as f:
-        writer = csv.writer(f)
-        writer.writerows(df_jobs)
+    print(f'Saving df_jobs_post_cleanup.{args["file_save_format"]}')
+    with open(args["df_dir"] + f'df_jobs_post_cleanup.{args["file_save_format"]}', 'wb') as f:
+        pickle.dump(df_jobs, f, protocol=pickle.HIGHEST_PROTOCOL)
+    print(f'Done saving df_jobs_post_cleanup.{args["file_save_format"]}')
 
-    with open(f'{args["df_dir"]}/df_jobs_post_cleanup.{args["file_save_format"]}', 'wb') as f:
-        pickle.dump(df_jobs, f)
+    # print(f'Saving df_jobs_post_cleanup.{args["file_save_format_backup"]}')
+    # df_jobs_rows = [item for sublist in data for item in sublist]
+    # with open(args["df_dir"] + f'df_jobs_post_cleanup.{args["file_save_format_backup"]}', 'wb', newline="") as f:
+    #     dict_writer = csv.DictWriter(f, df_jobs_rows[0].keys())
+    #     dict_writer.writeheader()
+    #     dict_writer.writerows(df_jobs_rows)
+    # print(f'Done saving df_jobs_post_cleanup.{args["file_save_format_backup"]}')
+
+    # if job_id_save_enabled is True:
+    #     job_id_dict = make_job_id_v_gender_key_dict()
+    # if job_sector_save_enabled is True:
+    #     sector_vs_job_id_dict = make_job_id_v_sector_key_dict()
 
     return df_jobs
 
@@ -2780,7 +2900,7 @@ def clean_from_old(
             for site in site_list:
                 for file_ in glob.glob(f'{scraped_data}/{site}/Data/*.json')+glob.glob(f'{scraped_data}/{site}/Data/*.csv')+glob.glob(f'{scraped_data}/{site}/Data/*.xlsx'):
                     files.append(file)
-        except:
+        except Exception as e:
             for file_ in glob.glob(f'{scraped_data}/*/Data/*.json')+glob.glob(f'{scraped_data}/*/Data/*.csv')+glob.glob(f'{scraped_data}/*/Data/*.xlsx'):
                 files.append(file_)
 
@@ -2802,7 +2922,7 @@ def clean_from_old(
             while True:
                 try:
                     trans_keyword = translator.translate(keyword).text.strip().lower()
-                except:
+                except Exception as e:
                     time.sleep(0.3)
                     continue
                 break
@@ -2954,7 +3074,7 @@ def make_job_id_v_sector_key_dict_helper(
 
                 for sector, keywords_list in args['sbi_sectors_dict_full'].items():
                     if search_keyword in str(keywords_list):
-                        sector_vs_job_id_dict[str(sector)][str(search_keyword)].append(row['Job ID'])
+                        sector_vs_job_id_dict[str(sector)][str(search_keyword)].append(str(row['Job ID']))
 
                 # for code, sect_dict in sbi_sectors_dict.items():
                 #     if str(row['Search Keyword']) in str(sect_dict['Used_Sector_Keywords']):
@@ -3045,18 +3165,18 @@ def make_job_id_v_gender_key_dict_helper(
                     args['keywords_agevsect'],
                 ):
                     if search_keyword == str(fem_keyword).strip().lower().replace("-Noon's MacBook Pro",''):
-                        job_id_dict['Female'].append(row['Job ID'])
+                        job_id_dict['Female'].append(str(row['Job ID']))
                     elif search_keyword == str(male_keyword).strip().lower().replace("-Noon's MacBook Pro",''):
-                        job_id_dict['Male'].append(row['Job ID'])
+                        job_id_dict['Male'].append(str(row['Job ID']))
                     else:
-                        job_id_dict['Mixed Gender'].append(row['Job ID'])
+                        job_id_dict['Mixed Gender'].append(str(row['Job ID']))
 
                     if search_keyword == str(old_keyword).strip().lower().replace("-Noon's MacBook Pro",''):
-                        job_id_dict['Older Worker'].append(row['Job ID'])
+                        job_id_dict['Older Worker'].append(str(row['Job ID']))
                     elif search_keyword == str(young_keyword).strip().lower().replace("-Noon's MacBook Pro",''):
-                        job_id_dict['Younger Worker'].append(row['Job ID'])
+                        job_id_dict['Younger Worker'].append(str(row['Job ID']))
                     else:
-                        job_id_dict['Mixed Age'].append(row['Job ID'])
+                        job_id_dict['Mixed Age'].append(str(row['Job ID']))
 
     trans_keyword_list = save_trans_keyword_list(trans_keyword_list)
     if args['save_enabled'] is True:

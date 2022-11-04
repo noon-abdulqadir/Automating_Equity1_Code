@@ -114,6 +114,9 @@ ENV/
 env.bak/
 venv.bak/
 
+# Circle
+.circleci/
+
 # Spyder project settings
 .spyderproject
 .spyproject
@@ -144,15 +147,9 @@ cython_debug/
 .cls
 .lua
 
-# directories
-Glassdoor/Data/
-Glassdoor/Data with nl/
-Indeed/Data/
-Indeed/Data with nl/
-LinkedIn/Data/
-LinkedIn/Data with nl/
-LinkedIn/Old/
-LinkedIn/Old 2/
-data/
 # .Rproj.user
 .Rproj.user
+
+# Directories
+scraped_data*/
+data/

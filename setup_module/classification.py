@@ -68,8 +68,13 @@ warnings.filterwarnings('ignore', category=DeprecationWarning)
 # %%
 # preprocessing
 # Function to get new data, clean it, and make excel dfs
-def get_new_data(cleanup_return_enabled=True):
-    df_jobs = post_cleanup(keywords_from_list=True, site_from_list=True)
+def get_new_data(cleanup_return_enabled=True, main_from_file=True, args=get_args()):
+    if main_from_file is False:
+        df_jobs = post_cleanup(keywords_from_list=True, site_from_list=True)
+    elif main_from_file is True:
+        with open(args["df_dir"] + f'df_jobs_post_cleanup.{args["file_save_format"]}', 'rb') as f:
+            df_jobs = pickle.load(f)
+
     df_sentence = split_to_sentences(df_jobs)
     if cleanup_return_enabled is True:
 
@@ -190,6 +195,8 @@ def open_and_clean_unlabeled_excel(
             get_new_data(cleanup_return_enabled)
     elif get_new_data_enabled is False:
         print('Using older version of df_jobs.')
+        # with open(args["df_dir"] + f'df_jobs_post_cleanup.{args["file_save_format"]}', 'rb') as f:
+        #     df_jobs = pickle.load(f)
 
     if main_from_file is False:
         stable_path = validate_path(
