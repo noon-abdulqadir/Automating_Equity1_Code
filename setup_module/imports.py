@@ -72,21 +72,21 @@ from_file = False
 # os.system(f'conda init --all')
 # os.system(f'conda activate {env_name}')
 
-with open(f'{code_dir}/install_modules.txt', 'r') as f:
-    install_modules = f.readlines()
+# with open(f'{code_dir}/install_modules.txt', 'r') as f:
+#     install_modules = f.readlines()
 
-if from_file:
-    for module in install_modules:
-        module = module.strip()
-        if module != '':
-            try:
-                importlib.import_module(module)
-            except ImportError:
-                print(f'Installing {module}')
-                try:
-                    os.system(f'conda install --channel apple --yes {module} ')
-                except Exception:
-                    os.system(f'python -m pip install {module}')
+# if from_file:
+#     for module in install_modules:
+#         module = module.strip()
+#         if module != '':
+#             try:
+#                 importlib.import_module(module)
+#             except ImportError:
+#                 print(f'Installing {module}')
+#                 try:
+#                     os.system(f'conda install --channel apple --yes {module} ')
+#                 except Exception:
+#                     os.system(f'python -m pip install {module}')
 
 try:
 

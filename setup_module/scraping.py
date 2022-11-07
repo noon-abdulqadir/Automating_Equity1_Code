@@ -2491,7 +2491,7 @@ def set_gender_age(
             df_jobs.loc[df_jobs['Sector'].astype(str).apply(lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Gender'] = str(cat)
     except Exception as e:
         for cat in ['Mixed Gender', 'Male', 'Female']:
-            df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin(job_id_dict[cat]), 'Gender'] = str(cat)
+            df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin([str(i) for i in job_id_dict[cat]]), 'Gender'] = str(cat)
 
 
     # Age
@@ -2501,7 +2501,7 @@ def set_gender_age(
             df_jobs.loc[df_jobs['Sector'].astype(str).apply(lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Age'] = str(cat)
     except Exception as e:
         for cat in ['Mixed Age', 'Younger Worker', 'Older Worker']:
-            df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin(job_id_dict[cat]), 'Age'] = str(cat)
+            df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin([str(i) for i in job_id_dict[cat]]), 'Age'] = str(cat)
 
     print('Categorizing gender and age')
     df_jobs = categorize_df_gender_age(df_jobs)
@@ -2814,18 +2814,16 @@ def post_cleanup(
         pickle.dump(df_jobs, f, protocol=pickle.HIGHEST_PROTOCOL)
     print(f'Done saving df_jobs_post_cleanup.{args["file_save_format"]}')
 
-    # print(f'Saving df_jobs_post_cleanup.{args["file_save_format_backup"]}')
-    # df_jobs_rows = [item for sublist in data for item in sublist]
-    # with open(args["df_dir"] + f'df_jobs_post_cleanup.{args["file_save_format_backup"]}', 'wb', newline="") as f:
-    #     dict_writer = csv.DictWriter(f, df_jobs_rows[0].keys())
-    #     dict_writer.writeheader()
-    #     dict_writer.writerows(df_jobs_rows)
-    # print(f'Done saving df_jobs_post_cleanup.{args["file_save_format_backup"]}')
+    print(f'Saving df_jobs_post_cleanup.{args["file_save_format_backup"]}')
+    with open(df_dir + f'df_jobs_post_cleanup.{file_save_format_backup}', 'w', newline="") as f:
+        writer = csv.writer(f)
+        writer.writerows(df_jobs)
+    print(f'Done saving df_jobs_post_cleanup.{args["file_save_format_backup"]}')
 
-    # if job_id_save_enabled is True:
-    #     job_id_dict = make_job_id_v_gender_key_dict()
-    # if job_sector_save_enabled is True:
-    #     sector_vs_job_id_dict = make_job_id_v_sector_key_dict()
+    if job_id_save_enabled is True:
+        job_id_dict = make_job_id_v_gender_key_dict(site_from_list=False)
+    if job_sector_save_enabled is True:
+        sector_vs_job_id_dict = make_job_id_v_sector_key_dict(site_from_list=False)
 
     return df_jobs
 
@@ -3094,7 +3092,7 @@ def make_job_id_v_sector_key_dict_helper(
 # %%
 # Function to match job IDs with gender and age in dict
 def make_job_id_v_gender_key_dict(
-    site_from_list=False,
+    site_from_list=True,
     site_list=['Indeed', 'Glassdoor', 'LinkedIn'],
     all_save_path = f'job_id_vs',
     args=get_args()):
