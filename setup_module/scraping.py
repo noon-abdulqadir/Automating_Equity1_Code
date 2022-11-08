@@ -2493,7 +2493,6 @@ def set_gender_age(
         for cat in ['Mixed Gender', 'Male', 'Female']:
             df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin([str(i) for i in job_id_dict[cat]]), 'Gender'] = str(cat)
 
-
     # Age
     print('Setting age.')
     try:

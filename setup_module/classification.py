@@ -84,7 +84,7 @@ def get_new_data(cleanup_return_enabled=True, main_from_file=True, args=get_args
 # %%
 # Open traing and testing dfs
 def open_and_clean_labeled_excel(
-    id_dict_new = True,
+    id_dict_new = False,
     df_labeled_dict={},
     dict_save=True,
     analysis_columns=[
