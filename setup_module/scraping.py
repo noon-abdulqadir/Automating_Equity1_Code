@@ -577,8 +577,8 @@ def get_sbi_sectors_list(
     parent_dir=validate_path(f'{code_dir}/data/content analysis + ids + sectors/'),
     ):
 
-    sib_5_loc = validate_path(f'{parent_dir}Age and Gender Composition of Industires and Jobs/Found Data for Specific Occupations/SBI_ALL_NACE_REV2.csv')
-    trans_keyword_save_loc=f'{parent_dir}Age and Gender Composition of Industires and Jobs/Output CSVs for Occupational Sectors/'
+    sib_5_loc = validate_path(f'{parent_dir}Sectors + Age and Gender Composition of Industires and Jobs/Found Data for Specific Occupations/SBI_ALL_NACE_REV2.csv')
+    trans_keyword_save_loc=f'{parent_dir}Sectors + Age and Gender Composition of Industires and Jobs/Output CSVs for Occupational Sectors/'
     trans_keyword_list = get_trans_keyword_list()
 
     df_sbi_sectors = pd.read_csv(sib_5_loc, delimiter=',')
@@ -589,7 +589,7 @@ def get_sbi_sectors_list(
     df_sbi_sectors = df_sbi_sectors.loc[df_sbi_sectors['Level'] == 1]
     df_sbi_sectors.drop(columns=['Level', 'Parent', 'This item includes', 'This item also includes', 'Rulings', 'This item excludes', 'Reference to ISIC Rev. 4'], inplace=True)
 
-    df_sectors_all = pd.read_pickle(f'{trans_keyword_save_loc}Sectors Output from scrip.pkl')[[('SBI Sector Titles'), ('Gender'), ('Age')]].droplevel('Categories', axis=1)[[('SBI Sector Titles', 'Code'), ('SBI Sector Titles', 'Sector Name'), ('SBI Sector Titles', 'Keywords'), ('Gender', 'Dominant Category'), ('Age', 'Dominant Category')]].droplevel('Variables', axis=1)
+    df_sectors_all = pd.read_pickle(f'{trans_keyword_save_loc}Sectors Output from script.pkl')[[('SBI Sector Titles'), ('Gender'), ('Age')]].droplevel('Categories', axis=1)[[('SBI Sector Titles', 'Code'), ('SBI Sector Titles', 'Sector Name'), ('SBI Sector Titles', 'Keywords'), ('Gender', 'Dominant Category'), ('Age', 'Dominant Category')]].droplevel('Variables', axis=1)
     df_sectors_all.columns = ['Code', 'Sector Name', 'Keywords', 'Gender Dominant Category', 'Age Dominant Category']
     df_sbi_sectors = df_sbi_sectors.merge(df_sectors_all, how='inner', on='Code')
     df_sbi_sectors.rename(columns = {'Sector Name': 'Sector_Name', 'Keywords': 'Used_Sector_Keywords', 'Gender Dominant Category': 'Gender_Dominant_Category', 'Age Dominant Category': 'Age_Dominant_Category'}, inplace=True)
@@ -636,8 +636,8 @@ def get_sbi_sectors_list(
 
 # %% CBS Data request
 def get_cbs_odata(
-    tables_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Age and Gender Composition of Industires and Jobs/Output CSVs for Occupational Sectors/',
-    sectors_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Age and Gender Composition of Industires and Jobs/Found Data for Specific Occupations/',
+    tables_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Sectors + Age and Gender Composition of Industires and Jobs/Output CSVs for Occupational Sectors/',
+    sectors_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Sectors + Age and Gender Composition of Industires and Jobs/Found Data for Specific Occupations/',
     table_url='https://opendata.cbs.nl/ODataAPI/OData/',
     table_id='81434ENG',
     addition_url='/UntypedDataSet',
@@ -707,7 +707,7 @@ def save_sector_excel(
     df_sectors_all,
     tables_file_path,
     sheet_name='All',
-    excel_file_name = 'Sectors Output from scrip.xlsx',
+    excel_file_name = 'Sectors Output from script.xlsx',
 ):
     writer = pd.ExcelWriter(f'{tables_file_path}{excel_file_name}', engine='xlsxwriter')
     df_sectors_all.to_excel(writer, sheet_name=sheet_name, merge_cells = True, startrow = 3)
@@ -787,9 +787,9 @@ def save_sector_excel(
 # Function to get sector df from cbs
 def get_sector_df_from_cbs(
     save_enabled: bool = True,
-    keywords_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Age and Gender Composition of Industires and Jobs/Analysis and Dataset Used/',
-    sectors_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Age and Gender Composition of Industires and Jobs/Found Data for Specific Occupations/',
-    tables_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Age and Gender Composition of Industires and Jobs/Output CSVs for Occupational Sectors/',
+    keywords_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Sectors + Age and Gender Composition of Industires and Jobs/Analysis and Dataset Used/',
+    sectors_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Sectors + Age and Gender Composition of Industires and Jobs/Found Data for Specific Occupations/',
+    tables_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Sectors + Age and Gender Composition of Industires and Jobs/Output CSVs for Occupational Sectors/',
     cols = ['Industry class / branch (SIC2008)', 'Sex of employee', 'Other characteristics employee', 'Employment/Jobs (x 1 000)'],
     get_cbs_odata_enabled=False,
     age_limit: int = 45,
@@ -829,7 +829,7 @@ def get_sector_df_from_cbs(
         (df_sectors['Age Range (in years)'].isin(old)),
         (df_sectors['Age Range (in years)'].isin(young))
     ]
-    choices = [f'Older (>= {age_limit} years)', f'Younger (< {age_limit} years)']
+    choices = [f'Older (>= {age_limit} years)', f'Younger (< {age_limit} years']
     age_cat = np.select(conditions, choices, default='Total')
     df_sectors.insert(3, 'Age', age_cat)
     choices.append('Total')
@@ -934,11 +934,11 @@ def get_sector_df_from_cbs(
     df_sectors_all.columns = pd.MultiIndex.from_tuples(level1_cols_tuple, names=['Variables', 'Categories', 'Counts'])
 
     if save_enabled is True:
-        df_sectors_all.to_csv(f'{tables_file_path}Sectors Output from scrip.csv', index=False)
-        df_sectors_all.to_pickle(f'{tables_file_path}Sectors Output from scrip.pkl')
+        df_sectors_all.to_csv(f'{tables_file_path}Sectors Output from script.csv', index=False)
+        df_sectors_all.to_pickle(f'{tables_file_path}Sectors Output from script.pkl')
         with pd.option_context("max_colwidth", 10000000000):
-            df_sectors_all.to_latex(f'{tables_file_path}Sectors Output from scrip.tex', index=False, longtable=True, escape=True, multicolumn=True, multicolumn_format='c', position='H', caption='Sectoral Gender and Age Composition and Segregation, Keywords, Counts, and Percentages', label='Jobs Count per Sector (x 1000)')
-        df_sectors_all.to_markdown(f'{tables_file_path}Sectors Output from scrip.md', index=True)
+            df_sectors_all.to_latex(f'{tables_file_path}Sectors Output from script.tex', index=False, longtable=True, escape=True, multicolumn=True, multicolumn_format='c', position='H', caption='Sectoral Gender and Age Composition and Segregation, Keywords, Counts, and Percentages', label='Jobs Count per Sector (x 1000)')
+        df_sectors_all.to_markdown(f'{tables_file_path}Sectors Output from script.md', index=True)
         save_sector_excel(df_sectors_all, tables_file_path)
 
     return df_sectors_all
@@ -947,32 +947,39 @@ def get_sector_df_from_cbs(
 # %%
 # Function to read and save keyword lists
 def read_and_save_keyword_list(
+    print_enabled: bool = False,
     save_enabled: bool = True,
     translate_enabled: bool = False,
-    sectors_file_path: str = validate_path(f'{code_dir}/data/content analysis + ids + sectors/Age and Gender Composition of Industires and Jobs/'),
+    sectors_file_path: str = validate_path(f'{code_dir}/data/content analysis + ids + sectors/Sectors + Age and Gender Composition of Industires and Jobs/'),
+    use_top10_data: bool = False,
     age_limit: int = 45,
     age_ratio: int = 10,
     gender_ratio: int = 20,
 ):
 
-    print(
-        f'NOTE: The function "read_and_save_keyword_list" contains the following optional (default) arguments:\n{get_default_args(read_and_save_keyword_list)}'
-    )
+    if print_enabled is True:
+        print(
+            f'NOTE: The function "read_and_save_keyword_list" contains the following optional (default) arguments:\n{get_default_args(read_and_save_keyword_list)}'
+        )
     # Augment Keywords List
     # Gender
-    keyword_file_path_womenvocc = validate_path(
-        f'{sectors_file_path}Found Data for Specific Occupations/Top 10 highest % of women in occupations (2018).csv'
-    )
-    # Highest % of women per occupation
-    df_womenvocc = pd.read_csv(keyword_file_path_womenvocc)
-    keywords_womenvocc = df_womenvocc['Beroep'].loc[1:].to_list()
+    if use_top10_data is True:
+        # Highest % of women per occupation
+        keyword_file_path_womenvocc = validate_path(
+            f'{sectors_file_path}Found Data for Specific Occupations/Top 10 highest % of women in occupations (2018).csv'
+        )
+        df_womenvocc = pd.read_csv(keyword_file_path_womenvocc)
+        keywords_womenvocc = df_womenvocc['Beroep'].loc[1:].to_list()
 
-    keyword_file_path_menvocc = validate_path(
-        f'{sectors_file_path}Found Data for Specific Occupations/Top 10 highest % of men in occupations (2018).csv'
-    )
-    # Highest % of men per occupation
-    df_menvocc = pd.read_csv(keyword_file_path_menvocc)
-    keywords_menvocc = df_menvocc['Beroep'].loc[1:].to_list()
+        # Highest % of men per occupation
+        keyword_file_path_menvocc = validate_path(
+            f'{sectors_file_path}Found Data for Specific Occupations/Top 10 highest % of men in occupations (2018).csv'
+        )
+        df_menvocc = pd.read_csv(keyword_file_path_menvocc)
+        keywords_menvocc = df_menvocc['Beroep'].loc[1:].to_list()
+    elif use_top10_data is False:
+        keywords_womenvocc = []
+        keywords_menvocc = []
 
     # Read into df
     df_sectors = get_sector_df_from_cbs()
@@ -989,11 +996,15 @@ def read_and_save_keyword_list(
 
     # Add female and male sectors to lists
     # Female Sectors + DF women v occ
-    keywords_womenvocc.extend(df_sector_women.index.to_list())
+    for keywords_list in df_sector_women[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')].to_list():
+        keywords_womenvocc.extend(keywords_list)
+        keywords_womenvocc.extend(df_sector_men.index.to_list())
     keywords_womenvocc = clean_and_translate_keyword_list(keywords_womenvocc, translate_enabled)
 
     # Male Sectors + DF men v occ
-    keywords_menvocc.extend(df_sector_men.index.to_list())
+    for keywords_list in df_sector_men[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')].to_list():
+        keywords_menvocc.extend(keywords_list)
+        keywords_menvocc.extend(df_sector_men.index.to_list())
     keywords_menvocc = clean_and_translate_keyword_list(keywords_menvocc, translate_enabled)
 
     ################################################### AGE ###################################################
@@ -1018,18 +1029,19 @@ def read_and_save_keyword_list(
     ################################################### SAVE ###################################################
 
     # Print and save lists
-    print(f'Female keywords total {len(keywords_womenvocc)}:\n{keywords_womenvocc}\n')
-    print(f'Male keywords total {len(keywords_menvocc)}:\n{keywords_menvocc}\n')
-    print(
-        f'Mixed gender keywords total {len(keywords_genvsect)}:\n{keywords_genvsect}\n'
-    )
-    print(f'Older worker keywords total {len(keywords_oldvocc)}:\n{keywords_oldvocc}\n')
-    print(
-        f'Younger worker keywords total {len(keywords_youngvocc)}:\n{keywords_youngvocc}\n'
-    )
-    print(
-        f'Mixed age keywords total {len(keywords_agevsect)}:\n{keywords_agevsect}\n'
-    )
+    if print_enabled is True:
+        print(f'Female keywords total {len(keywords_womenvocc)}:\n{keywords_womenvocc}\n')
+        print(f'Male keywords total {len(keywords_menvocc)}:\n{keywords_menvocc}\n')
+        print(
+            f'Mixed gender keywords total {len(keywords_genvsect)}:\n{keywords_genvsect}\n'
+        )
+        print(f'Older worker keywords total {len(keywords_oldvocc)}:\n{keywords_oldvocc}\n')
+        print(
+            f'Younger worker keywords total {len(keywords_youngvocc)}:\n{keywords_youngvocc}\n'
+        )
+        print(
+            f'Mixed age keywords total {len(keywords_agevsect)}:\n{keywords_agevsect}\n'
+        )
 
     keywords_dict = {
         'keywords_womenvocc': keywords_womenvocc,
@@ -1053,9 +1065,10 @@ def read_and_save_keyword_list(
                     f'/Analysis and Dataset Used/{str(key)}_with_nl.txt'
                 )
 
-            print(
-                f'Saving {key} of length: {len(value)} to file location {sectors_file_path}.'
-            )
+            if print_enabled is True:
+                print(
+                    f'Saving {key} of length: {len(value)} to file location {sectors_file_path}.'
+                )
             with open(sectors_file_path + save_path_file_name, 'w') as f:
                 for i in value:
                     f.write(f'{i.lower()}\n')
@@ -1081,14 +1094,16 @@ def read_and_save_keyword_list(
 # %%
 def get_keywords_from_cbs(
     save_enabled: bool = True,
-    keywords_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Age and Gender Composition of Industires and Jobs/Analysis and Dataset Used/',
-    sectors_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Age and Gender Composition of Industires and Jobs/Found Data for Specific Occupations/',
-    tables_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Age and Gender Composition of Industires and Jobs/Output CSVs for Occupational Sectors/',
+    keywords_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Sectors + Age and Gender Composition of Industires and Jobs/Analysis and Dataset Used/',
+    sectors_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Sectors + Age and Gender Composition of Industires and Jobs/Found Data for Specific Occupations/',
+    tables_file_path: str = f'{code_dir}/data/content analysis + ids + sectors/Sectors + Age and Gender Composition of Industires and Jobs/Output CSVs for Occupational Sectors/',
     cols = ['Industry class / branch (SIC2008)', 'Sex of employee', 'Other characteristics employee', 'Employment/Jobs (x 1 000)'],
     age_limit: int = 45,
     age_ratio: int = 10,
     gender_ratio: int = 20,
 ):
+
+    keywords_dict, keywords_womenvocc, keywords_menvocc, keywords_genvsect, keywords_oldvocc, keywords_youngvocc, keywords_agevsect, df_sector_women, df_sector_men, df_sector_old, df_sector_young = read_and_save_keyword_list()
 
     df_sectors = get_sector_df_from_cbs()
     df_sectors.set_index(('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Sector Name'), inplace = True)
@@ -1191,7 +1206,7 @@ def get_keyword_list(
 ):
 
     keywords_file_path = validate_path(
-        f'{code_dir}/data/content analysis + ids + sectors/Age and Gender Composition of Industires and Jobs/Analysis and Dataset Used/'
+        f'{code_dir}/data/content analysis + ids + sectors/Sectors + Age and Gender Composition of Industires and Jobs/Analysis and Dataset Used/'
     )
 
     if get_from_cbs is True:
@@ -1211,6 +1226,8 @@ def get_keyword_list(
         )
 
     # Women Sector
+    keywords_dict, keywords_womenvocc, keywords_menvocc, keywords_genvsect, keywords_oldvocc, keywords_youngvocc, keywords_agevsect, df_sector_women, df_sector_men, df_sector_old, df_sector_young = read_and_save_keyword_list()
+
     with open(keywords_file_path + 'keywords_womenvocc.txt', 'r') as f:
         keywords_womenvocc = f.read().splitlines()
     with open(
@@ -1995,8 +2012,8 @@ def clean_df(
 ) -> pd.DataFrame:
 
     df_jobs.columns = df_jobs.columns.to_series().apply(lambda x: x.strip())
-    df_jobs.dropna(axis=0, how='all',inplace=True)
-    df_jobs.dropna(axis=1, how='all',inplace=True)
+    df_jobs.dropna(axis=0, how='all', inplace=True)
+    df_jobs.dropna(axis=1, how='all', inplace=True)
     df_jobs.drop(
         df_jobs.columns[
             df_jobs.columns.str.contains(
@@ -2006,16 +2023,9 @@ def clean_df(
         axis=1,
         inplace=True,
     )
-
-    # # Set Variables
-    # if all(df_jobs.columns.isin(['Gender', 'Age'])):
-    #     subset_list=[int_variable, str_variable, gender, age]
-    # else:
-    #     subset_list=[int_variable, str_variable]
+    df_jobs[int_variable] = df_jobs[int_variable].apply(str)
 
     if reset is True:
-        # , 'Sector', 'Sector Code', '% Female', '% Male', '% Older', '% Younger', 'English Requirement', 'Dutch Requirement'
-        # or df_jobs['Gender'].isnull().values.any() or df_jobs['Age'].isnull().values.any() or df_jobs['Sector'].isnull().values.any() or df_jobs['Sector Code'].isnull().values.any() or df_jobs['% Female'].isnull().values.any() or df_jobs['% Male'].isnull().values.any() or df_jobs['% Older'].isnull().values.any() or df_jobs['% Younger'].isnull().values.any() or df_jobs['English Requirement'].isnull().values.any() or df_jobs['Dutch Requirement'].isnull().values.any():
         df_jobs = set_gender_age_sects_lang(df_jobs, str_variable=str_variable, id_dict_new=id_dict_new)
 
     subset_list=[int_variable, str_variable, gender, age]
@@ -2383,7 +2393,7 @@ def set_language_requirement(
 def set_sector_and_percentage(
     df_jobs,
     sector_dict_new=False,
-    sectors_path = f'{code_dir}/data/content analysis + ids + sectors/Age and Gender Composition of Industires and Jobs/Output CSVs for Occupational Sectors/ALL SECTOR AGE AND GENDER TABLE.xlsx',
+    sectors_path = f'{code_dir}/data/content analysis + ids + sectors/Sectors + Age and Gender Composition of Industires and Jobs/Output CSVs for Occupational Sectors/ALL SECTOR AGE AND GENDER TABLE.xlsx',
     age_limit = 45,
     age_ratio = 10,
     gender_ratio = 20,
@@ -2411,7 +2421,12 @@ def set_sector_and_percentage(
     for sect, sect_dict in sector_vs_job_id_dict.items():
         for keyword, job_ids in sect_dict.items():
             df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin([str(i) for i in job_ids]), 'Sector'] = str(sect).lower().strip()
-
+    # if 'Search Keyword' in df_jobs.columns:
+    #     if df_jobs['Sector'].isnull().values.any() or df_jobs['Sector'].isnull().sum() > 0 or df_jobs['Sector'].isna().values.any() or df_jobs['Sector'].isna().sum() > 0:
+    #         df_sectors = get_sector_df_from_cbs()
+    #         for idx, row in df_sectors.iterrows():
+    #             if isinstance(row[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')], list) and df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin([str(i) for i in row[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')]]):
+    #                     print(row[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Sector Name')])
 
     print('Setting sector code and percentages.')
     # Add gender and age columns
@@ -2426,7 +2441,7 @@ def set_sector_and_percentage(
     df_sectors = get_sector_df_from_cbs()
     for index, row in df_jobs.iterrows():
         for idx, r in df_sectors.iterrows():
-            if str(row['Sector']).strip().lower() == r[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Sector Name')].strip().lower():
+            if str(row['Sector']).strip().lower() == str(r[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Sector Name')]).strip().lower():
                 df_jobs.loc[index, 'Sector Code'] = r[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Code')]
                 df_jobs.loc[index, '% Female'] = r[('Gender', 'Female', '% per Sector')]
                 df_jobs.loc[index, '% Male'] = r[('Gender', 'Male', '% per Sector')]
@@ -2470,7 +2485,7 @@ def set_gender_age(
     trans_keyword_list = args['trans_keyword_list']
 
     if id_dict_new is True:
-        job_id_dict = make_job_id_v_gender_key_dict()
+        job_id_dict = make_job_id_v_genage_key_dict()
 
     elif id_dict_new is False:
         with open(validate_path(f'{args["parent_dir"]}job_id_vs_all.json'), encoding='utf8') as f:
@@ -2514,9 +2529,16 @@ def set_gender_age(
 # %%
 def set_gender_age_sects_lang(df_jobs, str_variable, id_dict_new=False, args=get_args()):
 
+    # now = datetime.datetime.now().total_seconds()
+
     df_jobs=set_language_requirement(df_jobs, str_variable=str_variable)
+    # print(f'Time taken for set_language_requirement: {now-datetime.datetime.now().total_seconds()}')
+    # now = datetime.datetime.now().total_seconds()
     df_jobs=set_sector_and_percentage(df_jobs, sector_dict_new=id_dict_new)
+    # print(f'Time taken for set_sector_and_percentage: {now-datetime.datetime.now().total_seconds()}')
+    # now = datetime.datetime.now().total_seconds()
     df_jobs=set_gender_age(df_jobs, id_dict_new=id_dict_new)
+    # print(f'Time taken for set_gender_age: {now-datetime.datetime.now().total_seconds()}')
 
     return df_jobs
 
@@ -2730,7 +2752,7 @@ def post_cleanup(
     keywords_from_list=True,
     site_list=['Indeed', 'Glassdoor', 'LinkedIn'],
     job_id_save_enabled=False,
-    job_sector_save_enabled=False,
+    job_sector_save_enabled=True,
     keyword='',
     site='',
     keywords_list=None,
@@ -2813,14 +2835,14 @@ def post_cleanup(
         pickle.dump(df_jobs, f, protocol=pickle.HIGHEST_PROTOCOL)
     print(f'Done saving df_jobs_post_cleanup.{args["file_save_format"]}')
 
-    print(f'Saving df_jobs_post_cleanup.{args["file_save_format_backup"]}')
-    with open(df_dir + f'df_jobs_post_cleanup.{file_save_format_backup}', 'w', newline="") as f:
-        writer = csv.writer(f)
-        writer.writerows(df_jobs)
-    print(f'Done saving df_jobs_post_cleanup.{args["file_save_format_backup"]}')
+    # print(f'Saving df_jobs_post_cleanup.{args["file_save_format_backup"]}')
+    # with open(df_dir + f'df_jobs_post_cleanup.{file_save_format_backup}', 'w', newline="") as f:
+    #     writer = csv.writer(f)
+    #     writer.writerows(df_jobs)
+    # print(f'Done saving df_jobs_post_cleanup.{args["file_save_format_backup"]}')
 
     if job_id_save_enabled is True:
-        job_id_dict = make_job_id_v_gender_key_dict(site_from_list=False)
+        job_id_dict = make_job_id_v_genage_key_dict(site_from_list=False)
     if job_sector_save_enabled is True:
         sector_vs_job_id_dict = make_job_id_v_sector_key_dict(site_from_list=False)
 
@@ -3021,7 +3043,8 @@ def make_job_id_v_sector_key_dict(
     print(
         f'NOTE: The function "make_job_id_v_sector_key_dict" contains the following optional (default) arguments:\n{get_default_args(make_job_id_v_sector_key_dict)}'
     )
-    sib_5_loc = validate_path(f'{args["parent_dir"]}Age and Gender Composition of Industires and Jobs/Found Data for Specific Occupations/SBI_ALL_NACE_REV2.csv')
+
+    sib_5_loc = validate_path(f'{args["parent_dir"]}Sectors + Age and Gender Composition of Industires and Jobs/Found Data for Specific Occupations/SBI_ALL_NACE_REV2.csv')
 
     # Get keywords and paths to df_jobs
     if site_from_list is True:
@@ -3062,7 +3085,7 @@ def make_job_id_v_sector_key_dict_helper(
 
         for index, row in df_jobs.iterrows():
             if row['Search Keyword'] not in [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']:
-                search_keyword = row['Search Keyword'].strip().lower().replace("-Noon's MacBook Pro",'').strip().lower()
+                search_keyword = str(row['Search Keyword'].strip().lower().replace("-Noon's MacBook Pro",'').strip().lower())
                 for w_keyword, r_keyword in keyword_trans_dict.items():
                     if search_keyword == w_keyword.lower():
                         df_jobs.loc[index, 'Search Keyword'] = r_keyword.strip().lower()
@@ -3090,14 +3113,14 @@ def make_job_id_v_sector_key_dict_helper(
 
 # %%
 # Function to match job IDs with gender and age in dict
-def make_job_id_v_gender_key_dict(
-    site_from_list=True,
+def make_job_id_v_genage_key_dict(
+    site_from_list=False,
     site_list=['Indeed', 'Glassdoor', 'LinkedIn'],
     all_save_path = f'job_id_vs',
     args=get_args()):
 
     print(
-        f'NOTE: The function "make_job_id_v_gender_key_dict" contains the following optional (default) arguments:\n{get_default_args(make_job_id_v_gender_key_dict)}'
+        f'NOTE: The function "make_job_id_v_genage_key_dict" contains the following optional (default) arguments:\n{get_default_args(make_job_id_v_genage_key_dict)}'
     )
 
     # Get keywords and paths to df_jobs
@@ -3106,12 +3129,12 @@ def make_job_id_v_gender_key_dict(
             if args['print_enabled'] is True:
                 print(f'Getting job ids for {site}.')
             df_jobs_paths = list((glob.glob(f'{scraped_data}/{site}/Data/*.csv')))
-            job_id_dict = make_job_id_v_gender_key_dict_helper(
+            job_id_dict = make_job_id_v_genage_key_dict_helper(
                 df_jobs_paths=df_jobs_paths, all_save_path=f'{all_save_path}_{site}'
             )
     elif site_from_list is False:
         df_jobs_paths = glob.glob(f'{scraped_data}/*/Data/*.csv')
-        job_id_dict = make_job_id_v_gender_key_dict_helper(
+        job_id_dict = make_job_id_v_genage_key_dict_helper(
             df_jobs_paths=df_jobs_paths, all_save_path=f'{all_save_path}_all'
         )
 
@@ -3119,7 +3142,7 @@ def make_job_id_v_gender_key_dict(
 
 
 # %%
-def make_job_id_v_gender_key_dict_helper(
+def make_job_id_v_genage_key_dict_helper(
     df_jobs_paths,
     all_save_path,
     job_id_dict=defaultdict(list),
@@ -3133,13 +3156,14 @@ def make_job_id_v_gender_key_dict_helper(
     sbi_sectors_dom_gen = args['sbi_sectors_dom_gen']
     sbi_sectors_dom_age = args['sbi_sectors_dom_age']
     trans_keyword_list = args['trans_keyword_list']
+    sector_vs_job_id_dict = make_job_id_v_sector_key_dict()
 
     for path in df_jobs_paths:
         df_jobs = pd.read_csv(path)
         for index, row in df_jobs.iterrows():
 
             if row['Search Keyword'] not in [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']:
-                search_keyword = row['Search Keyword'].replace("-Noon's MacBook Pro",'').strip().lower()
+                search_keyword = str(row['Search Keyword'].replace("-Noon's MacBook Pro",'').strip().lower())
                 for w_keyword, r_keyword in keyword_trans_dict.items():
                     if search_keyword == w_keyword.lower():
                         df_jobs.loc[index, 'Search Keyword'] = r_keyword.strip().lower()
@@ -3163,14 +3187,18 @@ def make_job_id_v_gender_key_dict_helper(
                 ):
                     if search_keyword == str(fem_keyword).strip().lower().replace("-Noon's MacBook Pro",''):
                         job_id_dict['Female'].append(str(row['Job ID']))
-                    elif search_keyword == str(male_keyword).strip().lower().replace("-Noon's MacBook Pro",''):
+                    else:
+                        job_id_dict['Mixed Gender'].append(str(row['Job ID']))
+                    if search_keyword == str(male_keyword).strip().lower().replace("-Noon's MacBook Pro",''):
                         job_id_dict['Male'].append(str(row['Job ID']))
                     else:
                         job_id_dict['Mixed Gender'].append(str(row['Job ID']))
 
                     if search_keyword == str(old_keyword).strip().lower().replace("-Noon's MacBook Pro",''):
                         job_id_dict['Older Worker'].append(str(row['Job ID']))
-                    elif search_keyword == str(young_keyword).strip().lower().replace("-Noon's MacBook Pro",''):
+                    else:
+                        job_id_dict['Mixed Age'].append(str(row['Job ID']))
+                    if search_keyword == str(young_keyword).strip().lower().replace("-Noon's MacBook Pro",''):
                         job_id_dict['Younger Worker'].append(str(row['Job ID']))
                     else:
                         job_id_dict['Mixed Age'].append(str(row['Job ID']))
@@ -3912,6 +3940,9 @@ def open_and_clean_excel(
         'Task_Warmth',
         'Task_Competence',
     ],
+    int_variable: str = 'Job ID',
+    str_variable='Sentence',
+    reset=True,
     args=get_args(),
 ):
 
@@ -3956,7 +3987,7 @@ def open_and_clean_excel(
                             is_non_zero_file(coder_dest_folder_path + '/' + done_job_excel_name) is False
                         )
                     ):
-                        del coders_dict[coder_number]
+                        coders_dict.pop(coder_number, None)
         if args['print_enabled'] is True:
             print(
                 f'{len(EXCEL_PATHS[coder_name])} valid excel files found for coder {coder_name}.'
@@ -3982,12 +4013,12 @@ def open_and_clean_excel(
             for path in CODER_EXCEL_PATH:
                 if args['print_enabled'] is True:
                     print(path)
-                file_extension = path.lower().split('.')[-1]
-                if file_extension == 'xlsx':
+                # file_extension = path.lower().split('.')[-1]
+                if path.endswith('xlsx'):
                     df_coder = pd.read_excel(
                         validate_path(path), index_col=0, engine='openpyxl'
                     )
-                elif file_extension == 'xls':
+                elif path.endswith('xls'):
                     df_coder = pd.read_excel(validate_path(path), index_col=0)
                 else:
                     raise Exception('File not supported')
@@ -3995,7 +4026,7 @@ def open_and_clean_excel(
                 if df_coder.columns.str.contains('^Unnamed').all():
                     break
                 else:
-                    df_coder = clean_df(df_coder, str_variable='Sentence', reset=True)
+                    df_coder = clean_df(df_coder, str_variable=str_variable, reset=reset)
                     df_coder.drop(
                         df_coder.columns[
                             df_coder.columns.str.contains('Coder Remarks', case=False)
@@ -4007,13 +4038,13 @@ def open_and_clean_excel(
                     for k, v in coders_dict.items():
                         if v == coder_key:
                             df_coder['Coder ID'] = k
-                    df_coder['OG_Sentence ID'] = df_coder.index + 1
+                    df_coder[f'OG_{str_variable} ID'] = df_coder.index + 1
                     df_coder = df_coder.fillna(0)
-                    df_coder['Sentence'] = df_coder['Sentence'].apply(lambda sentence: sentence.strip().lower().replace('[^\w\s]', ''))
-                    if df_coder['Sentence'].isna().sum() > 0:
+                    df_coder[str_variable] = df_coder[str_variable].apply(lambda sentence: sentence.strip().lower().replace('[^\w\s]', ''))
+                    if df_coder[str_variable].isna().sum() > 0:
                         if args['print_enabled'] is True:
                             print(
-                                f'{df_coder["Sentence"].isna().sum()} missing sentences found.'
+                                f'{df_coder[str_variable].isna().sum()} missing sentences found.'
                             )
                     df_coder_list.append(df_coder)
 
@@ -4021,8 +4052,8 @@ def open_and_clean_excel(
 
         if len(df_coder_list) >= 1:
             df_concat_coder_all = pd.concat(df_coder_list)
-            df_concat_coder_all['Sentence ID'] = (
-                df_concat_coder_all.groupby(['Sentence']).ngroup() + 1
+            df_concat_coder_all[f'{str_variable} ID'] = (
+                df_concat_coder_all.groupby([str_variable]).ngroup() + 1
             )
             df_concat_coder_all = df_concat_coder_all[
                 front_columns
@@ -4037,7 +4068,7 @@ def open_and_clean_excel(
                 .swifter.progress_bar(args['print_enabled'])
                 .apply(pd.to_numeric, downcast='integer', errors='coerce')
             )
-            df_concat_coder_all = clean_df(df_concat_coder_all, str_variable='Sentence', reset=True)
+            df_concat_coder_all = clean_df(df_concat_coder_all, str_variable=str_variable, reset=reset)
             df_concat_coder_all.index = range(df_concat_coder_all.shape[0])
             if args['print_enabled'] is True:
                 print(f'Total of {len(df_concat_coder_all)} sentences in the dataset.')

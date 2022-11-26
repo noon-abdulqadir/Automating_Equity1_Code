@@ -124,10 +124,10 @@ def open_and_clean_labeled_excel(
     if args['print_enabled'] is True:
         print(f'Number of DF words: {word_count}')
 
-    # Set Age and Gender IVs
+    # # Set Age and Gender IVs
     df_jobs_labeled = set_gender_age_sects_lang(df_jobs = df_jobs_labeled, id_dict_new = id_dict_new, str_variable = 'Job Description')
 
-    # Gender and Age Info
+    # # Gender and Age Info
     df_gender_age_info(df_jobs_labeled)
 
     # Detect Language

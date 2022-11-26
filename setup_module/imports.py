@@ -204,6 +204,7 @@ try:
     from gensim.utils import save_as_line_sentence, simple_preprocess
     from googletrans import Translator
     from http_request_randomizer.requests.proxy.requestProxy import RequestProxy
+    from icecream import ic
     from imblearn.combine import SMOTEENN, SMOTETomek
     from imblearn.datasets import make_imbalance
     from imblearn.metrics import classification_report_imbalanced
@@ -451,8 +452,8 @@ errors = (
     TimeoutException,
 )
 pp = pprint.PrettyPrinter(indent=4)
-# tqdm.tqdm.pandas(desc='progress-bar')
-# pbar = progressbar.ProgressBar(maxval=10)
+tqdm.tqdm_notebook().pandas(desc='progress-bar')
+pbar = progressbar.ProgressBar(maxval=10)
 # %matplotlib widget
 # %matplotlib notebook
 # %matplotlib inline

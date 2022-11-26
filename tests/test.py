@@ -302,7 +302,7 @@ def post_cleanup(
             pickle.dump(df_jobs, f, protocol=pickle.HIGHEST_PROTOCOL)
 
     if job_id_save_enabled is True:
-        job_id_dict = make_job_id_v_gender_key_dict(site_from_list, site_list)
+        job_id_dict = make_job_id_v_genage_key_dict(site_from_list, site_list)
         sector_vs_job_id_dict = make_job_id_v_sector_key_dict()
 
     return df_jobs
