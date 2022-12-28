@@ -118,7 +118,7 @@ def open_and_clean_labeled_excel(
     word_count = (
         df_jobs_labeled['Job Description']
         .swifter.progress_bar(args['print_enabled'])
-        .apply(lambda x: len(x.split(' ')))
+        .progress_apply(lambda x: len(x.split(' ')))
         .sum()
     )
     if args['print_enabled'] is True:
@@ -687,9 +687,9 @@ def get_sentiment(df_jobs_to_be_processed, text_col, algo='vader', sentiment_ran
 
     ## calculate sentiment
     if algo == 'vader':
-        df_jobs_to_be_processed['sentiment'] = df_jobs_to_be_processed[text_col].apply(lambda x: SentimentIntensityAnalyzer().polarity_scores(x)['compound'] if isinstance(x, str) else np.nan)
+        df_jobs_to_be_processed['sentiment'] = df_jobs_to_be_processed[text_col].progress_apply(lambda x: SentimentIntensityAnalyzer().polarity_scores(x)['compound'] if isinstance(x, str) else np.nan)
     elif algo == 'textblob':
-        df_jobs_to_be_processed['sentiment'] = df_jobs_to_be_processed[text_col].apply(lambda x: TextBlob(x).sentiment.polarity)
+        df_jobs_to_be_processed['sentiment'] = df_jobs_to_be_processed[text_col].progress_apply(lambda x: TextBlob(x).sentiment.polarity)
     ## rescaled
     if sentiment_range != (-1,1):
         df_jobs_to_be_processed['sentiment'] = preprocessing.MinMaxScaler(feature_range=sentiment_range).fit_transform(df_jobs_to_be_processed[['sentiment']])
@@ -764,7 +764,7 @@ def simple_preprocess_df(
                             )
                             for col in df_jobs_to_be_processed.columns:
                                 if 'grams_' in col:
-                                    df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].apply(lambda x: ast.literal_eval(str(x)))
+                                    df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].progress_apply(lambda x: ast.literal_eval(str(x)))
 
                         if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
                             df_jobs_to_be_processed.drop(['Unnamed: 0'], axis=1, inplace=True)
@@ -781,7 +781,7 @@ def simple_preprocess_df(
                     )
 
                     # Get word frequencies
-                    df_jobs_to_be_processed = df_jobs_to_be_processed.apply(lambda row: get_word_num_and_frequency(row=row, text_col=text_col), axis='columns')
+                    df_jobs_to_be_processed = df_jobs_to_be_processed.progress_apply(lambda row: get_word_num_and_frequency(row=row, text_col=text_col), axis='columns')
 
                     # Get sentiment
                     df_jobs_to_be_processed = get_sentiment(df_jobs_to_be_processed, text_col=text_col)
@@ -804,7 +804,7 @@ def simple_preprocess_df(
                     )
                     for col in df_jobs_to_be_processed.columns:
                         if 'grams_' in col:
-                            df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].apply(lambda x: ast.literal_eval(str(x)))
+                            df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].progress_apply(lambda x: ast.literal_eval(str(x)))
 
                 if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
                     df_jobs_to_be_processed.drop(['Unnamed: 0'], axis=1, inplace=True)
@@ -814,10 +814,10 @@ def simple_preprocess_df(
 
                 # Tokenize
                 ## Custom
-                df_jobs_to_be_processed['1grams_all'] = df_jobs_to_be_processed['Job Description_cleaned'].apply(lambda sentences: ast.literal_eval(custom_tokenizer(str(sentences), numbers_cleaned=numbers_cleaned, stemming_enabled=stemming_enabled, lemmatization_enabled=lemmatization_enabled, pattern=pattern, stop_words=stop_words, return_tokens=True)))
+                df_jobs_to_be_processed['1grams_all'] = df_jobs_to_be_processed['Job Description_cleaned'].progress_apply(lambda sentences: ast.literal_eval(custom_tokenizer(str(sentences), numbers_cleaned=numbers_cleaned, stemming_enabled=stemming_enabled, lemmatization_enabled=lemmatization_enabled, pattern=pattern, stop_words=stop_words, return_tokens=True)))
                 ## BERT
                 bert_tokenizer=BertTokenizer.from_pretrained('bert-base-uncased')
-                df_jobs_to_be_processed['1grams_bert'] = df_jobs_to_be_processed['Job Description_cleaned'].apply(lambda sentences: bert_tokenizer(str(sentences), return_tensors='tf'))
+                df_jobs_to_be_processed['1grams_bert'] = df_jobs_to_be_processed['Job Description_cleaned'].progress_apply(lambda sentences: bert_tokenizer(str(sentences), return_tensors='tf'))
 
                 if args['save_enabled'] is True:
                     print('Saving df_jobs_labeled after tokenization.')
@@ -834,7 +834,7 @@ def simple_preprocess_df(
                     )
                     for col in df_jobs_to_be_processed.columns:
                         if 'grams_' in col:
-                            df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].apply(lambda x: ast.literal_eval(str(x)))
+                            df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].progress_apply(lambda x: ast.literal_eval(str(x)))
 
                 if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
                     df_jobs_to_be_processed.drop(['Unnamed: 0'], axis=1, inplace=True)
@@ -845,7 +845,7 @@ def simple_preprocess_df(
 
                 # NLTK
                 for n_gram_number, n_gram_nltk in nltk_n_grams_dict.items():
-                    df_jobs_to_be_processed[f'{str(n_gram_number)}grams_nltk'] = df_jobs_to_be_processed['1grams_all'].reset_index(drop=True).swifter.progress_bar(args['print_enabled']).apply(lambda unigram: list(n_gram_nltk(unigram)))
+                    df_jobs_to_be_processed[f'{str(n_gram_number)}grams_nltk'] = df_jobs_to_be_processed['1grams_all'].reset_index(drop=True).swifter.progress_bar(args['print_enabled']).progress_apply(lambda unigram: list(n_gram_nltk(unigram)))
 
                 df_jobs_to_be_processed['123grams_nltk'] = df_jobs_to_be_processed['1grams_all'] + df_jobs_to_be_processed['2grams_nltk'] + df_jobs_to_be_processed['3grams_nltk']
 
@@ -864,7 +864,7 @@ def simple_preprocess_df(
                     )
                     for col in df_jobs_to_be_processed.columns:
                         if 'grams_' in col:
-                            df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].apply(lambda x: ast.literal_eval(str(x)))
+                            df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].progress_apply(lambda x: ast.literal_eval(str(x)))
 
                 if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
                     df_jobs_to_be_processed.drop(['Unnamed: 0'], axis=1, inplace=True)
@@ -873,12 +873,12 @@ def simple_preprocess_df(
                 for embedding_library, n_gram_number in itertools.product(embedding_libraries_list, n_grams_list):
                     if n_gram_number == 1:
                         embedding_library = 'all'
-                    df_jobs_to_be_processed = df_jobs_to_be_processed.apply(lambda row: get_abs_frequency(row=row, text_col=text_col, n_gram_number=n_gram_number, embedding_library=embedding_library), axis='columns')
+                    df_jobs_to_be_processed = df_jobs_to_be_processed.progress_apply(lambda row: get_abs_frequency(row=row, text_col=text_col, n_gram_number=n_gram_number, embedding_library=embedding_library), axis='columns')
 
                 # Get dictionary and corpus
                 for n_gram_number in n_grams_list:
                     if n_gram_number != 1:
-                        df_jobs_to_be_processed = df_jobs_to_be_processed.apply(lambda row: get_corpus_and_dictionary(row=row, n_gram_number=n_gram_number, embedding_library='gensim'), axis='columns')
+                        df_jobs_to_be_processed = df_jobs_to_be_processed.progress_apply(lambda row: get_corpus_and_dictionary(row=row, n_gram_number=n_gram_number, embedding_library='gensim'), axis='columns')
 
                 if args['save_enabled'] is True:
                     print('Saving df_jobs_labeled from n_grams function.')
@@ -898,7 +898,7 @@ def simple_preprocess_df(
                 )
                 for col in df_jobs_to_be_processed.columns:
                     if 'grams_' in col:
-                        df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].apply(lambda x: ast.literal_eval(str(x)))
+                        df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].progress_apply(lambda x: ast.literal_eval(str(x)))
 
             if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
                 df_jobs_to_be_processed.drop(['Unnamed: 0'], axis=1, inplace=True)
@@ -933,13 +933,13 @@ def simple_preprocess_df(
                 # Sent2Vec
                 print('Getting sent2vec embeddings.')
                 embeddings_index = get_glove()
-                df_jobs_to_be_processed[f'{n_gram_number}grams_{embedding_library}_sent2vec_embeddings'] = df_jobs_to_be_processed[f'{n_gram_number}grams_{embedding_library}'].apply(lambda sentences: sent2vec(sentences, embeddings_index=embeddings_index, external_glove=True, extra_preprocessing_enabled=False))
+                df_jobs_to_be_processed[f'{n_gram_number}grams_{embedding_library}_sent2vec_embeddings'] = df_jobs_to_be_processed[f'{n_gram_number}grams_{embedding_library}'].progress_apply(lambda sentences: sent2vec(sentences, embeddings_index=embeddings_index, external_glove=True, extra_preprocessing_enabled=False))
                 print('Done getting sent2vec embeddings.')
 
                 # # HuggingFace
                 # print('Getting huggingface embeddings.')
                 # bert_model=TFBertModel.from_pretrained('bert-base-uncased')
-                # df_jobs_to_be_processed[f'{n_gram_number}grams_{embedding_library}_huggingface_embeddings'] = df_jobs_to_be_processed[f'{n_gram_number}grams_{embedding_library}'].apply(lambda sentences: bert_model(sentences))
+                # df_jobs_to_be_processed[f'{n_gram_number}grams_{embedding_library}_huggingface_embeddings'] = df_jobs_to_be_processed[f'{n_gram_number}grams_{embedding_library}'].progress_apply(lambda sentences: bert_model(sentences))
                 # print('Done getting huggingface embeddings.')
 
             if args['save_enabled'] is True:
@@ -960,7 +960,7 @@ def simple_preprocess_df(
             )
             for col in df_jobs_to_be_processed.columns:
                 if 'grams_' in col:
-                    df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].apply(lambda x: ast.literal_eval(str(x)))
+                    df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].progress_apply(lambda x: ast.literal_eval(str(x)))
 
         if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
             df_jobs_to_be_processed.drop(['Unnamed: 0'], axis=1, inplace=True)

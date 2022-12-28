@@ -486,7 +486,7 @@ def clean_and_translate_keyword_list(
 
     # Remove all non-specific keywords
     for i in keywords_list:
-        if 'other ' in i.lower():
+        if 'other ' in i.lower() and i.lower() not in ['other business support', 'other service activities']:
             keywords_list.append(i.lower().split('other')[1])
             keywords_list.remove(i)
         if ' (excl.' in i.lower():
@@ -708,6 +708,9 @@ def save_sector_excel(
     tables_file_path,
     sheet_name='All',
     excel_file_name = 'Sectors Output from script.xlsx',
+    age_limit: int = 45,
+    age_ratio: int = 10,
+    gender_ratio: int = 20,
 ):
     writer = pd.ExcelWriter(f'{tables_file_path}{excel_file_name}', engine='xlsxwriter')
     df_sectors_all.to_excel(writer, sheet_name=sheet_name, merge_cells = True, startrow = 3)
@@ -731,6 +734,8 @@ def save_sector_excel(
                 worksheet.set_column(col_num + 1, col_num + 1, 28.5)
             elif value[i] == 'Keywords':
                 worksheet.set_column(col_num + 1, col_num + 1, 30)
+            elif value[i] == 'Keywords Count':
+                worksheet.set_column(col_num + 1, col_num + 1, 13.5)
             elif value[i] == '% per Sector':
                 worksheet.set_column(col_num + 1, col_num + 1, 12)
             elif value[i] == '% per Social Category':
@@ -778,7 +783,7 @@ def save_sector_excel(
 
     worksheet.merge_range(len(df_sectors_all)+7, 0, len(df_sectors_all)+7, df_sectors_all.shape[1], 'Note.', workbook.add_format({'italic': True, 'font_name': 'Times New Roman', 'font_size': 10, 'font_color': 'black', 'align': 'left'}))
     worksheet.merge_range(len(df_sectors_all)+8, 0, len(df_sectors_all)+8, df_sectors_all.shape[1], f'Threshold for gender = {df_sectors_all.loc[df_sectors_all.index[-1], ("Gender", "Female", "% per Workforce")]:.2f}% ± 20%', workbook.add_format({'italic': True, 'font_name': 'Times New Roman', 'font_size': 10, 'font_color': 'black', 'align': 'left'}))
-    worksheet.merge_range(len(df_sectors_all)+9, 0, len(df_sectors_all)+9, df_sectors_all.shape[1], f'Threshold for age = {df_sectors_all.loc[df_sectors_all.index[-1], ("Age", "Older (>= 45 years)", "% per Workforce")]:.2f}% ± 10%', workbook.add_format({'italic': True, 'font_name': 'Times New Roman', 'font_size': 10, 'font_color': 'black', 'align': 'left'}))
+    worksheet.merge_range(len(df_sectors_all)+9, 0, len(df_sectors_all)+9, df_sectors_all.shape[1], f'Threshold for age = {df_sectors_all.loc[df_sectors_all.index[-1], ("Age", f"Older (>= {age_limit} years)", "% per Workforce")]:.2f}% ± 10%', workbook.add_format({'italic': True, 'font_name': 'Times New Roman', 'font_size': 10, 'font_color': 'black', 'align': 'left'}))
     worksheet.merge_range(len(df_sectors_all)+10, 0, len(df_sectors_all)+10, df_sectors_all.shape[1], 'Source: Centraal Bureau voor de Statistiek (CBS)', workbook.add_format({'italic': True, 'font_name': 'Times New Roman', 'font_size': 8, 'font_color': 'black', 'align': 'left'}))
 
     writer.close()
@@ -829,7 +834,7 @@ def get_sector_df_from_cbs(
         (df_sectors['Age Range (in years)'].isin(old)),
         (df_sectors['Age Range (in years)'].isin(young))
     ]
-    choices = [f'Older (>= {age_limit} years)', f'Younger (< {age_limit} years']
+    choices = [f'Older (>= {age_limit} years)', f'Younger (< {age_limit} years)']
     age_cat = np.select(conditions, choices, default='Total')
     df_sectors.insert(3, 'Age', age_cat)
     choices.append('Total')
@@ -879,11 +884,12 @@ def get_sector_df_from_cbs(
     # Add keywords
     df_sectors_all.insert(2, 'Keywords', df_sectors_all['Code'].apply(lambda row: sbi_sectors_dict[row]['Used_Sector_Keywords'] if row in sbi_sectors_dict and isinstance(row, str) else np.nan))
     df_sectors_all['Keywords'] = df_sectors_all['Keywords'].apply(lambda row: clean_and_translate_keyword_list(row) if isinstance(row, list) else np.nan)
+    df_sectors_all.insert(3, 'Keywords Count', df_sectors_all['Keywords'].apply(lambda row: int(len(row)) if isinstance(row, list) else np.nan))
 
     # Add totals in bottom row
     df_sectors_all.loc[df_sectors_all[df_sectors_all['Sector Name'] == 'Other service activities'].index.values.astype(int)[0]+1, 'Sector Name'] = 'Total (excluding A-U)'
     df_sectors_all.iloc[df_sectors_all[df_sectors_all['Sector Name'] == 'Total (excluding A-U)'].index.values.astype(int)[0], ~df_sectors_all.columns.isin(['Code', 'Sector Name', 'Keywords'])] = df_sectors_all.sum(numeric_only=True)
-    df_sectors_all.columns = pd.MultiIndex.from_tuples([('Industry class / branch (SIC2008)', 'Code'), ('Industry class / branch (SIC2008)', 'Sector Name'), ('Industry class / branch (SIC2008)', 'Keywords'), ('Female', 'n'), ('Male', 'n'), (f'Older (>= {age_limit} years)', 'n'), (f'Younger (< {age_limit} years)', 'n'), ('Total Workforce', 'n')], names = ['Social category', 'Counts'])
+    df_sectors_all.columns = pd.MultiIndex.from_tuples([('Industry class / branch (SIC2008)', 'Code'), ('Industry class / branch (SIC2008)', 'Sector Name'), ('Industry class / branch (SIC2008)', 'Keywords'), ('Industry class / branch (SIC2008)', 'Keywords Count'), ('Female', 'n'), ('Male', 'n'), (f'Older (>= {age_limit} years)', 'n'), (f'Younger (< {age_limit} years)', 'n'), ('Total Workforce', 'n')], names = ['Social category', 'Counts'])
 
     # Make percentages
     for index, row in df_sectors_all.iteritems():
@@ -912,13 +918,14 @@ def get_sector_df_from_cbs(
 
     # Add AU and other rows
     au.insert(2, 'Keywords', np.nan)
+    au.insert(3, 'Keywords Count', np.nan)
     au[['Sectoral Gender Segregation', 'Sectoral Age Segregation']] = np.nan
     au.columns = pd.MultiIndex.from_tuples([col for col in df_sectors_all.columns if '%' not in col[1]])
     df_sectors_all = pd.concat([au, df_sectors_all], ignore_index=True)
 
     # Arrange columns
-    df_sectors_all = df_sectors_all.reindex(columns=df_sectors_all.columns.reindex(['Industry class / branch (SIC2008)', 'Female', 'Male', 'Sectoral Gender Segregation', 'Older (>= 45 years)', 'Younger (< 45 years)', 'Sectoral Age Segregation', 'Total Workforce'], level=0)[0])
-    df_sectors_all = df_sectors_all.reindex(columns=df_sectors_all.columns.reindex(['Code', 'Sector Name', 'Keywords', 'n', '% per Sector', '% per Social Category', '% per Workforce', '% Sector per Workforce', 'Dominant Category'], level=1)[0])
+    df_sectors_all = df_sectors_all.reindex(columns=df_sectors_all.columns.reindex(['Industry class / branch (SIC2008)', 'Female', 'Male', 'Sectoral Gender Segregation', f'Older (>= {age_limit} years)', f'Younger (< {age_limit} years)', 'Sectoral Age Segregation', 'Total Workforce'], level=0)[0])
+    df_sectors_all = df_sectors_all.reindex(columns=df_sectors_all.columns.reindex(['Code', 'Sector Name', 'Keywords', 'Keywords Count', 'n', '% per Sector', '% per Social Category', '% per Workforce', '% Sector per Workforce', 'Dominant Category'], level=1)[0])
 
     level1_cols_tuple = []
     for col in df_sectors_all.columns:
@@ -969,7 +976,8 @@ def read_and_save_keyword_list(
             f'{sectors_file_path}Found Data for Specific Occupations/Top 10 highest % of women in occupations (2018).csv'
         )
         df_womenvocc = pd.read_csv(keyword_file_path_womenvocc)
-        keywords_womenvocc = df_womenvocc['Beroep'].loc[1:].to_list()
+        #
+        _keywords_womenvocc = df_womenvocc['Beroep'].loc[1:].to_list()
 
         # Highest % of men per occupation
         keyword_file_path_menvocc = validate_path(
@@ -1406,7 +1414,6 @@ def get_keyword_list(
         keywords_agevsect,
     )
 
-
 # %%
 # Function to access args
 def get_args(
@@ -1477,15 +1484,6 @@ def get_args(
     embeddings_save_path=validate_path(f'{data_save_path}embeddings models/')
 
     (
-        sbi_english_keyword_list,
-        sbi_english_keyword_dict,
-        sbi_sectors_dict,
-        sbi_sectors_dict_full,
-        sbi_sectors_dom_gen,
-        sbi_sectors_dom_age,
-        trans_keyword_list,
-    ) = get_sbi_sectors_list()
-    (
         keywords_list,
         keywords_sector,
         keywords_womenvocc,
@@ -1495,6 +1493,16 @@ def get_args(
         keywords_youngvocc,
         keywords_agevsect,
     ) = get_keyword_list()
+
+    (
+        sbi_english_keyword_list,
+        sbi_english_keyword_dict,
+        sbi_sectors_dict,
+        sbi_sectors_dict_full,
+        sbi_sectors_dom_gen,
+        sbi_sectors_dom_age,
+        trans_keyword_list,
+    ) = get_sbi_sectors_list()
 
     return {
         'language': language,
@@ -2407,6 +2415,7 @@ def set_sector_and_percentage(
     sbi_sectors_dom_gen = args['sbi_sectors_dom_gen']
     sbi_sectors_dom_age = args['sbi_sectors_dom_age']
     trans_keyword_list = args['trans_keyword_list']
+    df_sectors = get_sector_df_from_cbs()
 
     if sector_dict_new is True:
         sector_vs_job_id_dict = make_job_id_v_sector_key_dict()
@@ -2752,7 +2761,7 @@ def post_cleanup(
     keywords_from_list=True,
     site_list=['Indeed', 'Glassdoor', 'LinkedIn'],
     job_id_save_enabled=False,
-    job_sector_save_enabled=True,
+    job_sector_save_enabled=False,
     keyword='',
     site='',
     keywords_list=None,
@@ -3083,7 +3092,7 @@ def make_job_id_v_sector_key_dict_helper(
     for path in df_jobs_paths:
         df_jobs = pd.read_csv(path)
 
-        for index, row in df_jobs.iterrows():
+        for index, row in tqdm.tqdm(df_jobs.iterrows()):
             if row['Search Keyword'] not in [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']:
                 search_keyword = str(row['Search Keyword'].strip().lower().replace("-Noon's MacBook Pro",'').strip().lower())
                 for w_keyword, r_keyword in keyword_trans_dict.items():
@@ -3125,7 +3134,7 @@ def make_job_id_v_genage_key_dict(
 
     # Get keywords and paths to df_jobs
     if site_from_list is True:
-        for site in site_list:
+        for site in tqdm.tqdm(site_list):
             if args['print_enabled'] is True:
                 print(f'Getting job ids for {site}.')
             df_jobs_paths = list((glob.glob(f'{scraped_data}/{site}/Data/*.csv')))
@@ -3149,18 +3158,11 @@ def make_job_id_v_genage_key_dict_helper(
     args=get_args(),
 ):
 
-    sbi_english_keyword_list = args['sbi_english_keyword_list']
-    sbi_english_keyword_dict = args['sbi_english_keyword_dict']
-    sbi_sectors_dict = args['sbi_sectors_dict']
-    sbi_sectors_dict_full = args['sbi_sectors_dict_full']
-    sbi_sectors_dom_gen = args['sbi_sectors_dom_gen']
-    sbi_sectors_dom_age = args['sbi_sectors_dom_age']
     trans_keyword_list = args['trans_keyword_list']
-    sector_vs_job_id_dict = make_job_id_v_sector_key_dict()
 
-    for path in df_jobs_paths:
+    for path in tqdm.tqdm(df_jobs_paths):
         df_jobs = pd.read_csv(path)
-        for index, row in df_jobs.iterrows():
+        for index, row in tqdm.tqdm(df_jobs.iterrows()):
 
             if row['Search Keyword'] not in [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']:
                 search_keyword = str(row['Search Keyword'].replace("-Noon's MacBook Pro",'').strip().lower())
