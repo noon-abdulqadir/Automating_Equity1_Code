@@ -387,16 +387,16 @@ try:
     from tensorflow.keras import preprocessing as kprocessing
     from textblob import TextBlob, Word
     from textblob.en.inflect import pluralize, singularize
-    from transformers import (
-        AutoConfig,
-        AutoModel,
-        AutoTokenizer,
-        BertConfig,
-        BertModel,
-        BertPreTrainedModel,
-        BertTokenizer,
-        TFBertModel,
-    )
+    # from transformers import (
+    #     AutoConfig,
+    #     AutoModel,
+    #     AutoTokenizer,
+    #     BertConfig,
+    #     BertModel,
+    #     BertPreTrainedModel,
+    #     BertTokenizer,
+    #     TFBertModel,
+    # )
     from transformers.trainer_pt_utils import get_parameter_names
     from webdriver_manager.chrome import ChromeDriverManager
 
