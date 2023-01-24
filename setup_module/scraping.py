@@ -2836,6 +2836,11 @@ def post_cleanup(
                 # elif site_from_list is False and keywords_from_list is False:
                 #     keyword_save(keyword, site, df_jobs, args=args)
 
+    for lst in df_jobs:
+        for df in lst:
+            if isinstance(df, DataFrame):
+                df = set_gender_age_sects_lang(df)
+
     if translate_keywords is True:
         trans_keyword_list = save_trans_keyword_list(trans_keyword_list)
 
