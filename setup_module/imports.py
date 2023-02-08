@@ -176,11 +176,13 @@ try:
     import torch
     import torch.nn as nn
     import tqdm
+
     # import tqdm.auto
     import transformers
     import urllib3
     import xgboost as xgb
     import xlsxwriter
+    import xorbits.pandas as xpd
 
     # from accelerate import Accelerator
     from bs4 import BeautifulSoup
@@ -242,7 +244,6 @@ try:
     from nltk.sentiment.vader import SentimentIntensityAnalyzer
     from nltk.stem import LancasterStemmer, PorterStemmer, SnowballStemmer
     from nltk.tokenize import WordPunctTokenizer
-    from numpy import arange, argmax, cumsum
     from pandas.api.types import is_numeric_dtype, is_object_dtype, is_string_dtype
     from plot_metric.functions import BinaryClassification
     from scipy import spatial, stats
@@ -387,6 +388,7 @@ try:
     from tensorflow.keras import preprocessing as kprocessing
     from textblob import TextBlob, Word
     from textblob.en.inflect import pluralize, singularize
+
     # from transformers import (
     #     AutoConfig,
     #     AutoModel,
@@ -402,6 +404,7 @@ try:
 
     # from whatthelang import WhatTheLang
     from xgboost import XGBClassifier
+    from xorbits.numpy import arange, argmax, cumsum
     from yellowbrick.text import TSNEVisualizer
 
 except ImportError as error:

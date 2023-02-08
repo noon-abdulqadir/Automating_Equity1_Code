@@ -2766,9 +2766,13 @@ def post_cleanup(
     site='',
     keywords_list=None,
     all_save_path = f'job_id_vs_all.json',
+    int_variable: str = 'Job ID',
+    str_variable: str = 'Job Description',
     args=get_args(),
     translator = Translator(),
     translate_keywords=True,
+    fix_na_enabled = True,
+    save_enabled=True
 ):
 
     print(
@@ -2836,24 +2840,26 @@ def post_cleanup(
                 # elif site_from_list is False and keywords_from_list is False:
                 #     keyword_save(keyword, site, df_jobs, args=args)
 
-    for lst in df_jobs:
-        for df in lst:
-            if isinstance(df, DataFrame):
-                df = set_gender_age_sects_lang(df)
+    if fix_na_enabled is True:
+        for lst in df_jobs:
+            for df in lst:
+                if isinstance(df, pd.DataFrame):
+                    df = set_gender_age_sects_lang(df, str_variable=str_variable)
 
     if translate_keywords is True:
         trans_keyword_list = save_trans_keyword_list(trans_keyword_list)
 
-    print(f'Saving df_jobs_post_cleanup.{args["file_save_format"]}')
-    with open(args["df_dir"] + f'df_jobs_post_cleanup.{args["file_save_format"]}', 'wb') as f:
-        pickle.dump(df_jobs, f, protocol=pickle.HIGHEST_PROTOCOL)
-    print(f'Done saving df_jobs_post_cleanup.{args["file_save_format"]}')
+    if save_enabled is True:
+        print(f'Saving df_jobs_post_cleanup.{args["file_save_format"]}')
+        with open(args["df_dir"] + f'df_jobs_post_cleanup.{args["file_save_format"]}', 'wb') as f:
+            pickle.dump(df_jobs, f, protocol=pickle.HIGHEST_PROTOCOL)
+        print(f'Done saving df_jobs_post_cleanup.{args["file_save_format"]}')
 
-    # print(f'Saving df_jobs_post_cleanup.{args["file_save_format_backup"]}')
-    # with open(df_dir + f'df_jobs_post_cleanup.{file_save_format_backup}', 'w', newline="") as f:
-    #     writer = csv.writer(f)
-    #     writer.writerows(df_jobs)
-    # print(f'Done saving df_jobs_post_cleanup.{args["file_save_format_backup"]}')
+        # print(f'Saving df_jobs_post_cleanup.{args["file_save_format_backup"]}')
+        # with open(df_dir + f'df_jobs_post_cleanup.{file_save_format_backup}', 'w', newline="") as f:
+        #     writer = csv.writer(f)
+        #     writer.writerows(df_jobs)
+        # print(f'Done saving df_jobs_post_cleanup.{args["file_save_format_backup"]}')
 
     if job_id_save_enabled is True:
         job_id_dict = make_job_id_v_genage_key_dict(site_from_list=False)
