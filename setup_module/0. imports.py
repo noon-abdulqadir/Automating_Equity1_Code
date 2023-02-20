@@ -176,7 +176,6 @@ try:
     import torch
     import torch.nn as nn
     import tqdm
-
     # import tqdm.auto
     import transformers
     import urllib3
@@ -188,36 +187,27 @@ try:
     from bs4 import BeautifulSoup
     from gensim import corpora, models
     from gensim.corpora import Dictionary
-    from gensim.models import (
-        CoherenceModel,
-        FastText,
-        KeyedVectors,
-        TfidfModel,
-        Word2Vec,
-    )
+    from gensim.models import (CoherenceModel, FastText, KeyedVectors,
+                               TfidfModel, Word2Vec)
     from gensim.models.doc2vec import Doc2Vec, TaggedDocument
     from gensim.models.phrases import ENGLISH_CONNECTOR_WORDS, Phraser, Phrases
-    from gensim.parsing.preprocessing import preprocess_string, remove_stopwords
-    from gensim.similarities import (
-        SoftCosineSimilarity,
-        SparseTermSimilarityMatrix,
-        WordEmbeddingSimilarityIndex,
-    )
+    from gensim.parsing.preprocessing import (preprocess_string,
+                                              remove_stopwords)
+    from gensim.similarities import (SoftCosineSimilarity,
+                                     SparseTermSimilarityMatrix,
+                                     WordEmbeddingSimilarityIndex)
     from gensim.test.utils import common_texts, datapath, get_tmpfile
     from gensim.utils import save_as_line_sentence, simple_preprocess
     from googletrans import Translator
-    from http_request_randomizer.requests.proxy.requestProxy import RequestProxy
+    from http_request_randomizer.requests.proxy.requestProxy import \
+        RequestProxy
     from icecream import ic
     from imblearn.combine import SMOTEENN, SMOTETomek
     from imblearn.datasets import make_imbalance
     from imblearn.metrics import classification_report_imbalanced
     from imblearn.over_sampling import SMOTE, RandomOverSampler
-    from imblearn.under_sampling import (
-        EditedNearestNeighbours,
-        NearMiss,
-        RandomUnderSampler,
-        TomekLinks,
-    )
+    from imblearn.under_sampling import (EditedNearestNeighbours, NearMiss,
+                                         RandomUnderSampler, TomekLinks)
     from IPython.core.interactiveshell import InteractiveShell
     from IPython.display import HTML, Image, Markdown, display
     from ipywidgets import FloatSlider, interactive
@@ -227,48 +217,33 @@ try:
     from langdetect import DetectorFactory, detect, detect_langs
     from matplotlib.animation import FuncAnimation
     from mpl_toolkits.mplot3d import Axes3D
-    from nltk import (
-        WordNetLemmatizer,
-        agreement,
-        bigrams,
-        pos_tag,
-        regexp_tokenize,
-        sent_tokenize,
-        trigrams,
-        word_tokenize,
-        wordpunct_tokenize,
-    )
+    from nltk import (WordNetLemmatizer, agreement, bigrams, pos_tag,
+                      regexp_tokenize, sent_tokenize, trigrams, word_tokenize,
+                      wordpunct_tokenize)
     from nltk.corpus import abc
     from nltk.corpus import stopwords as sw
     from nltk.corpus import wordnet as wn
     from nltk.sentiment.vader import SentimentIntensityAnalyzer
     from nltk.stem import LancasterStemmer, PorterStemmer, SnowballStemmer
     from nltk.tokenize import WordPunctTokenizer
-    from pandas.api.types import is_numeric_dtype, is_object_dtype, is_string_dtype
+    from pandas.api.types import (is_numeric_dtype, is_object_dtype,
+                                  is_string_dtype)
     from plot_metric.functions import BinaryClassification
     from scipy import spatial, stats
-    from scipy.stats import (
-        anderson,
-        chi2_contingency,
-        f_oneway,
-        mannwhitneyu,
-        normaltest,
-        shapiro,
-        stats,
-    )
+    from scipy.stats import (anderson, chi2_contingency, f_oneway,
+                             mannwhitneyu, normaltest, shapiro, stats)
     from selenium.common.exceptions import *
-    from selenium.common.exceptions import (
-        ElementClickInterceptedException,
-        ElementNotVisibleException,
-        NoAlertPresentException,
-        NoSuchElementException,
-        TimeoutException,
-    )
+    from selenium.common.exceptions import (ElementClickInterceptedException,
+                                            ElementNotVisibleException,
+                                            NoAlertPresentException,
+                                            NoSuchElementException,
+                                            TimeoutException)
     from selenium.webdriver import ActionChains, Chrome
     from selenium.webdriver.chrome.options import Options
     from selenium.webdriver.chrome.service import Service
     from selenium.webdriver.common.by import By
-    from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+    from selenium.webdriver.common.desired_capabilities import \
+        DesiredCapabilities
     from selenium.webdriver.common.keys import Keys
     from selenium.webdriver.support import expected_conditions as EC
     from selenium.webdriver.support.ui import Select, WebDriverWait
@@ -280,102 +255,59 @@ try:
     from sklearn.datasets import load_files
     from sklearn.decomposition import PCA, TruncatedSVD
     from sklearn.dummy import DummyClassifier
-    from sklearn.ensemble import (
-        AdaBoostClassifier,
-        BaggingClassifier,
-        BaggingRegressor,
-        ExtraTreesClassifier,
-        GradientBoostingClassifier,
-        RandomForestClassifier,
-        StackingClassifier,
-        StackingRegressor,
-        VotingClassifier,
-        VotingRegressor,
-    )
-    from sklearn.feature_extraction.text import (
-        CountVectorizer,
-        FeatureHasher,
-        TfidfVectorizer,
-    )
-    from sklearn.feature_selection import (
-        SelectFdr,
-        SelectFpr,
-        SelectFromModel,
-        SelectFwe,
-        SelectKBest,
-        SelectPercentile,
-        chi2,
-        f_classif,
-        f_regression,
-        mutual_info_classif,
-        mutual_info_regression,
-    )
+    from sklearn.ensemble import (AdaBoostClassifier, BaggingClassifier,
+                                  BaggingRegressor, ExtraTreesClassifier,
+                                  GradientBoostingClassifier,
+                                  RandomForestClassifier, StackingClassifier,
+                                  StackingRegressor, VotingClassifier,
+                                  VotingRegressor)
+    from sklearn.feature_extraction.text import (CountVectorizer,
+                                                 FeatureHasher,
+                                                 TfidfVectorizer)
+    from sklearn.feature_selection import (SelectFdr, SelectFpr,
+                                           SelectFromModel, SelectFwe,
+                                           SelectKBest, SelectPercentile, chi2,
+                                           f_classif, f_regression,
+                                           mutual_info_classif,
+                                           mutual_info_regression)
     from sklearn.impute import SimpleImputer
     from sklearn.kernel_ridge import KernelRidge
-    from sklearn.linear_model import (
-        LogisticRegression,
-        PassiveAggressiveClassifier,
-        Perceptron,
-        SGDClassifier,
-    )
+    from sklearn.linear_model import (LogisticRegression,
+                                      PassiveAggressiveClassifier, Perceptron,
+                                      SGDClassifier)
     from sklearn.manifold import TSNE
-    from sklearn.metrics import (
-        ConfusionMatrixDisplay,
-        accuracy_score,
-        balanced_accuracy_score,
-        brier_score_loss,
-        classification_report,
-        cohen_kappa_score,
-        confusion_matrix,
-        f1_score,
-        log_loss,
-        make_scorer,
-        matthews_corrcoef,
-        precision_recall_curve,
-        precision_score,
-        recall_score,
-        roc_auc_score,
-    )
+    from sklearn.metrics import (ConfusionMatrixDisplay, accuracy_score,
+                                 balanced_accuracy_score, brier_score_loss,
+                                 classification_report, cohen_kappa_score,
+                                 confusion_matrix, f1_score, log_loss,
+                                 make_scorer, matthews_corrcoef,
+                                 precision_recall_curve, precision_score,
+                                 recall_score, roc_auc_score)
     from sklearn.metrics.pairwise import cosine_similarity
-    from sklearn.model_selection import (
-        GridSearchCV,
-        KFold,
-        LeaveOneOut,
-        RandomizedSearchCV,
-        RepeatedStratifiedKFold,
-        ShuffleSplit,
-        StratifiedKFold,
-        StratifiedShuffleSplit,
-        cross_val_score,
-        cross_validate,
-        learning_curve,
-        train_test_split,
-    )
+    from sklearn.model_selection import (GridSearchCV, KFold, LeaveOneOut,
+                                         RandomizedSearchCV,
+                                         RepeatedStratifiedKFold, ShuffleSplit,
+                                         StratifiedKFold,
+                                         StratifiedShuffleSplit,
+                                         cross_val_score, cross_validate,
+                                         learning_curve, train_test_split)
     from sklearn.multiclass import OneVsOneClassifier, OneVsRestClassifier
     from sklearn.multioutput import MultiOutputClassifier
     from sklearn.naive_bayes import BernoulliNB, GaussianNB, MultinomialNB
     from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
     from sklearn.neural_network import MLPClassifier, MLPRegressor
     from sklearn.pipeline import FeatureUnion, Pipeline, make_pipeline
-    from sklearn.preprocessing import (
-        Binarizer,
-        FunctionTransformer,
-        LabelBinarizer,
-        LabelEncoder,
-        MinMaxScaler,
-        OneHotEncoder,
-        StandardScaler,
-        scale,
-    )
+    from sklearn.preprocessing import (Binarizer, FunctionTransformer,
+                                       LabelBinarizer, LabelEncoder,
+                                       MinMaxScaler, OneHotEncoder,
+                                       StandardScaler, scale)
     from sklearn.svm import SVC, LinearSVC
     from sklearn.tree import DecisionTreeClassifier
-    from sklearn.utils import check_consistent_length, check_random_state, check_X_y
+    from sklearn.utils import (check_consistent_length, check_random_state,
+                               check_X_y)
     from sklearn.utils.estimator_checks import check_estimator
-    from sklearn.utils.validation import (
-        check_is_fitted,
-        column_or_1d,
-        has_fit_parameter,
-    )
+    from sklearn.utils.validation import (check_is_fitted, column_or_1d,
+                                          has_fit_parameter)
     from statannotations.Annotator import Annotator
     from statsmodels.formula.api import ols
     from statsmodels.graphics.factorplots import interaction_plot
@@ -388,7 +320,6 @@ try:
     from tensorflow.keras import preprocessing as kprocessing
     from textblob import TextBlob, Word
     from textblob.en.inflect import pluralize, singularize
-
     # from transformers import (
     #     AutoConfig,
     #     AutoModel,
@@ -401,7 +332,6 @@ try:
     # )
     from transformers.trainer_pt_utils import get_parameter_names
     from webdriver_manager.chrome import ChromeDriverManager
-
     # from whatthelang import WhatTheLang
     from xgboost import XGBClassifier
 #     from xorbits.numpy import arange, argmax, cumsum
@@ -575,123 +505,124 @@ cat_list = [
 
 # %%
 keyword_trans_dict = {
-    'landbouw': 'agriculture', 
-    'manage drivers': 'transportation', 
-    'renting and other business support'; 'business support', 
-    'mijnbouw': 'mining', 
-    'bosbouw': 'forestry', 
-    'gas for': 'gas', 
-    'gas vooraad': 'gas', 
-    'productie': 'production', 
-    'sociologen': 'sociologist', 
-    'leraren van basisschool': 'primary school teacher', 
-    'ere leraren': 'honorary teacher', 
-    'other teacher': 'teacher', 
-    'andere leraren': 'teacher', 
-    'buyinging': 'buying', 
-    'accommodatie': 'accommodation', 
-    'vissen': 'fishing', 
-    'grooth': 'great', 
-    'opleiding':'education', 
-    'ingenieur': 'engineer', 
-    'engineers': 'engineer', 
-    'communicatie': 'communication', 
-    'auteur': 'author', 
-    'auteurs': 'author', 
-    'authors': 'author', 
-    'publieke administratie': 'public administration', 
-    'verkoop onroerend goed': 'selling real estate', 
-    'educational': 'education', 
-    'marketingmanager': 'marketing manager', 
-    'marketingmanagers': 'marketing manager', 
-    'food servin': 'food serving', 
-    'voedsel dienen': 'food serving', 
-    'etensservin': 'food serving', 
-    'sales': 'sale', 
-    'verkoop': 'sale', 
-    'sold': 'sale', 
-    'sell': 'sale', 
-    'uitverkoop': 'sale', 
-    'pedagoog': 'educationalist', 
-    'educationalists': 'educationalist', 
-    'educatie': 'education', 
-    'educator': 'education', 
-    'psycholoog': 'psychologist', 
-    'psychologists': 'psychologist', 
-    'logistieke manager': 'logistics manager', 
-    'logistieke managers': 'logistics manager', 
-    'logistic': 'logistics', 
-    'koop': 'buying', 
-    'buy': 'buying', 
-    'ere serviceactiviteiten': 'honorary service activity', 
-    'serviceactiviteiten': 'service activity', 
-    'directeur': 'director', 
-    'informatie': 'information', 
-    'serve accommodation': 'accommodation', 
-    'psychologen': 'psychologist', 
-    'linguïsten': 'linguist', 
-    'linguïst': 'linguist', 
-    'linguïst': 'linguist', 
-    'sales of real estate': 'selling real estate', 
-    'socioloog': 'sociologist', 
-    'opslag': 'storage', 
-    'educatief': 'education', 
-    'elektriciteit': 'electricity',  
-    'elektrotechnische ingenieur': 'electrical engineer', 
-    'elektrotechnische ingenieurs': 'electrical engineer', 
-    'ingenieurs': 'engineer', 
-    'ingenieur': 'engineer', 
-    'toepassings ontwikkelaar': 'application developer', 
-    'toepassings ontwikkelaars': 'application developer', 
-    'application developers': 'application developer', 
-    'water voorraad': 'water supply', 
-    'fysiotherapeuten': 'physiotherapist', 
-    'cultuur': 'culture', 
-    'career developmentsspecialist': 'career development specialist', 
-    'carrière ontwikkelingspecialisten': 'career development specialist', 
-    'carrière ontwikkelingspecialist': 'career development specialist', 
-    'ict-manager': 'ict manager', 
-    'ict-managers': 'ict manager', 
-    'ict managers': 'ict manager', 
-    'manager care institution': 'manager of healthcare institution', 
+    'landbouw': 'agriculture',
+    'manage drivers': 'transportation',
+    'renting and other business support': 'business support',
+    'mijnbouw': 'mining',
+    'bosbouw': 'forestry',
+    'gas for': 'gas',
+    'gas vooraad': 'gas',
+    'productie': 'production',
+    'sociologen': 'sociologist',
+    'leraren van basisschool': 'primary school teacher',
+    'ere leraren': 'honorary teacher',
+    'other teacher': 'teacher',
+    'andere leraren': 'teacher',
+    'buyinging': 'buying',
+    'accommodatie': 'accommodation',
+    'vissen': 'fishing',
+    'grooth': 'great',
+    'opleiding':'education',
+    'ingenieur': 'engineer',
+    'engineers': 'engineer',
+    'communicatie': 'communication',
+    'auteur': 'author',
+    'auteurs': 'author',
+    'authors': 'author',
+    'publieke administratie': 'public administration',
+    'verkoop onroerend goed': 'selling real estate',
+    'educational': 'education',
+    'marketingmanager': 'marketing manager',
+    'marketingmanagers': 'marketing manager',
+    'food servin': 'food serving',
+    'voedsel dienen': 'food serving',
+    'etensservin': 'food serving',
+    'sales': 'sale',
+    'verkoop': 'sale',
+    'sold': 'sale',
+    'sell': 'sale',
+    'uitverkoop': 'sale',
+    'pedagoog': 'educationalist',
+    'educationalists': 'educationalist',
+    'educatie': 'education',
+    'educator': 'education',
+    'psycholoog': 'psychologist',
+    'psychologists': 'psychologist',
+    'logistieke manager': 'logistics manager',
+    'logistieke managers': 'logistics manager',
+    'logistic': 'logistics',
+    'koop': 'buying',
+    'buy': 'buying',
+    'ere serviceactiviteiten': 'honorary service activity',
+    'serviceactiviteiten': 'service activity',
+    'directeur': 'director',
+    'informatie': 'information',
+    'serve accommodation': 'accommodation',
+    'psychologen': 'psychologist',
+    'linguïsten': 'linguist',
+    'linguïst': 'linguist',
+    'linguïst': 'linguist',
+    'sales of real estate': 'selling real estate',
+    'socioloog': 'sociologist',
+    'opslag': 'storage',
+    'educatief': 'education',
+    'elektriciteit': 'electricity',
+    'elektrotechnische ingenieur': 'electrical engineer',
+    'elektrotechnische ingenieurs': 'electrical engineer',
+    'ingenieurs': 'engineer',
+    'ingenieur': 'engineer',
+    'toepassings ontwikkelaar': 'application developer',
+    'toepassings ontwikkelaars': 'application developer',
+    'application developers': 'application developer',
+    'water voorraad': 'water supply',
+    'fysiotherapeuten': 'physiotherapist',
+    'cultuur': 'culture',
+    'career developmentsspecialist': 'career development specialist',
+    'carrière ontwikkelingspecialisten': 'career development specialist',
+    'carrière ontwikkelingspecialist': 'career development specialist',
+    'ict-manager': 'ict manager',
+    'ict-managers': 'ict manager',
+    'ict managers': 'ict manager',
+    'manager care institution': 'manager of healthcare institution',
     'managers care institution': 'manager of healthcare institution',
-    'manager healthcare institution': 'manager of healthcare institution', 
-    'managers healthcare institution': 'manager of healthcare institution', 
-    'manager of care institution': 'manager of healthcare institution', 
-    'managers of care institution': 'manager of healthcare institution', 
-    'manager healthcare institution': 'manager of healthcare institution', 
-    'managers healthcare institution': 'manager of healthcare institution', 
-    'managers of healthcare institution': 'manager of healthcare institution', 
-    'manager care institutions': 'manager of healthcare institution', 
+    'manager healthcare institution': 'manager of healthcare institution',
+    'managers healthcare institution': 'manager of healthcare institution',
+    'manager of care institution': 'manager of healthcare institution',
+    'managers of care institution': 'manager of healthcare institution',
+    'manager healthcare institution': 'manager of healthcare institution',
+    'managers healthcare institution': 'manager of healthcare institution',
+    'managers of healthcare institution': 'manager of healthcare institution',
+    'manager care institutions': 'manager of healthcare institution',
     'managers care institutions': 'manager of healthcare institution',
-    'manager healthcare institutions': 'manager of healthcare institution', 
-    'managers healthcare institutions': 'manager of healthcare institution', 
-    'manager of care institutions': 'manager of healthcare institution', 
-    'managers of care institutions': 'manager of healthcare institution', 
-    'manager healthcare institutions': 'manager of healthcare institution', 
-    'managers healthcare institutions': 'manager of healthcare institution', 
-    'managers of healthcare institutions': 'manager of healthcare institution', 
-    'forestrymanager of healthcare institution': 'manager of healthcare institution', 
-    'gezondheid en maatschappelijk werkactiviteit': 'healthcare', 
-    'doctors': 'doctor', 
-    'dokter': 'doctor', 
-    'dokters': 'doctor', 
-    'sociale werkzaamheden': 'social work', 
-    'sociaal werker': 'social work', 
-    'social work activities': 'social work activity', 
-    'sports': 'sport', 
-    'groothandel': 'wholesale', 
-    'andere serviceactiviteiten': 'other service activity', 
-    'specialized services manager': 'specialised services manager', 
-    'specialized business service': 'specialised business service', 
-    'specialized nurse': 'specialised nurse', 
-    'recreatie': 'recreation', 
-    'netwerk specialisten': 'network specialist', 
-    'netwerkspecialisten': 'network specialist', 
-    'adverse': 'staff', 
-    'bulletin': 'staff', 
+    'manager healthcare institutions': 'manager of healthcare institution',
+    'managers healthcare institutions': 'manager of healthcare institution',
+    'manager of care institutions': 'manager of healthcare institution',
+    'managers of care institutions': 'manager of healthcare institution',
+    'manager healthcare institutions': 'manager of healthcare institution',
+    'managers healthcare institutions': 'manager of healthcare institution',
+    'managers of healthcare institutions': 'manager of healthcare institution',
+    'forestrymanager of healthcare institution': 'manager of healthcare institution',
+    'gezondheid en maatschappelijk werkactiviteit': 'healthcare',
+    'doctors': 'doctor',
+    'dokter': 'doctor',
+    'dokters': 'doctor',
+    'sociale werkzaamheden': 'social work',
+    'sociaal werker': 'social work',
+    'social work activities': 'social work activity',
+    'sports': 'sport',
+    'groothandel': 'wholesale',
+    'andere serviceactiviteiten': 'other service activity',
+    'specialized services manager': 'specialised services manager',
+    'specialized business service': 'specialised business service',
+    'specialized nurse': 'specialised nurse',
+    'recreatie': 'recreation',
+    'netwerk specialisten': 'network specialist',
+    'netwerkspecialisten': 'network specialist',
+    'adverse': 'staff',
+    'bulletin': 'staff',
     'afvalbeheer': 'waste management'}
 
-# %%
-with open('/Users/nyxinsane/Documents/Work - UvA/Automating Equity/Study 1/Study1_Code/data/keyword_trans_dict.txt', 'w') as f:
-    json.dump(keyword_trans_dict, f)
+# # %%
+# with open(f'{code_dir}/scraped_data/CBS/Data/keyword_trans_dict.txt', 'w') as f:
+#     json.dump(keyword_trans_dict, f)
+
