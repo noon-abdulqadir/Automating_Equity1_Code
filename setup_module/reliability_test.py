@@ -61,8 +61,8 @@ sys.path.append(code_dir)
 
 # %%
 from setup_module.imports import *
-from setup_module.post_collection_processing import *
 from setup_module.scraping import *
+from setup_module.post_collection_processing import *
 
 warnings.filterwarnings('ignore', category=DeprecationWarning)
 
