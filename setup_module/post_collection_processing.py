@@ -225,6 +225,29 @@ def save_metadata(df_jobs, df_file_name, save_path, args=get_args()):
 
 
 # %%
+# Fix broken LinkedIn Files
+def fix_broken_linkedin_files(glob_path):
+    data_dict = {}
+    data_list = []
+
+    if glob_path.endswith('.json'):
+
+        with open(glob_path, encoding = 'utf-8') as csv_file_handler:
+            csv_reader = csv.DictReader(csv_file_handler)
+
+            for rows in csv_reader:
+                first_key = str(list(rows.keys())[0])
+                key = rows[first_key]
+                data_dict[key] = rows
+
+        for num in data_dict:
+            data_list.append(data_dict[num])
+
+        with open(glob_path, 'w', encoding = 'utf-8') as json_file_handler:
+            json_file_handler.write(json.dumps(data_list, indent = 4))
+
+
+# %%
 # Clean df and drop duplicates and -1 for job description
 def clean_df(
     df_jobs: pd.DataFrame,
