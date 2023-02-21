@@ -257,23 +257,25 @@ def clean_df(
     gender: str = 'Gender',
     age: str = 'Age',
     language: str = 'en',
+    nan_list = [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan'],
     reset=True,
     args=get_args(),
 ) -> pd.DataFrame:
 
     df_jobs.columns = df_jobs.columns.to_series().apply(lambda x: x.strip())
-    df_jobs.dropna(axis=0, how='all', inplace=True)
-    df_jobs.dropna(axis=1, how='all', inplace=True)
+    df_jobs.dropna(axis='index', how='all', inplace=True)
+    df_jobs.dropna(axis='columns', how='all', inplace=True)
     df_jobs.drop(
         df_jobs.columns[
             df_jobs.columns.str.contains(
                 'unnamed|index|level', regex=True, case=False, flags=re.I
             )
         ],
-        axis=1,
+        axis='columns',
         inplace=True,
+        errors='ignore',
     )
-    df_jobs[int_variable] = df_jobs[int_variable].apply(str)
+    df_jobs[int_variable] = df_jobs[int_variable].apply(lambda x: str(x).lower((strip())
 
     if reset is True:
         df_jobs = set_gender_age_sects_lang(df_jobs, str_variable=str_variable, id_dict_new=id_dict_new)
@@ -305,7 +307,11 @@ def clean_df(
     print('Detecting Language.')
     df_jobs = detect_language(df_jobs, str_variable)
     if 'Language' in df_jobs.columns:
-        df_jobs = df_jobs.loc[(df_jobs['Language'] == str(language))]
+        try:
+            df_jobs.drop(df_jobs.index[df_jobs['Language'] == str(language)], axis='index', inplace=True, errors='ignore')
+            
+        except:
+            df_jobs = df_jobs.loc[(df_jobs['Language'] == str(language))]
 
     if 'Search Keyword' in df_jobs.columns:
         for w_keyword, r_keyword in keyword_trans_dict.items():
@@ -535,7 +541,7 @@ def value_count_df_plot(which_df, main_cols, num_unique_values=100, filter_lt_pc
     which_df = pd.concat(all_cols_df)
     which_df['value'] = which_df['value'].fillna('null')
     which_df['feature_value'] = which_df['feature'] + "_" + which_df['value'].map(str)
-    which_df = which_df.drop(['value','feature'],axis=1)
+    which_df = which_df.drop(['value','feature'], axis='columns', errors='ignore')
     which_df = which_df[['feature_value','value_counts']]
     which_df = which_df.sort_values(by='value_counts',ascending=False)
 
@@ -1960,12 +1966,13 @@ def write_all_to_txt_helper(search_keyword, job_id, age, df_jobs, args=get_args(
     pathlib.Path(path_to_txt).mkdir(parents=True, exist_ok=True)
 
     df_jobs.drop(
-        [x for x in args['columns_drop_list'] if x in df_jobs.columns], axis=1, inplace=True,
+        [x for x in args['columns_drop_list'] if x in df_jobs.columns], axis='columns', inplace=True, errors='ignore'
     )
     df_jobs.drop(
         df_jobs.columns[df_jobs.columns.str.contains('Age', case=False)],
-        axis=1,
+        axis='columns',
         inplace=True,
+        errors='ignore',
     )
 
     for index, row in df_jobs.iterrows():
@@ -2242,8 +2249,9 @@ def open_and_clean_excel(
                         df_coder.columns[
                             df_coder.columns.str.contains('Coder Remarks', case=False)
                         ],
-                        axis=1,
+                        axis='columns',
                         inplace=True,
+                        errors='ignore',
                     )
                     df_coder['Job ID'].fillna(method='ffill', inplace=True)
                     for k, v in coders_dict.items():
