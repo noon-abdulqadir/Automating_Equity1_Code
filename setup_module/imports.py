@@ -36,9 +36,9 @@
 # %matplotlib notebook
 # %matplotlib inline
 # %%
-import importlib
 import os
 import sys
+import importlib
 from pathlib import Path
 
 mod = sys.modules[__name__]
