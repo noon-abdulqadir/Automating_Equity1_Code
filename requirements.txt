@@ -52,6 +52,7 @@ dill @ file:///home/conda/feedstock_root/build_artifacts/dill_1666603105584/work
 distlib @ file:///home/conda/feedstock_root/build_artifacts/distlib_1668356257807/work
 distributed @ file:///home/conda/feedstock_root/build_artifacts/distributed_1674878344345/work
 en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0-py3-none-any.whl
+en-core-web-trf @ https://github.com/explosion/spacy-models/releases/download/en_core_web_trf-3.5.0/en_core_web_trf-3.5.0-py3-none-any.whl
 entrypoints @ file:///home/conda/feedstock_root/build_artifacts/entrypoints_1643888246732/work
 et-xmlfile @ file:///home/conda/feedstock_root/build_artifacts/et_xmlfile_1674664118162/work
 exceptiongroup @ file:///home/conda/feedstock_root/build_artifacts/exceptiongroup_1671811474537/work
@@ -183,7 +184,7 @@ plotly @ file:///home/conda/feedstock_root/build_artifacts/plotly_1674528396558/
 plotnine @ file:///home/conda/feedstock_root/build_artifacts/plotnine_1665398702244/work
 ply==3.11
 pooch @ file:///home/conda/feedstock_root/build_artifacts/pooch_1643032624649/work
-pre-commit @ file:///Users/runner/miniforge3/conda-bld/pre-commit_1675715087996/work
+pre-commit @ file:///Users/runner/miniforge3/conda-bld/pre-commit_1677595498365/work
 preshed @ file:///Users/runner/miniforge3/conda-bld/preshed_1666991318984/work
 pretty-errors @ file:///home/conda/feedstock_root/build_artifacts/pretty_errors_1638034747243/work
 progressbar==2.5
@@ -199,6 +200,7 @@ pyasn1-modules==0.2.8
 pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1636257122734/work
 pydantic @ file:///Users/runner/miniforge3/conda-bld/pydantic_1673305678482/work
 Pygments @ file:///home/conda/feedstock_root/build_artifacts/pygments_1672682006896/work
+pygwalker @ file:///home/conda/feedstock_root/build_artifacts/pygwalker_1677699427146/work
 pylint @ file:///home/conda/feedstock_root/build_artifacts/pylint_1673294947923/work
 pynndescent @ file:///home/conda/feedstock_root/build_artifacts/pynndescent_1667326205155/work
 pyOpenSSL @ file:///home/conda/feedstock_root/build_artifacts/pyopenssl_1672659226110/work
@@ -242,8 +244,10 @@ sniffio @ file:///home/conda/feedstock_root/build_artifacts/sniffio_166205126622
 sortedcontainers @ file:///home/conda/feedstock_root/build_artifacts/sortedcontainers_1621217038088/work
 soupsieve @ file:///home/conda/feedstock_root/build_artifacts/soupsieve_1658207591808/work
 spacy @ file:///Users/runner/miniforge3/conda-bld/spacy_1674544556152/work
+spacy-alignments @ file:///Users/runner/miniforge3/conda-bld/spacy-alignments_1671544268553/work
 spacy-legacy @ file:///home/conda/feedstock_root/build_artifacts/spacy-legacy_1674550301837/work
 spacy-loggers @ file:///home/conda/feedstock_root/build_artifacts/spacy-loggers_1672303484730/work
+spacy-transformers==1.2.2
 specification-curve==0.3.1
 srsly @ file:///Users/runner/miniforge3/conda-bld/srsly_1666955508343/work
 stack-data @ file:///home/conda/feedstock_root/build_artifacts/stack_data_1669632077133/work
@@ -276,7 +280,7 @@ torchvision==0.14.1
 tornado @ file:///Users/runner/miniforge3/conda-bld/tornado_1666788685513/work
 tqdm @ file:///home/conda/feedstock_root/build_artifacts/tqdm_1662214488106/work
 traitlets @ file:///home/conda/feedstock_root/build_artifacts/traitlets_1675110562325/work
-transformers @ file:///home/conda/feedstock_root/build_artifacts/transformers_1676091074773/work
+transformers @ file:///home/conda/feedstock_root/build_artifacts/transformers_1667461945734/work
 trio @ file:///Users/runner/miniforge3/conda-bld/trio_1666780284196/work
 trio-websocket @ file:///home/conda/feedstock_root/build_artifacts/trio-websocket_1641849081899/work/dist
 typer @ file:///home/conda/feedstock_root/build_artifacts/typer_1667832226065/work

@@ -248,7 +248,7 @@ dependencies:
   - plotnine=0.10.1=pyhd8ed1ab_1
   - ply=3.11=py_1
   - pooch=1.6.0=pyhd8ed1ab_0
-  - pre-commit=3.0.4=py310hbe9552e_0
+  - pre-commit=3.1.1=py310hbe9552e_0
   - preshed=3.0.8=py310h0f1eb42_1
   - pretty_errors=1.2.25=pyhd8ed1ab_0
   - progressbar=2.5=py_0
@@ -265,6 +265,7 @@ dependencies:
   - pycparser=2.21=pyhd8ed1ab_0
   - pydantic=1.10.4=py310h8e9501a_1
   - pygments=2.14.0=pyhd8ed1ab_0
+  - pygwalker=0.1.4.6=pyhd8ed1ab_0
   - pylint=2.15.10=pyhd8ed1ab_0
   - pynndescent=0.5.8=pyh1a96a4e_0
   - pyopenssl=23.0.0=pyhd8ed1ab_0
@@ -315,6 +316,7 @@ dependencies:
   - sortedcontainers=2.4.0=pyhd8ed1ab_0
   - soupsieve=2.3.2.post1=pyhd8ed1ab_0
   - spacy=3.5.0=py310h629746b_0
+  - spacy-alignments=0.9.0=py310he8402e3_1
   - spacy-legacy=3.0.12=pyhd8ed1ab_0
   - spacy-loggers=1.0.4=pyhd8ed1ab_0
   - sqlite=3.40.0=h2229b38_0
@@ -342,7 +344,7 @@ dependencies:
   - tornado=6.2=py310h8e9501a_1
   - tqdm=4.64.1=pyhd8ed1ab_0
   - traitlets=5.9.0=pyhd8ed1ab_0
-  - transformers=4.26.1=pyhd8ed1ab_0
+  - transformers=4.24.0=pyhd8ed1ab_0
   - trio=0.22.0=py310hbe9552e_1
   - trio-websocket=0.9.2=pyhd8ed1ab_0
   - typer=0.7.0=pyhd8ed1ab_0
@@ -390,6 +392,7 @@ dependencies:
       - chardet==3.0.4
       - colorlover==0.3.0
       - en-core-web-sm==3.5.0
+      - en-core-web-trf==3.5.0
       - fake-useragent==1.1.1
       - flatbuffers==23.1.21
       - fqdn==1.5.1
@@ -425,6 +428,7 @@ dependencies:
       - sentence-transformers==2.2.2
       - sentencepiece==0.1.97
       - simpledorff==0.0.2
+      - spacy-transformers==1.2.2
       - specification-curve==0.3.1
       - sympy==1.11.1
       - tensorboard==2.11.2
