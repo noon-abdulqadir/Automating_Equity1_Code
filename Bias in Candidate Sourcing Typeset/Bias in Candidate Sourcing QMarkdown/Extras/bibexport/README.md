@@ -35,5 +35,3 @@ redirecting stdout to a file. E.g.
 or, when the filter is called in a one-off fashion
 
     pandoc --lua-filter=bibexport.lua article.md -o /dev/null
-    
-

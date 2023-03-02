@@ -13,7 +13,7 @@
     <category citation-format="note"/>
     <category field="generic-base"/>
     <summary>Estilo de citação em nota para as Humanidades tão próximo quanto possível das normas da ABNT (concebida originalmente apenas para autor-data).
-      Ainda em desenvolvimento. 
+      Ainda em desenvolvimento.
       Por enquanto, lida apenas com um conjunto limitado de tipos de referências - os que correspondem grosso modo aos conceitos da ABNT de:
       - monografias no todo: book thesis report motion_picture webpage;
       - monografias em parte: broadcast entry entry-dictionary entry-encyclopedia chapter paper-conference speech;
@@ -26,13 +26,13 @@
 
 
       Note and bibliography citation style for works in Humanities conforming as much as possible to Brazilian ABNT standard (originally designed only for author-date style).
-      Still under development. 
+      Still under development.
       For now, it only copes with a limited host of reference types - those which correspond broadly to the ABNT-defined concepts of:
       - monographs: book thesis report motion_picture webpage;
       - parts of monographs: broadcast entry entry-dictionary entry-encyclopedia chapter paper-conference speech;
       - parts of series: article article-magazine article-newspaper article-journal.
       Notes:
-      - Webpage is considered as a monograph available online only. 
+      - Webpage is considered as a monograph available online only.
         Information about context or original publication should be given in the "note" variable (the "extra" field in Zotero) and will be rendered as is.
       - Individual reference types may not conform exactly to ABNT standard, but are rendered as closest as possible.
       - Support to other reference types will be added eventually.</summary>

@@ -18,12 +18,12 @@
     </contributor>
     <category citation-format="author-date"/>
     <category field="generic-base"/>
-    <summary>Style following DIN 1505-2, for other media types on additional standards 
-      Hinweise zur Benutzung: 
-      * Zitieren von Gesetzen: 
-        - hier müssen manuell §, Abs und S. zur Seitenangabe beim Zitieren eingetragen werden 
-        - im Kurzbeleg wird der Kurztitel verwendet, dafür keine Autoren eintragen! 
-        - als Jahresangabe wird 'Datum des Inkrafttretens' herangezogen, Verwenden nur bei Verweis auf nicht z.Z. gültige Gesetze, z.B. (idF. v. 12.12.1972) 
+    <summary>Style following DIN 1505-2, for other media types on additional standards
+      Hinweise zur Benutzung:
+      * Zitieren von Gesetzen:
+        - hier müssen manuell §, Abs und S. zur Seitenangabe beim Zitieren eingetragen werden
+        - im Kurzbeleg wird der Kurztitel verwendet, dafür keine Autoren eintragen!
+        - als Jahresangabe wird 'Datum des Inkrafttretens' herangezogen, Verwenden nur bei Verweis auf nicht z.Z. gültige Gesetze, z.B. (idF. v. 12.12.1972)
        * Zitieren von Normen und Standards - nicht vollständig nach DIN 1505
         - Nutzen Sie den Typ 'Bericht' - als Abhilfe, da es keinen Typ 'Standard' gibt.
         - als Autor die Kurzbezeichnung inkl. Nummer und Jahr eingeben (z.B. VDI 2222-1997), Vorname leer, Jahr leer

@@ -6,7 +6,7 @@
 This [Lua filter][pandoc.lua-filters] for [Pandoc][pandoc] converts
 [LaTeX math][latex.math] to [MathJax][mathjax] generated
 [scalable vector graphics (SVG)][svg] for insertion into the output document
-in a standalone manner. 
+in a standalone manner.
 SVG output is in any of the [available MathJax fonts][mathjax.fonts].
 
 This is useful when a CSS paged media engine (such as [Prince XML][prince])
@@ -20,7 +20,7 @@ resulting in both absolute privacy and offline, standalone robustness.
 
 ## Version history
 
-- 2021-01-19: SVG caching 
+- 2021-01-19: SVG caching
 - 2021-01-16: Initial release
 
 

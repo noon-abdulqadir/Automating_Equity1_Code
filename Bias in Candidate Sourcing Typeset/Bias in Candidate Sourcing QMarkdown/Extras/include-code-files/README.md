@@ -54,4 +54,3 @@ location in the source file.
 An HTML can be produced with this command:
 
     pandoc --lua-filter=include-code-files.lua sample.md --output result.html
-

@@ -1044,7 +1044,7 @@ def get_sector_df_from_cbs(
     if save_enabled is True:
         df_sectors_all.to_csv(f'{data_save_dir}Sectors Output from script.csv', index=False)
         df_sectors_all.to_pickle(f'{data_save_dir}Sectors Output from script.pkl')
-        with pd.option_context("max_colwidth", 10000000000):
+        with pd.option_context('max_colwidth', 10000000000):
             df_sectors_all.to_latex(f'{data_save_dir}Sectors Output from script.tex', index=False, longtable=True, escape=True, multicolumn=True, multicolumn_format='c', position='H', caption='Sectoral Gender and Age Composition and Segregation, Keywords, Counts, and Percentages', label='Jobs Count per Sector (x 1000)')
         df_sectors_all.to_markdown(f'{data_save_dir}Sectors Output from script.md', index=True)
         save_sector_excel(df_sectors_all, data_save_dir)
@@ -1669,9 +1669,9 @@ def main_info(keyword: str, site: str, save_path: str = validate_path(f'{main_di
         keyword_url = ''
 
     keyword_file = '_'.join(keyword.lower().split(' '))
-    json_file_name = f'{site.lower()}_jobs_dict_{keyword_file.lower()}.json'.replace("-Noon's MacBook Pro", '').replace("_(excl", '')
-    df_file_name = f'{site.lower()}_jobs_df_{keyword_file.lower()}.{args["file_save_format_backup"]}'.replace("-Noon's MacBook Pro", '').replace("_(excl", '')
-    logs_file_name = f'{site.lower()}_jobs_logs_{keyword_file.lower()}.log'.replace("-Noon's MacBook Pro", '').replace("_(excl", '')
+    json_file_name = f'{site.lower()}_jobs_dict_{keyword_file.lower()}.json'.replace("-Noon's MacBook Pro", '').replace('_(excl', '')
+    df_file_name = f'{site.lower()}_jobs_df_{keyword_file.lower()}.{args["file_save_format_backup"]}'.replace("-Noon's MacBook Pro", '').replace('_(excl', '')
+    logs_file_name = f'{site.lower()}_jobs_logs_{keyword_file.lower()}.log'.replace("-Noon's MacBook Pro", '').replace('_(excl', '')
     filemode = 'a+' if is_non_zero_file(save_path + logs_file_name.lower()) is True else 'w+'
 
     return (
@@ -1868,4 +1868,3 @@ def id_check(
             job_present = False
 
     return jobs, job_present
-

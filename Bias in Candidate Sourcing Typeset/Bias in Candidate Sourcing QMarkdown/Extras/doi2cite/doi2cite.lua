@@ -85,7 +85,7 @@ function Cite(c)
           else
             error("Unable to open file: "..bibpath)
           end
-        end                
+        end
       end
     end
   end
@@ -125,10 +125,10 @@ function get_paths_from(metadata)
       end
     end
   end
-  return filepaths    
+  return filepaths
 end
 
--- Extract filename and dirname from a given a path 
+-- Extract filename and dirname from a given a path
 function split_path(filepath)
   local delim = nil
   local len = filepath:len()
@@ -146,7 +146,7 @@ function split_path(filepath)
   return {filename = filename, dirname = dirname}
 end
 
--- Find bibname in a given filepath list and return the filepath if found 
+-- Find bibname in a given filepath list and return the filepath if found
 function find_filepath(filename, filepaths)
   for path, _ in pairs(filepaths) do
     local filename = split_path(path)["filename"]
@@ -185,8 +185,8 @@ end
 -- Replace entry key of "entry_string" to newkey
 function replace_entrykey(entry_string, newkey)
   entry_string = entry_string:gsub('(@%w+{).-(,)', '%1'..newkey..'%2')
-  return entry_string    
-end 
+  return entry_string
+end
 
 -- Make hashmap which key = DOI, value = bibtex entry string
 function get_doi_entry_map(bibtex_string)

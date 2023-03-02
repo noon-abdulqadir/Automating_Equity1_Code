@@ -18,7 +18,7 @@ KNOWN ISSUES AND WORKAROUNDS
 
 - In-text citation for an edited book with no authors will not include "ed." or "eds" (can be added as Prefix manually). This is a current CSL limitation.
 - For a thesis, the Type field will need to contain "PhD thesis", "MSc thesis", or similar.
-- Certain item types (source types) may exhibit minor differences from the style guide due to specific field limitations of your reference manager. Use alternative item types if required (e.g. Report). 
+- Certain item types (source types) may exhibit minor differences from the style guide due to specific field limitations of your reference manager. Use alternative item types if required (e.g. Report).
 
 TO DO
 

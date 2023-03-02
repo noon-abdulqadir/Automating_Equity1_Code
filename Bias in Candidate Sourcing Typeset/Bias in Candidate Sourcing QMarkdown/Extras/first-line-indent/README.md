@@ -229,4 +229,3 @@ Contributing
 ------------
 
 PRs welcome.
-

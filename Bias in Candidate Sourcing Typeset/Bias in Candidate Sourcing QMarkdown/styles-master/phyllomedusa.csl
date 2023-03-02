@@ -208,7 +208,7 @@
                 <group prefix=" " delimiter=" ">
                   <text variable="container-title" font-style="italic"/>
                   <choose>
-                    <!--we use DOIs only for articles w/o page numbers conforming to published articles. 
+                    <!--we use DOIs only for articles w/o page numbers conforming to published articles.
                         No period after DOI -->
                     <if variable="DOI">
                       <group>

@@ -183,7 +183,7 @@
     <layout>
       <group delimiter=". ">
         <!--
- <text variable="type" prefix="[DEBUG: " suffix="]"/> 
+ <text variable="type" prefix="[DEBUG: " suffix="]"/>
 -->
         <text macro="author"/>
         <text macro="year-date" prefix=" (" suffix=")"/>
@@ -220,7 +220,7 @@
           </else-if>
           <else>
             <!--
- <else-if type="article-journal article-newspaper thesis webpage" match="any">broadcast personal_communication 
+ <else-if type="article-journal article-newspaper thesis webpage" match="any">broadcast personal_communication
 -->
             <text macro="title"/>
             <text macro="edition"/>

@@ -36,9 +36,9 @@
 # %matplotlib notebook
 # %matplotlib inline
 # %%
+import importlib
 import os
 import sys
-import importlib
 from pathlib import Path
 
 mod = sys.modules[__name__]
@@ -158,6 +158,7 @@ try:
     import progressbar
     import pyarrow as pa
     import pyarrow.parquet as pq
+    import pygwalker as pyg
     import requests
     import researchpy as rp
     import scipy
@@ -625,4 +626,3 @@ keyword_trans_dict = {
 # # %%
 # with open(f'{code_dir}/scraped_data/CBS/Data/keyword_trans_dict.txt', 'w') as f:
 #     json.dump(keyword_trans_dict, f)
-

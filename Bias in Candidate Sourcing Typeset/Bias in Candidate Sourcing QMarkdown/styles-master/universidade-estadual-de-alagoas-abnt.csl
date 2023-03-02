@@ -98,7 +98,7 @@
       <et-al font-style="normal"/>
     </names>
   </macro>
-  <!--A macro 'author' mostra os nomes dos autores na bibliografia, SOBRENOME, INICIAIS PRENOMES, sendo as iniciais 
+  <!--A macro 'author' mostra os nomes dos autores na bibliografia, SOBRENOME, INICIAIS PRENOMES, sendo as iniciais
 separadas por ponto. Quando houver mais de três autores, somente o primeiro será exibido e no lugar dos outros
 aparecera a expessão 'et al.'. Na regra da ABNT essa expressão deve aparecer em fonte normal -->
   <macro name="author">
@@ -156,7 +156,7 @@ do autor. Na regra da ABNT o sobrenome deve aparecer com todas as letras em caix
       <date-part name="year"/>
     </date>
   </macro>
-  <!--A macro 'title' mostra o título principal do arquivo. Em todos os tipos ele aparecerá em negrito logo após os nomes dos autores, 
+  <!--A macro 'title' mostra o título principal do arquivo. Em todos os tipos ele aparecerá em negrito logo após os nomes dos autores,
 exceto em arquivos do tipo 'artigo de jornal, artigo de revista, artigo de periódico', nesses arquivos eles irão aparecer em fonte normal -->
   <macro name="title">
     <choose>

@@ -2,14 +2,14 @@
 <style xmlns="http://purl.org/net/xbiblio/csl" class="note" version="1.0" demote-non-dropping-particle="sort-only" default-locale="fr-FR">
   <!--
 
-Feuille de style CSL 
-à destination du logiciel Zotero 
+Feuille de style CSL
+à destination du logiciel Zotero
 comportant les instructions de formatage des références bibliographiques et de la bibliographie de littérature secondaire définies par la revue Vita Latina [http://www.persee.fr/collection/vita ; http://vitalatina.upv.univ-montp3.fr/]
 réalisée par Louis Autin (doctorant - Université Grenoble Alpes ; Universität Osnabrück)
 
 Remarques :
 	- pour les thèses, Zotero ne permet pas de spécifier le directeur ; la feuille de style laisse donc cette indication à compléter manuellement, entre crochets ;
-	- à ce stade, le langage CSL ne permet pas de définir certains éléments de formatage, tels que la police, la taille de la police ou l'alignement de texte (ainsi, forcer la bibliographie à être justifiée). Ces éléments doivent être mis en place manuellement. 
+	- à ce stade, le langage CSL ne permet pas de définir certains éléments de formatage, tels que la police, la taille de la police ou l'alignement de texte (ainsi, forcer la bibliographie à être justifiée). Ces éléments doivent être mis en place manuellement.
  -->
   <!-- INFORMATIONS RELATIVES A LA FEUILLE DE STYLE -->
   <info>

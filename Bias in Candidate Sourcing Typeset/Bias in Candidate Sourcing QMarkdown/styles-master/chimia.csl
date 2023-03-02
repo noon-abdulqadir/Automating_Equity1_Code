@@ -280,7 +280,7 @@
             <text macro="year-date"/>
           </group>
         </else-if>
-        <!-- anything else: 
+        <!-- anything else:
           article-magazine
           article-newspaper
           broadcast
@@ -292,7 +292,7 @@
           map
           musical_score
           pamphlet
-          post          
+          post
         -->
         <else>
           <text macro="author" suffix=", "/>

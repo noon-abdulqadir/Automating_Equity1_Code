@@ -26,4 +26,3 @@ title: My Long Book
 wordcount: process-anyway
 ---
 ```
-

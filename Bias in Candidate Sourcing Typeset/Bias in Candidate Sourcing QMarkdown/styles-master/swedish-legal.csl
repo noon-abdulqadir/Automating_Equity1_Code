@@ -299,7 +299,7 @@
     </layout>
   </bibliography>
 </style>
-<!-- 
+<!--
   Att göra:
   Om en proposition föregås av ett prefix, ska inte första bokstaven vara versal. (går det ens?)
   Kan man för makrot issued-full-date, få månaden återgiven med inledande versal om det saknas full datumangivelse.

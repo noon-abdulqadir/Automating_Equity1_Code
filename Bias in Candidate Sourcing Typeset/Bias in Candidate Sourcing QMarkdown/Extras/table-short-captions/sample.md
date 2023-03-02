@@ -5,7 +5,7 @@ lot: true
 
 These tests are written so that if **bold font** appears in the LOT, something is wrong.
 
-The tests are split into two: expected uses, and non-standard uses/errors.  
+The tests are split into two: expected uses, and non-standard uses/errors.
 The non-standard uses are presented in this document for troubleshooting purposes, and to ensure the filter doesn't crash in corner cases.
 
 # Standard usage

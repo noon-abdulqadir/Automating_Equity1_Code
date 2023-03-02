@@ -18,7 +18,7 @@
     <summary>Tyndale Bulletin format with full notes and bibliography</summary>
     <updated>2022-03-04T14:17:21+00:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
-    <!-- Tyndale Bulletin style differs from SBLHS2 only rarely (§4.1). The departures are that Tyndale Bulletin 
+    <!-- Tyndale Bulletin style differs from SBLHS2 only rarely (§4.1). The departures are that Tyndale Bulletin
       1) insists that DOIs be included where available (§§11.1, 11.3.7) and
       2) uses British-style quotation mark conventions (§§8.1, 11.1, 11.6.6-11.3.8). -->
   </info>

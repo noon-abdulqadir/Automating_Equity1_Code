@@ -34,7 +34,7 @@ same as the accessible URL.
 
 # YAML header
 The file **name** of the auto-generated bibliography file **MUST** be
-`__from_DOI.bib`, but the **place** of the file can be changed (e.g. 
+`__from_DOI.bib`, but the **place** of the file can be changed (e.g.
 `'./refs/__from_DOI.bib'` or `'refs\\__from_DOI.bib'` for Windows). Yo
 u can designate the filepath in the document yaml header. The yaml key
  is `bibliography`, which is also used by --citeproc.
@@ -49,7 +49,7 @@ bibliography:
 ---
 
 # Introduction
-The Laemmli system is one of the most widely used gel systems for the 
+The Laemmli system is one of the most widely used gel systems for the
 separation of proteins.[@LAEMMLI_1970] By the way, Einstein is genius.
 [@https://doi.org/10.1002/andp.19053220607; @doi.org/10.1002/andp.1905
 3220806; @doi:10.1002/andp.19053221004]

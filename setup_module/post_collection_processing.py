@@ -275,7 +275,7 @@ def clean_df(
         inplace=True,
         errors='ignore',
     )
-    df_jobs[int_variable] = df_jobs[int_variable].apply(lambda x: str(x).lower((strip())
+    df_jobs[int_variable] = df_jobs[int_variable].apply(lambda x: str(x).lower().strip())
 
     if reset is True:
         df_jobs = set_gender_age_sects_lang(df_jobs, str_variable=str_variable, id_dict_new=id_dict_new)
@@ -309,7 +309,7 @@ def clean_df(
     if 'Language' in df_jobs.columns:
         try:
             df_jobs.drop(df_jobs.index[df_jobs['Language'] == str(language)], axis='index', inplace=True, errors='ignore')
-            
+
         except:
             df_jobs = df_jobs.loc[(df_jobs['Language'] == str(language))]
 
@@ -1726,10 +1726,11 @@ def sent_tokenize_and_save_df(search_keyword, job_id, age, df_jobs, args=get_arg
                 )
             sentence_dict = {}
             for index, row in df_jobs.iterrows():
-                pattern = r'[\n\r]+|(?<=[a-z]\.)(?=\s*[A-Z])|(?<=[a-z])(?=[A-Z])'
+                pattern = r'[\n]+|[,]{2,}|[|]{2,}|[\n\r]+|(?<=[a-z]\.)(?=\s*[A-Z])|(?=\:+[A-Z])'
+
                 # sentence_list = []
                 if row.loc['Language'] == str(args['language']):
-                    sentence_list = [re.split(pattern, sent) for sent in list(sent_tokenize(row['Job Description']))]
+#                     sentence_list = [re.split(pattern, sent) for sent in list(sent_tokenize(row['Job Description']))]
                     sentence_list = [re.split(pattern, sent) for sent in list(nlp(row['Job Description']).sents)]
                     sentence_dict[str(row.loc['Job ID'])] = list(sentence_list)
                     sentence_dict['Search Keyword'] = row['Search Keyword']

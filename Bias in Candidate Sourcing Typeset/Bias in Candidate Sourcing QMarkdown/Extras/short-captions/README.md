@@ -11,13 +11,13 @@ one is desired.
 
 # Usage
 
-Where you would have a figure in, say, markdown as 
+Where you would have a figure in, say, markdown as
 
-    ![The caption](foo.png ) 
+    ![The caption](foo.png )
 
-You can now specify the figure as 
+You can now specify the figure as
 
-    ![The long caption](foo.png){short-caption="a short caption"} 
+    ![The long caption](foo.png){short-caption="a short caption"}
 
 If the document metadata includes `lof:true`, then the List of Figures
 will use the short caption. This is particularly useful for students
@@ -28,7 +28,7 @@ lengthy.
     pandoc --lua-filter=short-captions.lua article.md -o article.tex
 
     pandoc --lua-filter=short-captions.lua article.md -o article.pdf
-    
+
 
 
 # Example

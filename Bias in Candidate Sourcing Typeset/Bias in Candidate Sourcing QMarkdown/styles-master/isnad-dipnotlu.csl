@@ -58,7 +58,7 @@
 	Databese			webpage
 	Software			book (with version number)
 	Patent				patent
-	Socail media		webpage (social media title as container-title)	
+	Socail media		webpage (social media title as container-title)
 	Movie				motion_picture (with genre)
 	TV broadcast		broadcast
 	Video record		motion_picture (without genre)

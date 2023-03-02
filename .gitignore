@@ -193,5 +193,6 @@ data/*
 setup_module/WebDriver/
 setup_module/apa.mplstyle-main/
 Bias in Candidate Sourcing LaTeX/
+Bias in Candidate Sourcing Typeset/
 
 /.luarc.json

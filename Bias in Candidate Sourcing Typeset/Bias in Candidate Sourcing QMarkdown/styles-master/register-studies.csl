@@ -899,7 +899,7 @@
                 </if>
               </choose>
             </else-if>
-            <!-- Only year: article-journal chapter entry entry-dictionary entry-encyclopedia dataset figure graphic motion_picture manuscript map musical_score paper-conference [published] patent report review review-book song 
+            <!-- Only year: article-journal chapter entry entry-dictionary entry-encyclopedia dataset figure graphic motion_picture manuscript map musical_score paper-conference [published] patent report review review-book song
              -->
           </choose>
         </group>
@@ -1336,7 +1336,7 @@
         <group prefix="(" suffix=")">
           <choose>
             <if variable="references">
-              <!-- This provides the option for more elaborate description 
+              <!-- This provides the option for more elaborate description
                    of publication history, such as full "reprinted" references
                    (example 26) or retracted references -->
               <text variable="references"/>

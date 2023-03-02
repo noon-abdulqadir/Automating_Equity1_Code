@@ -32,7 +32,7 @@ Take the following example YAML block:
 
 ``` yaml
 ---
-title: Affiliation Blocks Example 
+title: Affiliation Blocks Example
 author:
   - Jane Doe:
       institute:

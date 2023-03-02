@@ -74,7 +74,7 @@ quot-lang: de-AT
 ```
 
 **Note:** Only the language and the country tags of RFC 5646 are supported.
-For example, "it-CH" (i.e., Italian as spoken in Switzerland) is fine, 
+For example, "it-CH" (i.e., Italian as spoken in Switzerland) is fine,
 but "it-756" (also Italian as spoken in Switzerland) will return the quotation
 marks for "it" (i.e., Italian as spoken in general).
 
@@ -84,7 +84,7 @@ If *quot-marks* is set, *quot-lang* is ignored.
 ## lang
 
 The format of *lang* is the same as for *quot-lang*. If *quot-marks*
-or *quot-lang* is set, *lang* is ignored. 
+or *quot-lang* is set, *lang* is ignored.
 
 For example:
 
@@ -120,7 +120,7 @@ lang: abc-XYZ
 quotations are nodes in that tree. However, **pandoc-quotes.lua** replaces
 those nodes with their content, adding proper quotation marks. That is,
 **pandoc-quotes.lua** pushes quotations from the syntax of a document's
-representation into its semantics. That being so, you should *not* 
+representation into its semantics. That being so, you should *not*
 use **pandoc-quotes.lua** with output formats that represent quotes
 syntactically (e.g., HTML, LaTeX, ConTexT). Moroever, filters running after
 **pandoc-quotes** won't recognise quotes. So, it should be the last or

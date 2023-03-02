@@ -19,12 +19,12 @@ bibliographies must be defined via a separate field of the scheme
 The placement of bibliographies is controlled via special divs.
 
     # References
-    
+
     ::: {#refs_main}
     :::
-    
+
     # Software
-    
+
     ::: {#refs_software}
     :::
 

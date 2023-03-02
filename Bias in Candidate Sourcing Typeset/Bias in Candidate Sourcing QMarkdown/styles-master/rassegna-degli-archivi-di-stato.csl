@@ -14,15 +14,15 @@
     <category field="humanities"/>
     <issn>0037-2781</issn>
     <summary>Italian General Archives Direction ("Direzione generale degli Archivi", DGA) style used in "Rassegna degli Archivi di Stato" and all other publications of the Italian State archives. Based on the "Civiltà Italiana" style. For manuscripts, use the book type in Zotero, for archive documents, the manuscript type. Short titles of journal will be shown in the citations whenever possible; to avoid this, leave the short title field blank. The indication of an unabridged reprint (chapter I, § 6) can be achieved by writing the information in the date field.
-    This stile will not handle: 
-    the use of "e" instead of "-" to separate two authors because one of them has a "-" in the surname (chapter I, § 1 c); 
-    the citation of prefaces (I, 3); 
-    the books without a printer's or publisher's name (I, 5), you will have to manually enter "s.e." as needed; 
+    This stile will not handle:
+    the use of "e" instead of "-" to separate two authors because one of them has a "-" in the surname (chapter I, § 1 c);
+    the citation of prefaces (I, 3);
+    the books without a printer's or publisher's name (I, 5), you will have to manually enter "s.e." as needed;
     multiple citations with Id. or Ead. in place of the name (II, 2). See https://forums.zotero.org/discussion/4785/check-for-identical-author-editor ;
-    multiple citations from the same collection of essays (II, 1 b);  
-    extracts, supplements and journals' monographic issues (III, 5-7); 
-    translations (IV); 
-    citations of the acts of the Italian parliament (VIII). 
+    multiple citations from the same collection of essays (II, 1 b);
+    extracts, supplements and journals' monographic issues (III, 5-7);
+    translations (IV);
+    citations of the acts of the Italian parliament (VIII).
     Regarding archive documents, the citation of the sender's and recipient's name (4 b) can be obtained by abusing the page field, while citations with document's name before the archive's name cannot be achieved.</summary>
     <published>2021-06-27T14:00:00+01:00</published>
     <updated>2021-06-27T14:00:00+01:00</updated>
@@ -283,7 +283,7 @@
   </macro>
   <macro name="volume-book">
     <group delimiter=" ">
-      <!-- per avere i numeri romani in maiuscoletto 
+      <!-- per avere i numeri romani in maiuscoletto
 	   <text variable="volume" font-variant="small-caps" text-case="lowercase"/>
 	   -->
       <number variable="volume" form="roman" text-case="uppercase"/>

@@ -72,7 +72,7 @@
       </term>
     </terms>
   </locale>
-  <!--A macro 'container-contribuitor' e responsavel por mostrar os nomes dos editores, serao apresentados SOBRENOME, INICIAIS PRENOMES 
+  <!--A macro 'container-contribuitor' e responsavel por mostrar os nomes dos editores, serao apresentados SOBRENOME, INICIAIS PRENOMES
 tendo as inicias separadas por ponto.-->
   <macro name="container-contributors">
     <choose>
@@ -113,7 +113,7 @@ tendo as inicias separadas por ponto. -->
       </name>
     </names>
   </macro>
-  <!--A macro 'author' e responsavel por mostrar os nomes dos autores na bibliografia, serao no formato SOBRENOME, INICIAIS PRENOMES, tendo 
+  <!--A macro 'author' e responsavel por mostrar os nomes dos autores na bibliografia, serao no formato SOBRENOME, INICIAIS PRENOMES, tendo
 as inicias separadas por ponto. Quando houver mais de tres autores, somente o primeiro sera mostrado e no lugar dos outros
 aparecera a expess o 'et. al.'. Na regra da ABNT essa expressao deve aparecer em fonte normal-->
   <macro name="author">

@@ -71,7 +71,7 @@
       </term>
     </terms>
   </locale>
-  <!--A macro 'container-contribuitor' e responsavel por mostrar os nomes dos editores, serao apresentados SOBRENOME, INICIAIS PRENOMES 
+  <!--A macro 'container-contribuitor' e responsavel por mostrar os nomes dos editores, serao apresentados SOBRENOME, INICIAIS PRENOMES
       tendo as inicias separadas por ponto.-->
   <macro name="container-contributors">
     <choose>
@@ -115,7 +115,7 @@
       <et-al font-style="italic"/>
     </names>
   </macro>
-  <!--A macro 'author' e responsavel por mostrar os nomes dos autores na bibliografia, serao no formato SOBRENOME, INICIAIS PRENOMES, tendo 
+  <!--A macro 'author' e responsavel por mostrar os nomes dos autores na bibliografia, serao no formato SOBRENOME, INICIAIS PRENOMES, tendo
       as inicias separadas por ponto. Quando houver mais de tres autores, somente o primeiro sera mostrado e no lugar dos outros
       aparecera a expess o 'et. al.'. Na regra da ABNT essa expressao deve aparecer em fonte normal, mas o IPEA utiliza ela em italico.-->
   <macro name="author">
@@ -225,7 +225,7 @@
     </choose>
   </macro>
   <!--A macro 'event' sera utilizada em arquivos do tipo Evento/Conferencia. Ela e responsavel por mostrar o nome da conferencia, que tera formatacao
-      em caixa alta. Utiliza-se antes do nome da conferencia a expressao "In". Segundo a regra da ABNT ela deve ser em fonte normal, mas o IPEA 
+      em caixa alta. Utiliza-se antes do nome da conferencia a expressao "In". Segundo a regra da ABNT ela deve ser em fonte normal, mas o IPEA
       a ulitiliza em italico-->
   <macro name="event">
     <choose>

@@ -214,7 +214,7 @@
           <label variable="volume" form="short" plural="contextual"/>
         </if>
       </choose>
-      <!-- per avere i numeri romani in maiuscoletto: 
+      <!-- per avere i numeri romani in maiuscoletto:
       <text variable="volume" font-variant="small-caps" text-case="lowercase"/>
       -->
       <text variable="volume"/>

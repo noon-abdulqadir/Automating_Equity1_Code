@@ -107,7 +107,7 @@
     <layout delimiter="; ">
       <choose>
         <!-- Journal article
-             Style: <authors italic>, <journalname short> <journal-year>, <first-page>, <locator/cited page(s)>    
+             Style: <authors italic>, <journalname short> <journal-year>, <first-page>, <locator/cited page(s)>
         -->
         <if type="article-journal">
           <group delimiter=", ">
@@ -136,16 +136,16 @@
         <!-- Legal commentary or handbook should be of publication type "entry-encyclopedia"
         - The term "Bearbeiter" (author of a certain chapter) in the following examples should be added by you and is not governed by this stylesheet
         - examples:
-          - 
+          -
           - Heinrichs in Palandt, BGB, 73. Aufl. 2014, § 164 Rn. 9
-        
+
         Style:
         - if container-title (=Zotero.encyclopediaTitle) is NOT set: <editor non-italic>, <title short>, [<edition>. Aufl.] <year>, <locator/cited page(s)>
         -.- i.e. Bearbeiter in Palandt, BGB, 73. Aufl. 2014, § 164 Rn. 8 (where you should add "Bearbeiter in " yourself)
         - else <container-title>, <edition>. Aufl. <year>, <locator/cited page(s)>
         -.- i.e. Bearbeiter, in: BeckTKG, 4. Auflage 2013, ... (where you should add "Bearbeiter in " yourself)
-        
-        if there is at least one series-editor (CSL.collection-editor) set: <collection-editor>, [<edition>. Aufl. ]<year>, <locator/cited page(s)> 
+
+        if there is at least one series-editor (CSL.collection-editor) set: <collection-editor>, [<edition>. Aufl. ]<year>, <locator/cited page(s)>
         -.- i.e. Bearbeiter in Palandt, BGB, 73. Aufl. 2014, ... (where you should add "Bearbeiter in " yourself)
         -->
         <else-if type="entry-encyclopedia">
@@ -173,7 +173,7 @@
           <text macro="firstpage-locator" prefix=", "/>
         </else-if>
         <!-- Legal case
-        Style:  <court>, <type of decision> v. <date-decided> <en-dash> <docketnumber>[, <journal> <journal-year>, <first-page>[, <locator]] [ <en-dash> <case name>]  
+        Style:  <court>, <type of decision> v. <date-decided> <en-dash> <docketnumber>[, <journal> <journal-year>, <first-page>[, <locator]] [ <en-dash> <case name>]
         example: BGH, Urt. v. 1.4.2004 &#8211; I ZR 317/01, CR 2004, 388, 398 &#8211; Schöner Wetten
         -->
         <else-if type="legal_case" match="any">

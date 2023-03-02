@@ -52,7 +52,7 @@
 As macros são responsaveis por captar a informação e organizar as informações captadas dos campos do Mendeley
 ex:
 <macro name="number"><text variable="number"/></macro>
-Os campos são reconhecidos por variaveis e são usadas pela chamada da função macro 
+Os campos são reconhecidos por variaveis e são usadas pela chamada da função macro
 ex: <text macro="title>
 
 Dentro da tag citation são organizadas as citações dentro Mendeley.

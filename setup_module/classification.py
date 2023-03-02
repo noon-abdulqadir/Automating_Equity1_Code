@@ -72,7 +72,7 @@ def get_new_data(cleanup_return_enabled=True, main_from_file=True, args=get_args
     if main_from_file is False:
         df_jobs = post_cleanup(keywords_from_list=True, site_from_list=True)
     elif main_from_file is True:
-        with open(args["df_dir"] + f'df_jobs_post_cleanup.{args["file_save_format"]}', 'rb') as f:
+        with open(args['df_dir'] + f'df_jobs_post_cleanup.{args["file_save_format"]}', 'rb') as f:
             df_jobs = pickle.load(f)
 
     df_sentence = split_to_sentences(df_jobs)
@@ -242,8 +242,9 @@ def open_and_clean_unlabeled_excel(
                             'Coder Remarks', case=False
                         )
                     ],
-                    axis=1,
+                    axis='columns',
                     inplace=True,
+                    errors='ignore',
                 )
                 df_jobs_unlabeled_full = open_and_clean_unlabeled_excel_helper(df_jobs_unlabeled_full)
                 df_unlabeled_list.append(df_jobs_unlabeled_full)
@@ -346,7 +347,7 @@ def custom_tokenizer(row, stemming_enabled, lemmatization_enabled, numbers_clean
     tokens = [
                 stem_lem(str(unicodedata.normalize('NFKD', word).encode('ascii', 'ignore').decode('utf-8', 'ignore')),
                 stemming_enabled=stemming_enabled, lemmatization_enabled=lemmatization_enabled)
-                for word in simple_preprocess(re.sub(pattern[str(numbers_cleaned)], ' ', row.lower()), deacc=True)
+                for word in simple_preprocess(re.sub(pattern[str(numbers_cleaned)], ' ', row.strip().lower()), deacc=True)
                 if (word not in stop_words) and (word.isalpha())
             ]
     if return_tokens is True:
@@ -496,7 +497,7 @@ def word2vec_embeddings(sentences, w2v_vocab, w2v_model, size=300):
 
     sentences = [word for word in sentences if word in w2v_vocab]
 
-    return np.mean(w2v_model.wv[sentences], axis=0) if sentences else np.zeros(size)
+    return np.mean(w2v_model.wv[sentences], axis='index') if sentences else np.zeros(size)
 
 
 # %%
@@ -559,7 +560,7 @@ def word2vec_embeddings(sentences, w2v_vocab, w2v_model, size=300):
 
 #     sentences = [word for word in sentences if word in glove_vocab]
 
-#     return np.mean(w2v_model.wv[sentences], axis=0) if sentences else np.zeros(size)
+#     return np.mean(w2v_model.wv[sentences], axis='index') if sentences else np.zeros(size)
 
 
 # %%
@@ -623,7 +624,7 @@ def fasttext_embeddings(sentences, ft_vocab, ft_model, size=300):
 
     sentences = [word for word in sentences if word in ft_vocab]
 
-    return np.mean(ft_model.wv[sentences], axis=0) if sentences else np.zeros(size)
+    return np.mean(ft_model.wv[sentences], axis='index') if sentences else np.zeros(size)
 
 
 # %%
@@ -767,7 +768,12 @@ def simple_preprocess_df(
                                     df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].progress_apply(lambda x: ast.literal_eval(str(x)))
 
                         if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
-                            df_jobs_to_be_processed.drop(['Unnamed: 0'], axis=1, inplace=True)
+                            df_jobs_to_be_processed.drop(
+                                ['Unnamed: 0'],
+                                axis='columns',
+                                inplace=True,
+                                errors='ignore',
+                            )
 
                 # Remove stopwords
                 if preprocessing_enabled is True:
@@ -807,7 +813,7 @@ def simple_preprocess_df(
                             df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].progress_apply(lambda x: ast.literal_eval(str(x)))
 
                 if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
-                    df_jobs_to_be_processed.drop(['Unnamed: 0'], axis=1, inplace=True)
+                    df_jobs_to_be_processed.drop(['Unnamed: 0'], axis='columns', inplace=True, errors='ignore')
 
             # Tokenize on Ngrams
             if n_grams_enabled is True:
@@ -837,7 +843,7 @@ def simple_preprocess_df(
                             df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].progress_apply(lambda x: ast.literal_eval(str(x)))
 
                 if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
-                    df_jobs_to_be_processed.drop(['Unnamed: 0'], axis=1, inplace=True)
+                    df_jobs_to_be_processed.drop(['Unnamed: 0'], axis='columns', inplace=True, errors='ignore')
 
                 # Gensim
                 bigram_transformer, trigram_transformer, df_jobs_to_be_processed['2grams_gensim'], df_jobs_to_be_processed['3grams_gensim'] = get_gensim_n_grams(df_jobs_to_be_processed['1grams_all'])
@@ -867,7 +873,7 @@ def simple_preprocess_df(
                             df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].progress_apply(lambda x: ast.literal_eval(str(x)))
 
                 if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
-                    df_jobs_to_be_processed.drop(['Unnamed: 0'], axis=1, inplace=True)
+                    df_jobs_to_be_processed.drop(['Unnamed: 0'], axis='columns', inplace=True, errors='ignore')
 
                 # Get absolute word frequencies
                 for embedding_library, n_gram_number in itertools.product(embedding_libraries_list, n_grams_list):
@@ -901,7 +907,7 @@ def simple_preprocess_df(
                         df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].progress_apply(lambda x: ast.literal_eval(str(x)))
 
             if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
-                df_jobs_to_be_processed.drop(['Unnamed: 0'], axis=1, inplace=True)
+                df_jobs_to_be_processed.drop(['Unnamed: 0'], axis='columns', inplace=True, errors='ignore')
 
             # Get embeddings
             for embedding_library, n_gram_number in itertools.product(embedding_libraries_list, n_grams_list):
@@ -963,10 +969,10 @@ def simple_preprocess_df(
                     df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].progress_apply(lambda x: ast.literal_eval(str(x)))
 
         if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
-            df_jobs_to_be_processed.drop(['Unnamed: 0'], axis=1, inplace=True)
+            df_jobs_to_be_processed.drop(['Unnamed: 0'], axis='columns', inplace=True, errors='ignore')
 
     if drop_cols_enabled is True:
-        df_jobs_to_be_processed.drop(['Gender', 'Age'], axis=1, inplace=True)
+        df_jobs_to_be_processed.drop(['Gender', 'Age'], axis='columns', inplace=True, errors='ignore')
 
     if args['save_enabled'] is True:
 
@@ -1004,7 +1010,7 @@ def get_and_viz_df_dict(dataframes, df_loc, args=get_args()):
 #             if (str(col) != str(columns))
 #             and (str(text_col) != str(columns))
 #         ],
-#         axis=1,
+#         axis='columns',
 #     )
 
 #     df_jobs = df_jobs_labeled.dropna(subset=[col, text_col], how='any')
@@ -1152,7 +1158,7 @@ def evaluate_prediction(
         print(f'Confusion matrix:\n{cm}')
         print('(row=expected, col=predicted)')
 
-        cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+        cm_normalized = cm.astype('float') / cm.sum(axis='columns')[:, np.newaxis]
         plot_confusion_matrix(
             df_jobs_labeled, col, cm_normalized, my_tags, title + ' Normalized'
         )
@@ -1557,7 +1563,7 @@ def optimization(
 #                 continue
 
 #         M = np.array(M)
-#         v = M.sum(axis=0)
+#         v = M.sum(axis='index')
 #         if type(v) != np.ndarray:
 #             return np.zeros(300)
 
@@ -1703,4 +1709,3 @@ def optimization(
 #     return batch_losses, torch.cat(outputs)
 
 # %%
-

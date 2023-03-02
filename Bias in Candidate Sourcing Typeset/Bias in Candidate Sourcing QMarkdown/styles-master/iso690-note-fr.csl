@@ -253,7 +253,7 @@ It is not always possible to get this information from Zotero data once they are
 
 CSL definition for medium field:
 'medium description (e.g. "CD", "DVD", etc.)'
-medium field is used in those CSL types: 
+medium field is used in those CSL types:
     graphic         (mapped against artwork:artworkMedium (medium))
     song            (mapped against podcast:audioFileType (medium))
     song            (mapped against audioRecording:audioRecordingFormat (medium))
@@ -266,7 +266,7 @@ medium field is used in those CSL types:
 
 CSL definition for genre field:
 'class, type or genre of the item (e.g. "adventure" for an adventure movie, "PhD dissertation" for a PhD thesis)'
-genre field is used in those CSL types: 
+genre field is used in those CSL types:
     post-weblog             (mapped against blogPost:websiteType (type))
     book                    (mapped against computerProgram:programmingLanguage)
     motion_picture          (mapped against film:genre (type))
