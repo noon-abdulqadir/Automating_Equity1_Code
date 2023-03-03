@@ -347,7 +347,8 @@ def custom_tokenizer(row, stemming_enabled, lemmatization_enabled, numbers_clean
     tokens = [
                 stem_lem(str(unicodedata.normalize('NFKD', word).encode('ascii', 'ignore').decode('utf-8', 'ignore')),
                 stemming_enabled=stemming_enabled, lemmatization_enabled=lemmatization_enabled)
-                for word in simple_preprocess(re.sub(pattern[str(numbers_cleaned)], ' ', row.strip().lower()), deacc=True)
+                for word in preprocess_documents(re.sub(pattern[str(numbers_cleaned)], ' ', row.strip().lower()))
+#                 for word in simple_preprocess(re.sub(pattern[str(numbers_cleaned)], ' ', row.strip().lower()), deacc=True)
                 if (word not in stop_words) and (word.isalpha())
             ]
     if return_tokens is True:

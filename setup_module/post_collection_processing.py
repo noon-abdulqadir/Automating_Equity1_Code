@@ -540,7 +540,7 @@ def value_count_df_plot(which_df, main_cols, num_unique_values=100, filter_lt_pc
     #append column values to end of column
     which_df = pd.concat(all_cols_df)
     which_df['value'] = which_df['value'].fillna('null')
-    which_df['feature_value'] = which_df['feature'] + "_" + which_df['value'].map(str)
+    which_df['feature_value'] = which_df['feature'] + '_' + which_df['value'].map(str)
     which_df = which_df.drop(['value','feature'], axis='columns', errors='ignore')
     which_df = which_df[['feature_value','value_counts']]
     which_df = which_df.sort_values(by='value_counts',ascending=False)
@@ -920,7 +920,7 @@ def save_df(
             print(f'Saving {keyword.lower()} jobs df of length {len(df_jobs.index)} to csv as {df_file_name.lower()} in location {save_path}')
 
         df_jobs.to_csv(save_path + df_file_name, mode='w', sep=',', header=True, index=True)
-        df_jobs.to_csv(save_path + df_file_name.split(args["file_save_format_backup"])[0]+'txt', mode='w', sep=',', header=True, index=True)
+        df_jobs.to_csv(save_path + df_file_name.split(args['file_save_format_backup'])[0]+'txt', mode='w', sep=',', header=True, index=True)
 
         if (not df_jobs.empty) and (len(df_jobs != 0)):
             try:
@@ -963,7 +963,7 @@ def site_loop(site, site_list, site_from_list, args, df_list_from_site=None):
 def site_save(site, df_jobs, args, chunk_size = 1024 * 1024):
     if args['save_enabled'] is True:
         print(f'Saving df_{site}_all_jobs.{args["file_save_format"]}')
-        with open(args["df_dir"] + f'df_{site}_all_jobs.{args["file_save_format"]}', 'wb') as f:
+        with open(args['df_dir'] + f'df_{site}_all_jobs.{args["file_save_format"]}', 'wb') as f:
             pickle.dump(df_jobs, f, protocol=pickle.HIGHEST_PROTOCOL)
         print(f'Done saving df_{site}_all_jobs.{args["file_save_format"]}')
 
@@ -1098,7 +1098,7 @@ def post_cleanup(
 
     if save_enabled is True:
         print(f'Saving df_jobs_post_cleanup.{args["file_save_format"]}')
-        with open(args["df_dir"] + f'df_jobs_post_cleanup.{args["file_save_format"]}', 'wb') as f:
+        with open(args['df_dir'] + f'df_jobs_post_cleanup.{args["file_save_format"]}', 'wb') as f:
             pickle.dump(df_jobs, f, protocol=pickle.HIGHEST_PROTOCOL)
         print(f'Done saving df_jobs_post_cleanup.{args["file_save_format"]}')
 
@@ -1731,7 +1731,12 @@ def sent_tokenize_and_save_df(search_keyword, job_id, age, df_jobs, args=get_arg
                 # sentence_list = []
                 if row.loc['Language'] == str(args['language']):
 #                     sentence_list = [re.split(pattern, sent) for sent in list(sent_tokenize(row['Job Description']))]
-                    sentence_list = [re.split(pattern, sent) for sent in list(nlp(row['Job Description']).sents)]
+                    sentence_list = [
+                        sent
+                        for sentence in list(nlp(row['Job Description']).sents)
+                        for sent in re.split(pattern, sentence)
+                        if len(sent) != 0
+                    ]
                     sentence_dict[str(row.loc['Job ID'])] = list(sentence_list)
                     sentence_dict['Search Keyword'] = row['Search Keyword']
                     sentence_dict['Gender'] = row['Gender']
