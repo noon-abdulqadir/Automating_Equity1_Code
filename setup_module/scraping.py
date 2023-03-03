@@ -673,7 +673,7 @@ def get_sbi_sectors_list(
     df_sbi_sectors = df_sbi_sectors.loc[df_sbi_sectors['Level'] == 1]
     df_sbi_sectors.drop(columns=['Level', 'Parent', 'This item includes', 'This item also includes', 'Rulings', 'This item excludes', 'Reference to ISIC Rev. 4'], inplace=True)
 
-    df_sectors_all = pd.read_pickle(f'{data_save_dir}Sectors Output from script.pkl')[[('SBI Sector Titles'), ('Gender'), ('Age')]].droplevel('Categories', axis=1)[[('SBI Sector Titles', 'Code'), ('SBI Sector Titles', 'Sector Name'), ('SBI Sector Titles', 'Keywords'), ('Gender', 'Dominant Category'), ('Age', 'Dominant Category')]].droplevel('Variables', axis=1)
+    df_sectors_all = pd.read_pickle(f'{data_save_dir}Sectors Output from script.pkl')[[('SBI Sector Titles'), ('Gender'), ('Age')]].droplevel('Categories', axis='columns')[[('SBI Sector Titles', 'Code'), ('SBI Sector Titles', 'Sector Name'), ('SBI Sector Titles', 'Keywords'), ('Gender', 'Dominant Category'), ('Age', 'Dominant Category')]].droplevel('Variables', axis='columns')
     df_sectors_all.columns = ['Code', 'Sector Name', 'Keywords', 'Gender Dominant Category', 'Age Dominant Category']
     df_sbi_sectors = df_sbi_sectors.merge(df_sectors_all, how='inner', on='Code')
     df_sbi_sectors.rename(columns = {'Sector Name': 'Sector_Name', 'Keywords': 'Used_Sector_Keywords', 'Gender Dominant Category': 'Gender_Dominant_Category', 'Age Dominant Category': 'Age_Dominant_Category'}, inplace=True)

@@ -283,32 +283,45 @@ def clean_df(
     subset_list=[int_variable, str_variable, gender, age]
     print('Cleaning DF')
     df_jobs.drop_duplicates(
-        subset=subset_list,
+        subset=[str_variable],
         keep='first',
         inplace=True,
         ignore_index=True,
     )
 
-    df_jobs = df_jobs.loc[
-        (
-            df_jobs[str_variable]
-            .swifter.progress_bar(args['print_enabled'])
-            .progress_bar(args['print_enabled'])
-            .apply(lambda x: isinstance(x, str))
-        )
-        & (df_jobs[str_variable] != -1)
-        & (df_jobs[str_variable] != '-1')
-        & (df_jobs[str_variable] != None)
-        & (df_jobs[str_variable] != 'None')
-        & (df_jobs[str_variable] != np.nan)
-        & (df_jobs[str_variable] != 'nan')
-    ]
+#     df_jobs = df_jobs.loc[
+#         (
+#             df_jobs[str_variable]
+#             .swifter.progress_bar(args['print_enabled'])
+#             .progress_bar(args['print_enabled'])
+#             .apply(lambda x: isinstance(x, str))
+#         )
+#         & (df_jobs[str_variable] != -1)
+#         & (df_jobs[str_variable] != '-1')
+#         & (df_jobs[str_variable] != None)
+#         & (df_jobs[str_variable] != 'None')
+#         & (df_jobs[str_variable] != np.nan)
+#         & (df_jobs[str_variable] != 'nan')
+#     ]
+
+    df_jobs.drop(
+        df_jobs[
+            (df_jobs[str_variable].isin(nan_list)) |
+            (df_jobs[str_variable].isnull()) |
+            (df_jobs[str_variable].isna())
+        ].index,
+        axis='index',
+        inplace=True,
+        errors='ignore'
+
+    )
+
 
     print('Detecting Language.')
     df_jobs = detect_language(df_jobs, str_variable)
     if 'Language' in df_jobs.columns:
         try:
-            df_jobs.drop(df_jobs.index[df_jobs['Language'] == str(language)], axis='index', inplace=True, errors='ignore')
+            df_jobs.drop(df_jobs.index[df_jobs['Language'] != str(language)], axis='index', inplace=True, errors='ignore')
 
         except:
             df_jobs = df_jobs.loc[(df_jobs['Language'] == str(language))]
