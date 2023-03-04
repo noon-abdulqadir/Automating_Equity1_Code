@@ -509,6 +509,7 @@ keyword_trans_dict = {
     'landbouw': 'agriculture',
     'manage drivers': 'transportation',
     'renting and other business support': 'business support',
+    'other business support': 'business support',
     'mijnbouw': 'mining',
     'bosbouw': 'forestry',
     'gas for': 'gas',
@@ -612,6 +613,7 @@ keyword_trans_dict = {
     'social work activities': 'social work activity',
     'sports': 'sport',
     'groothandel': 'wholesale',
+    'wholesale and retail': 'wholesale',
     'andere serviceactiviteiten': 'other service activity',
     'specialized services manager': 'specialised services manager',
     'specialized business service': 'specialised business service',
@@ -621,8 +623,10 @@ keyword_trans_dict = {
     'netwerkspecialisten': 'network specialist',
     'adverse': 'staff',
     'bulletin': 'staff',
+    'other service activity': 'staff',
     'afvalbeheer': 'waste management'}
 
-# # %%
-# with open(f'{code_dir}/scraped_data/CBS/Data/keyword_trans_dict.txt', 'w') as f:
-#     json.dump(keyword_trans_dict, f)
+
+# %%
+with open(f'{code_dir}/scraped_data/CBS/Data/keyword_trans_dict.txt', 'w') as f:
+    json.dump(keyword_trans_dict, f)
