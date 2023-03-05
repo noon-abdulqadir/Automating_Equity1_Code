@@ -106,7 +106,7 @@ def create_metadata(args=get_args()):
         columns[4]: {
             'type': 'str',
             'description': 'age categorization of job based on Standard Industrial Classifications (SBI2008; 2018)',
-            'example': 'Older Worker',
+            'example': 'Older',
         },  # Age
         columns[5]: {
             'type': 'str',
@@ -398,6 +398,7 @@ def categorize_df_gender_age(
     return df
 
 
+
 # %%
 # Function to dummy code gender and age
 def dummy_code_df_gender_age(df, print_info=False, args=get_args()):
@@ -412,14 +413,14 @@ def dummy_code_df_gender_age(df, print_info=False, args=get_args()):
     df.loc[df['Gender'] != 'Male', ['Gender_Male']] = 0
 
     # Age Recode
-    df.loc[df['Age'] == 'Older Worker', ['Age_Older']] = 1
-    df.loc[df['Age'] != 'Older Worker', ['Age_Older']] = 0
+    df.loc[df['Age'] == 'Older', ['Age_Older']] = 1
+    df.loc[df['Age'] != 'Older', ['Age_Older']] = 0
 
     df.loc[df['Age'] == 'Mixed Age', ['Age_Mixed']] = 1
     df.loc[df['Age'] != 'Mixed Age', ['Age_Mixed']] = 0
 
-    df.loc[df['Age'] == 'Younger Worker', ['Age_Younger']] = 1
-    df.loc[df['Age'] != 'Younger Worker', ['Age_Younger']] = 0
+    df.loc[df['Age'] == 'Young', ['Age_Younger']] = 1
+    df.loc[df['Age'] != 'Young', ['Age_Younger']] = 0
 
     # Gender Recode
     df.loc[df['Gender'] == 'Female', ['Gender_Num']] = 1
@@ -427,9 +428,9 @@ def dummy_code_df_gender_age(df, print_info=False, args=get_args()):
     df.loc[df['Gender'] == 'Male', ['Gender_Num']] = 3
 
     # Age Recode
-    df.loc[df['Age'] == 'Older Worker', ['Age_Num']] = 1
+    df.loc[df['Age'] == 'Older', ['Age_Num']] = 1
     df.loc[df['Age'] == 'Mixed Age', ['Age_Num']] = 2
-    df.loc[df['Age'] == 'Younger Worker', ['Age_Num']] = 3
+    df.loc[df['Age'] == 'Young', ['Age_Num']] = 3
 
     if print_info is True:
         df_gender_age_info(df)
@@ -783,7 +784,7 @@ def set_gender_age(
         for sect, cat in sbi_sectors_dom_age.items():
             df_jobs.loc[df_jobs['Sector'].astype(str).apply(lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Age'] = str(cat)
     except Exception as e:
-        for cat in ['Mixed Age', 'Younger Worker', 'Older Worker']:
+        for cat in ['Mixed Age', 'Young', 'Older']:
             df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin([str(i) for i in job_id_dict[cat]]), 'Age'] = str(cat)
 
     print('Categorizing gender and age')
@@ -1461,11 +1462,11 @@ def make_job_id_v_genage_key_dict_helper(
                         job_id_dict['Mixed Gender'].append(str(row['Job ID']))
 
                     if search_keyword == str(old_keyword).strip().lower().replace("-Noon's MacBook Pro",''):
-                        job_id_dict['Older Worker'].append(str(row['Job ID']))
+                        job_id_dict['Older'].append(str(row['Job ID']))
                     else:
                         job_id_dict['Mixed Age'].append(str(row['Job ID']))
                     if search_keyword == str(young_keyword).strip().lower().replace("-Noon's MacBook Pro",''):
-                        job_id_dict['Younger Worker'].append(str(row['Job ID']))
+                        job_id_dict['Young'].append(str(row['Job ID']))
                     else:
                         job_id_dict['Mixed Age'].append(str(row['Job ID']))
 

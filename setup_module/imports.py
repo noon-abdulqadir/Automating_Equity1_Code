@@ -484,7 +484,7 @@ ivs_age_dummy_num = [
         'Age_Younger',
     ]
 order_gender = ['Female', 'Mixed Gender', 'Male']
-order_age = ['Older Worker', 'Mixed Age', 'Younger Worker']
+order_age = ['Older', 'Mixed Age', 'Younger']
 ivs_dict = {'Gender': order_gender, 'Age': order_age}
 
 dvs = {}
@@ -628,5 +628,5 @@ keyword_trans_dict = {
 
 
 # %%
-with open(f'{code_dir}/scraped_data/CBS/Data/keyword_trans_dict.txt', 'w') as f:
-    json.dump(keyword_trans_dict, f)
+# with open(f'{code_dir}/scraped_data/CBS/Data/keyword_trans_dict.txt', 'w') as f:
+#     json.dump(keyword_trans_dict, f)

@@ -277,7 +277,7 @@ final_competence_classifier = 'VotingClassifier'
 # Setting Variables
 # ivs = ['Gender', 'Age']
 # order_gender = ['Female', 'Mixed Gender', 'Male']
-# order_age = ['Older Worker', 'Mixed Age', 'Younger Worker']
+# order_age = ['Older Worker', 'Mixed Age', 'Younger']
 # ivs_dict = {'Gender': order_gender, 'Age': order_age}
 
 # dvs = {}

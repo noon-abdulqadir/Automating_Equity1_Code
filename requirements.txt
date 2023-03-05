@@ -248,6 +248,7 @@ spacy-alignments @ file:///Users/runner/miniforge3/conda-bld/spacy-alignments_16
 spacy-legacy @ file:///home/conda/feedstock_root/build_artifacts/spacy-legacy_1674550301837/work
 spacy-loggers @ file:///home/conda/feedstock_root/build_artifacts/spacy-loggers_1672303484730/work
 spacy-transformers==1.2.2
+spacytextblob==4.0.0
 specification-curve==0.3.1
 srsly @ file:///Users/runner/miniforge3/conda-bld/srsly_1666955508343/work
 stack-data @ file:///home/conda/feedstock_root/build_artifacts/stack_data_1669632077133/work

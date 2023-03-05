@@ -1146,7 +1146,7 @@ def read_and_save_keyword_list(
         )
         print(f'Older worker keywords total {len(keywords_oldvocc)}:\n{keywords_oldvocc}\n')
         print(
-            f'Younger worker keywords total {len(keywords_youngvocc)}:\n{keywords_youngvocc}\n'
+            f'Younger keywords total {len(keywords_youngvocc)}:\n{keywords_youngvocc}\n'
         )
         print(
             f'Mixed age keywords total {len(keywords_agevsect)}:\n{keywords_agevsect}\n'
@@ -1496,7 +1496,7 @@ def get_keyword_list(
             f'Older worker keywords total {len(keywords_oldvocc)}:\n{keywords_oldvocc}\n'
         )
         print(
-            f'Younger worker keywords total {len(keywords_youngvocc)}:\n{keywords_youngvocc}\n'
+            f'Younger keywords total {len(keywords_youngvocc)}:\n{keywords_youngvocc}\n'
         )
         print(f'Age Segregated total {len(keywords_agevsect)}:\n{keywords_agevsect}\n')
         print(f'Mixed Age total {len(mixed_age)}:\n{mixed_age}\n')
@@ -1555,7 +1555,7 @@ def get_args(
         'Collection Date',
     ],
     gender_sectors=['Female', 'Male', 'Mixed Gender'],
-    age_sectors=['Older Worker', 'Younger Worker', 'Mixed Age'],
+    age_sectors=['Older Worker', 'Younger', 'Mixed Age'],
     format_props={
         'border': 0,
         'font_name': 'Times New Roman',
