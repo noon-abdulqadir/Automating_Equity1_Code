@@ -372,27 +372,27 @@ def get_gensim_n_grams(unigram_sentences):
 
 
 # %%
-def get_corpus_and_dictionary(row, n_gram_number, embedding_library):
+def get_corpus_and_dictionary(row, ngram_number, embedding_library):
 
-    row[f'{n_gram_number}grams_{embedding_library}_dictionary'] = corpora.Dictionary(
+    row[f'{ngram_number}grams_{embedding_library}_dictionary'] = corpora.Dictionary(
         [
-            row[f'{n_gram_number}grams_{embedding_library}']
+            row[f'{ngram_number}grams_{embedding_library}']
         ]
     )
 
-    row[f'{n_gram_number}grams_{embedding_library}_corpus'] = [
-        row[f'{n_gram_number}grams_{embedding_library}_dictionary'].doc2bow(
-            row[f'{n_gram_number}grams_{embedding_library}']
+    row[f'{ngram_number}grams_{embedding_library}_corpus'] = [
+        row[f'{ngram_number}grams_{embedding_library}_dictionary'].doc2bow(
+            row[f'{ngram_number}grams_{embedding_library}']
         )
     ]
 
-    row[f'{n_gram_number}grams_{embedding_library}_tfidf'] = TfidfModel(
-        row[f'{n_gram_number}grams_{embedding_library}_corpus']
+    row[f'{ngram_number}grams_{embedding_library}_tfidf'] = TfidfModel(
+        row[f'{ngram_number}grams_{embedding_library}_corpus']
     )
 
-    # row[f'{n_gram_number}grams_{embedding_library}_tfidf_matrix'] = [
-    #     row[f'{n_gram_number}grams_{embedding_library}_tfidf'][doc]
-    #     for doc in row[f'{n_gram_number}grams_{embedding_library}_corpus']
+    # row[f'{ngram_number}grams_{embedding_library}_tfidf_matrix'] = [
+    #     row[f'{ngram_number}grams_{embedding_library}_tfidf'][doc]
+    #     for doc in row[f'{ngram_number}grams_{embedding_library}_corpus']
     # ]
 
     return row
@@ -410,10 +410,10 @@ def get_word_num_and_frequency(row, text_col):
 
 
 # %%
-def get_abs_frequency(row, text_col, n_gram_number, embedding_library):
+def get_abs_frequency(row, text_col, ngram_number, embedding_library):
 
     abs_word_freq = defaultdict(int)
-    for word in row[f'{n_gram_number}grams_{embedding_library}']:
+    for word in row[f'{ngram_number}grams_{embedding_library}']:
         abs_word_freq[word] += 1
 
         abs_wtd_df = (
@@ -424,9 +424,9 @@ def get_abs_frequency(row, text_col, n_gram_number, embedding_library):
         abs_wtd_df.insert(1, 'abs_word_perc', value=abs_wtd_df['abs_word_freq'] / abs_wtd_df['abs_word_freq'].sum())
         abs_wtd_df.insert(2, 'abs_word_perc_cum', abs_wtd_df['abs_word_perc'].cumsum())
 
-        row[f'{n_gram_number}grams_{embedding_library}_abs_word_freq'] = str(abs_wtd_df['abs_word_freq'].to_dict())
-        row[f'{n_gram_number}grams_{embedding_library}_abs_word_perc'] = str(abs_wtd_df['abs_word_perc'].to_dict())
-        row[f'{n_gram_number}grams_{embedding_library}_abs_word_perc_cum'] = str(abs_wtd_df['abs_word_perc_cum'].to_dict())
+        row[f'{ngram_number}grams_{embedding_library}_abs_word_freq'] = str(abs_wtd_df['abs_word_freq'].to_dict())
+        row[f'{ngram_number}grams_{embedding_library}_abs_word_perc'] = str(abs_wtd_df['abs_word_perc'].to_dict())
+        row[f'{ngram_number}grams_{embedding_library}_abs_word_perc_cum'] = str(abs_wtd_df['abs_word_perc_cum'].to_dict())
 
     return row
 
@@ -437,13 +437,14 @@ def convert_frequency(value, freq):
     return dict(functools.reduce(operator.add, map(collections.Counter, [ast.literal_eval(row) for idx, row in value['df'][f'{freq}'].iteritems() if isinstance(row, str) and str(row) != 'nan' and type(row) != float and len(row) != 0])))
 
 
+
 # %%
 def build_train_word2vec(
-    sector, df, n_gram_number, embedding_library, sectors_enabled = False, size = 300, print_enabled = True,
+    sector, df, ngram_number, embedding_library, sectors_enabled = False, size = 300, print_enabled = True,
     words = ['she', 'he', 'support', 'leader', 'management', 'team', 'business', 'customer', 'risk', 'build', 'computer', 'programmer'],
     t = time.time(), cores = multiprocessing.cpu_count(), args=get_args(),
 ):
-    sentences = df[f'{n_gram_number}grams_{embedding_library}'].values
+    sentences = df[f'{ngram_number}grams_{embedding_library}'].values
 
     w2v_model = Word2Vec(
         sentences=sentences,
@@ -501,13 +502,14 @@ def word2vec_embeddings(sentences, w2v_vocab, w2v_model, size=300):
     return np.mean(w2v_model.wv[sentences], axis='index') if sentences else np.zeros(size)
 
 
+
 # %%
 # def build_train_glove(
-#     sector, df, n_gram_number, embedding_library, sectors_enabled = False, size = 300, print_enabled = True,
+#     sector, df, ngram_number, embedding_library, sectors_enabled = False, size = 300, print_enabled = True,
 #     words = ['she', 'he', 'support', 'leader', 'management', 'team', 'business', 'customer', 'risk', 'build', 'computer', 'programmer'],
 #     t = time.time(), cores = multiprocessing.cpu_count(), args=get_args(),
 # ):
-#     sentences = df[f'{n_gram_number}grams_{embedding_library}'].values
+#     sentences = df[f'{ngram_number}grams_{embedding_library}'].values
 #     glove_model = Glove(
 #         sentences=sentences,
 #         size=size,
@@ -566,11 +568,11 @@ def word2vec_embeddings(sentences, w2v_vocab, w2v_model, size=300):
 
 # %%
 def build_train_fasttext(
-    sector, df, n_gram_number, embedding_library, sectors_enabled = False, size = 300, print_enabled = True,
+    sector, df, ngram_number, embedding_library, sectors_enabled = False, size = 300, print_enabled = True,
     words = ['she', 'he', 'support', 'leader', 'management', 'team', 'business', 'customer', 'risk', 'build', 'computer', 'programmer'],
     t = time.time(), cores = multiprocessing.cpu_count(), args=get_args(),
 ):
-    sentences = df[f'{n_gram_number}grams_{embedding_library}'].values
+    sentences = df[f'{ngram_number}grams_{embedding_library}'].values
 
     ft_model = FastText(
         sentences=sentences,
@@ -728,10 +730,10 @@ def simple_preprocess_df(
         lemmatization_enabled,
         main_from_function,
         n_gram,
-        n_grams_enabled,
-        n_grams_from_funtion,
-        n_grams_list,
-        nltk_n_grams_dict,
+        ngrams_enabled,
+        ngrams_from_funtion,
+        ngrams_list,
+        nltk_ngrams_dict,
         numbers_cleaned,
         pattern,
         preprocessed_from_function,
@@ -743,7 +745,7 @@ def simple_preprocess_df(
 
     if embedding_from_function is True:
         print('df_jobs_labeled from embedding function.')
-        if n_grams_from_funtion is True:
+        if ngrams_from_funtion is True:
             print('df_jobs_labeled from n_grams function.')
             if preprocessed_from_function is True:
                 print('df_jobs_labeled from preprocessed function.')
@@ -817,7 +819,7 @@ def simple_preprocess_df(
                 df_jobs_to_be_processed.drop(['Unnamed: 0'], axis='columns', inplace=True, errors='ignore')
 
             # Tokenize on Ngrams
-            if n_grams_enabled is True:
+            if ngrams_enabled is True:
 
                 # Tokenize
                 ## Custom
@@ -852,8 +854,8 @@ def simple_preprocess_df(
                 df_jobs_to_be_processed['123grams_gensim'] = df_jobs_to_be_processed['1grams_all'] + df_jobs_to_be_processed['2grams_gensim'] + df_jobs_to_be_processed['3grams_gensim']
 
                 # NLTK
-                for n_gram_number, n_gram_nltk in nltk_n_grams_dict.items():
-                    df_jobs_to_be_processed[f'{str(n_gram_number)}grams_nltk'] = df_jobs_to_be_processed['1grams_all'].reset_index(drop=True).swifter.progress_bar(args['print_enabled']).progress_apply(lambda unigram: list(n_gram_nltk(unigram)))
+                for ngram_number, ngram_nltk in nltk_ngrams_dict.items():
+                    df_jobs_to_be_processed[f'{str(ngram_number)}grams_nltk'] = df_jobs_to_be_processed['1grams_all'].reset_index(drop=True).swifter.progress_bar(args['print_enabled']).progress_apply(lambda unigram: list(ngram_nltk(unigram)))
 
                 df_jobs_to_be_processed['123grams_nltk'] = df_jobs_to_be_processed['1grams_all'] + df_jobs_to_be_processed['2grams_nltk'] + df_jobs_to_be_processed['3grams_nltk']
 
@@ -878,22 +880,22 @@ def simple_preprocess_df(
                 df_jobs_to_be_processed.drop(['Unnamed: 0'], axis='columns', inplace=True, errors='ignore')
 
                 # Get absolute word frequencies
-                for embedding_library, n_gram_number in itertools.product(embedding_libraries_list, n_grams_list):
-                    if n_gram_number == 1:
+                for embedding_library, ngram_number in itertools.product(embedding_libraries_list, ngrams_list):
+                    if ngram_number == 1:
                         embedding_library = 'all'
-                    df_jobs_to_be_processed = df_jobs_to_be_processed.progress_apply(lambda row: get_abs_frequency(row=row, text_col=text_col, n_gram_number=n_gram_number, embedding_library=embedding_library), axis='columns')
+                    df_jobs_to_be_processed = df_jobs_to_be_processed.progress_apply(lambda row: get_abs_frequency(row=row, text_col=text_col, ngram_number=ngram_number, embedding_library=embedding_library), axis='columns')
 
                 # Get dictionary and corpus
-                for n_gram_number in n_grams_list:
-                    if n_gram_number != 1:
-                        df_jobs_to_be_processed = df_jobs_to_be_processed.progress_apply(lambda row: get_corpus_and_dictionary(row=row, n_gram_number=n_gram_number, embedding_library='gensim'), axis='columns')
+                for ngram_number in ngrams_list:
+                    if ngram_number != 1:
+                        df_jobs_to_be_processed = df_jobs_to_be_processed.progress_apply(lambda row: get_corpus_and_dictionary(row=row, ngram_number=ngram_number, embedding_library='gensim'), axis='columns')
 
                 if args['save_enabled'] is True:
                     print('Saving df_jobs_labeled from n_grams function.')
                     df_jobs_to_be_processed.to_pickle(f'{args["df_dir"]}df_jobs_labeled_corpus_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format"]}')
                     df_jobs_to_be_processed.to_csv(f'{args["df_dir"]}df_jobs_labeled_corpus_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format_backup"]}')
 
-        elif n_grams_from_funtion is False:
+        elif ngrams_from_funtion is False:
             print('Using given version of corpus df_jobs_labeled.')
 
             try:
@@ -912,42 +914,42 @@ def simple_preprocess_df(
             df_jobs_to_be_processed.drop(['Unnamed: 0'], axis='columns', inplace=True, errors='ignore')
 
             # Get embeddings
-            for embedding_library, n_gram_number in itertools.product(embedding_libraries_list, n_grams_list):
-                if n_gram_number == 1:
+            for embedding_library, ngram_number in itertools.product(embedding_libraries_list, ngrams_list):
+                if ngram_number == 1:
                     embedding_library = 'all'
 
-                print(f'Building {n_gram_number}grams_{embedding_library} model and vocabulary.')
+                print(f'Building {ngram_number}grams_{embedding_library} model and vocabulary.')
 
                 for embed_model_name, embed_func_list in embedding_models_dict.items():
                     build_train_func, embed_func, model_loader = embed_func_list
 
                     vocab, model = build_train_func(
                         df=df_jobs_to_be_processed,
-                        n_gram_number=n_gram_number,
+                        ngram_number=ngram_number,
                         embedding_library=embedding_library,
                         sector=None,
                     )
                     print(f'Getting {embed_model_name} embeddings.')
                     df_jobs_to_be_processed[
-                        f'{n_gram_number}grams_{embedding_library}_mean_{embed_model_name}_embeddings'
+                        f'{ngram_number}grams_{embedding_library}_mean_{embed_model_name}_embeddings'
                     ] = df_jobs_to_be_processed[
-                        f'{n_gram_number}grams_{embedding_library}'
+                        f'{ngram_number}grams_{embedding_library}'
                     ].apply(
                         lambda sentences: embed_func(sentences, vocab, model)
                     )
                     if args['save_enabled'] is True:
-                        model.save(f'{args["embeddings_save_path"]}{n_gram_number}grams_{embedding_library}_{embed_model_name}_model.model')
+                        model.save(f'{args["embeddings_save_path"]}{ngram_number}grams_{embedding_library}_{embed_model_name}_model.model')
 
                 # Sent2Vec
                 print('Getting sent2vec embeddings.')
                 embeddings_index = get_glove()
-                df_jobs_to_be_processed[f'{n_gram_number}grams_{embedding_library}_sent2vec_embeddings'] = df_jobs_to_be_processed[f'{n_gram_number}grams_{embedding_library}'].progress_apply(lambda sentences: sent2vec(sentences, embeddings_index=embeddings_index, external_glove=True, extra_preprocessing_enabled=False))
+                df_jobs_to_be_processed[f'{ngram_number}grams_{embedding_library}_sent2vec_embeddings'] = df_jobs_to_be_processed[f'{ngram_number}grams_{embedding_library}'].progress_apply(lambda sentences: sent2vec(sentences, embeddings_index=embeddings_index, external_glove=True, extra_preprocessing_enabled=False))
                 print('Done getting sent2vec embeddings.')
 
                 # # HuggingFace
                 # print('Getting huggingface embeddings.')
                 # bert_model=TFBertModel.from_pretrained('bert-base-uncased')
-                # df_jobs_to_be_processed[f'{n_gram_number}grams_{embedding_library}_huggingface_embeddings'] = df_jobs_to_be_processed[f'{n_gram_number}grams_{embedding_library}'].progress_apply(lambda sentences: bert_model(sentences))
+                # df_jobs_to_be_processed[f'{ngram_number}grams_{embedding_library}_huggingface_embeddings'] = df_jobs_to_be_processed[f'{ngram_number}grams_{embedding_library}'].progress_apply(lambda sentences: bert_model(sentences))
                 # print('Done getting huggingface embeddings.')
 
             if args['save_enabled'] is True:
@@ -1462,7 +1464,7 @@ def optimization(
         plt.ylim([0, 1])
         plt.ylabel('True Positive Rate')
         plt.xlabel('False Positive Rate')
-        # plt.savefig('roccurve.svg')
+        # plt.savefig('roccurve.svg', bbox_inches='tight')
         plt.show()
         metrics.plot_roc_curve(classifier, X_test, y_test)
         plt.show()

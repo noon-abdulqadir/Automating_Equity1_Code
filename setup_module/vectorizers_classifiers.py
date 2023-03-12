@@ -59,12 +59,14 @@ main_dir = str(Path(code_dir).parents[0])
 scraped_data = f'{code_dir}/scraped_data'
 sys.path.append(code_dir)
 
-from setup_module.classification import *
+
 
 # %%
 from setup_module.imports import *
 from setup_module.params import *
-from setup_module.scraping import *
+# from setup_module.scraping import *
+# from setup_module.post_collection_processing import *
+# from setup_module.classification import *
 
 warnings.filterwarnings('ignore', category=DeprecationWarning)
 
@@ -74,69 +76,68 @@ warnings.filterwarnings('ignore', category=DeprecationWarning)
 
 ## Word Embedding
 ### Word2Vec
-nlp = en_core_web_sm.load()
-w2v = KeyedVectors.load_word2vec_format(
-    f'{gensim_path}word2vec-google-news-300/word2vec-google-news-300.gz',
-    binary=True,
-)
-w2v.init_sims(replace=True)
+# nlp = spacy.load('en_core_web_sm')
+# w2v = KeyedVectors.load_word2vec_format(
+#     f'{gensim_path}word2vec-google-news-300/word2vec-google-news-300.gz',
+#     binary=True,
+# )
+# w2v.init_sims(replace=True)
 
-params_w2v = {
-    'Word2Vec__ngram_range': [(1, 1), (2, 2), (3, 3), (1, 2), (2, 3), (1, 3)],
-    'Word2Vec__max_features': [None, 5000, 10000, 50000],
-    'Word2Vec__min_count': [5.0, 10.0, 15.0, 20.0, 25.0],
-    'Word2Vec__window': [2.0, 5.0, 10.0, 12.0, 15.0],
-    'Word2Vec__vector_size': [50.0, 100.0, 150.0, 200.0, 250.0],
-    'Word2Vec__iter': [50.0, 100.0, 150.0, 200.0, 250.0],
-    'Word2Vec__alpha': [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10],
-    'Word2Vec__min_df': [0.5, 1.0, 1.5, 2.0],
-    'Word2Vec__max_df': [0.25, 0.5, 0.75, 1.0, 1.5],
-    'Word2Vec__max_features': [None, 5000, 10000, 50000],
-    'Word2Vec__ngram_range': [(1, 1), (2, 2), (3, 3), (1, 2), (2, 3), (1, 3)],
-    'Word2Vec__sublinear_tf': [True, False],
-    'Word2Vec__binary': [True, False],
-    'Word2Vec__norm': [None, 'l1', 'l2'],
-    'Word2Vec__min_n': [1, 2, 3, 4, 5],
-    'Word2Vec__max_n': [1, 2, 3, 4, 5],
-    'Word2Vec__workers': [1, 2, 3, 4, 5],
-    'Word2Vec__sorted_vocab': [True, False],
-    'Word2Vec__batch_words': [1000, 2000, 3000, 4000, 5000],
-    'Word2Vec__callbacks': [
-        None,
-        'keras.callbacks.TensorBoard',
-        'keras.callbacks.CSVLogger',
-    ],
-    'Word2Vec__epochs': [1, 2, 3, 4, 5],
-    'Word2Vec__shuffle': [True, False],
-    'Word2Vec__validation_split': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
-}
+# params_w2v = {
+#     'Word2Vec__ngram_range': [(1, 1), (2, 2), (3, 3), (1, 2), (2, 3), (1, 3)],
+#     'Word2Vec__max_features': [None, 5000, 10000, 50000],
+#     'Word2Vec__min_count': [5.0, 10.0, 15.0, 20.0, 25.0],
+#     'Word2Vec__window': [2.0, 5.0, 10.0, 12.0, 15.0],
+#     'Word2Vec__vector_size': [50.0, 100.0, 150.0, 200.0, 250.0],
+#     'Word2Vec__iter': [50.0, 100.0, 150.0, 200.0, 250.0],
+#     'Word2Vec__alpha': [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10],
+#     'Word2Vec__min_df': [0.5, 1.0, 1.5, 2.0],
+#     'Word2Vec__max_df': [0.25, 0.5, 0.75, 1.0, 1.5],
+#     'Word2Vec__max_features': [None, 5000, 10000, 50000],
+#     'Word2Vec__ngram_range': [(1, 1), (2, 2), (3, 3), (1, 2), (2, 3), (1, 3)],
+#     'Word2Vec__sublinear_tf': [True, False],
+#     'Word2Vec__binary': [True, False],
+#     'Word2Vec__norm': [None, 'l1', 'l2'],
+#     'Word2Vec__min_n': [1, 2, 3, 4, 5],
+#     'Word2Vec__max_n': [1, 2, 3, 4, 5],
+#     'Word2Vec__workers': [1, 2, 3, 4, 5],
+#     'Word2Vec__sorted_vocab': [True, False],
+#     'Word2Vec__batch_words': [1000, 2000, 3000, 4000, 5000],
+#     'Word2Vec__callbacks': [
+#         None,
+#         'keras.callbacks.TensorBoard',
+#         'keras.callbacks.CSVLogger',
+#     ],
+#     'Word2Vec__epochs': [1, 2, 3, 4, 5],
+#     'Word2Vec__shuffle': [True, False],
+#     'Word2Vec__validation_split': [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+# }
 
-### Gensim FastText
-ft = gensim.models.FastText(sample=6e-5, min_alpha=0.0007, workers=cores - 1)
-params_ft = {
-    'FastText__min_count': [5.0, 10.0, 15.0, 20.0, 25.0],
-    'FastText__window': [2.0, 5.0, 10.0, 12.0, 15.0],
-    'FastText__vector_size': [50.0, 100.0, 150.0, 200.0, 250.0],
-    'FastText__alpha': [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10],
-    'FastText__min_alpha': [
-        0.0001,
-        0.0002,
-        0.0003,
-        0.0004,
-        0.0005,
-        0.0006,
-        0.0007,
-        0.0008,
-        0.0009,
-        0.001,
-    ],
-    'FastText__epochs': [50.0, 100.0, 150.0, 200.0, 250.0],
-    'FastText__min_n': [1.0, 2.0, 3.0, 4.0, 5.0],
-    'FastText__max_n': [1.0, 2.0, 3.0, 4.0, 5.0],
-    'FastText__sg': [0, 1],
-    'FastText__workers': [cores - 1],
-}
-
+# ### Gensim FastText
+# ft = gensim.models.FastText(sample=6e-5, min_alpha=0.0007, workers=multiprocessing.cpu_count() - 1)
+# params_ft = {
+#     'FastText__min_count': [5.0, 10.0, 15.0, 20.0, 25.0],
+#     'FastText__window': [2.0, 5.0, 10.0, 12.0, 15.0],
+#     'FastText__vector_size': [50.0, 100.0, 150.0, 200.0, 250.0],
+#     'FastText__alpha': [0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.10],
+#     'FastText__min_alpha': [
+#         0.0001,
+#         0.0002,
+#         0.0003,
+#         0.0004,
+#         0.0005,
+#         0.0006,
+#         0.0007,
+#         0.0008,
+#         0.0009,
+#         0.001,
+#     ],
+#     'FastText__epochs': [50.0, 100.0, 150.0, 200.0, 250.0],
+#     'FastText__min_n': [1.0, 2.0, 3.0, 4.0, 5.0],
+#     'FastText__max_n': [1.0, 2.0, 3.0, 4.0, 5.0],
+#     'FastText__sg': [0, 1],
+#     'FastText__workers': [cores - 1],
+# }
 
 ### Word Emedding FeatureUnion
 # em = FeatureUnion(
@@ -153,20 +154,17 @@ params_count = {
     'analyzer': 'word',
     'ngram_range': (1, 3),
     'lowercase': 'True',
-    'max_features': 10000,
-    'stop_words': 'english',
+#     'stop_words': 'english',
     # 'max_df': 0.95,
     # 'min_df': 0.05,
 }
 
 params_count_pipe = {
-    'CountVectorizer__stop_words': ['english'],
-    'CountVectorizer__analyzer': ['word', 'char'],
-    'CountVectorizer__ngram_range': [(1, 1), (2, 2), (3, 3), (1, 2), (2, 3), (1, 3)],
+    'CountVectorizer__analyzer': ['word'],
+    'CountVectorizer__ngram_range': [(1, 3)],
     'CountVectorizer__lowercase': [True, False],
-    'CountVectorizer__max_features': [None, 5000, 10000, 50000],
-    # 'CountVectorizer__max_df': [0.95, 0.9, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5],
-    # 'CountVectorizer__min_df': [0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.35, 0.4, 0.45, 0.5],
+    'CountVectorizer__max_df': [0.9, 0.85, 0.8, 0.75, 0.70],
+    'CountVectorizer__min_df': [0.10, 0.15, 0.2, 0.25, 0.30],
 }
 
 ### TfidfVectorizer
@@ -175,23 +173,23 @@ params_tfidf = {
     'analyzer': 'word',
     'ngram_range': (1, 3),
     'lowercase': 'True',
-    'max_features': 10000,
+#     'max_features': 10000,
     'use_idf': 'True',
-    'stop_words': 'english',
+#     'stop_words': 'english',
     # 'max_df': 0.95,
     # 'min_df': 0.05,
 }
 
 params_tfidf_pipe = {
-    'TfidfVectorizer__stop_words': ['english'],
-    'TfidfVectorizer__analyzer': ['word', 'char'],
-    'TfidfVectorizer__ngram_range': [(1, 1), (2, 2), (3, 3), (1, 2), (2, 3), (1, 3)],
+#     'TfidfVectorizer__stop_words': ['english'],
+    'TfidfVectorizer__analyzer': ['word'],
+    'TfidfVectorizer__ngram_range': [(1, 3)],
     'TfidfVectorizer__lowercase': [True, False],
-    'TfidfVectorizer__max_features': [None, 5000, 10000, 50000],
-    'TfidfVectorizer___use_idf': [True, False],
-    'TfidfVectorizer___smooth_idf': [True, False],
-    # 'TfidfVectorizer___max_df': [0.75, 0.80, 0.85, 0.90, 0.95],
-    # 'TfidfVectorizer___min_df': [0.05, 0.10, 0.15, 0.20, 0.25],
+#     'TfidfVectorizer__max_features': [None, 5000, 10000, 50000],
+    'TfidfVectorizer___use_idf': [True],
+#     'TfidfVectorizer___smooth_idf': [True, False],
+    'TfidfVectorizer__max_df': [0.9, 0.85, 0.8, 0.75, 0.70],
+    'TfidfVectorizer__min_df': [0.10, 0.15, 0.2, 0.25, 0.30],
 }
 
 ### BOW FeatureUnion
@@ -222,8 +220,8 @@ vectorizers_pipe = {
 
 ## Vectorizers List
 vectorizers_lst = [
-    # count.set_params(**params_count),
-    # tfidf.set_params(**params_tfidf),
+    count.set_params(**params_count),
+    tfidf.set_params(**params_tfidf),
     bow.set_params(**params_bow),
 ]
 
@@ -1302,3 +1300,5 @@ elif use_dict_for_classifiers_vectorizers is False:
         names=['Variable', 'Vectorizer', 'Measures'],
     )
     table_df = pd.DataFrame(index=index, columns=columns)
+
+# %%

@@ -87,7 +87,7 @@ file_save_format = args['file_save_format']
 file_save_format_backup = args['file_save_format_backup']
 image_save_format = args['image_save_format']
 
-text_col = 'Job Description spacy_sentencized'
+text_col = 'Job Description_cleaned'
 n_gram = '3grams_gensim'
 preprocessing_enabled = True
 stemming_enabled = False
@@ -233,35 +233,35 @@ elif task_enabled is True:
     #     csv_file_name = 'Classifiers Table Language Models_WITH_TASK.csv'
     #     excel_file_name = 'Classifiers Table Language Models_WITH_TASK.xlsx'
 
-# if id_dict_new is True:
-#     job_id_dict = make_job_id_v_genage_key_dict()
-#     sector_vs_job_id_dict = make_job_id_v_sector_key_dict()
+if id_dict_new is True:
+    job_id_dict = make_job_id_v_genage_key_dict()
+    sector_vs_job_id_dict = make_job_id_v_sector_key_dict()
 
-# elif id_dict_new is False:
-#     with open(validate_path(f'{parent_dir}job_id_vs_all.json'), encoding='utf-8') as f:
-#         job_id_dict = json.load(f)
+elif id_dict_new is False:
+    with open(validate_path(f'{parent_dir}job_id_vs_all.json'), encoding='utf-8') as f:
+        job_id_dict = json.load(f)
 
-#     with open(validate_path(f'{parent_dir}job_id_vs_sector_all.json'), encoding='utf-8') as f:
-#         sector_vs_job_id_dict = json.load(f)
+    with open(validate_path(f'{parent_dir}job_id_vs_sector_all.json'), encoding='utf-8') as f:
+        sector_vs_job_id_dict = json.load(f)
 
-# if from_processing_function is True:
+if from_processing_function is True:
 
-#     df_jobs_labeled = simple_preprocess_df()
+    df_jobs_labeled = simple_preprocess_df()
 
-# elif from_processing_function is False:
-#     df_jobs_labaled_save_path = f'{args["df_dir"]}df_jobs_labeled_final_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned})'
+elif from_processing_function is False:
+    df_jobs_labaled_save_path = f'{args["df_dir"]}df_jobs_labeled_final_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned})'
 
-#     try:
-#         df_jobs_labeled = pd.read_pickle(
-#             validate_path(f'{df_jobs_labaled_save_path}.{file_save_format}'))
-#         df_jobs_labeled.to_pickle(validate_path(
-#             f'{df_jobs_labaled_save_path}.{file_save_format}'))
+    try:
+        df_jobs_labeled = pd.read_pickle(
+            validate_path(f'{df_jobs_labaled_save_path}.{file_save_format}'))
+        df_jobs_labeled.to_pickle(validate_path(
+            f'{df_jobs_labaled_save_path}.{file_save_format}'))
 
-#     except Exception:
-#         df_jobs_labeled = pd.read_csv(
-#             validate_path(f'{df_jobs_labaled_save_path}.{file_save_format_backup}'))
-#         df_jobs_labeled.to_csv(validate_path(
-#             f'{df_jobs_labaled_save_path}.{file_save_format_backup}'))
+    except Exception:
+        df_jobs_labeled = pd.read_csv(
+            validate_path(f'{df_jobs_labaled_save_path}.{file_save_format_backup}'))
+        df_jobs_labeled.to_csv(validate_path(
+            f'{df_jobs_labaled_save_path}.{file_save_format_backup}'))
 
 
 # Final Classification

@@ -379,9 +379,7 @@ def categorize_df_gender_age(
 ):
     # Arrange Categories
     try:
-        df['Gender'] = (
-            df['Gender'].astype('category').cat.reorder_categories(order_gender, ordered=True)
-        )
+        df['Gender'] = df['Gender'].astype('category').cat.reorder_categories(order_gender, ordered=True)
 
         df['Gender'] = pd.Categorical(
             df['Gender'], categories=order_gender, ordered=True
@@ -391,7 +389,9 @@ def categorize_df_gender_age(
     try:
         df['Age'] = df['Age'].astype('category').cat.reorder_categories(order_age, ordered=True)
 
-        df['Age'] = pd.Categorical(df['Age'], categories=order_age, ordered=True)
+        df['Age'] = pd.Categorical(
+            df['Age'], categories=order_age, ordered=True
+        )
     except ValueError as e:
         print(e)
 
@@ -621,7 +621,7 @@ def get_viz(df_name, df_df, dataframes, args=get_args()):
         axis='y'
     )
     if args['save_enabled'] is True:
-        fig.savefig(f'{args["plot_save_path"]}{df_name} - Warmth and Competence Sentence Counts.{image_save_format}', format=image_save_format, dpi=3000)
+        fig.savefig(f'{args["plot_save_path"]}{df_name} - Warmth and Competence Sentence Counts.{image_save_format}', format=image_save_format, dpi=3000, bbox_inches='tight')
 
     fig.show()
     plt.pause(0.1)

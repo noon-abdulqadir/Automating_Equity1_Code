@@ -1575,7 +1575,7 @@ def get_args(
     image_save_format = 'eps',
 ):
     parent_dir = validate_path(f'{data_save_path}content analysis + ids + sectors/')
-    content_analysis_dir = validate_path(f'{parent_dir}Coding Material/')
+    content_analysis_dir = validate_path(f'{scraped_data}/Coding Material/')
     df_dir = validate_path(f'{data_save_path}final dfs/')
     models_save_path=validate_path(f'{data_save_path}classification models/')
     table_save_path=validate_path(f'{data_save_path}output tables/')
