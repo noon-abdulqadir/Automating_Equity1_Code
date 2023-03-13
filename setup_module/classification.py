@@ -1096,18 +1096,6 @@ def plot_confusion_matrix_percentage(
     col, cm, classifier_name, vectorizer_name, cmap=plt.cm.Blues
 ):
     cm_title = f'{col} Confusion matrix: {classifier_name} + {vectorizer_name}'
-    # plt.imshow(cm, interpolation='nearest', cmap=cmap)
-    # plt.title(cm_title)
-    # plt.colorbar()
-    # tick_marks = np.arange(len(my_tags))
-    # target_names = my_tags
-    # plt.xticks(tick_marks, target_names, rotation=45)
-    # plt.yticks(tick_marks, target_names)
-    # plt.tight_layout()
-    # plt.ylabel('True label')
-    # plt.xlabel('Predicted label')
-    # plt.show()
-    # Plot
     print('\n')
     group_names = ['True Neg', 'False Pos', 'False Neg', 'True Pos']
     group_counts = [f'{value:0.0f}\n' for value in cm.flatten()]
@@ -1126,6 +1114,7 @@ def plot_confusion_matrix_percentage(
     # plt.tight_layout()
     plt.show()
     print('-' * 20)
+
     return heatmap
 
 
