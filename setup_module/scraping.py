@@ -1045,7 +1045,7 @@ def get_sector_df_from_cbs(
         df_sectors_all.to_csv(f'{data_save_dir}Sectors Output from script.csv', index=False)
         df_sectors_all.to_pickle(f'{data_save_dir}Sectors Output from script.pkl')
         with pd.option_context('max_colwidth', 10000000000):
-            df_sectors_all.to_latex(f'{data_save_dir}Sectors Output from script.tex', index=False, longtable=True, escape=True, multicolumn=True, multicolumn_format='c', position='H', caption='Sectoral Gender and Age Composition and Segregation, Keywords, Counts, and Percentages', label='Jobs Count per Sector (x 1000)')
+            df_sectors_all.style.to_latex(f'{data_save_dir}Sectors Output from script.tex', index=False, longtable=True, escape=True, multicolumn=True, multicolumn_format='c', position='H', caption='Sectoral Gender and Age Composition and Segregation, Keywords, Counts, and Percentages', label='Jobs Count per Sector (x 1000)')
         df_sectors_all.to_markdown(f'{data_save_dir}Sectors Output from script.md', index=True)
         save_sector_excel(df_sectors_all, data_save_dir)
 
