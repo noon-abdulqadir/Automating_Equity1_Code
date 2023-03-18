@@ -678,8 +678,6 @@ def get_sbi_sectors_list(
     df_sbi_sectors = df_sbi_sectors.merge(df_sectors_all, how='inner', on='Code')
     df_sbi_sectors.rename(columns = {'Sector Name': 'Sector_Name', 'Keywords': 'Used_Sector_Keywords', 'Gender Dominant Category': 'Gender_Dominant_Category', 'Age Dominant Category': 'Age_Dominant_Category'}, inplace=True)
     df_sbi_sectors['Sector_Name'] = df_sbi_sectors['Sector_Name'].apply(lambda x: x.strip().lower() if isinstance(x, str) else np.nan)
-    # df_sbi_sectors['Gender_Dominant_Category'] = df_sbi_sectors['Gender_Dominant_Category'].apply(lambda x: x.strip().lower() if isinstance(x, str) else np.nan)
-    # df_sbi_sectors['Age_Dominant_Category'] = df_sbi_sectors['Age_Dominant_Category'].apply(lambda x: x.strip().lower() if isinstance(x, str) else np.nan)
     df_sbi_sectors['Used_Sector_Keywords'] = df_sbi_sectors['Used_Sector_Keywords'].apply(lambda x: clean_and_translate_keyword_list(x) if isinstance(x, list) else np.nan)
     df_sbi_sectors.set_index(df_sbi_sectors['Code'], inplace=True)
 
