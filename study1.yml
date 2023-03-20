@@ -16,6 +16,7 @@ dependencies:
   - async-timeout=4.0.2=pyhd8ed1ab_0
   - async_generator=1.10=py_0
   - attrs=22.2.0=pyh71513ae_0
+  - autopep8=2.0.2=pyhd8ed1ab_0
   - aws-c-auth=0.6.26=h0f48f9c_0
   - aws-c-cal=0.5.21=h134b2d6_2
   - aws-c-common=0.8.14=h1a8c8d9_0
@@ -91,6 +92,7 @@ dependencies:
   - importlib_metadata=6.1.0=hd8ed1ab_0
   - importlib_resources=5.12.0=pyhd8ed1ab_0
   - ipykernel=6.15.0=pyh736e0ef_0
+  - ipympl=0.9.3=pyhd8ed1ab_0
   - ipython=8.11.0=pyhd1c38e8_0
   - ipython_genutils=0.2.0=py_1
   - ipywidgets=8.0.4=pyhd8ed1ab_0
@@ -235,6 +237,7 @@ dependencies:
   - pure_eval=0.2.2=pyhd8ed1ab_0
   - py-xgboost=1.7.4=cpu_py310ha244a38_0
   - pyarrow=11.0.0=py310h89f3c6b_13_cpu
+  - pycodestyle=2.10.0=pyhd8ed1ab_0
   - pycparser=2.21=pyhd8ed1ab_0
   - pydantic=1.10.6=py310h8e9501a_0
   - pygments=2.14.0=pyhd8ed1ab_0
@@ -255,6 +258,8 @@ dependencies:
   - pytz=2022.7.1=pyhd8ed1ab_0
   - pyyaml=6.0=py310h8e9501a_5
   - pyzmq=25.0.1=py310hc407298_0
+  - radian=0.6.4=pyhd8ed1ab_0
+  - rchitect=0.3.40=py310h8e9501a_0
   - re2=2023.02.02=hb7217d7_0
   - readline=8.1.2=h46ed386_0
   - regex=2022.10.31=py310h8e9501a_0

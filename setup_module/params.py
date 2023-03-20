@@ -137,9 +137,9 @@ test_split = test_size = 1 - train_ratio
 validation_split = test_ratio / (test_ratio + validation_ratio)
 
 # Cross-validation
-random.seed(42)
-np.random.seed(42)
 random_state = 42
+random.seed(random_state)
+np.random.seed(random_state)
 partition = True
 cv = RepeatedStratifiedKFold(
     n_splits=10, n_repeats=3, random_state=random_state)

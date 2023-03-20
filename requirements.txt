@@ -11,6 +11,7 @@ astunparse==1.6.3
 async-generator==1.10
 async-timeout @ file:///home/conda/feedstock_root/build_artifacts/async-timeout_1640026696943/work
 attrs @ file:///home/conda/feedstock_root/build_artifacts/attrs_1671632566681/work
+autopep8 @ file:///home/conda/feedstock_root/build_artifacts/autopep8_1677845287175/work
 backcall @ file:///home/conda/feedstock_root/build_artifacts/backcall_1592338393461/work
 backports.functools-lru-cache @ file:///home/conda/feedstock_root/build_artifacts/backports.functools_lru_cache_1618230623929/work
 beautifulsoup4 @ file:///home/conda/feedstock_root/build_artifacts/beautifulsoup4_1675252249248/work
@@ -86,6 +87,7 @@ imbalanced-learn @ file:///home/conda/feedstock_root/build_artifacts/imbalanced-
 importlib-metadata @ file:///home/conda/feedstock_root/build_artifacts/importlib-metadata_1679167925176/work
 importlib-resources @ file:///home/conda/feedstock_root/build_artifacts/importlib_resources_1676919000169/work
 ipykernel @ file:///Users/runner/miniforge3/conda-bld/ipykernel_1655369698656/work
+ipympl @ file:///home/conda/feedstock_root/build_artifacts/ipympl_1676535632179/work
 ipython @ file:///Users/runner/miniforge3/conda-bld/ipython_1677617314627/work
 ipython-genutils==0.2.0
 ipywidgets @ file:///home/conda/feedstock_root/build_artifacts/ipywidgets_1671720089366/work
@@ -185,6 +187,7 @@ pure-eval @ file:///home/conda/feedstock_root/build_artifacts/pure_eval_16428759
 pyarrow==11.0.0
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
+pycodestyle @ file:///home/conda/feedstock_root/build_artifacts/pycodestyle_1669306857274/work
 pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1636257122734/work
 pydantic @ file:///Users/runner/miniforge3/conda-bld/pydantic_1678316298173/work
 Pygments @ file:///home/conda/feedstock_root/build_artifacts/pygments_1672682006896/work
@@ -200,6 +203,8 @@ python-json-logger @ file:///home/conda/feedstock_root/build_artifacts/python-js
 pytz @ file:///home/conda/feedstock_root/build_artifacts/pytz_1673864280276/work
 PyYAML @ file:///Users/runner/miniforge3/conda-bld/pyyaml_1666772543719/work
 pyzmq @ file:///Users/runner/miniforge3/conda-bld/pyzmq_1678776995287/work
+radian @ file:///home/conda/feedstock_root/build_artifacts/radian_1665955683388/work
+rchitect @ file:///Users/runner/miniforge3/conda-bld/rchitect_1673540209888/work
 regex @ file:///Users/runner/miniforge3/conda-bld/regex_1667265315676/work
 requests @ file:///home/conda/feedstock_root/build_artifacts/requests_1673863902341/work
 requests-oauthlib==1.3.1
@@ -220,7 +225,7 @@ sentence-transformers==2.2.2
 sentencepiece==0.1.97
 shellingham @ file:///home/conda/feedstock_root/build_artifacts/shellingham_1676292972954/work
 simpledorff==0.0.2
-six==1.15.0
+six @ file:///home/conda/feedstock_root/build_artifacts/six_1620240208055/work
 smart-open @ file:///home/conda/feedstock_root/build_artifacts/smart_open_1630238320325/work
 sniffio @ file:///home/conda/feedstock_root/build_artifacts/sniffio_1662051266223/work
 sortedcontainers @ file:///home/conda/feedstock_root/build_artifacts/sortedcontainers_1621217038088/work
