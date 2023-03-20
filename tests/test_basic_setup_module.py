@@ -35,8 +35,8 @@
 # from setup_module.classification import *
 # from setup_module.vectorizers_classifiers import *
 # warnings.filterwarnings("ignore", category=DeprecationWarning)
-# %matplotlib notebook
-# %matplotlib inline
+#
+#
 # %%
 import io
 import os

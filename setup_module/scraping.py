@@ -33,9 +33,10 @@
 # from setup_module.classification import *
 # from setup_module.vectorizers_classifiers import *
 # warnings.filterwarnings("ignore", category=DeprecationWarning)
-# %matplotlib notebook
-# %matplotlib inline
+#
+#
 # %%
+import itertools
 import os
 import sys
 from pathlib import Path
@@ -816,7 +817,7 @@ def save_sector_excel(
     worksheet.set_row(6, None, None, {'hidden': True})
     worksheet.set_column(0, 0, None, None, {'hidden': True})
     # Title
-    worksheet.merge_range(0, 0, 0, df_sectors_all.shape[1], 'Table 10', workbook.add_format({'bold': True, 'font_name': 'Times New Roman', 'font_size': 12, 'font_color': 'black', 'align': 'left'}))
+    worksheet.merge_range(0, 0, 0, df_sectors_all.shape[1], 'Table', workbook.add_format({'bold': True, 'font_name': 'Times New Roman', 'font_size': 12, 'font_color': 'black', 'align': 'left'}))
     worksheet.merge_range(1, 0, 1, df_sectors_all.shape[1], 'Sectoral Gender and Age Composition and Segregation, Keywords, Counts, and Percentages', workbook.add_format({'italic': True, 'font_name': 'Times New Roman', 'font_size': 12, 'font_color': 'black', 'align': 'left'}))
     worksheet.merge_range(2, 0, 2, df_sectors_all.shape[1], 'Jobs Count per Sector (x 1000)', workbook.add_format({'bold': False, 'font_name': 'Times New Roman', 'font_size': 12, 'font_color': 'black', 'align': 'center', 'top': True, 'bottom': True}))
     # Format column headers
@@ -851,32 +852,32 @@ def save_sector_excel(
     keyword = [col_num for col_num, value in enumerate(df_sectors_all.columns.values) if 'Keywords' in value[-1]]
 
     row_idx, col_idx = df_sectors_all.shape
-    for c in range(col_idx):
-        for r in range(row_idx):
-            if c in perc:
-                formats = {'num_format': '0.00%', 'font_name': 'Times New Roman', 'font_size': 12}
-                if r == row_idx-1:
-                    formats.update({'top': True, 'bottom': True})
-            elif c in num:
-                formats = {'num_format': '0', 'font_name': 'Times New Roman', 'font_size': 12}
-                if r == row_idx-1:
-                    formats.update({'top': True, 'bottom': True})
-            elif c in word:
-                formats = {'font_name': 'Times New Roman', 'font_size': 12}
-                if r == row_idx-1:
-                    formats.update({'top': True, 'bottom': True})
-            elif c in keyword:
-                formats = {'font_name': 'Times New Roman', 'font_size': 12, 'align': 'left'}
-                if r == row_idx-1:
-                    formats.update({'top': True, 'bottom': True})
-            try:
-                worksheet.write(r + 7, c + 1, df_sectors_all.iloc[r, c], workbook.add_format(formats))
-            except TypeError:
-                if isinstance(df_sectors_all.iloc[r, c], list):
-                    value = str(df_sectors_all.iloc[r, c])
-                else:
-                    value = ''
-                worksheet.write(r + 7, c + 1, value, workbook.add_format(formats))
+    for c, r in itertools.product(range(col_idx), range(row_idx)):
+        if c in perc:
+            formats = {'num_format': '0.00%', 'font_name': 'Times New Roman', 'font_size': 12}
+            if r == row_idx-1:
+                formats |= {'top': True, 'bottom': True}
+        elif c in num:
+            formats = {'num_format': '0', 'font_name': 'Times New Roman', 'font_size': 12}
+            if r == row_idx-1:
+                formats |= {'top': True, 'bottom': True}
+        elif c in word:
+            formats = {'font_name': 'Times New Roman', 'font_size': 12}
+            if r == row_idx-1:
+                formats |= {'top': True, 'bottom': True}
+        elif c in keyword:
+            formats = {'font_name': 'Times New Roman', 'font_size': 12, 'align': 'left'}
+            if r == row_idx-1:
+                formats |= {'top': True, 'bottom': True}
+        try:
+            worksheet.write(r + 7, c + 1, df_sectors_all.iloc[r, c], workbook.add_format(formats))
+        except TypeError:
+            value = (
+                str(df_sectors_all.iloc[r, c])
+                if isinstance(df_sectors_all.iloc[r, c], list)
+                else ''
+            )
+            worksheet.write(r + 7, c + 1, value, workbook.add_format(formats))
 
     worksheet.merge_range(len(df_sectors_all)+7, 0, len(df_sectors_all)+7, df_sectors_all.shape[1], 'Note.', workbook.add_format({'italic': True, 'font_name': 'Times New Roman', 'font_size': 10, 'font_color': 'black', 'align': 'left'}))
     worksheet.merge_range(len(df_sectors_all)+8, 0, len(df_sectors_all)+8, df_sectors_all.shape[1], f'Threshold for gender = {df_sectors_all.loc[df_sectors_all.index[-1], ("Gender", "Female", "% per Workforce")]:.2f}% ± 20%', workbook.add_format({'italic': True, 'font_name': 'Times New Roman', 'font_size': 10, 'font_color': 'black', 'align': 'left'}))
@@ -898,7 +899,8 @@ def get_sector_df_from_cbs(
 ):
 
     sectors_file_path: str = validate_path(f'{parent_dir}Found Data/')
-    data_save_dir: str = validate_path(f'{parent_dir}Data/')
+    data_save_dir1: str = validate_path(f'{parent_dir}Data/')
+    data_save_dir2: str = validate_path(f'{code_dir}/data/output tables/')
 
     # with open(f'{code_dir}/data/content analysis + ids + sectors/sbi_sectors_dict.json', 'r', encoding='utf8') as f:
     #     sbi_sectors_dict = json.load(f)
@@ -1040,12 +1042,13 @@ def get_sector_df_from_cbs(
     df_sectors_all.columns = pd.MultiIndex.from_tuples(level1_cols_tuple, names=['Variables', 'Categories', 'Counts'])
 
     if save_enabled is True:
-        df_sectors_all.to_csv(f'{data_save_dir}Sectors Output from script.csv', index=False)
-        df_sectors_all.to_pickle(f'{data_save_dir}Sectors Output from script.pkl')
-        with pd.option_context('max_colwidth', 10000000000):
-            df_sectors_all.style.to_latex(f'{data_save_dir}Sectors Output from script.tex', index=False, longtable=True, escape=True, multicolumn=True, multicolumn_format='c', position='H', caption='Sectoral Gender and Age Composition and Segregation, Keywords, Counts, and Percentages', label='Jobs Count per Sector (x 1000)')
-        df_sectors_all.to_markdown(f'{data_save_dir}Sectors Output from script.md', index=True)
-        save_sector_excel(df_sectors_all, data_save_dir)
+        for data_save_dir in [data_save_dir1, data_save_dir2]:
+            df_sectors_all.to_csv(f'{data_save_dir}Sectors Output from script.csv', index=False)
+            df_sectors_all.to_pickle(f'{data_save_dir}Sectors Output from script.pkl')
+            with pd.option_context('max_colwidth', 10000000000):
+                df_sectors_all.to_latex(f'{data_save_dir}Sectors Output from script.tex', index=False, longtable=True, escape=True, multicolumn=True, multicolumn_format='c', position='H', caption='Sectoral Gender and Age Composition and Segregation, Keywords, Counts, and Percentages', label='Jobs Count per Sector (x 1000)')
+            df_sectors_all.to_markdown(f'{data_save_dir}Sectors Output from script.md', index=True)
+            save_sector_excel(df_sectors_all, data_save_dir)
 
     return df_sectors_all
 

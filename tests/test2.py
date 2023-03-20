@@ -30,9 +30,9 @@ from setup_module.classification import *
 
 warnings.filterwarnings('ignore', category=DeprecationWarning)
 
-%matplotlib notebook
-%matplotlib widget
-%matplotlib inline
+
+
+
 
 # %%
 # Tokenizers
