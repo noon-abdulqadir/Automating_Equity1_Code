@@ -827,7 +827,8 @@ def simple_preprocess_df(
                 ## BERT
                 BERTMODEL='bert-base-uncased'
                 bert_tokenizer = BertTokenizer.from_pretrained(BERTMODEL, strip_accents = True)
-                df_jobs_to_be_processed['1grams_bert'] = df_jobs_to_be_processed['Job Description_cleaned'].progress_apply(lambda sentence: bert_tokenizer.tokenize(str(sentence)))
+                df_jobs_to_be_processed['1grams_bert'] = df_jobs_to_be_processed['Job Description_cleaned'].progress_apply(
+                    lambda sentence: bert_tokenizer.tokenize(str(sentence)).to(device))
 
                 if args['save_enabled'] is True:
                     print('Saving df_jobs_labeled after tokenization.')
