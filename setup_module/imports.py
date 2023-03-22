@@ -183,6 +183,13 @@ try:
 #     import xorbits.pandas as xpd
 
     # from accelerate import Accelerator
+    # import tensorflow as tf
+    # from tensorflow import keras
+    # from tensorflow.keras import backend as K
+    # from tensorflow.keras import layers, models
+    # from tensorflow.keras import preprocessing
+    # from tensorflow.keras import preprocessing as kprocessing
+    import textblob
     from bs4 import BeautifulSoup
     from gensim import corpora, models
     from gensim.corpora import Dictionary
@@ -205,6 +212,7 @@ try:
     from gensim.utils import save_as_line_sentence, simple_preprocess
     from googletrans import Translator
     from http_request_randomizer.requests.proxy.requestProxy import RequestProxy
+
     # from icecream import ic
     from imblearn.combine import SMOTEENN, SMOTETomek
     from imblearn.datasets import make_imbalance
@@ -220,6 +228,7 @@ try:
     from IPython.display import HTML, Image, Markdown, display
     from ipywidgets import FloatSlider, interactive
     from joblib import parallel_backend
+
     # from keras.layers import Activation, Dense
     # from keras.models import Sequential
     from langdetect import DetectorFactory, detect, detect_langs
@@ -379,20 +388,22 @@ try:
     from statsmodels.graphics.factorplots import interaction_plot
     from statsmodels.stats.diagnostic import het_white
     from statsmodels.stats.outliers_influence import variance_inflation_factor
-    # import tensorflow as tf
-    # from tensorflow import keras
-    # from tensorflow.keras import backend as K
-    # from tensorflow.keras import layers, models
-    # from tensorflow.keras import preprocessing
-    # from tensorflow.keras import preprocessing as kprocessing
-    import textblob
     from textblob import TextBlob, Word
     from textblob.en.inflect import pluralize, singularize
-
     from transformers import (
-        AutoTokenizer, AutoModelForTokenClassification, TokenClassificationPipeline,
-        BertTokenizer, BertTokenizerFast, BertForSequenceClassification, Trainer, TrainingArguments,
-        DistilBertTokenizerFast, DistilBertForSequenceClassification, BertForPreTraining, BertConfig, BertModel
+        AutoModelForTokenClassification,
+        AutoTokenizer,
+        BertConfig,
+        BertForPreTraining,
+        BertForSequenceClassification,
+        BertModel,
+        BertTokenizer,
+        BertTokenizerFast,
+        DistilBertForSequenceClassification,
+        DistilBertTokenizerFast,
+        TokenClassificationPipeline,
+        Trainer,
+        TrainingArguments,
     )
     from transformers.trainer_pt_utils import get_parameter_names
     from webdriver_manager.chrome import ChromeDriverManager
@@ -468,7 +479,7 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 5000)
 pd.set_option('display.colheader_justify', 'center')
 pd.set_option('display.precision', 3)
-pd.set_option('display.float_format', '{:.3f}'.format)
+pd.set_option('display.float_format', '{:.2f}'.format)
 # lux.config.default_display = "lux"
 # lux.config.plotting_backend = "matplotlib"
 

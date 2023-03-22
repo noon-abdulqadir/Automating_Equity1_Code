@@ -1,12 +1,13 @@
 name: study1_3.10
 channels:
   - conda-forge/osx-arm64
+  - apple
   - conda-forge
 dependencies:
   - _py-xgboost-mutex=2.0=cpu_0
   - aiohttp=3.8.4=py310h8e9501a_0
   - aiosignal=1.3.1=pyhd8ed1ab_0
-  - anyio=3.6.1=py310hbe9552e_0
+  - anyio=3.6.1=pyhd8ed1ab_1
   - appnope=0.1.3=pyhd8ed1ab_0
   - argon2-cffi=21.3.0=pyhd8ed1ab_0
   - argon2-cffi-bindings=21.2.0=py310h8e9501a_3
@@ -84,8 +85,8 @@ dependencies:
   - gflags=2.2.2=hc88da5d_1004
   - glog=0.6.0=h6da1cb0_0
   - heapdict=1.0.1=py_0
-  - huggingface_hub=0.13.2=pyhd8ed1ab_0
-  - icu=70.1=h6b3803e_0
+  - huggingface_hub=0.13.3=pyhd8ed1ab_0
+  - icu=72.1=he12128b_0
   - identify=2.5.21=pyhd8ed1ab_0
   - imbalanced-learn=0.10.1=pyhd8ed1ab_0
   - importlib-metadata=6.1.0=pyha770c72_0
@@ -102,7 +103,7 @@ dependencies:
   - joblib=1.2.0=pyhd8ed1ab_0
   - jsonschema=4.17.3=pyhd8ed1ab_0
   - jupyter=1.0.0=py310hbe9552e_8
-  - jupyter_client=8.0.3=pyhd8ed1ab_0
+  - jupyter_client=8.1.0=pyhd8ed1ab_0
   - jupyter_console=6.6.3=pyhd8ed1ab_0
   - jupyter_contrib_core=0.4.0=pyhd8ed1ab_0
   - jupyter_contrib_nbextensions=0.7.0=pyhd8ed1ab_0
@@ -114,7 +115,7 @@ dependencies:
   - jupyter_server=2.5.0=pyhd8ed1ab_0
   - jupyter_server_terminals=0.4.4=pyhd8ed1ab_1
   - jupyterlab_pygments=0.2.2=pyhd8ed1ab_0
-  - jupyterlab_widgets=3.0.5=pyhd8ed1ab_0
+  - jupyterlab_widgets=3.0.6=pyhd8ed1ab_0
   - kiwisolver=1.4.4=py310h2887b22_1
   - krb5=1.20.1=h69eda48_0
   - langcodes=3.3.0=pyhd8ed1ab_0
@@ -158,7 +159,7 @@ dependencies:
   - libwebp-base=1.3.0=h1a8c8d9_0
   - libxcb=1.13=h9b22ae9_1004
   - libxgboost=1.7.4=cpu_h13cf1d8_0
-  - libxml2=2.10.3=h87b0503_3
+  - libxml2=2.10.3=h2aff0a6_6
   - libxslt=1.1.37=h1bd8bc4_0
   - libzlib=1.2.13=h03a7124_4
   - littleutils=0.2.2=py_0
@@ -188,7 +189,7 @@ dependencies:
   - nbconvert=7.2.9=pyhd8ed1ab_0
   - nbconvert-core=7.2.9=pyhd8ed1ab_0
   - nbconvert-pandoc=7.2.9=pyhd8ed1ab_0
-  - nbformat=5.7.3=pyhd8ed1ab_0
+  - nbformat=5.8.0=pyhd8ed1ab_0
   - ncurses=6.3=h07bb92c_1
   - nest-asyncio=1.5.6=pyhd8ed1ab_0
   - nltk=3.8.1=pyhd8ed1ab_0
@@ -223,7 +224,7 @@ dependencies:
   - platformdirs=3.1.1=pyhd8ed1ab_0
   - plotly=5.13.1=pyhd8ed1ab_0
   - plotnine=0.10.1=pyhd8ed1ab_2
-  - pooch=1.7.0=pyhd8ed1ab_0
+  - pooch=1.7.0=pyha770c72_1
   - pre-commit=3.2.0=pyha770c72_0
   - preshed=3.0.8=py310h0f1eb42_1
   - pretty_errors=1.2.25=pyhd8ed1ab_0
@@ -257,7 +258,7 @@ dependencies:
   - pytorch=1.13.1=cpu_py310h32bc11d_1
   - pytz=2022.7.1=pyhd8ed1ab_0
   - pyyaml=6.0=py310h8e9501a_5
-  - pyzmq=25.0.1=py310hc407298_0
+  - pyzmq=25.0.2=py310hc407298_0
   - radian=0.6.4=pyhd8ed1ab_0
   - rchitect=0.3.40=py310h8e9501a_0
   - re2=2023.02.02=hb7217d7_0
@@ -272,7 +273,6 @@ dependencies:
   - scikit-learn=1.2.2=py310ha00a7cd_0
   - scipy=1.10.1=py310ha0d8a01_0
   - seaborn=0.10.1=py_0
-  - seaborn-base=0.12.2=pyhd8ed1ab_0
   - selenium=4.8.2=pyhd8ed1ab_0
   - send2trash=1.8.0=pyhd8ed1ab_0
   - setuptools=67.6.0=pyhd8ed1ab_0
@@ -327,7 +327,7 @@ dependencies:
   - webencodings=0.5.1=py_1
   - websocket-client=1.5.1=pyhd8ed1ab_0
   - wheel=0.40.0=pyhd8ed1ab_0
-  - widgetsnbextension=4.0.5=pyhd8ed1ab_0
+  - widgetsnbextension=4.0.6=pyhd8ed1ab_0
   - wrapt=1.15.0=py310h8e9501a_0
   - wsproto=1.2.0=pyhd8ed1ab_0
   - xarray=2023.2.0=pyhd8ed1ab_0
@@ -355,7 +355,7 @@ dependencies:
       - colorlover==0.3.0
       - en-core-web-sm==3.5.0
       - fake-useragent==1.1.1
-      - flatbuffers==1.12
+      - flatbuffers==23.3.3
       - gast==0.4.0
       - google-auth==2.16.2
       - google-auth-oauthlib==0.4.6
@@ -373,7 +373,7 @@ dependencies:
       - httpx==0.13.3
       - hyperframe==5.2.0
       - idna==2.10
-      - keras==2.9.0
+      - keras==2.11.0
       - keras-preprocessing==1.1.2
       - libclang==15.0.6.1
       - libmaths==0.1.8
@@ -395,10 +395,10 @@ dependencies:
       - six==1.15.0
       - specification-curve==0.3.1
       - sympy==1.11.1
-      - tensorboard==2.9.1
+      - tensorboard==2.11.2
       - tensorboard-data-server==0.6.1
       - tensorboard-plugin-wit==1.8.1
-      - tensorflow-estimator==2.9.0
+      - tensorflow-estimator==2.11.0
       - termcolor==2.2.0
       - torch==2.1.0.dev20230319
       - torchaudio==2.1.0.dev20230319
