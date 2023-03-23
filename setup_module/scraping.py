@@ -41,6 +41,8 @@ import os
 import sys
 from pathlib import Path
 
+import more_itertools
+
 code_dir = None
 code_dir_name = 'Code'
 unwanted_subdir_name = 'Analysis'

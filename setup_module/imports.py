@@ -41,6 +41,7 @@ import importlib
 import os
 import sys
 from pathlib import Path
+from dotenv.main import find_dotenv, load_dotenv
 
 mod = sys.modules[__name__]
 
@@ -59,35 +60,34 @@ for _ in range(5):
         if code_dir is not None:
             break
 
-main_dir = str(Path(code_dir).parents[0])
-scraped_data = f'{code_dir}/scraped_data'
-sys.path.append(code_dir)
 # %load_ext autoreload
 # %autoreload 2
 
 # %%
-env_name = 'study1'
-from_file = False
+envrc_path = Path.cwd().parents[0].joinpath('.envrc')
+load_dotenv(dotenv_path=envrc_path)
+conda_env_name = os.environ.get('CONDA_ENV_NAME')
+conda_env_path = os.environ.get('CONDA_ENV_PATH')
+from_file = True
 
-# os.system('source /opt/homebrew/Caskroom/miniforge/base/bin/activate')
 # os.system(f'conda init --all')
-# os.system(f'conda activate {env_name}')
+# os.system(f'conda activate {conda_env_name}')
 
-# with open(f'{code_dir}/install_modules.txt', 'r') as f:
-#     install_modules = f.readlines()
+# with open(f'{code_dir}/imported_modules.txt', 'r') as f:
+#     imported_modules = f.readlines()
 
 # if from_file:
-#     for module in install_modules:
-#         module = module.strip()
-#         if module != '':
+#     for lib in imported_modules:
+#         lib = lib.strip()
+#         if lib != '':
 #             try:
-#                 importlib.import_module(module)
+#                 globals()[lib] = __import__(lib)
 #             except ImportError:
-#                 print(f'Installing {module}')
+#                 print(f'Installing {lib}')
 #                 try:
-#                     os.system(f'conda install --channel apple --yes {module} ')
+#                     os.system(f'conda install --name {conda_env_name} --yes {lib}')
 #                 except Exception:
-#                     os.system(f'python -m pip install {module}')
+#                     os.system(f'{conda_env_path}/bin/pip install {lib}')
 
 try:
 
@@ -173,6 +173,7 @@ try:
     import swifter
     import torch
     import torch.nn as nn
+    import torch.nn.functional as F
     import tqdm
 
     # import tqdm.auto
@@ -214,10 +215,13 @@ try:
     from http_request_randomizer.requests.proxy.requestProxy import RequestProxy
 
     # from icecream import ic
+    import imblearn
+    from imblearn.metrics import geometric_mean_score, make_index_balanced_accuracy
+    from imblearn.combine import SMOTEENN, SMOTETomek
     from imblearn.combine import SMOTEENN, SMOTETomek
     from imblearn.datasets import make_imbalance
     from imblearn.metrics import classification_report_imbalanced
-    from imblearn.over_sampling import SMOTE, RandomOverSampler
+    from imblearn.over_sampling import SMOTE, SMOTENC, RandomOverSampler
     from imblearn.under_sampling import (
         EditedNearestNeighbours,
         NearMiss,
@@ -254,6 +258,7 @@ try:
     from pandas.api.types import is_numeric_dtype, is_object_dtype, is_string_dtype
     from plot_metric.functions import BinaryClassification
     from scipy import spatial, stats
+    from scipy.special import softmax
     from scipy.stats import (
         anderson,
         chi2_contingency,
@@ -281,6 +286,7 @@ try:
     from selenium.webdriver.support.ui import Select, WebDriverWait
     from sentence_transformers import SentenceTransformer, losses, util
     from sklearn import feature_selection, metrics, set_config, svm, utils
+    from sklearn.utils.class_weight import compute_class_weight
     from sklearn.base import BaseEstimator, TransformerMixin
     from sklearn.calibration import CalibratedClassifierCV, CalibrationDisplay
     from sklearn.compose import ColumnTransformer
@@ -326,23 +332,12 @@ try:
         SGDClassifier,
     )
     from sklearn.manifold import TSNE
-    from sklearn.metrics import (
-        ConfusionMatrixDisplay,
-        accuracy_score,
-        balanced_accuracy_score,
-        brier_score_loss,
-        classification_report,
-        cohen_kappa_score,
-        confusion_matrix,
-        f1_score,
-        log_loss,
-        make_scorer,
-        matthews_corrcoef,
-        precision_recall_curve,
-        precision_score,
-        recall_score,
-        roc_auc_score,
-    )
+    from sklearn.metrics import (ConfusionMatrixDisplay,accuracy_score, balanced_accuracy_score,
+                                brier_score_loss, classification_report, cohen_kappa_score,
+                                confusion_matrix, f1_score, log_loss,
+                                make_scorer, matthews_corrcoef, fowlkes_mallows_score,
+                                precision_recall_curve, precision_score,
+                                recall_score, roc_auc_score)
     from sklearn.metrics.pairwise import cosine_similarity
     from sklearn.model_selection import (
         GridSearchCV,
@@ -391,19 +386,9 @@ try:
     from textblob import TextBlob, Word
     from textblob.en.inflect import pluralize, singularize
     from transformers import (
-        AutoModelForTokenClassification,
-        AutoTokenizer,
-        BertConfig,
-        BertForPreTraining,
-        BertForSequenceClassification,
-        BertModel,
-        BertTokenizer,
-        BertTokenizerFast,
-        DistilBertForSequenceClassification,
-        DistilBertTokenizerFast,
-        TokenClassificationPipeline,
-        Trainer,
-        TrainingArguments,
+        AutoTokenizer, AutoModelForTokenClassification, TokenClassificationPipeline,
+        BertTokenizer, BertTokenizerFast, BertForSequenceClassification, Trainer, TrainingArguments,
+        DistilBertTokenizerFast, DistilBertForSequenceClassification, BertForPreTraining, BertConfig, BertModel
     )
     from transformers.trainer_pt_utils import get_parameter_names
     from webdriver_manager.chrome import ChromeDriverManager
@@ -411,21 +396,87 @@ try:
     # from whatthelang import WhatTheLang
     from xgboost import XGBClassifier
 #     from xorbits.numpy import arange, argmax, cumsum
-    from yellowbrick.text import TSNEVisualizer
+    # from yellowbrick.text import TSNEVisualizer
+    from plot_metric.functions import BinaryClassification
 
 except ImportError as error:
     module_name = str(error).split('named')[1]
     print(f'The library {module_name} is not installed. Installing now.')
     # !conda install --channel apple --yes {module_name}
 
+# imported_modules = dir()
+# with open(f'{code_dir}imported_modules.txt', 'w') as f:
+#     for lib in imported_modules:
+#         if '__' not in str(lib) and '_' not in str(lib):
+#             f.write(f'{lib}\n')
+
+random_state = 42
+random.seed(random_state)
+np.random.seed(random_state)
+torch.manual_seed(random_state)
+DetectorFactory.seed = random_state
+cores = multiprocessing.cpu_count()
+
+# %%
+# MAIN DIR
+main_dir = f'{str(Path(code_dir).parents[0])}/'
+
+# code_dir
+code_dir = f'{code_dir}/'
+sys.path.append(code_dir)
+
+# scraping dir
+scraped_data = f'{code_dir}scraped_data/'
+
+# data dir
+data_dir = f'{code_dir}data/'
+
+# df save sir
+df_save_dir = f'{data_dir}final dfs/'
+
+# lang models dir
+llm_path = f'{data_dir}Language Models'
+
+# models dir
+models_save_path = f'{data_dir}classification models/'
+
+# output tables dir
+table_save_path = f'{data_dir}output tables/'
+
+# plots dir
+plot_save_path = f'{data_dir}plots/'
+
 # %%
 # Tweak Settings
-model_download_dir = os.path.expanduser(f'{code_dir}/data/Language Models/')
-
-nltk_path = f'{str(model_download_dir)}nltk/'
+nltk_path = f'{llm_path}/nltk'
 nltk.data.path.append(nltk_path)
 
-gensim_path = f'{str(model_download_dir)}gensim/'
+nltk_libs = [
+    'words', 'stopwords', 'punkt', 'averaged_perceptron_tagger',
+    'omw-1.4', 'wordnet', 'maxent_ne_chunker', 'vader_lexicon'
+]
+
+for nltk_lib in nltk_libs:
+    for nltk_dir in glob.glob(f'{nltk_path}/*/!(*.zip)'):
+        if nltk_dir.split('/')[-1] == nltk_lib:
+            nltk.download(nltk_lib, download_dir = nltk_path)
+
+# nltk.download('words', download_dir = nltk_path)
+# nltk.download('stopwords', download_dir = nltk_path)
+# nltk.download('punkt', download_dir = nltk_path)
+# nltk.download('averaged_perceptron_tagger', download_dir = nltk_path)
+# nltk.download('omw-1.4', download_dir=f'{nltk_path}')
+# nltk.download('wordnet', download_dir=f'{nltk_path}')
+# nltk.download('maxent_ne_chunker', download_dir = nltk_path)
+# nltk.download('vader_lexicon', download_dir = nltk_path)
+# nltk.download_shell()
+
+# nlp = en_core_web_sm.load()
+nlp = spacy.load('en_core_web_sm')
+# nlp = spacy.load('en_core_web_trf')
+
+# Gensim
+gensim_path = f'{str(llm_path)}gensim/'
 gensim_api.base_dir = os.path.dirname(gensim_path)
 gensim_api.BASE_DIR = os.path.dirname(gensim_path)
 gensim_api.GENSIM_DATA_DIR = os.path.dirname(gensim_path)
@@ -465,38 +516,23 @@ errors = (
 pp = pprint.PrettyPrinter(indent=4)
 tqdm.tqdm_notebook().pandas(desc='progress-bar')
 pbar = progressbar.ProgressBar(maxval=10)
-#
-#
-#
+
 mpl.use('MacOSX')
 mpl.style.use(f'{code_dir}/setup_module/apa.mplstyle-main/apa.mplstyle')
 mpl.rcParams['text.usetex'] = False
 font = {'family': 'arial', 'weight': 'normal', 'size': 10}
 mpl.rc('font', **font)
-plt.style.use('ggplot')
+plt.style.use('tableau-colorblind10')
+plt.set_cmap('PuBu_r')
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 5000)
 pd.set_option('display.colheader_justify', 'center')
 pd.set_option('display.precision', 3)
 pd.set_option('display.float_format', '{:.2f}'.format)
+
 # lux.config.default_display = "lux"
 # lux.config.plotting_backend = "matplotlib"
-
-# nltk.download('words', download_dir = nltk_path)
-# nltk.download('punkt', download_dir = nltk_path)
-# nltk.download('stopwords', download_dir = nltk_path)
-# nltk.download('omw-1.4', download_dir=f'{nltk_path}')
-# nltk.download('wordnet', download_dir=f'{nltk_path}')
-# nltk.download('averaged_perceptron_tagger', download_dir = nltk_path)
-# nltk.download('maxent_ne_chunker', download_dir = nltk_path)
-# nltk.download('vader_lexicon', download_dir = nltk_path)
-# nltk.download_shell()
-
-# nlp = en_core_web_sm.load()
-nlp = spacy.load('en_core_web_sm')
-# nlp = spacy.load('en_core_web_trf')
-
 
 # %%
 # Analysis
@@ -505,6 +541,10 @@ random_state = 42
 random.seed(random_state)
 np.random.seed(random_state)
 DetectorFactory.seed = random_state
+
+site_list=['Indeed', 'Glassdoor', 'LinkedIn']
+nan_list = [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']
+pattern = r'[\n]+|[,]{2,}|[|]{2,}|[\n\r]+|(?<=[a-z]\.)(?=\s*[A-Z])|(?=\:+[A-Z])'
 
 ivs = ['Gender', 'Age']
 ivs_all = [

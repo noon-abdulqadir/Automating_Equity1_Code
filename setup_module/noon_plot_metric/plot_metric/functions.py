@@ -1,26 +1,29 @@
 import random
-from itertools import cycle
-from itertools import product
+from itertools import cycle, product
 from pprint import pprint
 from statistics import mean
 
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
-from numpy import arange
-from numpy import argmax
-from numpy import argmin
-from numpy import concatenate
-from numpy import linspace
-from numpy import newaxis
-from numpy import unique
-from numpy import zeros_like
+from numpy import (
+    arange,
+    argmax,
+    argmin,
+    concatenate,
+    linspace,
+    newaxis,
+    unique,
+    zeros_like,
+)
 from scipy import interp
-from sklearn.metrics import auc
-from sklearn.metrics import average_precision_score
-from sklearn.metrics import confusion_matrix
-from sklearn.metrics import precision_recall_curve
-from sklearn.metrics import roc_curve
+from sklearn.metrics import (
+    auc,
+    average_precision_score,
+    confusion_matrix,
+    precision_recall_curve,
+    roc_curve,
+)
 
 plt.style.use('tableau-colorblind10')
 
@@ -83,7 +86,7 @@ class BinaryClassification:
     __param_confusion_matrix = {'threshold': None,
                                 'normalize': False,
                                 'title': 'Confusion matrix',
-                                'cmap': plt.cm.Reds,
+                                'cmap': 'Blues',
                                 'colorbar': True,
                                 'label_rotation': 45}
 
@@ -161,7 +164,7 @@ class BinaryClassification:
         self.labels = labels
         self.threshold = threshold
         sns.set_style(seaborn_style)
-        if matplotlib_style is not None:
+        if matplotlib_style is None:
             plt.style.use('tableau-colorblind10')
 
     def get_function_parameters(self, function, as_df=False):
@@ -202,7 +205,7 @@ class BinaryClassification:
         else:
             return param_dict
 
-    def plot_confusion_matrix(self, threshold=None, normalize=False, title='Confusion matrix', cmap=plt.cm.Reds,
+    def plot_confusion_matrix(self, threshold=None, normalize=False, title='Confusion matrix', cmap='Blues',
                               colorbar=True, label_rotation=45):
         """
         Plots the confusion matrix.
@@ -215,7 +218,7 @@ class BinaryClassification:
             Set to True to normalize matrix and make matrix coefficient between 0 and 1.
         title : string, default="Confusion matrix",
             Set title of the plot.
-        cmap : colormap, default=plt.cm.Reds
+        cmap : colormap, default='Blues'
             Colormap of the matrix. See https://matplotlib.org/examples/color/colormaps_reference.html to find all
             available colormap.
         colorbar : bool, default=True
@@ -1052,7 +1055,7 @@ class MultiClassClassification:
         plt.title('Receiver operating characteristic for multi-class (One-Vs-All')
         plt.legend(loc='lower right')
 
-    def plot_confusion_matrix(self, normalize=False, title='Confusion matrix', cmap=plt.cm.Reds):
+    def plot_confusion_matrix(self, normalize=False, title='Confusion matrix', cmap='Blues'):
         """
         This function prints and plots the confusion matrix.
         Normalization can be applied by setting `normalize=True`.
