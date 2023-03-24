@@ -88,7 +88,8 @@ if set_conda:
                 except ImportError:
                     print(f'Installing {lib}')
                     try:
-                        os.system(f'conda install --name {conda_env_name} --yes {lib}')
+                        os.system(
+                            f'conda install --name {conda_env_name} --yes {lib}')
                     except Exception:
                         os.system(f'{conda_env_path}/bin/pip install {lib}')
 
@@ -158,6 +159,7 @@ try:
     import numpy as np
     import openpyxl
     import pandas as pd
+    import plot_metric
 
     # import pingouin as pg
     # import plotly
@@ -302,7 +304,12 @@ try:
     from sklearn.base import BaseEstimator, TransformerMixin
     from sklearn.calibration import CalibratedClassifierCV, CalibrationDisplay
     from sklearn.compose import ColumnTransformer
-    from sklearn.datasets import load_files
+    from sklearn.datasets import (
+        load_files,
+        load_iris,
+        make_classification,
+        make_regression,
+    )
     from sklearn.decomposition import PCA, TruncatedSVD
     from sklearn.dummy import DummyClassifier
     from sklearn.ensemble import (
@@ -406,6 +413,7 @@ try:
         column_or_1d,
         has_fit_parameter,
     )
+    from spacy.matcher import Matcher
     from statannotations.Annotator import Annotator
     from statsmodels.formula.api import ols
     from statsmodels.graphics.factorplots import interaction_plot
@@ -448,6 +456,8 @@ except ImportError as error:
 #         if '__' not in str(lib) and '_' not in str(lib):
 #             f.write(f'{lib}\n')
 
+# %%
+# Set random seed
 random_state = 42
 random.seed(random_state)
 np.random.seed(random_state)
@@ -456,6 +466,7 @@ DetectorFactory.seed = random_state
 cores = multiprocessing.cpu_count()
 
 # %%
+# Set paths
 # MAIN DIR
 main_dir = f'{str(Path(code_dir).parents[0])}/'
 
@@ -485,7 +496,8 @@ table_save_path = f'{data_dir}output tables/'
 plot_save_path = f'{data_dir}plots/'
 
 # %%
-# Tweak Settings
+# Set LM settings
+# Preprocessing
 # NLTK
 nltk_path = f'{llm_path}/nltk'
 nltk.data.path.append(nltk_path)
@@ -498,7 +510,7 @@ nltk_libs = [
 for nltk_lib in nltk_libs:
     for nltk_dir in glob.glob(f'{nltk_path}/*/!(*.zip)'):
         if nltk_dir.split('/')[-1] == nltk_lib:
-            nltk.download(nltk_lib, download_dir = nltk_path)
+            nltk.download(nltk_lib, download_dir=nltk_path)
 
 # nltk.download_shell()
 
@@ -518,8 +530,69 @@ gensim_api.base_dir = os.path.dirname(gensim_path)
 gensim_api.BASE_DIR = os.path.dirname(gensim_path)
 gensim_api.GENSIM_DATA_DIR = os.path.dirname(gensim_path)
 glove_path = f'{gensim_path}glove/'
-fasttext_path = os.path.abspath(f'{gensim_path}fasttext-wiki-news-subwords-300')
+fasttext_path = os.path.abspath(
+    f'{gensim_path}fasttext-wiki-news-subwords-300')
 
+# Classification
+# Sklearn
+t = time.time()
+n_jobs = -1
+n_splits = 10
+n_repeats = 3
+class_weight = 'balanced'
+cv = RepeatedStratifiedKFold(
+    n_splits=n_splits, n_repeats=n_repeats, random_state=random_state)
+scoring = 'recall'
+scores = ['recall', 'accuracy', 'f1', 'roc_auc',
+          'explained_variance', 'matthews_corrcoef']
+scorers = {
+    'precision_score': make_scorer(precision_score),
+    'recall_score': make_scorer(recall_score),
+    'accuracy_score': make_scorer(accuracy_score),
+}
+analysis_columns = ['Warmth', 'Competence']
+text_col = 'Job Description spacy_sentencized'
+
+metrics_dict = {
+    'Mean Cross Validation Train Score': np.nan,
+    'Mean Cross Validation Test Score': np.nan,
+    f'Mean Explained Train Variance - {scoring.title()}': np.nan,
+    f'Mean Explained Test Variance - {scoring.title()}': np.nan,
+    'Explained Variance': np.nan,
+    'Accuracy': np.nan,
+    'Balanced Accuracy': np.nan,
+    'Precision': np.nan,
+    'Recall': np.nan,
+    'F1-score': np.nan,
+    'Matthews Correlation Coefficient': np.nan,
+    'Fowlkes–Mallows Index': np.nan,
+    'ROC': np.nan,
+    'AUC': np.nan,
+    f'{scoring.title()} Best Threshold': np.nan,
+    f'{scoring.title()} Best Score': np.nan,
+    'Log Loss/Cross Entropy': np.nan,
+    'Cohen’s Kappa': np.nan,
+    'Geometric Mean': np.nan,
+    'Classification Report': np.nan,
+    'Confusion Matrix': np.nan,
+    'Normalized Confusion Matrix': np.nan
+}
+
+# BERT
+max_length = 512
+returned_tensor = 'pt'
+cpu_counts = torch.multiprocessing.cpu_count()
+device = torch.device('mps') if torch.has_mps and torch.backends.mps.is_built() and torch.backends.mps.is_available(
+) else torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+device_name = str(device.type)
+print(f'Using {device_name.upper()}')
+bert_model_name = 'bert-base-uncased'
+bert_tokenizer = BertTokenizerFast.from_pretrained(
+    bert_model_name, strip_accents=True)
+bert_model = BertForSequenceClassification.from_pretrained(
+    bert_model_name).to(device)
+
+# Set display options
 IPython.core.page = print
 IPython.display.clear_output
 display(HTML('<style>.container { width:90% !important; }</style>'))
@@ -573,69 +646,64 @@ pd.set_option('display.float_format', '{:.2f}'.format)
 
 # %%
 # Analysis
-# Setting Variables
-random_state = 42
-random.seed(random_state)
-np.random.seed(random_state)
-DetectorFactory.seed = random_state
-
-site_list=['Indeed', 'Glassdoor', 'LinkedIn']
+# Set Variables
+site_list = ['Indeed', 'Glassdoor', 'LinkedIn']
 nan_list = [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']
 pattern = r'[\n]+|[,]{2,}|[|]{2,}|[\n\r]+|(?<=[a-z]\.)(?=\s*[A-Z])|(?=\:+[A-Z])'
 
 ivs = ['Gender', 'Age']
 ivs_all = [
-        'Gender',
-        'Gender_Num',
-        'Gender_Female',
-        'Gender_Mixed',
-        'Gender_Male',
-        'Age',
-        'Age_Num',
-        'Age_Older',
-        'Age_Mixed',
-        'Age_Younger',
-    ]
+    'Gender',
+    'Gender_Num',
+    'Gender_Female',
+    'Gender_Mixed',
+    'Gender_Male',
+    'Age',
+    'Age_Num',
+    'Age_Older',
+    'Age_Mixed',
+    'Age_Younger',
+]
 ivs_all_dummy_num = [
-        'Gender_Num',
-        'Gender_Female',
-        'Gender_Mixed',
-        'Gender_Male',
-        'Age_Num',
-        'Age_Older',
-        'Age_Mixed',
-        'Age_Younger',
-    ]
+    'Gender_Num',
+    'Gender_Female',
+    'Gender_Mixed',
+    'Gender_Male',
+    'Age_Num',
+    'Age_Older',
+    'Age_Mixed',
+    'Age_Younger',
+]
 ivs_all_dummy = [
-        'Gender_Female',
-        'Gender_Mixed',
-        'Gender_Male',
-        'Age_Older',
-        'Age_Mixed',
-        'Age_Younger',
-    ]
+    'Gender_Female',
+    'Gender_Mixed',
+    'Gender_Male',
+    'Age_Older',
+    'Age_Mixed',
+    'Age_Younger',
+]
 ivs_gender_dummy_num = [
-        'Gender_Num',
-        'Gender_Female',
-        'Gender_Mixed',
-        'Gender_Male',
-    ]
+    'Gender_Num',
+    'Gender_Female',
+    'Gender_Mixed',
+    'Gender_Male',
+]
 ivs_gender_dummy = [
-        'Gender_Female',
-        'Gender_Mixed',
-        'Gender_Male',
-    ]
+    'Gender_Female',
+    'Gender_Mixed',
+    'Gender_Male',
+]
 ivs_age_dummy_num = [
-        'Age_Num',
-        'Age_Older',
-        'Age_Mixed',
-        'Age_Younger',
-    ]
+    'Age_Num',
+    'Age_Older',
+    'Age_Mixed',
+    'Age_Younger',
+]
 ivs_age_dummy_num = [
-        'Age_Older',
-        'Age_Mixed',
-        'Age_Younger',
-    ]
+    'Age_Older',
+    'Age_Mixed',
+    'Age_Younger',
+]
 order_gender = ['Female', 'Mixed Gender', 'Male']
 order_age = ['Older', 'Mixed Age', 'Younger']
 ivs_dict = {'Gender': order_gender, 'Age': order_age}
@@ -658,6 +726,7 @@ cat_list = [
 ]
 
 # %%
+# Fix Keywords
 keyword_trans_dict = {
     'landbouw': 'agriculture',
     'manage drivers': 'transportation',
@@ -677,7 +746,7 @@ keyword_trans_dict = {
     'accommodatie': 'accommodation',
     'vissen': 'fishing',
     'grooth': 'great',
-    'opleiding':'education',
+    'opleiding': 'education',
     'ingenieur': 'engineer',
     'engineers': 'engineer',
     'communicatie': 'communication',
@@ -779,7 +848,12 @@ keyword_trans_dict = {
     'other service activity': 'staff',
     'afvalbeheer': 'waste management'}
 
-
-# %%
 # with open(f'{code_dir}/scraped_data/CBS/Data/keyword_trans_dict.txt', 'w') as f:
 #     json.dump(keyword_trans_dict, f)
+
+# %%
+
+# with open(f'{code_dir}/scraped_data/CBS/Data/keyword_trans_dict.txt', 'w') as f:
+#     json.dump(keyword_trans_dict, f)
+
+# %%
