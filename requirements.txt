@@ -45,7 +45,7 @@ defusedxml @ file:///home/conda/feedstock_root/build_artifacts/defusedxml_161523
 dill @ file:///home/conda/feedstock_root/build_artifacts/dill_1666603105584/work
 distlib @ file:///home/conda/feedstock_root/build_artifacts/distlib_1668356257807/work
 distributed @ file:///home/conda/feedstock_root/build_artifacts/distributed_1678486482984/work
-en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0-py3-none-any.whl
+en-core-web-sm @ file:///home/conda/feedstock_root/build_artifacts/spacy-models_1675348492002/work/en_core_web_sm
 entrypoints @ file:///home/conda/feedstock_root/build_artifacts/entrypoints_1643888246732/work
 et-xmlfile @ file:///home/conda/feedstock_root/build_artifacts/et_xmlfile_1674664118162/work
 exceptiongroup @ file:///home/conda/feedstock_root/build_artifacts/exceptiongroup_1678703645500/work

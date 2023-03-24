@@ -22,11 +22,12 @@ main_dir = str(Path(code_dir).parents[0])
 scraped_data = f'{code_dir}/scraped_data'
 sys.path.append(code_dir)
 
+from setup_module.classification import *
+
 # %%
 from setup_module.imports import *
 from setup_module.params import *
 from setup_module.scraping import *
-from setup_module.classification import *
 
 warnings.filterwarnings('ignore', category=DeprecationWarning)
 
@@ -67,7 +68,7 @@ for col in tqdm.tqdm(analysis_columns):
         != 0
     ):
         print('Splitting data into training and test sets.')
-        df_jobs_labeled.dropna(subset=['Warmth', 'Competence', text_col], how='any', inplace=True)
+        df_jobs_labeled = df_jobs_labeled.dropna(subset=['Warmth', 'Competence', text_col], how='any')
 
         train, test = train_test_split(
             df_jobs_labeled, test_size=test_split, train_size = 1-test_split, random_state=random_state
@@ -114,7 +115,7 @@ for col in tqdm.tqdm(analysis_columns):
 
         ## tokenize train text
         print(f'Getting keras_embeddings for train dataset.')
-        train_tokens = [ast.literal_eval(row) for idx, row in train[f'{n_gram}'].iteritems() if isinstance(row, str) and str(row) != 'nan' and type(row) != float and len(row) != 0]
+        train_tokens = [ast.literal_eval(row) for idx, row in train[f'{n_gram}'].items() if isinstance(row, str) and str(row) != 'nan' and type(row) != float and len(row) != 0]
         tokenizer.fit_on_texts(iter(iter(train_tokens)))
         vocabulary_map = tokenizer.word_index
         ## create sequence
@@ -125,7 +126,7 @@ for col in tqdm.tqdm(analysis_columns):
 
         ## tokenize test text
         print(f'Getting keras_embeddings for test dataset.')
-        test_tokens = [ast.literal_eval(row) for idx, row in test[f'{n_gram}'].iteritems() if isinstance(row, str) and str(row) != 'nan' and type(row) != float and len(row) != 0]
+        test_tokens = [ast.literal_eval(row) for idx, row in test[f'{n_gram}'].items() if isinstance(row, str) and str(row) != 'nan' and type(row) != float and len(row) != 0]
         ## create sequence
         lst_text2seq_test= tokenizer.texts_to_sequences(iter(iter(test_tokens)))
         ## padding sequence
@@ -251,7 +252,7 @@ for col in tqdm.tqdm(analysis_columns):
         ## show explanation
         ### 1. preprocess input
         corpus = test[text_col]
-        tokens = [ast.literal_eval(row) for idx, row in test[f'{n_gram}'].iteritems() if isinstance(row, str) and str(row) != 'nan' and type(row) != float and len(row) != 0]
+        tokens = [ast.literal_eval(row) for idx, row in test[f'{n_gram}'].items() if isinstance(row, str) and str(row) != 'nan' and type(row) != float and len(row) != 0]
         X_instance = kprocessing.sequence.pad_sequences(
                         tokenizer.texts_to_sequences(corpus), maxlen=15,
                         padding='post', truncating='post')
@@ -291,7 +292,7 @@ for col in tqdm.tqdm(analysis_columns):
 
         ### 6. visualize on notebook
         print('\033[1m'+'Text with highlighted words')
-        from IPython.core.display import display, HTML
+        from IPython.core.display import HTML, display
         display(HTML(text))
 
 

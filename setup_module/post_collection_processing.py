@@ -263,16 +263,15 @@ def clean_df(
 ) -> pd.DataFrame:
 
     df_jobs.columns = df_jobs.columns.to_series().apply(lambda x: x.strip())
-    df_jobs.dropna(axis='index', how='all', inplace=True)
-    df_jobs.dropna(axis='columns', how='all', inplace=True)
-    df_jobs.drop(
+    df_jobs = df_jobs.dropna(axis='index', how='all')
+    df_jobs = df_jobs.dropna(axis='columns', how='all')
+    df_jobs = df_jobs.drop(
         df_jobs.columns[
             df_jobs.columns.str.contains(
                 'unnamed|index|level', regex=True, case=False, flags=re.I
             )
         ],
         axis='columns',
-        inplace=True,
         errors='ignore',
     )
     df_jobs[int_variable] = df_jobs[int_variable].apply(lambda x: str(x).lower().strip())
@@ -282,18 +281,15 @@ def clean_df(
 
     subset_list=[int_variable, str_variable, gender, age]
     print('Cleaning DF')
-    df_jobs.drop_duplicates(
+    df_jobs = df_jobs.drop_duplicates(
         subset=[str_variable],
         keep='first',
-        inplace=True,
         ignore_index=True,
     )
 
 #     df_jobs = df_jobs.loc[
 #         (
 #             df_jobs[str_variable]
-#             .swifter.progress_bar(args['print_enabled'])
-#             .progress_bar(args['print_enabled'])
 #             .apply(lambda x: isinstance(x, str))
 #         )
 #         & (df_jobs[str_variable] != -1)
@@ -304,14 +300,13 @@ def clean_df(
 #         & (df_jobs[str_variable] != 'nan')
 #     ]
 
-    df_jobs.drop(
+    df_jobs = df_jobs.drop(
         df_jobs[
             (df_jobs[str_variable].isin(nan_list)) |
             (df_jobs[str_variable].isnull()) |
             (df_jobs[str_variable].isna())
         ].index,
         axis='index',
-        inplace=True,
         errors='ignore'
 
     )
@@ -321,7 +316,7 @@ def clean_df(
     df_jobs = detect_language(df_jobs, str_variable)
     if 'Language' in df_jobs.columns:
         try:
-            df_jobs.drop(df_jobs.index[df_jobs['Language'] != str(language)], axis='index', inplace=True, errors='ignore')
+            df_jobs = df_jobs.drop(df_jobs.index[df_jobs['Language'] != str(language)], axis='index', errors='ignore')
 
         except:
             df_jobs = df_jobs.loc[(df_jobs['Language'] == str(language))]
@@ -330,7 +325,7 @@ def clean_df(
         for w_keyword, r_keyword in keyword_trans_dict.items():
             df_jobs.loc[(df_jobs['Search Keyword'] == str(w_keyword)), 'Search Keyword'] = r_keyword
 
-    df_jobs.reset_index(inplace=True, drop=True)
+    df_jobs = df_jobs.reset_index(drop=True)
 
     return df_jobs
 
@@ -343,7 +338,7 @@ def detect_language(df_jobs: pd.DataFrame, str_variable = 'Job Description', arg
 
     # df_jobs['Language'] = language
     try:
-        df_jobs['Language'] = df_jobs[str_variable].swifter.progress_bar(args['print_enabled']).apply(detect_language_helper)
+        df_jobs['Language'] = df_jobs[str_variable].apply(detect_language_helper)
 
     except Exception as e:
         if args['print_enabled'] is True:
@@ -639,7 +634,7 @@ def set_language_requirement(
     # Dutch
     print('Setting Dutch language requirements.')
     if 'Dutch Requirement' in df_jobs.columns:
-        df_jobs.drop(columns=['Dutch Requirement'], inplace=True)
+        df_jobs = df_jobs.drop(columns=['Dutch Requirement'])
     df_jobs['Dutch Requirement'] = np.where(
         df_jobs[str_variable].str.contains(dutch_requirement_pattern),
         'Yes',
@@ -649,7 +644,7 @@ def set_language_requirement(
     # English
     print('Setting English language requirements.')
     if 'English Requirement' in df_jobs.columns:
-        df_jobs.drop(columns=['English Requirement'], inplace=True)
+        df_jobs = df_jobs.drop(columns=['English Requirement'])
     df_jobs['English Requirement'] = np.where(
         df_jobs[str_variable].str.contains(english_requirement_pattern),
         'Yes',
@@ -687,7 +682,7 @@ def set_sector_and_percentage(
     # Set Sectors
     print('Setting sector.')
     if 'Sector' in df_jobs.columns:
-        df_jobs.drop(columns=['Sector'], inplace=True)
+        df_jobs = df_jobs.drop(columns=['Sector'])
     for sect, sect_dict in sector_vs_job_id_dict.items():
         for keyword, job_ids in sect_dict.items():
             df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin([str(i) for i in job_ids]), 'Sector'] = str(sect).lower().strip()
@@ -703,7 +698,7 @@ def set_sector_and_percentage(
     sect_cols = ['Sector Code', '% Female', '% Male', '% Older', '% Younger']
     for col in sect_cols:
         if col in df_jobs.columns:
-            df_jobs.drop(columns=col, inplace=True)
+            df_jobs = df_jobs.drop(columns=col)
     df_jobs = df_jobs.reindex(columns=[*df_jobs.columns, *sect_cols], fill_value=np.nan)
 
     # Set Percentages
@@ -766,7 +761,7 @@ def set_gender_age(
     gen_age_cols = ['Gender', 'Age']
     for col in gen_age_cols:
         if col in df_jobs.columns:
-            df_jobs.drop(columns=col, inplace=True)
+            df_jobs = df_jobs.drop(columns=col)
     df_jobs = df_jobs.reindex(columns=[*df_jobs.columns, *gen_age_cols], fill_value=np.nan)
 
     # Gender
@@ -924,7 +919,7 @@ def save_df(
         try:
             search_keyword = df_jobs['Search Keyword'].iloc[0].lower().replace("-Noon's MacBook Pro",'')
         except KeyError:
-            df_jobs.reset_index(drop=True, inplace=True)
+            df_jobs = df_jobs.reset_index(drop=True)
             search_keyword = df_jobs['Search Keyword'].iloc[0].lower().replace("-Noon's MacBo an and.  ok Pro",'')
         except IndexError:
             print(len(df_jobs))
@@ -1492,7 +1487,6 @@ def split_df_jobs_to_df_sent(
     dff = df_for_analysis.assign(
         **{
             lst_col: df_for_analysis[lst_col]
-            .swifter.progress_bar(args['print_enabled'])
             .apply(lambda x: sent_tokenize(x))
         }
     )
@@ -1985,13 +1979,12 @@ def write_all_to_txt_helper(search_keyword, job_id, age, df_jobs, args=get_args(
     )
     pathlib.Path(path_to_txt).mkdir(parents=True, exist_ok=True)
 
-    df_jobs.drop(
-        [x for x in args['columns_drop_list'] if x in df_jobs.columns], axis='columns', inplace=True, errors='ignore'
+    df_jobs = df_jobs.drop(
+        [x for x in args['columns_drop_list'] if x in df_jobs.columns], axis='columns', errors='ignore'
     )
-    df_jobs.drop(
+    df_jobs = df_jobs.drop(
         df_jobs.columns[df_jobs.columns.str.contains('Age', case=False)],
         axis='columns',
-        inplace=True,
         errors='ignore',
     )
 
@@ -2265,15 +2258,14 @@ def open_and_clean_excel(
                     break
                 else:
                     df_coder = clean_df(df_coder, str_variable=str_variable, reset=reset)
-                    df_coder.drop(
+                    df_coder = df_coder.drop(
                         df_coder.columns[
                             df_coder.columns.str.contains('Coder Remarks', case=False)
                         ],
                         axis='columns',
-                        inplace=True,
                         errors='ignore',
                     )
-                    df_coder['Job ID'].fillna(method='ffill', inplace=True)
+                    df_coder['Job ID'] = df_coder['Job ID'].fillna(method='ffill')
                     for k, v in coders_dict.items():
                         if v == coder_key:
                             df_coder['Coder ID'] = k
@@ -2304,7 +2296,6 @@ def open_and_clean_excel(
             ]
             df_concat_coder_all.loc[:, cal_columns] = (
                 df_concat_coder_all.loc[:, cal_columns]
-                .swifter.progress_bar(args['print_enabled'])
                 .apply(pd.to_numeric, downcast='integer', errors='coerce')
             )
             df_concat_coder_all = clean_df(df_concat_coder_all, str_variable=str_variable, reset=reset)

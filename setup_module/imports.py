@@ -41,6 +41,7 @@ import importlib
 import os
 import sys
 from pathlib import Path
+
 from dotenv.main import find_dotenv, load_dotenv
 
 mod = sys.modules[__name__]
@@ -68,26 +69,28 @@ envrc_path = Path.cwd().parents[0].joinpath('.envrc')
 load_dotenv(dotenv_path=envrc_path)
 conda_env_name = os.environ.get('CONDA_ENV_NAME')
 conda_env_path = os.environ.get('CONDA_ENV_PATH')
+set_conda = False
 from_file = True
 
-# os.system(f'conda init --all')
-# os.system(f'conda activate {conda_env_name}')
+if set_conda:
+    os.system('conda init --all')
+    os.system(f'conda activate {conda_env_name}')
 
-# with open(f'{code_dir}/imported_modules.txt', 'r') as f:
-#     imported_modules = f.readlines()
+    with open(f'{code_dir}/imported_modules.txt', 'r') as f:
+        imported_modules = f.readlines()
 
-# if from_file:
-#     for lib in imported_modules:
-#         lib = lib.strip()
-#         if lib != '':
-#             try:
-#                 globals()[lib] = __import__(lib)
-#             except ImportError:
-#                 print(f'Installing {lib}')
-#                 try:
-#                     os.system(f'conda install --name {conda_env_name} --yes {lib}')
-#                 except Exception:
-#                     os.system(f'{conda_env_path}/bin/pip install {lib}')
+    if from_file:
+        for lib in imported_modules:
+            lib = lib.strip()
+            if lib != '':
+                try:
+                    globals()[lib] = __import__(lib)
+                except ImportError:
+                    print(f'Installing {lib}')
+                    try:
+                        os.system(f'conda install --name {conda_env_name} --yes {lib}')
+                    except Exception:
+                        os.system(f'{conda_env_path}/bin/pip install {lib}')
 
 try:
 
@@ -130,18 +133,22 @@ try:
     from threading import Thread
     from typing import Dict, List, Optional, Set, Tuple
 
-    import bokeh
-    import cardinality
+    # import bokeh
+    # import cardinality
     import cbsodata
     import en_core_web_sm
     import gensim
     import gensim.downloader as gensim_api
+
+    # from icecream import ic
+    import imblearn
     import IPython
     import IPython.core
     import joblib
     import langdetect
-    import libmaths as lm
-    import lxml
+
+    # import libmaths as lm
+    # import lxml
     import matplotlib as mpl
     import matplotlib.gridspec as gridspec
     import matplotlib.image as img
@@ -151,15 +158,17 @@ try:
     import numpy as np
     import openpyxl
     import pandas as pd
-    import pingouin as pg
-    import plotly
-    import plotly.express as px
-    import plotly.graph_objects as go
-    import progressbar
+
+    # import pingouin as pg
+    # import plotly
+    # import plotly.express as px
+    # import plotly.graph_objects as go
+    # import progressbar
     import pyarrow as pa
     import pyarrow.parquet as pq
     import requests
-    import researchpy as rp
+
+    # import researchpy as rp
     import scipy
     import seaborn as sns
     import selenium.webdriver as webdriver
@@ -167,23 +176,13 @@ try:
     import simpledorff
     import sklearn as sk
     import spacy
-    import specification_curve as specy
+
+    # import specification_curve as specy
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
-    import swifter
-    import torch
-    import torch.nn as nn
-    import torch.nn.functional as F
-    import tqdm
 
-    # import tqdm.auto
-    import transformers
-    import urllib3
-    import xgboost as xgb
-    import xlsxwriter
-#     import xorbits.pandas as xpd
-
-    # from accelerate import Accelerator
+    # import xlsxwriter
+    # import xorbits.pandas as xpd
     # import tensorflow as tf
     # from tensorflow import keras
     # from tensorflow.keras import backend as K
@@ -191,6 +190,18 @@ try:
     # from tensorflow.keras import preprocessing
     # from tensorflow.keras import preprocessing as kprocessing
     import textblob
+
+    # import swifter
+    import torch
+    import torch.nn as nn
+    import torch.nn.functional as F
+    import tqdm
+
+    # import tqdm.auto
+    # from accelerate import Accelerator
+    import transformers
+    import urllib3
+    import xgboost as xgb
     from bs4 import BeautifulSoup
     from gensim import corpora, models
     from gensim.corpora import Dictionary
@@ -213,14 +224,13 @@ try:
     from gensim.utils import save_as_line_sentence, simple_preprocess
     from googletrans import Translator
     from http_request_randomizer.requests.proxy.requestProxy import RequestProxy
-
-    # from icecream import ic
-    import imblearn
-    from imblearn.metrics import geometric_mean_score, make_index_balanced_accuracy
-    from imblearn.combine import SMOTEENN, SMOTETomek
     from imblearn.combine import SMOTEENN, SMOTETomek
     from imblearn.datasets import make_imbalance
-    from imblearn.metrics import classification_report_imbalanced
+    from imblearn.metrics import (
+        classification_report_imbalanced,
+        geometric_mean_score,
+        make_index_balanced_accuracy,
+    )
     from imblearn.over_sampling import SMOTE, SMOTENC, RandomOverSampler
     from imblearn.under_sampling import (
         EditedNearestNeighbours,
@@ -250,7 +260,9 @@ try:
         wordpunct_tokenize,
     )
     from nltk.corpus import abc
+    from nltk.corpus import stopwords
     from nltk.corpus import stopwords as sw
+    from nltk.corpus import wordnet
     from nltk.corpus import wordnet as wn
     from nltk.sentiment.vader import SentimentIntensityAnalyzer
     from nltk.stem import LancasterStemmer, PorterStemmer, SnowballStemmer
@@ -284,9 +296,9 @@ try:
     from selenium.webdriver.common.keys import Keys
     from selenium.webdriver.support import expected_conditions as EC
     from selenium.webdriver.support.ui import Select, WebDriverWait
-    from sentence_transformers import SentenceTransformer, losses, util
+
+    # from sentence_transformers import SentenceTransformer, losses, util
     from sklearn import feature_selection, metrics, set_config, svm, utils
-    from sklearn.utils.class_weight import compute_class_weight
     from sklearn.base import BaseEstimator, TransformerMixin
     from sklearn.calibration import CalibratedClassifierCV, CalibrationDisplay
     from sklearn.compose import ColumnTransformer
@@ -305,6 +317,7 @@ try:
         VotingClassifier,
         VotingRegressor,
     )
+    from sklearn.experimental import enable_halving_search_cv
     from sklearn.feature_extraction.text import (
         CountVectorizer,
         FeatureHasher,
@@ -332,15 +345,28 @@ try:
         SGDClassifier,
     )
     from sklearn.manifold import TSNE
-    from sklearn.metrics import (ConfusionMatrixDisplay,accuracy_score, balanced_accuracy_score,
-                                brier_score_loss, classification_report, cohen_kappa_score,
-                                confusion_matrix, f1_score, log_loss,
-                                make_scorer, matthews_corrcoef, fowlkes_mallows_score,
-                                precision_recall_curve, precision_score,
-                                recall_score, roc_auc_score)
+    from sklearn.metrics import (
+        ConfusionMatrixDisplay,
+        accuracy_score,
+        balanced_accuracy_score,
+        brier_score_loss,
+        classification_report,
+        cohen_kappa_score,
+        confusion_matrix,
+        f1_score,
+        fowlkes_mallows_score,
+        log_loss,
+        make_scorer,
+        matthews_corrcoef,
+        precision_recall_curve,
+        precision_score,
+        recall_score,
+        roc_auc_score,
+    )
     from sklearn.metrics.pairwise import cosine_similarity
     from sklearn.model_selection import (
         GridSearchCV,
+        HalvingGridSearchCV,
         KFold,
         LeaveOneOut,
         RandomizedSearchCV,
@@ -352,6 +378,7 @@ try:
         cross_validate,
         learning_curve,
         train_test_split,
+        validation_curve,
     )
     from sklearn.multiclass import OneVsOneClassifier, OneVsRestClassifier
     from sklearn.multioutput import MultiOutputClassifier
@@ -372,6 +399,7 @@ try:
     from sklearn.svm import SVC, LinearSVC
     from sklearn.tree import DecisionTreeClassifier
     from sklearn.utils import check_consistent_length, check_random_state, check_X_y
+    from sklearn.utils.class_weight import compute_class_weight
     from sklearn.utils.estimator_checks import check_estimator
     from sklearn.utils.validation import (
         check_is_fitted,
@@ -386,18 +414,28 @@ try:
     from textblob import TextBlob, Word
     from textblob.en.inflect import pluralize, singularize
     from transformers import (
-        AutoTokenizer, AutoModelForTokenClassification, TokenClassificationPipeline,
-        BertTokenizer, BertTokenizerFast, BertForSequenceClassification, Trainer, TrainingArguments,
-        DistilBertTokenizerFast, DistilBertForSequenceClassification, BertForPreTraining, BertConfig, BertModel
+        AutoModelForTokenClassification,
+        AutoTokenizer,
+        BertConfig,
+        BertForPreTraining,
+        BertForSequenceClassification,
+        BertModel,
+        BertTokenizer,
+        BertTokenizerFast,
+        DistilBertForSequenceClassification,
+        DistilBertTokenizerFast,
+        TokenClassificationPipeline,
+        Trainer,
+        TrainingArguments,
     )
     from transformers.trainer_pt_utils import get_parameter_names
     from webdriver_manager.chrome import ChromeDriverManager
 
     # from whatthelang import WhatTheLang
     from xgboost import XGBClassifier
-#     from xorbits.numpy import arange, argmax, cumsum
+
+    # from xorbits.numpy import arange, argmax, cumsum
     # from yellowbrick.text import TSNEVisualizer
-    from plot_metric.functions import BinaryClassification
 
 except ImportError as error:
     module_name = str(error).split('named')[1]
@@ -448,6 +486,7 @@ plot_save_path = f'{data_dir}plots/'
 
 # %%
 # Tweak Settings
+# NLTK
 nltk_path = f'{llm_path}/nltk'
 nltk.data.path.append(nltk_path)
 
@@ -461,18 +500,16 @@ for nltk_lib in nltk_libs:
         if nltk_dir.split('/')[-1] == nltk_lib:
             nltk.download(nltk_lib, download_dir = nltk_path)
 
-# nltk.download('words', download_dir = nltk_path)
-# nltk.download('stopwords', download_dir = nltk_path)
-# nltk.download('punkt', download_dir = nltk_path)
-# nltk.download('averaged_perceptron_tagger', download_dir = nltk_path)
-# nltk.download('omw-1.4', download_dir=f'{nltk_path}')
-# nltk.download('wordnet', download_dir=f'{nltk_path}')
-# nltk.download('maxent_ne_chunker', download_dir = nltk_path)
-# nltk.download('vader_lexicon', download_dir = nltk_path)
 # nltk.download_shell()
 
-# nlp = en_core_web_sm.load()
+stop_words = set(stopwords.words('english'))
+punctuations = list(string.punctuation)
+lemmatizer = WordNetLemmatizer()
+stemmer = PorterStemmer()
+
+# Spacy
 nlp = spacy.load('en_core_web_sm')
+# nlp = en_core_web_sm.load()
 # nlp = spacy.load('en_core_web_trf')
 
 # Gensim
@@ -515,7 +552,7 @@ errors = (
 )
 pp = pprint.PrettyPrinter(indent=4)
 tqdm.tqdm_notebook().pandas(desc='progress-bar')
-pbar = progressbar.ProgressBar(maxval=10)
+# pbar = progressbar.ProgressBar(maxval=10)
 
 mpl.use('MacOSX')
 mpl.style.use(f'{code_dir}/setup_module/apa.mplstyle-main/apa.mplstyle')

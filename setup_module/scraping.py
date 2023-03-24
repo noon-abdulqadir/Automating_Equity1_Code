@@ -41,8 +41,6 @@ import os
 import sys
 from pathlib import Path
 
-import more_itertools
-
 code_dir = None
 code_dir_name = 'Code'
 unwanted_subdir_name = 'Analysis'
@@ -128,8 +126,10 @@ def chunks(lst, n):
 
 # %%
 # Function to validate path or file
-def validate_path(file: str, file_extensions=['.*', 'chromedriver']) -> str:
+def validate_path(file: str, file_extensions=None) -> str:
 
+    if file_extensions is None:
+        file_extensions = ['.*', 'chromedriver']
     if file.endswith(tuple(file_extensions)):
         if not os.path.isdir(file):
             if is_non_zero_file(file) is False:
@@ -526,7 +526,7 @@ def remove_code(keywords_lst: list, keyword_clean_lst=None) -> list:
                 lst.remove(i)
             keyword_clean_lst.append(' '.join(lst))
 
-    return keyword_clean_lst
+    return [x for x in keyword_clean_lst if x != '']
 
 
 # %%
@@ -670,25 +670,25 @@ def get_sbi_sectors_list(
 
     df_sbi_sectors = pd.read_csv(sib_5_loc, delimiter=',')
     df_sbi_sectors.columns = df_sbi_sectors.columns.str.strip()
-    df_sbi_sectors.rename(columns = {'Description': 'Old_Sector_Name'}, inplace=True)
+    df_sbi_sectors = df_sbi_sectors.rename(columns = {'Description': 'Old_Sector_Name'})
     df_sbi_sectors = df_sbi_sectors.dropna(subset=['Old_Sector_Name', 'Code'])
     df_sbi_sectors['Old_Sector_Name'] = df_sbi_sectors['Old_Sector_Name'].apply(lambda x: x.lower().strip())
     df_sbi_sectors = df_sbi_sectors.loc[df_sbi_sectors['Level'] == 1]
-    df_sbi_sectors.drop(columns=['Level', 'Parent', 'This item includes', 'This item also includes', 'Rulings', 'This item excludes', 'Reference to ISIC Rev. 4'], inplace=True)
+    df_sbi_sectors = df_sbi_sectors.drop(columns=['Level', 'Parent', 'This item includes', 'This item also includes', 'Rulings', 'This item excludes', 'Reference to ISIC Rev. 4'])
 
     df_sectors_all = pd.read_pickle(f'{data_save_dir}Sectors Output from script.pkl')[[('SBI Sector Titles'), ('Gender'), ('Age')]].droplevel('Categories', axis='columns')[[('SBI Sector Titles', 'Code'), ('SBI Sector Titles', 'Sector Name'), ('SBI Sector Titles', 'Keywords'), ('Gender', 'Dominant Category'), ('Age', 'Dominant Category')]].droplevel('Variables', axis='columns')
     df_sectors_all.columns = ['Code', 'Sector Name', 'Keywords', 'Gender Dominant Category', 'Age Dominant Category']
     df_sbi_sectors = df_sbi_sectors.merge(df_sectors_all, how='inner', on='Code')
-    df_sbi_sectors.rename(columns = {'Sector Name': 'Sector_Name', 'Keywords': 'Used_Sector_Keywords', 'Gender Dominant Category': 'Gender_Dominant_Category', 'Age Dominant Category': 'Age_Dominant_Category'}, inplace=True)
+    df_sbi_sectors = df_sbi_sectors.rename(columns = {'Sector Name': 'Sector_Name', 'Keywords': 'Used_Sector_Keywords', 'Gender Dominant Category': 'Gender_Dominant_Category', 'Age Dominant Category': 'Age_Dominant_Category'})
     df_sbi_sectors['Sector_Name'] = df_sbi_sectors['Sector_Name'].apply(lambda x: x.strip().lower() if isinstance(x, str) else np.nan)
     df_sbi_sectors['Used_Sector_Keywords'] = df_sbi_sectors['Used_Sector_Keywords'].apply(lambda x: clean_and_translate_keyword_list(x) if isinstance(x, list) else np.nan)
-    df_sbi_sectors.set_index(df_sbi_sectors['Code'], inplace=True)
+    df_sbi_sectors = df_sbi_sectors.set_index(df_sbi_sectors['Code'])
 
     df_sbi_sectors.to_csv(f'{data_save_dir}SBI-5_Sectors.csv', index=True)
     df_sbi_sectors.to_excel(f'{data_save_dir}SBI-5_Sectors.xlsx', index=True)
     df_sbi_sectors.to_pickle(f'{data_save_dir}SBI-5_Sectors.pkl')
 
-    sbi_english_keyword_list = [i for index, row in df_sbi_sectors['Used_Sector_Keywords'].iteritems() if isinstance(row, list) for i in row]
+    sbi_english_keyword_list = [i for index, row in df_sbi_sectors['Used_Sector_Keywords'].items() if isinstance(row, list) for i in row]
     sbi_english_keyword_list = clean_and_translate_keyword_list(sbi_english_keyword_list)
 
     if len(list(set(trans_keyword_list) - set(sbi_english_keyword_list))) > 0:
@@ -714,7 +714,7 @@ def get_sbi_sectors_list(
     for cat_keywords in df_sbi_sectors[['Age_Dominant_Category', 'Used_Sector_Keywords']].to_dict(orient='split')['data']:
         sbi_sectors_keywords_age_dom[cat_keywords[0]].extend(cat_keywords[1])
     for d in (sbi_sectors_keywords_gen_dom, sbi_sectors_keywords_age_dom):
-        sbi_sectors_keywords_full_dom.update(d)
+        sbi_sectors_keywords_full_dom |= d
 
     if save_enabled is True:
         with open(f'{data_save_dir}sbi_english_keyword_list.txt', 'w', encoding='utf8') as f:
@@ -889,6 +889,18 @@ def save_sector_excel(
     writer.close()
 
 # %%
+# Function to rearrgane gender and age columns
+def get_only_df(df_sectors, col_name, opp_col_name):
+    df_only = df_sectors.pivot_table(values='n', index=['Code', 'Sector Name', opp_col_name], columns=[col_name], aggfunc='sum')
+    df_only = df_only.reset_index()
+    df_only = df_only.loc[df_only[opp_col_name] == 'Total']
+    df_only = df_only.drop(columns=[opp_col_name, 'Total'])
+    df_only = df_only.reset_index(drop=True)
+    df_only.name = col_name
+
+    return df_only
+
+# %%
 # Function to get sector df from cbs
 def get_sector_df_from_cbs(
     save_enabled: bool = True,
@@ -912,7 +924,7 @@ def get_sector_df_from_cbs(
         select = ['SexOfEmployee', 'TypeOfEmploymentContract', 'OtherCharacteristicsEmployee', 'IndustryClassBranchSIC2008', 'Periods', 'Jobs_1']
         odata_colnames_normalized = {'IndustryClassBranchSIC2008': 'Industry class / branch (SIC2008)', 'SexOfEmployee': 'Sex of employee', 'OtherCharacteristicsEmployee': 'Other characteristics employee', 'Jobs_1': 'Employment/Jobs (x 1 000)'}
         df_sectors = get_cbs_odata()
-        df_sectors.rename(columns=odata_colnames_normalized, inplace=True)
+        df_sectors = df_sectors.rename(columns=odata_colnames_normalized)
     elif get_cbs_odata_enabled is False:
         # print(f'Error getting data from CBS Statline OData. Using the following file:\n{sectors_file_path}Sectors Tables/FINAL/Gender x Age_CBS_DATA.csv')
         # Read, clean, create code variable
@@ -923,7 +935,7 @@ def get_sector_df_from_cbs(
 
 
     df_sectors = df_sectors[cols]
-    df_sectors.rename({'Sex of employee': 'Gender', 'Other characteristics employee': 'Age Range (in years)', 'Industry class / branch (SIC2008)': 'Sector Name', 'Employment/Jobs (x 1 000)': 'n'}, inplace=True, axis = 1)
+    df_sectors = df_sectors.rename({'Sex of employee': 'Gender', 'Other characteristics employee': 'Age Range (in years)', 'Industry class / branch (SIC2008)': 'Sector Name', 'Employment/Jobs (x 1 000)': 'n'}, axis = 1)
     df_sectors.insert(0, 'Code', df_sectors['Sector Name'].apply(lambda row: row[0]))
     df_sectors['Sector Name'] = df_sectors['Sector Name'].apply(lambda row: row[2:].strip() if '-' not in row else row[3:].strip())
 
@@ -941,48 +953,37 @@ def get_sector_df_from_cbs(
     age_cat = np.select(conditions, choices, default='Total')
     df_sectors.insert(3, 'Age', age_cat)
     choices.append('Total')
-    df_sectors['Age'].astype('category').cat.reorder_categories(choices, inplace=True)
 
     # Change gender label
-    df_sectors['Gender'].replace({'Sex: Female': 'Female', 'Sex: Male': 'Male'}, inplace=True)
-    df_sectors['Gender'].astype('category').cat.reorder_categories(['Female', 'Male', 'Total'], inplace=True)
+    df_sectors['Gender'] = df_sectors['Gender'].replace({'Sex: Female': 'Female', 'Sex: Male': 'Male'})
 
     # Rearrgane columns
     # Gender
-    df_gender_only = df_sectors.pivot_table(values='n', index=['Code', 'Sector Name', 'Age'], columns=['Gender'], aggfunc='sum')
-    df_gender_only.reset_index(inplace=True)
-    df_gender_only = df_gender_only.loc[df_gender_only['Age'] == 'Total']
-    df_gender_only.drop(columns=['Age', 'Total'], inplace=True)
-    df_gender_only.reset_index(drop=True, inplace=True)
-    df_gender_only.name = 'Gender'
+    df_gender_only = get_only_df(df_sectors, 'Gender', 'Age')
+
     # Age
-    df_age_only = df_sectors.pivot_table(values='n', index=['Code', 'Sector Name', 'Gender'], columns=['Age'], aggfunc='sum')
-    df_age_only.reset_index(inplace=True)
-    df_age_only = df_age_only.loc[df_age_only['Gender'] == 'Total']
-    df_age_only.drop(columns=['Gender', 'Total'], inplace=True)
-    df_age_only.reset_index(drop=True, inplace=True)
-    df_age_only.name = 'Age'
+    df_age_only = get_only_df(df_sectors, 'Age', 'Gender')
 
     # Total
     df_total_only = df_sectors.pivot_table(values='n', index=['Code', 'Sector Name', 'Gender', 'Age'], aggfunc='sum')
-    df_total_only.reset_index(inplace=True)
+    df_total_only = df_total_only.reset_index()
     df_total_only = df_total_only.loc[(df_total_only['Gender'] == 'Total') & (df_total_only['Age'] == 'Total')]
-    df_total_only.drop(columns=['Gender', 'Age'], inplace=True)
-    df_total_only.reset_index(drop=True, inplace=True)
-    df_total_only.rename(columns={'n': 'Total Workforce'}, inplace=True)
+    df_total_only = df_total_only.drop(columns=['Gender', 'Age'])
+    df_total_only = df_total_only.reset_index(drop=True)
+    df_total_only = df_total_only.rename(columns={'n': 'Total Workforce'})
     df_total_only.name = 'Total'
 
     # Merge all
     df_sectors_all = pd.merge(pd.merge(df_gender_only, df_age_only, how='outer'), df_total_only, how='outer')
-    df_sectors_all.reset_index(inplace=True, drop=True)
+    df_sectors_all = df_sectors_all.reset_index(drop=True)
 
     # Take out "All economic activities" row
     au = df_sectors_all.loc[df_sectors_all['Sector Name'] == 'All economic activities']
     au.loc[au['Code'] != 'A-U', 'Code'] = 'A-U'
     df_sectors_all = df_sectors_all[df_sectors_all['Sector Name'] != 'All economic activities']
-    df_sectors_all.reset_index(inplace=True, drop=True)
+    df_sectors_all = df_sectors_all.reset_index(drop=True)
     df_sectors_all = df_sectors_all.groupby(['Code'], as_index=True).agg({'Sector Name': 'first', **dict.fromkeys(df_sectors_all.loc[:, ~df_sectors_all.columns.isin(['Code', 'Sector Name'])].columns.to_list(), 'sum')})
-    df_sectors_all.reset_index(inplace=True)
+    df_sectors_all = df_sectors_all.reset_index()
 
     # Add keywords
     df_sectors_all.insert(2, 'Keywords', df_sectors_all['Code'].apply(lambda row: sbi_sectors_dict[row]['Used_Sector_Keywords'] if row in sbi_sectors_dict and isinstance(row, str) else np.nan))
@@ -995,7 +996,7 @@ def get_sector_df_from_cbs(
     df_sectors_all.columns = pd.MultiIndex.from_tuples([('Industry class / branch (SIC2008)', 'Code'), ('Industry class / branch (SIC2008)', 'Sector Name'), ('Industry class / branch (SIC2008)', 'Keywords'), ('Industry class / branch (SIC2008)', 'Keywords Count'), ('Female', 'n'), ('Male', 'n'), (f'Older (>= {age_limit} years)', 'n'), (f'Younger (< {age_limit} years)', 'n'), ('Total Workforce', 'n')], names = ['Social category', 'Counts'])
 
     # Make percentages
-    for index, row in df_sectors_all.iteritems():
+    for index, row in df_sectors_all.items():
         if ('Total' not in index[0]) and ('%' not in index[1]) and ('n' in index[1]) and (not isinstance(row[0], str)) and (not math.isnan(row[0])):
             df_sectors_all[(index[0], '% per Sector')] = row/df_sectors_all[('Total Workforce', 'n')]#*100
             df_sectors_all[(index[0], '% per Social Category')] = row/df_sectors_all.loc[df_sectors_all[df_sectors_all[('Industry class / branch (SIC2008)', 'Sector Name')] == 'Total (excluding A-U)'].index.values.astype(int)[0], index]#*100
@@ -1048,7 +1049,7 @@ def get_sector_df_from_cbs(
             df_sectors_all.to_csv(f'{data_save_dir}Sectors Output from script.csv', index=False)
             df_sectors_all.to_pickle(f'{data_save_dir}Sectors Output from script.pkl')
             with pd.option_context('max_colwidth', 10000000000):
-                df_sectors_all.style.to_latex(f'{data_save_dir}Sectors Output from script.tex', index=False, longtable=True, escape=True, multicolumn=True, multicolumn_format='c', position='H', caption='Sectoral Gender and Age Composition and Segregation, Keywords, Counts, and Percentages', label='Jobs Count per Sector (x 1000)')
+                df_sectors_all.to_latex(f'{data_save_dir}Sectors Output from script.tex', index=False, longtable=True, escape=True, multicolumn=True, multicolumn_format='c', position='H', caption='Sectoral Gender and Age Composition and Segregation, Keywords, Counts, and Percentages', label='Jobs Count per Sector (x 1000)')
             df_sectors_all.to_markdown(f'{data_save_dir}Sectors Output from script.md', index=True)
             save_sector_excel(df_sectors_all, data_save_dir)
 
