@@ -562,6 +562,7 @@ metrics_dict = {
     'Accuracy': np.nan,
     'Balanced Accuracy': np.nan,
     'Precision': np.nan,
+    'Average Precision': np.nan,
     'Recall': np.nan,
     'F1-score': np.nan,
     'Matthews Correlation Coefficient': np.nan,
