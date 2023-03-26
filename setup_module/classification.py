@@ -40,6 +40,9 @@ import os
 import sys
 from pathlib import Path
 
+from setup_module.imports import *
+from setup_module.scraping import *
+
 code_dir = None
 code_dir_name = 'Code'
 unwanted_subdir_name = 'Analysis'
@@ -60,14 +63,14 @@ scraped_data = f'{code_dir}/scraped_data'
 sys.path.append(code_dir)
 
 # %%
-from setup_module.imports import *
-from setup_module.scraping import *
 
 warnings.filterwarnings('ignore', category=DeprecationWarning)
 
 # %%
 # preprocessing
 # Function to get new data, clean it, and make excel dfs
+
+
 def get_new_data(cleanup_return_enabled=True, main_from_file=True, args=get_args()):
     if main_from_file is False:
         df_jobs = post_cleanup(keywords_from_list=True, site_from_list=True)
@@ -84,7 +87,7 @@ def get_new_data(cleanup_return_enabled=True, main_from_file=True, args=get_args
 # %%
 # Open traing and testing dfs
 def open_and_clean_labeled_excel(
-    id_dict_new = False,
+    id_dict_new=False,
     df_labeled_dict={},
     dict_save=True,
     analysis_columns=[
@@ -107,7 +110,8 @@ def open_and_clean_labeled_excel(
     ) = open_and_clean_excel()
 
     # Tune DF
-    df_jobs_labeled = df_jobs_labeled.rename(columns={'Sentence': 'Job Description'})
+    df_jobs_labeled = df_jobs_labeled.rename(
+        columns={'Sentence': 'Job Description'})
     df_jobs_labeled = df_jobs_labeled[
         ['Job ID', 'Job Description'] + [str(col) for col in analysis_columns]
     ]
@@ -117,14 +121,15 @@ def open_and_clean_labeled_excel(
         print(f'Number of DF sentences: {len(df_jobs_labeled)}')
     word_count = (
         df_jobs_labeled['Job Description']
-        .apply(lambda x: len(x.split(' ')))
+        .progress_apply(lambda x: len(x.split(' ')))
         .sum()
     )
     if args['print_enabled'] is True:
         print(f'Number of DF words: {word_count}')
 
     # # Set Age and Gender IVs
-    df_jobs_labeled = set_gender_age_sects_lang(df_jobs = df_jobs_labeled, id_dict_new = id_dict_new, str_variable = 'Job Description')
+    df_jobs_labeled = set_gender_age_sects_lang(
+        df_jobs=df_jobs_labeled, id_dict_new=id_dict_new, str_variable='Job Description')
 
     # # Gender and Age Info
     df_gender_age_info(df_jobs_labeled)
@@ -136,12 +141,14 @@ def open_and_clean_labeled_excel(
     # print(profile.to_json())
 
     if args['save_enabled'] is True:
-        df_jobs_labeled.to_csv(f'{args["df_dir"]}df_jobs_labeled_unprocessed.{args["file_save_format_backup"]}')
+        df_jobs_labeled.to_csv(
+            f'{args["df_dir"]}df_jobs_labeled_unprocessed.{args["file_save_format_backup"]}')
 
-        df_jobs_labeled.to_pickle(f'{args["df_dir"]}df_jobs_labeled_unprocessed.{args["file_save_format"]}')
+        df_jobs_labeled.to_pickle(
+            f'{args["df_dir"]}df_jobs_labeled_unprocessed.{args["file_save_format"]}')
 
     # Make different DFs for each variable in training then place them in dict
-    for column, col in itertools.product(df_jobs_labeled.columns, analysis_columns):
+    for column, col in tqdm_product(df_jobs_labeled.columns, analysis_columns):
         if str(col) == str(column):
             df_labeled_dict[f'{column}'] = df_jobs_labeled[
                 ['Job Description', 'Gender', 'Age', str(column)]
@@ -199,7 +206,8 @@ def open_and_clean_unlabeled_excel(
 
     if main_from_file is False:
         stable_path = validate_path(
-            validate_path(args['parent_dir'] + stable_path_excel + f'{language}/')
+            validate_path(args['parent_dir'] +
+                          stable_path_excel + f'{language}/')
         )
 
         if os.path.isdir(stable_path):
@@ -245,7 +253,8 @@ def open_and_clean_unlabeled_excel(
                     inplace=True,
                     errors='ignore',
                 )
-                df_jobs_unlabeled_full = open_and_clean_unlabeled_excel_helper(df_jobs_unlabeled_full)
+                df_jobs_unlabeled_full = open_and_clean_unlabeled_excel_helper(
+                    df_jobs_unlabeled_full)
                 df_unlabeled_list.append(df_jobs_unlabeled_full)
     elif main_from_file is True:
         df_jobs_temp = []
@@ -263,7 +272,8 @@ def open_and_clean_unlabeled_excel(
             elif isinstance(jobs_list, pd.DataFrame):
                 df_jobs_temp.append(jobs_list)
             df_jobs_unlabeled_full = pd.concat(df_jobs_temp)
-            df_jobs_unlabeled_full = open_and_clean_unlabeled_excel_helper(df_jobs_unlabeled_full)
+            df_jobs_unlabeled_full = open_and_clean_unlabeled_excel_helper(
+                df_jobs_unlabeled_full)
             df_unlabeled_list.append(df_jobs_unlabeled_full)
     # pbar.finish()
     if len(df_unlabeled_list) > 1:
@@ -272,7 +282,8 @@ def open_and_clean_unlabeled_excel(
         if isinstance(df_unlabeled_list, pd.DataFrame):
             df_jobs_unlabeled = df_unlabeled_list
         if isinstance(df_unlabeled_list, list):
-            df_jobs_unlabeled = pd.concat([df for df in df_unlabeled_list if isinstance(df, pd.DataFrame)])
+            df_jobs_unlabeled = pd.concat(
+                [df for df in df_unlabeled_list if isinstance(df, pd.DataFrame)])
 
     df_jobs_unlabeled['Sentence ID'] = (
         df_jobs_unlabeled.groupby(['Job Description']).ngroup() + 1
@@ -286,7 +297,8 @@ def open_and_clean_unlabeled_excel(
         ]
         # + analysis_columns
     ]
-    df_jobs_unlabeled = df_jobs_unlabeled.reindex(columns = df_jobs_unlabeled.columns.tolist() + analysis_columns)
+    df_jobs_unlabeled = df_jobs_unlabeled.reindex(
+        columns=df_jobs_unlabeled.columns.tolist() + analysis_columns)
     df_jobs_unlabeled = df_jobs_unlabeled.drop_duplicates()
     df_jobs_unlabeled.insert(1, sent_id_col.name, sent_id_col)
     df_jobs_unlabeled = clean_df(
@@ -295,9 +307,10 @@ def open_and_clean_unlabeled_excel(
     df_jobs_unlabeled.index = range(df_jobs_unlabeled.shape[0])
 
     if args['save_enabled'] is True:
-        df_jobs_unlabeled.to_pickle(validate_path(f'{args["df_dir"]}df_jobs_unlabeled.{args["file_save_format"]}'))
-        df_jobs_unlabeled.to_csv(validate_path(f'{args["df_dir"]}df_jobs_unlabeled.{args["file_save_format_backup"]}'))
-
+        df_jobs_unlabeled.to_pickle(validate_path(
+            f'{args["df_dir"]}df_jobs_unlabeled.{args["file_save_format"]}'))
+        df_jobs_unlabeled.to_csv(validate_path(
+            f'{args["df_dir"]}df_jobs_unlabeled.{args["file_save_format_backup"]}'))
 
     return df_jobs_unlabeled
 
@@ -305,9 +318,11 @@ def open_and_clean_unlabeled_excel(
 # %%
 def open_and_clean_unlabeled_excel_helper(df_jobs_unlabeled_full):
 
-    df_jobs_unlabeled_full = df_jobs_unlabeled_full.dropna(subset=['Job ID', 'Job Description'])
+    df_jobs_unlabeled_full = df_jobs_unlabeled_full.dropna(
+        subset=['Job ID', 'Job Description'])
     df_jobs_unlabeled_full = df_jobs_unlabeled_full.drop_duplicates()
-    df_jobs_unlabeled_full['Job ID'] = df_jobs_unlabeled_full['Job ID'].fillna(method='ffill')
+    df_jobs_unlabeled_full['Job ID'] = df_jobs_unlabeled_full['Job ID'].fillna(
+        method='ffill')
     df_jobs_unlabeled_full['Job Description'] = (
         df_jobs_unlabeled_full['Job Description']
         .str.strip()
@@ -344,12 +359,12 @@ def stem_lem(
 def custom_tokenizer(row, stemming_enabled, lemmatization_enabled, numbers_cleaned, pattern, stop_words, return_tokens=False):
 
     tokens = [
-                stem_lem(str(unicodedata.normalize('NFKD', word).encode('ascii', 'ignore').decode('utf-8', 'ignore')),
-                stemming_enabled=stemming_enabled, lemmatization_enabled=lemmatization_enabled)
-                for word in preprocess_documents(re.sub(pattern[str(numbers_cleaned)], ' ', row.strip().lower()))
-#                 for word in simple_preprocess(re.sub(pattern[str(numbers_cleaned)], ' ', row.strip().lower()), deacc=True)
-                if (word not in stop_words) and (word.isalpha())
-            ]
+        stem_lem(str(unicodedata.normalize('NFKD', word).encode('ascii', 'ignore').decode('utf-8', 'ignore')),
+                 stemming_enabled=stemming_enabled, lemmatization_enabled=lemmatization_enabled)
+        for word in preprocess_documents(re.sub(pattern[str(numbers_cleaned)], ' ', row.strip().lower()))
+        #                 for word in simple_preprocess(re.sub(pattern[str(numbers_cleaned)], ' ', row.strip().lower()), deacc=True)
+        if (word not in stop_words) and (word.isalpha())
+    ]
     if return_tokens is True:
         return tokens
     elif return_tokens is False:
@@ -357,14 +372,18 @@ def custom_tokenizer(row, stemming_enabled, lemmatization_enabled, numbers_clean
 
 # %%
 # Function to create bi and tri grams
+
+
 def get_gensim_n_grams(unigram_sentences):
 
     # Bigrams
-    bigram = Phraser(Phrases(unigram_sentences, connector_words=ENGLISH_CONNECTOR_WORDS, min_count=1, threshold=1))
+    bigram = Phraser(Phrases(
+        unigram_sentences, connector_words=ENGLISH_CONNECTOR_WORDS, min_count=1, threshold=1))
     bigram_sentences = bigram[unigram_sentences]
 
     # Trigrams
-    trigram = Phraser(Phrases(bigram_sentences, connector_words=ENGLISH_CONNECTOR_WORDS, min_count=1, threshold=1))
+    trigram = Phraser(Phrases(
+        bigram_sentences, connector_words=ENGLISH_CONNECTOR_WORDS, min_count=1, threshold=1))
     trigram_sentences = trigram[bigram_sentences]
 
     return bigram, trigram, list(bigram_sentences), list(trigram_sentences)
@@ -403,7 +422,8 @@ def get_word_num_and_frequency(row, text_col):
     row['num_words'] = len(str(row[f'{text_col}']).split())
     row['num_unique_words'] = len(set(str(row[f'{text_col}']).split()))
     row['num_chars'] = len(str(row[f'{text_col}']))
-    row['num_punctuations'] = len([c for c in str(row[f'{text_col}']) if c in string.punctuation])
+    row['num_punctuations'] = len(
+        [c for c in str(row[f'{text_col}']) if c in string.punctuation])
 
     return row
 
@@ -419,13 +439,18 @@ def get_abs_frequency(row, text_col, ngram_number, embedding_library):
             pd.DataFrame.from_dict(abs_word_freq, orient='index')
             .rename(columns={0: 'abs_word_freq'})
             .sort_values(by=['abs_word_freq'], ascending=False)
-            )
-        abs_wtd_df.insert(1, 'abs_word_perc', value=abs_wtd_df['abs_word_freq'] / abs_wtd_df['abs_word_freq'].sum())
-        abs_wtd_df.insert(2, 'abs_word_perc_cum', abs_wtd_df['abs_word_perc'].cumsum())
+        )
+        abs_wtd_df.insert(
+            1, 'abs_word_perc', value=abs_wtd_df['abs_word_freq'] / abs_wtd_df['abs_word_freq'].sum())
+        abs_wtd_df.insert(2, 'abs_word_perc_cum',
+                          abs_wtd_df['abs_word_perc'].cumsum())
 
-        row[f'{ngram_number}grams_{embedding_library}_abs_word_freq'] = str(abs_wtd_df['abs_word_freq'].to_dict())
-        row[f'{ngram_number}grams_{embedding_library}_abs_word_perc'] = str(abs_wtd_df['abs_word_perc'].to_dict())
-        row[f'{ngram_number}grams_{embedding_library}_abs_word_perc_cum'] = str(abs_wtd_df['abs_word_perc_cum'].to_dict())
+        row[f'{ngram_number}grams_{embedding_library}_abs_word_freq'] = str(
+            abs_wtd_df['abs_word_freq'].to_dict())
+        row[f'{ngram_number}grams_{embedding_library}_abs_word_perc'] = str(
+            abs_wtd_df['abs_word_perc'].to_dict())
+        row[f'{ngram_number}grams_{embedding_library}_abs_word_perc_cum'] = str(
+            abs_wtd_df['abs_word_perc_cum'].to_dict())
 
     return row
 
@@ -436,12 +461,12 @@ def convert_frequency(value, freq):
     return dict(functools.reduce(operator.add, map(collections.Counter, [ast.literal_eval(row) for idx, row in value['df'][f'{freq}'].items() if isinstance(row, str) and str(row) != 'nan' and type(row) != float and len(row) != 0])))
 
 
-
 # %%
 def build_train_word2vec(
-    sector, df, ngram_number, embedding_library, sectors_enabled = False, size = 300, print_enabled = True,
-    words = ['she', 'he', 'support', 'leader', 'management', 'team', 'business', 'customer', 'risk', 'build', 'computer', 'programmer'],
-    t = time.time(), cores = multiprocessing.cpu_count(), args=get_args(),
+    sector, df, ngram_number, embedding_library, sectors_enabled=False, size=300, print_enabled=True,
+    words=['she', 'he', 'support', 'leader', 'management', 'team',
+           'business', 'customer', 'risk', 'build', 'computer', 'programmer'],
+    t=time.time(), cores=multiprocessing.cpu_count(), args=get_args(),
 ):
     sentences = df[f'{ngram_number}grams_{embedding_library}'].values
 
@@ -455,12 +480,13 @@ def build_train_word2vec(
         min_alpha=0.0007,
         negative=20,
         workers=cores - 1,
-        sg = 1,
+        sg=1,
     )
 
     w2v_model.build_vocab(sentences, progress_per=10000)
     if sectors_enabled is True and sector != None and print_enabled is True:
-        print(f'Time to train the model for {sector} {size}: {round((time.time() - t) / 60, 2)} mins')
+        print(
+            f'Time to train the model for {sector} {size}: {round((time.time() - t) / 60, 2)} mins')
 
     w2v_model.train(
         sentences,
@@ -470,7 +496,8 @@ def build_train_word2vec(
     )
 
     if sectors_enabled is True and sector != None and print_enabled is True:
-        print(f'Time to build w2v_vocab for {sector} {size}: {round((time.time() - t) / 60, 2)} mins')
+        print(
+            f'Time to build w2v_vocab for {sector} {size}: {round((time.time() - t) / 60, 2)} mins')
     w2v_vocab = list(w2v_model.wv.index_to_key)
 
     if args['print_enabled'] is True:
@@ -483,9 +510,12 @@ def build_train_word2vec(
                 try:
                     # print(f'{sector} 300: {w2v_model_300.wv[word]}')
                     # print(f'{sector} 100: {w2v_model_100.wv[word]}')
-                    print(f'Length of {sector} {size} model vobal: {len(w2v_vocab)}')
-                    print(f'{sector} {size} - Positive most similar to {word}: {w2v_model.wv.most_similar(positive=word, topn=5)}')
-                    print(f'{sector} {size} - Negative most similar to {word}: {w2v_model.wv.most_similar(negative=word, topn=5)}')
+                    print(
+                        f'Length of {sector} {size} model vobal: {len(w2v_vocab)}')
+                    print(
+                        f'{sector} {size} - Positive most similar to {word}: {w2v_model.wv.most_similar(positive=word, topn=5)}')
+                    print(
+                        f'{sector} {size} - Negative most similar to {word}: {w2v_model.wv.most_similar(negative=word, topn=5)}')
 
                 except KeyError as e:
                     print(e)
@@ -499,7 +529,6 @@ def word2vec_embeddings(sentences, w2v_vocab, w2v_model, size=300):
     sentences = [word for word in sentences if word in w2v_vocab]
 
     return np.mean(w2v_model.wv[sentences], axis='index') if sentences else np.zeros(size)
-
 
 
 # %%
@@ -567,9 +596,10 @@ def word2vec_embeddings(sentences, w2v_vocab, w2v_model, size=300):
 
 # %%
 def build_train_fasttext(
-    sector, df, ngram_number, embedding_library, sectors_enabled = False, size = 300, print_enabled = True,
-    words = ['she', 'he', 'support', 'leader', 'management', 'team', 'business', 'customer', 'risk', 'build', 'computer', 'programmer'],
-    t = time.time(), cores = multiprocessing.cpu_count(), args=get_args(),
+    sector, df, ngram_number, embedding_library, sectors_enabled=False, size=300, print_enabled=True,
+    words=['she', 'he', 'support', 'leader', 'management', 'team',
+           'business', 'customer', 'risk', 'build', 'computer', 'programmer'],
+    t=time.time(), cores=multiprocessing.cpu_count(), args=get_args(),
 ):
     sentences = df[f'{ngram_number}grams_{embedding_library}'].values
 
@@ -583,12 +613,13 @@ def build_train_fasttext(
         min_alpha=0.0007,
         negative=20,
         workers=cores - 1,
-        sg = 1,
+        sg=1,
     )
 
     ft_model.build_vocab(sentences, progress_per=10000)
     if sectors_enabled is True and sector != None and print_enabled is True:
-        print(f'Time to train the model for {sector} {size}: {round((time.time() - t) / 60, 2)} mins')
+        print(
+            f'Time to train the model for {sector} {size}: {round((time.time() - t) / 60, 2)} mins')
 
     ft_model.train(
         sentences,
@@ -598,7 +629,8 @@ def build_train_fasttext(
     )
 
     if sectors_enabled is True and sector != None and print_enabled is True:
-        print(f'Time to build vocab for {sector} {size}: {round((time.time() - t) / 60, 2)} mins')
+        print(
+            f'Time to build vocab for {sector} {size}: {round((time.time() - t) / 60, 2)} mins')
     ft_vocab = list(ft_model.wv.index_to_key)
 
     if args['print_enabled'] is True:
@@ -611,9 +643,12 @@ def build_train_fasttext(
                 try:
                     # print(f'{sector} 300: {ft_model_300.wv[word]}')
                     # print(f'{sector} 100: {ft_model_100.wv[word]}')
-                    print(f'Length of {sector} {size} model vobal: {len(ft_vocab)}')
-                    print(f'{sector} {size} - Positive most similar to {word}: {ft_model.wv.most_similar(positive=word, topn=5)}')
-                    print(f'{sector} {size} - Negative most similar to {word}: {ft_model.wv.most_similar(negative=word, topn=5)}')
+                    print(
+                        f'Length of {sector} {size} model vobal: {len(ft_vocab)}')
+                    print(
+                        f'{sector} {size} - Positive most similar to {word}: {ft_model.wv.most_similar(positive=word, topn=5)}')
+                    print(
+                        f'{sector} {size} - Negative most similar to {word}: {ft_model.wv.most_similar(negative=word, topn=5)}')
 
                 except KeyError as e:
                     print(e)
@@ -639,7 +674,7 @@ def fasttext_embeddings(sentences, ft_vocab, ft_model, size=300):
 
 
 # %%
-def get_glove(glove_file = validate_path(f'{glove_path}glove.840B.300d.txt')):
+def get_glove(glove_file=validate_path(f'{glove_path}glove.840B.300d.txt')):
 
     embeddings_index = {}
     with open(glove_file, 'r', encoding='utf8') as glove:
@@ -658,10 +693,12 @@ def get_glove(glove_file = validate_path(f'{glove_path}glove.840B.300d.txt')):
 
 
 # %%
-#Mean Pooling - Take attention mask into account for correct averaging
+# Mean Pooling - Take attention mask into account for correct averaging
 def mean_pooling(model_output, attention_mask):
-    token_embeddings = model_output[0] #First element of model_output contains all token embeddings
-    input_mask_expanded = attention_mask.unsqueeze(-1).expand(token_embeddings.size()).float()
+    # First element of model_output contains all token embeddings
+    token_embeddings = model_output[0]
+    input_mask_expanded = attention_mask.unsqueeze(
+        -1).expand(token_embeddings.size()).float()
     return torch.sum(token_embeddings * input_mask_expanded, 1) / torch.clamp(input_mask_expanded.sum(1), min=1e-9)
 
 
@@ -686,16 +723,19 @@ def mean_pooling(model_output, attention_mask):
 
 
 # %%
-def get_sentiment(df_jobs_to_be_processed, text_col, algo='vader', sentiment_range=(-1,1)):
+def get_sentiment(df_jobs_to_be_processed, text_col, algo='vader', sentiment_range=(-1, 1)):
 
-    ## calculate sentiment
+    # calculate sentiment
     if algo == 'vader':
-        df_jobs_to_be_processed['sentiment'] = df_jobs_to_be_processed[text_col].apply(lambda x: SentimentIntensityAnalyzer().polarity_scores(x)['compound'] if isinstance(x, str) else np.nan)
+        df_jobs_to_be_processed['sentiment'] = df_jobs_to_be_processed[text_col].progress_apply(
+            lambda x: SentimentIntensityAnalyzer().polarity_scores(x)['compound'] if isinstance(x, str) else np.nan)
     elif algo == 'textblob':
-        df_jobs_to_be_processed['sentiment'] = df_jobs_to_be_processed[text_col].apply(lambda x: TextBlob(x).sentiment.polarity)
-    ## rescaled
-    if sentiment_range != (-1,1):
-        df_jobs_to_be_processed['sentiment'] = preprocessing.MinMaxScaler(feature_range=sentiment_range).fit_transform(df_jobs_to_be_processed[['sentiment']])
+        df_jobs_to_be_processed['sentiment'] = df_jobs_to_be_processed[text_col].progress_apply(
+            lambda x: TextBlob(x).sentiment.polarity)
+    # rescaled
+    if sentiment_range != (-1, 1):
+        df_jobs_to_be_processed['sentiment'] = preprocessing.MinMaxScaler(
+            feature_range=sentiment_range).fit_transform(df_jobs_to_be_processed[['sentiment']])
     # print(df_jobs_to_be_processed[['sentiment']].describe().T)
 
     return df_jobs_to_be_processed
@@ -706,7 +746,8 @@ def get_sentiment(df_jobs_to_be_processed, text_col, algo='vader', sentiment_ran
 def create_soft_cossim_matrix(documents, cat_order, similarity_matrix):
     len_array = np.arange(len(documents))
     xx, yy = np.meshgrid(len_array, len_array)
-    cossim_mat = pd.DataFrame([[round(similarity_matrix.inner_product(documents[i],documents[j], normalized=(True, True)) ,2) for i, j in zip(x,y)] for y, x in zip(xx, yy)])
+    cossim_mat = pd.DataFrame([[round(similarity_matrix.inner_product(
+        documents[i], documents[j], normalized=(True, True)), 2) for i, j in zip(x, y)] for y, x in zip(xx, yy)])
     cossim_mat.columns = cat_order
     cossim_mat.index = cat_order
 
@@ -752,7 +793,8 @@ def simple_preprocess_df(
                     print('df_jobs_labeled from main function.')
                     if args['print_enabled'] is True:
                         print('Opening df_jobs_to_be_processed from file.')
-                    df_jobs_to_be_processed, df_labeled_dict = open_and_clean_labeled_excel(id_dict_new = id_dict_new)
+                    df_jobs_to_be_processed, df_labeled_dict = open_and_clean_labeled_excel(
+                        id_dict_new=id_dict_new)
                 elif main_from_function is False:
                     print('Using given version of main df_jobs_labeled.')
 
@@ -767,7 +809,8 @@ def simple_preprocess_df(
                             )
                             for col in df_jobs_to_be_processed.columns:
                                 if 'grams_' in col:
-                                    df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].apply(lambda x: ast.literal_eval(str(x)))
+                                    df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].progress_apply(
+                                        lambda x: ast.literal_eval(str(x)))
 
 #                         if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
                         df_jobs_to_be_processed = df_jobs_to_be_processed.drop(
@@ -781,21 +824,26 @@ def simple_preprocess_df(
                     df_jobs_to_be_processed['Job Description_cleaned'] = (
                         df_jobs_to_be_processed['Job Description']
                         .reset_index(drop=True)
-                        .apply(
-                            lambda row: custom_tokenizer(str(row), numbers_cleaned=numbers_cleaned, stemming_enabled=stemming_enabled, lemmatization_enabled=lemmatization_enabled, pattern=pattern, stop_words=stop_words, return_tokens=False)
+                        .progress_apply(
+                            lambda row: custom_tokenizer(str(row), numbers_cleaned=numbers_cleaned, stemming_enabled=stemming_enabled,
+                                                         lemmatization_enabled=lemmatization_enabled, pattern=pattern, stop_words=stop_words, return_tokens=False)
                         )
                     )
 
                     # Get word frequencies
-                    df_jobs_to_be_processed = df_jobs_to_be_processed.apply(lambda row: get_word_num_and_frequency(row=row, text_col=text_col), axis='columns')
+                    df_jobs_to_be_processed = df_jobs_to_be_processed.progress_apply(
+                        lambda row: get_word_num_and_frequency(row=row, text_col=text_col), axis='columns')
 
                     # Get sentiment
-                    df_jobs_to_be_processed = get_sentiment(df_jobs_to_be_processed, text_col=text_col)
+                    df_jobs_to_be_processed = get_sentiment(
+                        df_jobs_to_be_processed, text_col=text_col)
 
                     if args['save_enabled'] is True:
                         print('Saving df_jobs_labeled from preprocessed function.')
-                        df_jobs_to_be_processed.to_pickle(f'{args["df_dir"]}df_jobs_labeled_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format"]}')
-                        df_jobs_to_be_processed.to_csv(f'{args["df_dir"]}df_jobs_labeled_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format_backup"]}')
+                        df_jobs_to_be_processed.to_pickle(
+                            f'{args["df_dir"]}df_jobs_labeled_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format"]}')
+                        df_jobs_to_be_processed.to_csv(
+                            f'{args["df_dir"]}df_jobs_labeled_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format_backup"]}')
 
             elif preprocessed_from_function is False:
                 print('Using given version of preprocessed df_jobs_labeled.')
@@ -810,27 +858,33 @@ def simple_preprocess_df(
                     )
                     for col in df_jobs_to_be_processed.columns:
                         if 'grams_' in col:
-                            df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].apply(lambda x: ast.literal_eval(str(x)))
+                            df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].progress_apply(
+                                lambda x: ast.literal_eval(str(x)))
 
 #                 if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
-                df_jobs_to_be_processed = df_jobs_to_be_processed.drop(['Unnamed: 0'], axis='columns', errors='ignore')
+                df_jobs_to_be_processed = df_jobs_to_be_processed.drop(
+                    ['Unnamed: 0'], axis='columns', errors='ignore')
 
             # Tokenize on Ngrams
             if ngrams_enabled is True:
 
                 # Tokenize
-                ## Custom
-                df_jobs_to_be_processed['1grams_all'] = df_jobs_to_be_processed['Job Description_cleaned'].apply(lambda sentences: ast.literal_eval(custom_tokenizer(str(sentences), numbers_cleaned=numbers_cleaned, stemming_enabled=stemming_enabled, lemmatization_enabled=lemmatization_enabled, pattern=pattern, stop_words=stop_words, return_tokens=True)))
-                ## BERT
-                BERTMODEL='bert-base-uncased'
-                bert_tokenizer = BertTokenizer.from_pretrained(BERTMODEL, strip_accents = True)
-                df_jobs_to_be_processed['1grams_bert'] = df_jobs_to_be_processed['Job Description_cleaned'].apply(
+                # Custom
+                df_jobs_to_be_processed['1grams_all'] = df_jobs_to_be_processed['Job Description_cleaned'].progress_apply(lambda sentences: ast.literal_eval(custom_tokenizer(str(
+                    sentences), numbers_cleaned=numbers_cleaned, stemming_enabled=stemming_enabled, lemmatization_enabled=lemmatization_enabled, pattern=pattern, stop_words=stop_words, return_tokens=True)))
+                # BERT
+                BERTMODEL = 'bert-base-uncased'
+                bert_tokenizer = BertTokenizer.from_pretrained(
+                    BERTMODEL, strip_accents=True)
+                df_jobs_to_be_processed['1grams_bert'] = df_jobs_to_be_processed['Job Description_cleaned'].progress_apply(
                     lambda sentence: bert_tokenizer.tokenize(str(sentence)).to(device))
 
                 if args['save_enabled'] is True:
                     print('Saving df_jobs_labeled after tokenization.')
-                    df_jobs_to_be_processed.to_pickle(f'{args["df_dir"]}df_jobs_labeled_tokenized_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format"]}')
-                    df_jobs_to_be_processed.to_csv(f'{args["df_dir"]}df_jobs_labeled_tokenized_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format_backup"]}')
+                    df_jobs_to_be_processed.to_pickle(
+                        f'{args["df_dir"]}df_jobs_labeled_tokenized_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format"]}')
+                    df_jobs_to_be_processed.to_csv(
+                        f'{args["df_dir"]}df_jobs_labeled_tokenized_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format_backup"]}')
 
                 try:
                     df_jobs_to_be_processed = pd.read_pickle(
@@ -842,25 +896,35 @@ def simple_preprocess_df(
                     )
                     for col in df_jobs_to_be_processed.columns:
                         if 'grams_' in col:
-                            df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].apply(lambda x: ast.literal_eval(str(x)))
+                            df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].progress_apply(
+                                lambda x: ast.literal_eval(str(x)))
 
 #                 if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
-                df_jobs_to_be_processed = df_jobs_to_be_processed.drop(['Unnamed: 0'], axis='columns', errors='ignore')
+                df_jobs_to_be_processed = df_jobs_to_be_processed.drop(
+                    ['Unnamed: 0'], axis='columns', errors='ignore')
 
                 # Gensim
-                bigram_transformer, trigram_transformer, df_jobs_to_be_processed['2grams_gensim'], df_jobs_to_be_processed['3grams_gensim'] = get_gensim_n_grams(df_jobs_to_be_processed['1grams_all'])
-                df_jobs_to_be_processed['123grams_gensim'] = df_jobs_to_be_processed['1grams_all'] + df_jobs_to_be_processed['2grams_gensim'] + df_jobs_to_be_processed['3grams_gensim']
+                bigram_transformer, trigram_transformer, df_jobs_to_be_processed['2grams_gensim'], df_jobs_to_be_processed['3grams_gensim'] = get_gensim_n_grams(
+                    df_jobs_to_be_processed['1grams_all'])
+                df_jobs_to_be_processed['123grams_gensim'] = df_jobs_to_be_processed['1grams_all'] + \
+                    df_jobs_to_be_processed['2grams_gensim'] + \
+                    df_jobs_to_be_processed['3grams_gensim']
 
                 # NLTK
                 for ngram_number, ngram_nltk in nltk_ngrams_dict.items():
-                    df_jobs_to_be_processed[f'{str(ngram_number)}grams_nltk'] = df_jobs_to_be_processed['1grams_all'].reset_index(drop=True).apply(lambda unigram: list(ngram_nltk(unigram)))
+                    df_jobs_to_be_processed[f'{str(ngram_number)}grams_nltk'] = df_jobs_to_be_processed['1grams_all'].reset_index(
+                        drop=True).progress_apply(lambda unigram: list(ngram_nltk(unigram)))
 
-                df_jobs_to_be_processed['123grams_nltk'] = df_jobs_to_be_processed['1grams_all'] + df_jobs_to_be_processed['2grams_nltk'] + df_jobs_to_be_processed['3grams_nltk']
+                df_jobs_to_be_processed['123grams_nltk'] = df_jobs_to_be_processed['1grams_all'] + \
+                    df_jobs_to_be_processed['2grams_nltk'] + \
+                    df_jobs_to_be_processed['3grams_nltk']
 
                 if args['save_enabled'] is True:
                     print('Saving df_jobs_labeled from n_grams function.')
-                    df_jobs_to_be_processed.to_pickle(f'{args["df_dir"]}df_jobs_labeled_ngram_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format"]}')
-                    df_jobs_to_be_processed.to_csv(f'{args["df_dir"]}df_jobs_labeled_ngram_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format_backup"]}')
+                    df_jobs_to_be_processed.to_pickle(
+                        f'{args["df_dir"]}df_jobs_labeled_ngram_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format"]}')
+                    df_jobs_to_be_processed.to_csv(
+                        f'{args["df_dir"]}df_jobs_labeled_ngram_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format_backup"]}')
 
                 try:
                     df_jobs_to_be_processed = pd.read_pickle(
@@ -872,26 +936,32 @@ def simple_preprocess_df(
                     )
                     for col in df_jobs_to_be_processed.columns:
                         if 'grams_' in col:
-                            df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].apply(lambda x: ast.literal_eval(str(x)))
+                            df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].progress_apply(
+                                lambda x: ast.literal_eval(str(x)))
 
 #                 if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
-                df_jobs_to_be_processed = df_jobs_to_be_processed.drop(['Unnamed: 0'], axis='columns', errors='ignore')
+                df_jobs_to_be_processed = df_jobs_to_be_processed.drop(
+                    ['Unnamed: 0'], axis='columns', errors='ignore')
 
                 # Get absolute word frequencies
-                for embedding_library, ngram_number in itertools.product(embedding_libraries_list, ngrams_list):
+                for embedding_library, ngram_number in tqdm_product(embedding_libraries_list, ngrams_list):
                     if ngram_number == 1:
                         embedding_library = 'all'
-                    df_jobs_to_be_processed = df_jobs_to_be_processed.apply(lambda row: get_abs_frequency(row=row, text_col=text_col, ngram_number=ngram_number, embedding_library=embedding_library), axis='columns')
+                    df_jobs_to_be_processed = df_jobs_to_be_processed.progress_apply(lambda row: get_abs_frequency(
+                        row=row, text_col=text_col, ngram_number=ngram_number, embedding_library=embedding_library), axis='columns')
 
                 # Get dictionary and corpus
                 for ngram_number in ngrams_list:
                     if ngram_number != 1:
-                        df_jobs_to_be_processed = df_jobs_to_be_processed.apply(lambda row: get_corpus_and_dictionary(row=row, ngram_number=ngram_number, embedding_library='gensim'), axis='columns')
+                        df_jobs_to_be_processed = df_jobs_to_be_processed.progress_apply(lambda row: get_corpus_and_dictionary(
+                            row=row, ngram_number=ngram_number, embedding_library='gensim'), axis='columns')
 
                 if args['save_enabled'] is True:
                     print('Saving df_jobs_labeled from n_grams function.')
-                    df_jobs_to_be_processed.to_pickle(f'{args["df_dir"]}df_jobs_labeled_corpus_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format"]}')
-                    df_jobs_to_be_processed.to_csv(f'{args["df_dir"]}df_jobs_labeled_corpus_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format_backup"]}')
+                    df_jobs_to_be_processed.to_pickle(
+                        f'{args["df_dir"]}df_jobs_labeled_corpus_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format"]}')
+                    df_jobs_to_be_processed.to_csv(
+                        f'{args["df_dir"]}df_jobs_labeled_corpus_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format_backup"]}')
 
         elif ngrams_from_funtion is False:
             print('Using given version of corpus df_jobs_labeled.')
@@ -906,17 +976,20 @@ def simple_preprocess_df(
                 )
                 for col in df_jobs_to_be_processed.columns:
                     if 'grams_' in col:
-                        df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].apply(lambda x: ast.literal_eval(str(x)))
+                        df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].progress_apply(
+                            lambda x: ast.literal_eval(str(x)))
 
 #             if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
-            df_jobs_to_be_processed = df_jobs_to_be_processed.drop(['Unnamed: 0'], axis='columns', errors='ignore')
+            df_jobs_to_be_processed = df_jobs_to_be_processed.drop(
+                ['Unnamed: 0'], axis='columns', errors='ignore')
 
             # Get embeddings
-            for embedding_library, ngram_number in itertools.product(embedding_libraries_list, ngrams_list):
+            for embedding_library, ngram_number in tqdm_product(embedding_libraries_list, ngrams_list):
                 if ngram_number == 1:
                     embedding_library = 'all'
 
-                print(f'Building {ngram_number}grams_{embedding_library} model and vocabulary.')
+                print(
+                    f'Building {ngram_number}grams_{embedding_library} model and vocabulary.')
 
                 for embed_model_name, embed_func_list in embedding_models_dict.items():
                     build_train_func, embed_func, model_loader = embed_func_list
@@ -932,28 +1005,33 @@ def simple_preprocess_df(
                         f'{ngram_number}grams_{embedding_library}_mean_{embed_model_name}_embeddings'
                     ] = df_jobs_to_be_processed[
                         f'{ngram_number}grams_{embedding_library}'
-                    ].apply(
+                    ].progress_apply(
                         lambda sentences: embed_func(sentences, vocab, model)
                     )
                     if args['save_enabled'] is True:
-                        model.save(f'{args["embeddings_save_path"]}{ngram_number}grams_{embedding_library}_{embed_model_name}_model.model')
+                        model.save(
+                            f'{args["embeddings_save_path"]}{ngram_number}grams_{embedding_library}_{embed_model_name}_model.model')
 
                 # Sent2Vec
                 print('Getting sent2vec embeddings.')
                 embeddings_index = get_glove()
-                df_jobs_to_be_processed[f'{ngram_number}grams_{embedding_library}_sent2vec_embeddings'] = df_jobs_to_be_processed[f'{ngram_number}grams_{embedding_library}'].apply(lambda sentences: sent2vec(sentences, embeddings_index=embeddings_index, external_glove=True, extra_preprocessing_enabled=False))
+                df_jobs_to_be_processed[f'{ngram_number}grams_{embedding_library}_sent2vec_embeddings'] = df_jobs_to_be_processed[f'{ngram_number}grams_{embedding_library}'].progress_apply(
+                    lambda sentences: sent2vec(sentences, embeddings_index=embeddings_index, external_glove=True, extra_preprocessing_enabled=False))
                 print('Done getting sent2vec embeddings.')
 
                 # # HuggingFace
                 # print('Getting huggingface embeddings.')
                 # bert_model=TFBertModel.from_pretrained('bert-base-uncased')
-                # df_jobs_to_be_processed[f'{ngram_number}grams_{embedding_library}_huggingface_embeddings'] = df_jobs_to_be_processed[f'{ngram_number}grams_{embedding_library}'].apply(lambda sentences: bert_model(sentences))
+                # df_jobs_to_be_processed[f'{ngram_number}grams_{embedding_library}_huggingface_embeddings'] = df_jobs_to_be_processed[f'{ngram_number}grams_{embedding_library}'].progress_apply(lambda sentences: bert_model(sentences))
                 # print('Done getting huggingface embeddings.')
 
             if args['save_enabled'] is True:
-                print('Saving df_jobs_labeled from word2vec and fasttext embedding function.')
-                df_jobs_to_be_processed.to_pickle(f'{args["df_dir"]}df_jobs_labeled_embeddings_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format"]}')
-                df_jobs_to_be_processed.to_csv(f'{args["df_dir"]}df_jobs_labeled_embeddings_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format_backup"]}')
+                print(
+                    'Saving df_jobs_labeled from word2vec and fasttext embedding function.')
+                df_jobs_to_be_processed.to_pickle(
+                    f'{args["df_dir"]}df_jobs_labeled_embeddings_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format"]}')
+                df_jobs_to_be_processed.to_csv(
+                    f'{args["df_dir"]}df_jobs_labeled_embeddings_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format_backup"]}')
 
     elif embedding_from_function is False:
         print('Using given version of embeddings df_jobs_labeled.')
@@ -968,18 +1046,23 @@ def simple_preprocess_df(
             )
             for col in df_jobs_to_be_processed.columns:
                 if 'grams_' in col:
-                    df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].apply(lambda x: ast.literal_eval(str(x)))
+                    df_jobs_to_be_processed[col] = df_jobs_to_be_processed[col].progress_apply(
+                        lambda x: ast.literal_eval(str(x)))
 
 #         if 'Unnamed: 0' in df_jobs_to_be_processed.columns:
-        df_jobs_to_be_processed = df_jobs_to_be_processed.drop(['Unnamed: 0'], axis='columns', errors='ignore')
+        df_jobs_to_be_processed = df_jobs_to_be_processed.drop(
+            ['Unnamed: 0'], axis='columns', errors='ignore')
 
     if drop_cols_enabled is True:
-        df_jobs_to_be_processed = df_jobs_to_be_processed.drop(['Gender', 'Age'], axis='columns', errors='ignore')
+        df_jobs_to_be_processed = df_jobs_to_be_processed.drop(
+            ['Gender', 'Age'], axis='columns', errors='ignore')
 
     if args['save_enabled'] is True:
 
-        df_jobs_to_be_processed.to_pickle(f'{args["df_dir"]}df_jobs_labeled_final_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format"]}')
-        df_jobs_to_be_processed.to_csv(f'{args["df_dir"]}df_jobs_labeled_final_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format_backup"]}')
+        df_jobs_to_be_processed.to_pickle(
+            f'{args["df_dir"]}df_jobs_labeled_final_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format"]}')
+        df_jobs_to_be_processed.to_csv(
+            f'{args["df_dir"]}df_jobs_labeled_final_preprocessed_stemming({stemming_enabled})_lemmatization({lemmatization_enabled})_numbers_cleaned({numbers_cleaned}).{args["file_save_format_backup"]}')
 
     return df_jobs_to_be_processed
 
@@ -991,7 +1074,8 @@ def get_and_viz_df_dict(dataframes, df_loc, args=get_args()):
         print('='*80)
         print(df_name.upper())
         print('='*80)
-        dataframes[df_name] = pd.read_pickle(f'{args["df_dir"]}{df_name}{df_loc}.{args["file_save_format"]}')
+        dataframes[df_name] = pd.read_pickle(
+            f'{args["df_dir"]}{df_name}{df_loc}.{args["file_save_format"]}')
         dataframes[df_name] = categorize_df_gender_age(dataframes[df_name])
         dataframes[df_name].info()
         if 'mean' not in df_name:
@@ -1137,7 +1221,8 @@ def evaluate_prediction(
         print(
             f'Precision: {metrics.precision_score(y_test, y_test_pred, pos_label = 1, labels = [1,0])}'
         )
-        best_threshold, best_score = calculate_best_threshold(y_test, y_test_pred, scoring, print_enabled)
+        best_threshold, best_score = calculate_best_threshold(
+            y_test, y_test_pred, scoring, print_enabled)
         print(f'Best {scoring} Threshold: {best_threshold}')
         print(f'Best {scoring} Score: {best_score}')
         print(
@@ -1149,12 +1234,15 @@ def evaluate_prediction(
         print(f'Confusion matrix:\n{cm}')
         print('(row=expected, col=predicted)')
 
-        cm_normalized = cm.astype('float') / cm.sum(axis='columns')[:, np.newaxis]
+        cm_normalized = cm.astype(
+            'float') / cm.sum(axis='columns')[:, np.newaxis]
         plot_confusion_matrix(
             df_jobs_labeled, col, cm_normalized, my_tags, title + ' Normalized'
         )
-        skplt.metrics.plot_confusion_matrix(y_test, y_test_pred, normalize=True)
+        skplt.metrics.plot_confusion_matrix(
+            y_test, y_test_pred, normalize=True)
         plt.show()
+
 
 def get_label_n(y, y_pred, n=None):
 
@@ -1176,6 +1264,7 @@ def get_label_n(y, y_pred, n=None):
 
     return y_pred
 
+
 def precision_n_scores(y, y_pred, n=None):
 
     # turn raw prediction decision scores into binary labels
@@ -1186,6 +1275,7 @@ def precision_n_scores(y, y_pred, n=None):
     y_pred = column_or_1d(y_pred)
 
     return metrics.precision_score(y, y_pred)
+
 
 def evaluate_print(clf_name, y, y_pred):
 
@@ -1201,18 +1291,21 @@ def evaluate_print(clf_name, y, y_pred):
 
 # %%
 def explain_model(test, y_test, y_test_pred, y_test_prob_pred, y_train):
-    ## select observation
+    # select observation
     i = 0
     txt_instance = test[f'{str(text_col)}'].astype('str').iloc[i]
-    ## check true value and predicted value
-    print('True:', y_test[i], '--> Pred:', y_test_pred[i], '| Prob:', round(np.max(y_test_prob_pred[i]),2))
-    ## show explanation
+    # check true value and predicted value
+    print('True:', y_test[i], '--> Pred:', y_test_pred[i],
+          '| Prob:', round(np.max(y_test_prob_pred[i]), 2))
+    # show explanation
     explainer = lime_text.LimeTextExplainer(class_names=np.unique(y_train))
 
     return explainer.explain_instance(txt_instance, model.y_test_prob_pred, num_features=3)
 
 # %%
 # Search Optimization
+
+
 def grid_search_wrapper(
     X_test,
     y_test,
@@ -1257,6 +1350,8 @@ def grid_search_wrapper(
     return grid_search
 
 # %%
+
+
 def calculate_best_threshold(y_test, y_test_pred, scoring, print_enabled):
     best_threshold = -1
     best_score = -1
@@ -1271,7 +1366,8 @@ def calculate_best_threshold(y_test, y_test_pred, scoring, print_enabled):
         else:
             raise ValueError(f'{scoring.title()} is not a valid score')
 
-        emb_model_score = scorer(y_true=y_test, y_pred=(y_test_pred > threshold).astype(int))
+        emb_model_score = scorer(y_true=y_test, y_pred=(
+            y_test_pred > threshold).astype(int))
         if emb_model_score > best_score:
             best_score = emb_model_score
             best_threshold = threshold
@@ -1281,6 +1377,8 @@ def calculate_best_threshold(y_test, y_test_pred, scoring, print_enabled):
 
     return best_threshold, best_score
 # %%
+
+
 def predict(
     X_test,
     y_test,
@@ -1314,12 +1412,15 @@ def predict(
 # %%
 def evaluation(y_test, y_test_pred, scoring, print_enabled, title='Confusion Matrix'):
     cm = metrics.confusion_matrix(y_test, y_test_pred)
-    precision = metrics.precision_score(y_test, y_test_pred, pos_label=1, labels=[1, 0])
-    recall = metrics.recall_score(y_test, y_test_pred, pos_label=1, labels=[1, 0])
+    precision = metrics.precision_score(
+        y_test, y_test_pred, pos_label=1, labels=[1, 0])
+    recall = metrics.recall_score(
+        y_test, y_test_pred, pos_label=1, labels=[1, 0])
     accuracy = metrics.accuracy_score(y_test, y_test_pred)
     f1 = metrics.f1_score(y_test, y_test_pred)
     mcc = metrics.matthews_corrcoef(y_test, y_test_pred)
-    best_threshold, best_score = calculate_best_threshold(y_test, y_test_pred, scoring, print_enabled)
+    best_threshold, best_score = calculate_best_threshold(
+        y_test, y_test_pred, scoring, print_enabled)
     report = classification_report(y_test, y_test_pred)
 
     print('=' * 20)
@@ -1346,45 +1447,52 @@ def evaluation(y_test, y_test_pred, scoring, print_enabled, title='Confusion Mat
 
 
 # %%
-def evaluate_multi_classif(y_test, predicted, y_test_pred, scoring = 'recall', print_enabled = False, figsize=(15,5)):
+def evaluate_multi_classif(y_test, predicted, y_test_pred, scoring='recall', print_enabled=False, figsize=(15, 5)):
     classes = np.unique(y_test)
     y_test_array = pd.get_dummies(y_test, drop_first=False).values
 
-    ## Accuracy, Precision, Recall
+    # Accuracy, Precision, Recall
     mcc = metrics.matthews_corrcoef(y_test, predicted)
-    best_threshold, best_score = calculate_best_threshold(y_test, predicted, scoring, print_enabled)
+    best_threshold, best_score = calculate_best_threshold(
+        y_test, predicted, scoring, print_enabled)
     report = classification_report(y_test, predicted)
 
     accuracy = metrics.accuracy_score(y_test, predicted)
     f1 = metrics.f1_score(y_test, predicted)
-    print('Accuracy:',  round(accuracy,2))
-    print('F1:', round(f1,2))
+    print('Accuracy:',  round(accuracy, 2))
+    print('F1:', round(f1, 2))
     print('Detail:')
     print(report)
 
-    ## Plot confusion matrix
+    # Plot confusion matrix
     cm = metrics.confusion_matrix(y_test, predicted)
     fig, ax = plt.subplots()
     sns.heatmap(cm, annot=True, fmt='d', ax=ax, cmap=plt.cm.Blues, cbar=False)
-    ax.set(xlabel='Pred', ylabel='True', xticklabels=classes, yticklabels=classes, title='Confusion matrix')
+    ax.set(xlabel='Pred', ylabel='True', xticklabels=classes,
+           yticklabels=classes, title='Confusion matrix')
     plt.yticks(rotation=0)
 
     fig, ax = plt.subplots(nrows=1, ncols=2, figsize=figsize)
-    ## Plot roc
+    # Plot roc
     for i in range(len(classes)):
-        fpr, tpr, thresholds = metrics.roc_curve(y_test_array[:,i], y_test_pred[:,i])
-        ax[0].plot(fpr, tpr, lw=3, label='{0} (area={1:0.2f})'.format(classes[i], metrics.auc(fpr, tpr)))
-    ax[0].plot([0,1], [0,1], color='navy', lw=3, linestyle='--')
-    ax[0].set(xlim=[-0.05,1.0], ylim=[0.0,1.05], xlabel='False Positive Rate',
-                ylabel='True Positive Rate (Recall)', title='Receiver operating characteristic')
+        fpr, tpr, thresholds = metrics.roc_curve(
+            y_test_array[:, i], y_test_pred[:, i])
+        ax[0].plot(fpr, tpr, lw=3, label='{0} (area={1:0.2f})'.format(
+            classes[i], metrics.auc(fpr, tpr)))
+    ax[0].plot([0, 1], [0, 1], color='navy', lw=3, linestyle='--')
+    ax[0].set(xlim=[-0.05, 1.0], ylim=[0.0, 1.05], xlabel='False Positive Rate',
+              ylabel='True Positive Rate (Recall)', title='Receiver operating characteristic')
     ax[0].legend(loc='lower right')
     ax[0].grid(True)
 
-    ## Plot precision-recall curve
+    # Plot precision-recall curve
     for i in range(len(classes)):
-        precision, recall, thresholds = metrics.precision_recall_curve(y_test_array[:,i], y_test_pred[:,i])
-        ax[1].plot(recall, precision, lw=3, label='{0} (area={1:0.2f})'.format(classes[i], metrics.auc(recall, precision)))
-    ax[1].set(xlim=[0.0,1.05], ylim=[0.0,1.05], xlabel='Recall', ylabel='Precision', title='Precision-Recall curve')
+        precision, recall, thresholds = metrics.precision_recall_curve(
+            y_test_array[:, i], y_test_pred[:, i])
+        ax[1].plot(recall, precision, lw=3, label='{0} (area={1:0.2f})'.format(
+            classes[i], metrics.auc(recall, precision)))
+    ax[1].set(xlim=[0.0, 1.05], ylim=[0.0, 1.05], xlabel='Recall',
+              ylabel='Precision', title='Precision-Recall curve')
     ax[1].legend(loc='best')
     ax[1].grid(True)
     plt.show()
@@ -1439,7 +1547,8 @@ def optimization(
         roc_auc = metrics.auc(fpr, tpr)
         print('\n')
         print('-' * 20)
-        print(f'ROC AUC for {classifier_name} with {vectorizer_name}:\n', roc_auc)
+        print(
+            f'ROC AUC for {classifier_name} with {vectorizer_name}:\n', roc_auc)
 
         # ROC
         plt.figure(figsize=(4, 4))
@@ -1470,7 +1579,8 @@ def optimization(
         j_ordered = sorted(zip(j_scores, thresholds))
         optimal_threshold = j_ordered[-1][1]
         print(f'Optimal threshold: ', np.exp(optimal_threshold))
-        y_test_pred_new = np.where(y_prob_log_pred[:, 1] > optimal_threshold, 1, 0)
+        y_test_pred_new = np.where(
+            y_prob_log_pred[:, 1] > optimal_threshold, 1, 0)
         print(f'New y_test_pred:\n{y_test_pred_new}')
 
         # print('-'*20)
@@ -1487,7 +1597,8 @@ def optimization(
         print(
             f'SCORES FOR {classifier_name} WITH {vectorizer_name} AFTER OPTIMIZATION:'
         )
-        cm, precision, recall, accuracy, f1, mcc, best_threshold, best_score, report = evaluation(y_test, y_test_pred, scoring, print_enabled)
+        cm, precision, recall, accuracy, f1, mcc, best_threshold, best_score, report = evaluation(
+            y_test, y_test_pred, scoring, print_enabled)
 
     return y_test_pred_new, df_ROC_plot
 

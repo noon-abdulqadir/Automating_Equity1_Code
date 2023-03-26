@@ -170,6 +170,7 @@ try:
     import torch.nn as nn
     import torch.nn.functional as F
     import tqdm
+    import tqdm.auto as tqdm_auto
     import transformers
     import urllib3
     import xgboost as xgb
@@ -408,38 +409,38 @@ try:
     from webdriver_manager.chrome import ChromeDriverManager
     from xgboost import XGBClassifier
 
-    # from accelerate import Accelerator
-    # from icecream import ic
-    # import bokeh
-    # import cardinality
-    # import libmaths as lm
-    # import lxml
-    # import pingouin as pg
-    # import plotly
-    # import plotly.express as px
-    # import plotly.graph_objects as go
-    # import progressbar
-    # import researchpy as rp
-    # import xorbits.pandas as xpd
-    # import tensorflow as tf
-    # from tensorflow import keras
-    # from tensorflow.keras import backend as K
-    # from tensorflow.keras import layers, models
-    # from tensorflow.keras import preprocessing
-    # from tensorflow.keras import preprocessing as kprocessing
-    # import swifter
-    # import tqdm.auto
-    # from whatthelang import WhatTheLang
-    # from xorbits.numpy import arange, argmax, cumsum
-    # from yellowbrick.text import TSNEVisualizer
-    # from sentence_transformers import SentenceTransformer, losses, util
-    # from keras.layers import Activation, Dense
-    # from keras.models import Sequential
 
 except ImportError as error:
     module_name = str(error).split('named')[1]
     print(f'The library {module_name} is not installed. Installing now.')
     # !conda install --channel apple --yes {module_name}
+
+# from accelerate import Accelerator
+# from icecream import ic
+# import bokeh
+# import cardinality
+# import libmaths as lm
+# import lxml
+# import pingouin as pg
+# import plotly
+# import plotly.express as px
+# import plotly.graph_objects as go
+# import progressbar
+# import researchpy as rp
+# import xorbits.pandas as xpd
+# import tensorflow as tf
+# from tensorflow import keras
+# from tensorflow.keras import backend as K
+# from tensorflow.keras import layers, models
+# from tensorflow.keras import preprocessing
+# from tensorflow.keras import preprocessing as kprocessing
+# import swifter
+# from whatthelang import WhatTheLang
+# from xorbits.numpy import arange, argmax, cumsum
+# from yellowbrick.text import TSNEVisualizer
+# from sentence_transformers import SentenceTransformer, losses, util
+# from keras.layers import Activation, Dense
+# from keras.models import Sequential
 
 # imported_modules = dir()
 # with open(f'{code_dir}imported_modules.txt', 'w') as f:
@@ -489,7 +490,7 @@ plot_save_path = f'{data_dir}plots/'
 # %%
 # Set LM settings
 # Preprocessing
-# NLTK
+# NLTK variables
 nltk_path = f'{llm_path}/nltk'
 nltk.data.path.append(nltk_path)
 
@@ -511,7 +512,7 @@ lemmatizer = WordNetLemmatizer()
 stemmer = PorterStemmer()
 sentim_analyzer = SentimentIntensityAnalyzer()
 
-# Spacy
+# Spacy variables
 nlp = spacy.load('en_core_web_sm')
 # nlp = en_core_web_sm.load()
 # nlp = spacy.load('en_core_web_trf')
@@ -526,7 +527,7 @@ fasttext_path = os.path.abspath(
     f'{gensim_path}fasttext-wiki-news-subwords-300')
 
 # Classification
-# Sklearn
+# Sklearn variables
 t = time.time()
 n_jobs = -1
 n_splits = 10
@@ -572,7 +573,7 @@ metrics_dict = {
     'Normalized Confusion Matrix': np.nan
 }
 
-# BERT
+# BERT variables
 max_length = 512
 returned_tensor = 'pt'
 cpu_counts = torch.multiprocessing.cpu_count()
@@ -586,7 +587,7 @@ bert_tokenizer = BertTokenizerFast.from_pretrained(
 bert_model = BertForSequenceClassification.from_pretrained(
     bert_model_name).to(device)
 
-# Set display options
+# Display variables
 # csv.field_size_limit(sys.maxsize)
 # IPython.core.page = print
 # IPython.display.clear_output
@@ -618,9 +619,12 @@ errors = (
     TimeoutException,
 )
 
-# Plotting
+# Plotting variables
 pp = pprint.PrettyPrinter(indent=4)
-tqdm.tqdm_notebook().pandas(desc='progress-bar')
+tqdm.tqdm.pandas(desc='progress-bar')
+tqdm_auto.tqdm.pandas(desc='progress-bar')
+tqdm.notebook.tqdm().pandas(desc='progress-bar')
+tqdm_auto.notebook_tqdm().pandas(desc='progress-bar')
 # pbar = progressbar.ProgressBar(maxval=10)
 mpl.use('MacOSX')
 mpl.style.use(f'{code_dir}/setup_module/apa.mplstyle-main/apa.mplstyle')

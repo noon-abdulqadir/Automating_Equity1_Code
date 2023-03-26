@@ -36,6 +36,8 @@
 #
 #
 # %%
+from setup_module.scraping import *
+from setup_module.imports import *
 import os
 import sys
 from pathlib import Path
@@ -60,8 +62,6 @@ scraped_data = f'{code_dir}/scraped_data'
 sys.path.append(code_dir)
 
 # %%
-from setup_module.imports import *
-from setup_module.scraping import *
 
 warnings.filterwarnings('ignore', category=DeprecationWarning)
 
@@ -69,6 +69,8 @@ warnings.filterwarnings('ignore', category=DeprecationWarning)
 # post_collection_processing
 # %%
 # Function to create a metadata dict
+
+
 def create_metadata(args=get_args()):
 
     if args['print_enabled'] is True:
@@ -199,7 +201,7 @@ def create_metadata(args=get_args()):
 def save_metadata(df_jobs, df_file_name, save_path, args=get_args()):
 
     if (not df_jobs.empty) and (len(df_jobs != 0)):
-        if args['print_enabled'] ==True:
+        if args['print_enabled'] == True:
             print('Attaching Metadata to existing DF.')
         metadata_dict = create_metadata()
         metadata_key = 'metadat.iot'
@@ -210,8 +212,9 @@ def save_metadata(df_jobs, df_file_name, save_path, args=get_args()):
             metadata_key.encode(): metadata_dict_json.encode(),
             **existing_metadata,
         }
-        df_jobs_pyarrow = df_jobs_pyarrow.replace_schema_metadata(combined_metadata)
-        if args['print_enabled'] ==True:
+        df_jobs_pyarrow = df_jobs_pyarrow.replace_schema_metadata(
+            combined_metadata)
+        if args['print_enabled'] == True:
             print('Saving DF as .parquet file.')
         pq.write_table(
             df_jobs_pyarrow,
@@ -232,7 +235,7 @@ def fix_broken_linkedin_files(glob_path):
 
     if glob_path.endswith('.json'):
 
-        with open(glob_path, encoding = 'utf-8') as csv_file_handler:
+        with open(glob_path, encoding='utf-8') as csv_file_handler:
             csv_reader = csv.DictReader(csv_file_handler)
 
             for rows in csv_reader:
@@ -243,26 +246,27 @@ def fix_broken_linkedin_files(glob_path):
         for num in data_dict:
             data_list.append(data_dict[num])
 
-        with open(glob_path, 'w', encoding = 'utf-8') as json_file_handler:
-            json_file_handler.write(json.dumps(data_list, indent = 4))
+        with open(glob_path, 'w', encoding='utf-8') as json_file_handler:
+            json_file_handler.write(json.dumps(data_list, indent=4))
 
 
 # %%
 # Clean df and drop duplicates and -1 for job description
 def clean_df(
     df_jobs: pd.DataFrame,
-    id_dict_new = False,
+    id_dict_new=False,
     int_variable: str = 'Job ID',
     str_variable: str = 'Job Description',
     gender: str = 'Gender',
     age: str = 'Age',
     language: str = 'en',
-    nan_list = [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan'],
+    nan_list=[None, 'None', '', ' ', [], -1,
+              '-1', 0, '0', 'nan', np.nan, 'Nan'],
     reset=True,
     args=get_args(),
 ) -> pd.DataFrame:
 
-    df_jobs.columns = df_jobs.columns.to_series().apply(lambda x: x.strip())
+    df_jobs.columns = df_jobs.columns.to_series().progress_apply(lambda x: x.strip())
     df_jobs = df_jobs.dropna(axis='index', how='all')
     df_jobs = df_jobs.dropna(axis='columns', how='all')
     df_jobs = df_jobs.drop(
@@ -274,12 +278,14 @@ def clean_df(
         axis='columns',
         errors='ignore',
     )
-    df_jobs[int_variable] = df_jobs[int_variable].apply(lambda x: str(x).lower().strip())
+    df_jobs[int_variable] = df_jobs[int_variable].progress_apply(
+        lambda x: str(x).lower().strip())
 
     if reset is True:
-        df_jobs = set_gender_age_sects_lang(df_jobs, str_variable=str_variable, id_dict_new=id_dict_new)
+        df_jobs = set_gender_age_sects_lang(
+            df_jobs, str_variable=str_variable, id_dict_new=id_dict_new)
 
-    subset_list=[int_variable, str_variable, gender, age]
+    subset_list = [int_variable, str_variable, gender, age]
     print('Cleaning DF')
     df_jobs = df_jobs.drop_duplicates(
         subset=[str_variable],
@@ -290,7 +296,7 @@ def clean_df(
 #     df_jobs = df_jobs.loc[
 #         (
 #             df_jobs[str_variable]
-#             .apply(lambda x: isinstance(x, str))
+#             .progress_apply(lambda x: isinstance(x, str))
 #         )
 #         & (df_jobs[str_variable] != -1)
 #         & (df_jobs[str_variable] != '-1')
@@ -311,19 +317,20 @@ def clean_df(
 
     )
 
-
     print('Detecting Language.')
     df_jobs = detect_language(df_jobs, str_variable)
     if 'Language' in df_jobs.columns:
         try:
-            df_jobs = df_jobs.drop(df_jobs.index[df_jobs['Language'] != str(language)], axis='index', errors='ignore')
+            df_jobs = df_jobs.drop(df_jobs.index[df_jobs['Language'] != str(
+                language)], axis='index', errors='ignore')
 
         except:
             df_jobs = df_jobs.loc[(df_jobs['Language'] == str(language))]
 
     if 'Search Keyword' in df_jobs.columns:
         for w_keyword, r_keyword in keyword_trans_dict.items():
-            df_jobs.loc[(df_jobs['Search Keyword'] == str(w_keyword)), 'Search Keyword'] = r_keyword
+            df_jobs.loc[(df_jobs['Search Keyword'] == str(
+                w_keyword)), 'Search Keyword'] = r_keyword
 
     df_jobs = df_jobs.reset_index(drop=True)
 
@@ -332,13 +339,14 @@ def clean_df(
 
 # %%
 # Lang detect
-def detect_language(df_jobs: pd.DataFrame, str_variable = 'Job Description', args=get_args()) -> pd.DataFrame:
+def detect_language(df_jobs: pd.DataFrame, str_variable='Job Description', args=get_args()) -> pd.DataFrame:
     if args['print_enabled'] is True:
         print('Starting language detection...')
 
     # df_jobs['Language'] = language
     try:
-        df_jobs['Language'] = df_jobs[str_variable].apply(detect_language_helper)
+        df_jobs['Language'] = df_jobs[str_variable].progress_apply(
+            detect_language_helper)
 
     except Exception as e:
         if args['print_enabled'] is True:
@@ -374,7 +382,8 @@ def categorize_df_gender_age(
 ):
     # Arrange Categories
     try:
-        df['Gender'] = df['Gender'].astype('category').cat.reorder_categories(order_gender, ordered=True)
+        df['Gender'] = df['Gender'].astype(
+            'category').cat.reorder_categories(order_gender, ordered=True)
 
         df['Gender'] = pd.Categorical(
             df['Gender'], categories=order_gender, ordered=True
@@ -382,7 +391,8 @@ def categorize_df_gender_age(
     except ValueError as e:
         print(e)
     try:
-        df['Age'] = df['Age'].astype('category').cat.reorder_categories(order_age, ordered=True)
+        df['Age'] = df['Age'].astype(
+            'category').cat.reorder_categories(order_age, ordered=True)
 
         df['Age'] = pd.Categorical(
             df['Age'], categories=order_age, ordered=True
@@ -391,7 +401,6 @@ def categorize_df_gender_age(
         print(e)
 
     return df
-
 
 
 # %%
@@ -450,12 +459,15 @@ def df_gender_age_info(
             print('-'*20)
             print(f'{iv} Counts:\n{df[f"{iv}"].value_counts()}')
             print('-'*20)
-            print(f'{iv} Percentages:\n{df[f"{iv}"].value_counts(normalize=True).mul(100).round(1).astype(float)}')
+            print(
+                f'{iv} Percentages:\n{df[f"{iv}"].value_counts(normalize=True).mul(100).round(1).astype(float)}')
             try:
                 print('-'*20)
-                print(f'{iv} Mean: {df[f"{iv}"].mean().round(2).astype(float)}')
+                print(
+                    f'{iv} Mean: {df[f"{iv}"].mean().round(2).astype(float)}')
                 print('-'*20)
-                print(f'{iv} Standard Deviation: {df[f"{iv}"].std().round(2).astype(float)}')
+                print(
+                    f'{iv} Standard Deviation: {df[f"{iv}"].std().round(2).astype(float)}')
             except Exception:
                 pass
         except Exception:
@@ -482,11 +494,14 @@ def df_warm_comp_info(
                     print('-'*20)
                     print(f'{dv} Counts:\n{df[f"{dv}"].value_counts()}')
                     print('-'*20)
-                    print(f'{dv} Percentages:\n{df[f"{dv}"].value_counts(normalize=True).mul(100).round(1).astype(float)}')
+                    print(
+                        f'{dv} Percentages:\n{df[f"{dv}"].value_counts(normalize=True).mul(100).round(1).astype(float)}')
                     print('-'*20)
-                    print(f'{dv} Means: {df[f"{dv}"].mean().round(2).astype(float)}')
+                    print(
+                        f'{dv} Means: {df[f"{dv}"].mean().round(2).astype(float)}')
                     print('-'*20)
-                    print(f'{dv} Standard Deviation: {df[f"{dv}"].std().round(2).astype(float)}')
+                    print(
+                        f'{dv} Standard Deviation: {df[f"{dv}"].std().round(2).astype(float)}')
                 except Exception:
                     print(f'{dv} not available.')
 
@@ -498,7 +513,7 @@ def df_warm_comp_info(
 def value_count_df_plot(which_df, main_cols, num_unique_values=100, filter_lt_pct=.05, height=1300, width=1500, align='left'):
     cols = []
     nunique = []
-    df = which_df #specify which df you're using
+    df = which_df  # specify which df you're using
     which_df = df
 
     for c in which_df.columns:
@@ -506,89 +521,78 @@ def value_count_df_plot(which_df, main_cols, num_unique_values=100, filter_lt_pc
         nunique.append(which_df[c].nunique())
     df_cols = pd.DataFrame(nunique)
     df_cols['cols'] = cols
-    df_cols.columns = ['nunique','column']
-    df_cols = df_cols[['column','nunique']]
+    df_cols.columns = ['nunique', 'column']
+    df_cols = df_cols[['column', 'nunique']]
     df_cols_non_unique = df_cols[
-            (df_cols['nunique'] <= df_cols.shape[0])
-            & (df_cols['nunique'] > 1)
-        ].sort_values(by='nunique',ascending=True)
+        (df_cols['nunique'] <= df_cols.shape[0])
+        & (df_cols['nunique'] > 1)
+    ].sort_values(by='nunique', ascending=True)
     merch_cols = list(df_cols_non_unique.column)
     # print(df_cols_non_unique.shape)
     df_cols_non_unique.head()
 
-    #lte 30 unique values in any column
+    # lte 30 unique values in any column
     num_unique_values = num_unique_values
-    df_cols_non_unique = df_cols_non_unique[df_cols_non_unique['nunique'] <= num_unique_values]
+    df_cols_non_unique = df_cols_non_unique[df_cols_non_unique['nunique']
+                                            <= num_unique_values]
     list_non_unique_cols = list(df_cols_non_unique['column'])
-    print('total number of cols with lte', num_unique_values, 'unique values:', len(list_non_unique_cols))
+    print('total number of cols with lte', num_unique_values,
+          'unique values:', len(list_non_unique_cols))
 
-    #include main cols
+    # include main cols
     main_cols = [main_cols]
     number_of_main_cols = len(main_cols)
 
-    #append main cols with interesting cols
+    # append main cols with interesting cols
     interestin_cols = main_cols + list_non_unique_cols
 
-    #specify interesting cols
+    # specify interesting cols
     df1 = df.loc[:, df.columns.isin(interestin_cols)]
-    df1 = df1.iloc[:,:-1]
+    df1 = df1.iloc[:, :-1]
 
-    #get value counts for each value in each col
-    def value_counts_col(df,col):
+    # get value counts for each value in each col
+    def value_counts_col(df, col):
         df = df
-        value_counts_df = pd.DataFrame(round(df[col].value_counts(normalize=True),2).reset_index())
-        value_counts_df.columns = ['value','value_counts']
+        value_counts_df = pd.DataFrame(
+            round(df[col].value_counts(normalize=True), 2).reset_index())
+        value_counts_df.columns = ['value', 'value_counts']
         value_counts_df['feature'] = col
         return value_counts_df
 
     all_cols_df = []
     for i in df1.columns[number_of_main_cols:]:
-        dfs = value_counts_col(df1,i)
+        dfs = value_counts_col(df1, i)
         all_cols_df.append(dfs)
 
-    #append column values to end of column
+    # append column values to end of column
     which_df = pd.concat(all_cols_df)
     which_df['value'] = which_df['value'].fillna('null')
-    which_df['feature_value'] = which_df['feature'] + '_' + which_df['value'].map(str)
-    which_df = which_df.drop(['value','feature'], axis='columns', errors='ignore')
-    which_df = which_df[['feature_value','value_counts']]
-    which_df = which_df.sort_values(by='value_counts',ascending=False)
+    which_df['feature_value'] = which_df['feature'] + \
+        '_' + which_df['value'].map(str)
+    which_df = which_df.drop(['value', 'feature'],
+                             axis='columns', errors='ignore')
+    which_df = which_df[['feature_value', 'value_counts']]
+    which_df = which_df.sort_values(by='value_counts', ascending=False)
 
-    #filter out less than x% features
+    # filter out less than x% features
     filter_lt_pct = filter_lt_pct
     which_df = which_df[which_df['value_counts'] >= filter_lt_pct]
 
-    print('df shape:', which_df.shape,'\n')
+    print('df shape:', which_df.shape, '\n')
 
-    #table plot
+    # table plot
     fig2 = go.Figure(data=[go.Table(
-        header=dict(values=list(which_df.columns)
-                    ,fill_color='black'
-                    ,align=align
-                    ,font=dict(color='white', size=12)
-                    ,line_color=['darkgray','darkgray','darkgray']
-                   )
-        ,cells=dict(values=[which_df['feature_value'],which_df['value_counts']]
-                   ,fill_color='black'
-                   ,align=align
-                   ,font=dict(color='white', size=12)
-                   ,line_color=['darkgray','darkgray','darkgray']
-                   )
+        header=dict(values=list(which_df.columns), fill_color='black', align=align, font=dict(color='white', size=12), line_color=['darkgray', 'darkgray', 'darkgray']
+                    ), cells=dict(values=[which_df['feature_value'], which_df['value_counts']], fill_color='black', align=align, font=dict(color='white', size=12), line_color=['darkgray', 'darkgray', 'darkgray']
+                                  )
     )
     ])
     fig2.update_layout(height=100, margin=dict(r=0, l=0, t=0, b=0))
     fig2.show()
 
-    #bar plot
-    fig1 = px.bar(which_df
-                     ,y='feature_value'
-                     ,x='value_counts'
-                     ,height=height
-                     ,width=width
-                     ,template='plotly_dark'
-                     ,text='value_counts'
-                     ,title='<b>Outlier Values of Interesting Cols within Dataset'
-                    )
+    # bar plot
+    fig1 = px.bar(which_df, y='feature_value', x='value_counts', height=height, width=width, template='plotly_dark', text='value_counts', title='<b>Outlier Values of Interesting Cols within Dataset'
+                  )
     fig1.update_xaxes(showgrid=False)
     fig1.update_yaxes(showgrid=False)
     fig1.show()
@@ -611,12 +615,14 @@ def get_viz(df_name, df_df, dataframes, args=get_args()):
         .sort_values(by='index')
     )
     fig, ax = plt.subplots()
-    fig.suptitle(f'{df_name}: Warmth and Competence Sentence Counts', fontsize=16.0)
+    fig.suptitle(
+        f'{df_name}: Warmth and Competence Sentence Counts', fontsize=16.0)
     warm_comp_count.plot(kind='barh', stacked=True, legend=True, color='blue', ax=ax).grid(
         axis='y'
     )
     if args['save_enabled'] is True:
-        fig.savefig(f'{args["plot_save_path"]}{df_name} - Warmth and Competence Sentence Counts.{image_save_format}', format=image_save_format, dpi=3000, bbox_inches='tight')
+        fig.savefig(f'{args["plot_save_path"]}{df_name} - Warmth and Competence Sentence Counts.{image_save_format}',
+                    format=image_save_format, dpi=3000, bbox_inches='tight')
 
     fig.show()
     plt.pause(0.1)
@@ -625,11 +631,11 @@ def get_viz(df_name, df_df, dataframes, args=get_args()):
 # %%
 def set_language_requirement(
     df_jobs,
-    str_variable = 'Job Description',
-    dutch_requirement_pattern = r'[Ll]anguage: [Dd]utch|[Dd]utch [Pp]referred|[Dd]utch [Re]quired|[Dd]utch [Ll]anguage|[Pp]roficient in [Dd]utch|[Ss]peak [Dd]utch|[Kk]now [Dd]utch',
-    english_requirement_pattern = r'[Ll]anguage: [Ee]nglish|[Ee]nglish [Pp]referred|[Ee]nglish [Re]quired|[Ee]nglish [Ll]anguage|[Pp]roficient in [Ee]nglish|[Ss]peak [Ee]nglish|[Kk]now [Ee]nglish',
+    str_variable='Job Description',
+    dutch_requirement_pattern=r'[Ll]anguage: [Dd]utch|[Dd]utch [Pp]referred|[Dd]utch [Re]quired|[Dd]utch [Ll]anguage|[Pp]roficient in [Dd]utch|[Ss]peak [Dd]utch|[Kk]now [Dd]utch',
+    english_requirement_pattern=r'[Ll]anguage: [Ee]nglish|[Ee]nglish [Pp]referred|[Ee]nglish [Re]quired|[Ee]nglish [Ll]anguage|[Pp]roficient in [Ee]nglish|[Ss]peak [Ee]nglish|[Kk]now [Ee]nglish',
     args=get_args(),
-    ):
+):
     # Language requirements
     # Dutch
     print('Setting Dutch language requirements.')
@@ -658,9 +664,9 @@ def set_language_requirement(
 def set_sector_and_percentage(
     df_jobs,
     sector_dict_new=False,
-    age_limit = 45,
-    age_ratio = 10,
-    gender_ratio = 20,
+    age_limit=45,
+    age_ratio=10,
+    gender_ratio=20,
     args=get_args(),
 ):
 
@@ -685,12 +691,13 @@ def set_sector_and_percentage(
         df_jobs = df_jobs.drop(columns=['Sector'])
     for sect, sect_dict in sector_vs_job_id_dict.items():
         for keyword, job_ids in sect_dict.items():
-            df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin([str(i) for i in job_ids]), 'Sector'] = str(sect).lower().strip()
+            df_jobs.loc[df_jobs['Job ID'].astype(str).progress_apply(lambda x: x.lower(
+            ).strip()).isin([str(i) for i in job_ids]), 'Sector'] = str(sect).lower().strip()
     # if 'Search Keyword' in df_jobs.columns:
     #     if df_jobs['Sector'].isnull().values.any() or df_jobs['Sector'].isnull().sum() > 0 or df_jobs['Sector'].isna().values.any() or df_jobs['Sector'].isna().sum() > 0:
     #         df_sectors = get_sector_df_from_cbs()
     #         for idx, row in df_sectors.iterrows():
-    #             if isinstance(row[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')], list) and df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin([str(i) for i in row[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')]]):
+    #             if isinstance(row[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')], list) and df_jobs['Job ID'].astype(str).progress_apply(lambda x: x.lower().strip()).isin([str(i) for i in row[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')]]):
     #                     print(row[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Sector Name')])
 
     print('Setting sector code and percentages.')
@@ -699,7 +706,8 @@ def set_sector_and_percentage(
     for col in sect_cols:
         if col in df_jobs.columns:
             df_jobs = df_jobs.drop(columns=col)
-    df_jobs = df_jobs.reindex(columns=[*df_jobs.columns, *sect_cols], fill_value=np.nan)
+    df_jobs = df_jobs.reindex(
+        columns=[*df_jobs.columns, *sect_cols], fill_value=np.nan)
 
     # Set Percentages
     # Open df
@@ -707,11 +715,16 @@ def set_sector_and_percentage(
     for index, row in df_jobs.iterrows():
         for idx, r in df_sectors.iterrows():
             if str(row['Sector']).strip().lower() == str(r[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Sector Name')]).strip().lower():
-                df_jobs.loc[index, 'Sector Code'] = r[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Code')]
-                df_jobs.loc[index, '% Female'] = r[('Gender', 'Female', '% per Sector')]
-                df_jobs.loc[index, '% Male'] = r[('Gender', 'Male', '% per Sector')]
-                df_jobs.loc[index, '% Older'] = r[('Age', f'Older (>= {age_limit} years)', '% per Sector')]
-                df_jobs.loc[index, '% Younger'] = r[('Age', f'Younger (< {age_limit} years)', '% per Sector')]
+                df_jobs.loc[index, 'Sector Code'] = r[(
+                    'SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Code')]
+                df_jobs.loc[index, '% Female'] = r[(
+                    'Gender', 'Female', '% per Sector')]
+                df_jobs.loc[index, '% Male'] = r[(
+                    'Gender', 'Male', '% per Sector')]
+                df_jobs.loc[index, '% Older'] = r[(
+                    'Age', f'Older (>= {age_limit} years)', '% per Sector')]
+                df_jobs.loc[index, '% Younger'] = r[(
+                    'Age', f'Younger (< {age_limit} years)', '% per Sector')]
 
     print('Done setting sector percentages.')
 
@@ -723,10 +736,10 @@ def set_sector_and_percentage(
 
 #     for index, row in df_jobs.iterrows():
 #         if row['Sector'] in [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']:
-#             df_jobs.loc[(df_jobs['Job ID'].astype(str).apply(lambda x: x.strip().lower()).isin([i.strip().lower() for i in job_ids if isinstance (i, str)])) | (df_jobs['Search Keyword'].astype(str).apply(lambda x: x.strip().lower()) == keyword.strip().lower()), 'Sector'] = sect.capitalize()
+#             df_jobs.loc[(df_jobs['Job ID'].astype(str).progress_apply(lambda x: x.strip().lower()).isin([i.strip().lower() for i in job_ids if isinstance (i, str)])) | (df_jobs['Search Keyword'].astype(str).progress_apply(lambda x: x.strip().lower()) == keyword.strip().lower()), 'Sector'] = sect.capitalize()
 #             for index, row in df_jobs.iterrows():
 #                 if row['Sector'] in [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']:
-#                     df_jobs.loc[(df_jobs['Search Keyword'].astype(str).apply(lambda x: x.strip().lower()) == keyword.strip().lower()), 'Sector'] = sect.capitalize()
+#                     df_jobs.loc[(df_jobs['Search Keyword'].astype(str).progress_apply(lambda x: x.strip().lower()) == keyword.strip().lower()), 'Sector'] = sect.capitalize()
 #                     if row['Sector'] in [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']:
 #                         trans_keyword_list.append(keyword.strip().lower())
 #                         trans_keyword_list = save_trans_keyword_list(trans_keyword_list)
@@ -762,25 +775,30 @@ def set_gender_age(
     for col in gen_age_cols:
         if col in df_jobs.columns:
             df_jobs = df_jobs.drop(columns=col)
-    df_jobs = df_jobs.reindex(columns=[*df_jobs.columns, *gen_age_cols], fill_value=np.nan)
+    df_jobs = df_jobs.reindex(
+        columns=[*df_jobs.columns, *gen_age_cols], fill_value=np.nan)
 
     # Gender
     print('Setting gender.')
     try:
         for sect, cat in sbi_sectors_dom_gen.items():
-            df_jobs.loc[df_jobs['Sector'].astype(str).apply(lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Gender'] = str(cat)
+            df_jobs.loc[df_jobs['Sector'].astype(str).progress_apply(
+                lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Gender'] = str(cat)
     except Exception as e:
         for cat in ['Mixed Gender', 'Male', 'Female']:
-            df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin([str(i) for i in job_id_dict[cat]]), 'Gender'] = str(cat)
+            df_jobs.loc[df_jobs['Job ID'].astype(str).progress_apply(lambda x: x.lower(
+            ).strip()).isin([str(i) for i in job_id_dict[cat]]), 'Gender'] = str(cat)
 
     # Age
     print('Setting age.')
     try:
         for sect, cat in sbi_sectors_dom_age.items():
-            df_jobs.loc[df_jobs['Sector'].astype(str).apply(lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Age'] = str(cat)
+            df_jobs.loc[df_jobs['Sector'].astype(str).progress_apply(
+                lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Age'] = str(cat)
     except Exception as e:
         for cat in ['Mixed Age', 'Young', 'Older']:
-            df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin([str(i) for i in job_id_dict[cat]]), 'Age'] = str(cat)
+            df_jobs.loc[df_jobs['Job ID'].astype(str).progress_apply(lambda x: x.lower(
+            ).strip()).isin([str(i) for i in job_id_dict[cat]]), 'Age'] = str(cat)
 
     print('Categorizing gender and age')
     df_jobs = categorize_df_gender_age(df_jobs)
@@ -796,13 +814,13 @@ def set_gender_age_sects_lang(df_jobs, str_variable, id_dict_new=False, args=get
 
     # now = datetime.datetime.now().total_seconds()
 
-    df_jobs=set_language_requirement(df_jobs, str_variable=str_variable)
+    df_jobs = set_language_requirement(df_jobs, str_variable=str_variable)
     # print(f'Time taken for set_language_requirement: {now-datetime.datetime.now().total_seconds()}')
     # now = datetime.datetime.now().total_seconds()
-    df_jobs=set_sector_and_percentage(df_jobs, sector_dict_new=id_dict_new)
+    df_jobs = set_sector_and_percentage(df_jobs, sector_dict_new=id_dict_new)
     # print(f'Time taken for set_sector_and_percentage: {now-datetime.datetime.now().total_seconds()}')
     # now = datetime.datetime.now().total_seconds()
-    df_jobs=set_gender_age(df_jobs, id_dict_new=id_dict_new)
+    df_jobs = set_gender_age(df_jobs, id_dict_new=id_dict_new)
     # print(f'Time taken for set_gender_age: {now-datetime.datetime.now().total_seconds()}')
 
     return df_jobs
@@ -847,7 +865,8 @@ def load_merge_dict_df(
         # old_jobs = remove_dupe_dicts(old_jobs)
     elif is_non_zero_file(save_path + json_file_name.lower()) is False:
         if args['print_enabled'] is True:
-            print(f'No list of dicts with the name "{json_file_name.lower()}" found.')
+            print(
+                f'No list of dicts with the name "{json_file_name.lower()}" found.')
         old_jobs = []
     if args['print_enabled'] is True:
         print(f'Old jobs dict of length: {len(old_jobs)}.')
@@ -886,7 +905,8 @@ def load_merge_dict_df(
             )
 
         elif len(jobs) == 0:
-            print(f'List of dicts of length {len(jobs)} was loaded for {keyword}.')
+            print(
+                f'List of dicts of length {len(jobs)} was loaded for {keyword}.')
         print('-' * 20)
 
     return jobs, df_old_jobs
@@ -917,29 +937,36 @@ def save_df(
 
         # Search keyword
         try:
-            search_keyword = df_jobs['Search Keyword'].iloc[0].lower().replace("-Noon's MacBook Pro",'')
+            search_keyword = df_jobs['Search Keyword'].iloc[0].lower().replace(
+                "-Noon's MacBook Pro", '')
         except KeyError:
             df_jobs = df_jobs.reset_index(drop=True)
-            search_keyword = df_jobs['Search Keyword'].iloc[0].lower().replace("-Noon's MacBo an and.  ok Pro",'')
+            search_keyword = df_jobs['Search Keyword'].iloc[0].lower().replace(
+                "-Noon's MacBo an and.  ok Pro", '')
         except IndexError:
             print(len(df_jobs))
 
         # Save df to csv
         if print_enabled is True:
-            print(f'Saving {keyword.lower()} jobs df of length {len(df_jobs.index)} to csv as {df_file_name.lower()} in location {save_path}')
+            print(
+                f'Saving {keyword.lower()} jobs df of length {len(df_jobs.index)} to csv as {df_file_name.lower()} in location {save_path}')
 
-        df_jobs.to_csv(save_path + df_file_name, mode='w', sep=',', header=True, index=True)
-        df_jobs.to_csv(save_path + df_file_name.split(args['file_save_format_backup'])[0]+'txt', mode='w', sep=',', header=True, index=True)
+        df_jobs.to_csv(save_path + df_file_name, mode='w',
+                       sep=',', header=True, index=True)
+        df_jobs.to_csv(save_path + df_file_name.split(args['file_save_format_backup'])[
+                       0]+'txt', mode='w', sep=',', header=True, index=True)
 
         if (not df_jobs.empty) and (len(df_jobs != 0)):
             try:
-                df_jobs_pyarrow = save_metadata(df_jobs, df_file_name, save_path)
+                df_jobs_pyarrow = save_metadata(
+                    df_jobs, df_file_name, save_path)
             except Exception:
                 pass
 
     elif df_jobs.empty:
         if print_enabled is True:
-            print(f'Jobs DataFrame is empty since no jobs results were found for {str(keyword)}. Moving on to next search.')
+            print(
+                f'Jobs DataFrame is empty since no jobs results were found for {str(keyword)}. Moving on to next search.')
 
     return df_jobs
 
@@ -954,7 +981,8 @@ def site_loop(site, site_list, site_from_list, args, df_list_from_site=None):
             if args['print_enabled'] is True:
                 print('-' * 20)
                 print(f'Cleaning up LIST OF DFs for {site}.')
-            glob_paths = glob.glob(f'{scraped_data}/{site}/Data/*.json')+glob.glob(f'{scraped_data}/{site}/Data/*.csv')+glob.glob(f'{scraped_data}/{site}/Data/*.xlsx')
+            glob_paths = glob.glob(f'{scraped_data}/{site}/Data/*.json')+glob.glob(
+                f'{scraped_data}/{site}/Data/*.csv')+glob.glob(f'{scraped_data}/{site}/Data/*.xlsx')
 
             yield site, df_list_from_site, glob_paths
 
@@ -963,13 +991,14 @@ def site_loop(site, site_list, site_from_list, args, df_list_from_site=None):
         if args['print_enabled'] is True:
             print('-' * 20)
             print('Cleaning up LIST OF DFs from all sites.')
-        glob_paths = glob.glob(f'{scraped_data}/*/Data/*.json')+glob.glob(f'{scraped_data}/*/Data/*.csv')+glob.glob(f'{scraped_data}/*/Data/*.xlsx')
+        glob_paths = glob.glob(f'{scraped_data}/*/Data/*.json')+glob.glob(
+            f'{scraped_data}/*/Data/*.csv')+glob.glob(f'{scraped_data}/*/Data/*.xlsx')
 
         yield site, df_list_from_site, glob_paths
 
 
 # %%
-def site_save(site, df_jobs, args, chunk_size = 1024 * 1024):
+def site_save(site, df_jobs, args, chunk_size=1024 * 1024):
     if args['save_enabled'] is True:
         print(f'Saving df_{site}_all_jobs.{args["file_save_format"]}')
         with open(args['df_dir'] + f'df_{site}_all_jobs.{args["file_save_format"]}', 'wb') as f:
@@ -984,9 +1013,11 @@ def keyword_loop(keyword, keywords_from_list, glob_paths, args, translator, df_l
         df_list_from_keyword = []
         for glob_path in glob_paths:
             if 'dict_' in glob_path and glob_path.endswith('.json'):
-                keyword = glob_path.split('dict_')[1].split('.')[0].replace("-Noon's MacBook Pro",'').strip().lower()
+                keyword = glob_path.split('dict_')[1].split('.')[0].replace(
+                    "-Noon's MacBook Pro", '').strip().lower()
             elif 'df_' in glob_path and (glob_path.endswith('.csv') or glob_path.endswith('.xlsx')):
-                keyword = glob_path.split('df_')[1].split('.')[0].replace("-Noon's MacBook Pro",'').strip().lower()
+                keyword = glob_path.split('df_')[1].split('.')[0].replace(
+                    "-Noon's MacBook Pro", '').strip().lower()
             if '_' in keyword:
                 keyword = ' '.join(keyword.split('_')).strip().lower()
 
@@ -995,7 +1026,7 @@ def keyword_loop(keyword, keywords_from_list, glob_paths, args, translator, df_l
             yield keyword, df_list_from_keyword
 
     elif keywords_from_list is False:
-        keyword=keyword
+        keyword = keyword
         df_list_from_keyword = None
         if args['print_enabled'] is True:
             print(f'Post collection cleanup for {keyword}.')
@@ -1005,10 +1036,12 @@ def keyword_loop(keyword, keywords_from_list, glob_paths, args, translator, df_l
 # %%
 def keyword_save(keyword, site, df_jobs, args):
     if args['save_enabled'] is True:
-        print(f'Saving df_{site}_{keyword}_all_jobs.{args["file_save_format"]}')
+        print(
+            f'Saving df_{site}_{keyword}_all_jobs.{args["file_save_format"]}')
         with open(args['df_dir'] + f'df_{site}_{keyword}_all_jobs.{args["file_save_format"]}', 'wb') as f:
             pickle.dump(df_jobs, f, protocol=pickle.HIGHEST_PROTOCOL)
-        print(f'Done saving df_{site}_{keyword}_all_jobs.{args["file_save_format"]}')
+        print(
+            f'Done saving df_{site}_{keyword}_all_jobs.{args["file_save_format"]}')
 
 
 # %%
@@ -1021,13 +1054,13 @@ def post_cleanup(
     keyword='',
     site='',
     keywords_list=None,
-    all_save_path = f'job_id_vs_all.json',
+    all_save_path=f'job_id_vs_all.json',
     int_variable: str = 'Job ID',
     str_variable: str = 'Job Description',
     args=get_args(),
-    translator = Translator(),
+    translator=Translator(),
     translate_keywords=True,
-    fix_na_enabled = True,
+    fix_na_enabled=True,
     save_enabled=True
 ):
 
@@ -1050,7 +1083,8 @@ def post_cleanup(
             if translate_keywords is True and detect(trans_keyword) != 'en':
                 while True:
                     try:
-                        trans_keyword = translator.translate(trans_keyword).text.strip().lower()
+                        trans_keyword = translator.translate(
+                            trans_keyword).text.strip().lower()
                     except Exception as e:
                         time.sleep(0.3)
                         continue
@@ -1100,7 +1134,8 @@ def post_cleanup(
         for lst in df_jobs:
             for df in lst:
                 if isinstance(df, pd.DataFrame):
-                    df = set_gender_age_sects_lang(df, str_variable=str_variable)
+                    df = set_gender_age_sects_lang(
+                        df, str_variable=str_variable)
 
     if translate_keywords is True:
         trans_keyword_list = save_trans_keyword_list(trans_keyword_list)
@@ -1120,7 +1155,8 @@ def post_cleanup(
     if job_id_save_enabled is True:
         job_id_dict = make_job_id_v_genage_key_dict(site_from_list=False)
     if job_sector_save_enabled is True:
-        sector_vs_job_id_dict = make_job_id_v_sector_key_dict(site_from_list=False)
+        sector_vs_job_id_dict = make_job_id_v_sector_key_dict(
+            site_from_list=False)
 
     return df_jobs
 
@@ -1175,9 +1211,9 @@ def post_cleanup_helper(keyword, site, args=get_args()):
 def clean_from_old(
     site=None,
     site_list=['Indeed', 'Glassdoor', 'LinkedIn'],
-    files = None,
-    exten_to_find = ['.json','.csv','.xlsx'],
-    translator = Translator(),
+    files=None,
+    exten_to_find=['.json', '.csv', '.xlsx'],
+    translator=Translator(),
     args=get_args(),
 ):
     if files is None:
@@ -1200,16 +1236,19 @@ def clean_from_old(
         if site is None:
             site = file_.split(f'{code_dir}/')[1].split('/Data')[0].strip()
         if 'dict_' in file_ and file_.endswith('.json'):
-            keyword = file_.split('dict_')[1].split('.')[0].replace("-Noon's MacBook Pro",'').strip().lower()
+            keyword = file_.split('dict_')[1].split('.')[0].replace(
+                "-Noon's MacBook Pro", '').strip().lower()
         elif 'df_' in file_ and (file_.endswith('.csv') or file_.endswith('.xlsx')):
-            keyword = file_.split('df_')[1].split('.')[0].replace("-Noon's MacBook Pro",'').strip().lower()
+            keyword = file_.split('df_')[1].split('.')[0].replace(
+                "-Noon's MacBook Pro", '').strip().lower()
         if '_' in keyword:
             keyword = ' '.join(keyword.split('_')).strip().lower()
 
         if detect(keyword) != 'en':
             while True:
                 try:
-                    trans_keyword = translator.translate(keyword).text.strip().lower()
+                    trans_keyword = translator.translate(
+                        keyword).text.strip().lower()
                 except Exception as e:
                     time.sleep(0.3)
                     continue
@@ -1260,22 +1299,28 @@ def clean_from_old(
                         df_jobs_json = pd.DataFrame(json.load(f))
                 df_jobs = df_jobs.append(df_jobs_json, ignore_index=True)
                 if trans_keyword != keyword and is_non_zero_file(trans_save_path + trans_json_file_name.lower()) is True:
-                    trans_df_jobs_json = pd.read_json(trans_save_path + trans_json_file_name.lower(), orient='records')
-                    df_jobs = df_jobs.append(trans_df_jobs_json, ignore_index=True)
+                    trans_df_jobs_json = pd.read_json(
+                        trans_save_path + trans_json_file_name.lower(), orient='records')
+                    df_jobs = df_jobs.append(
+                        trans_df_jobs_json, ignore_index=True)
 
             if file_.endswith('.csv'):
                 df_jobs_csv = pd.read_csv(file_)
                 df_jobs = df_jobs.append(df_jobs_csv, ignore_index=True)
                 if trans_keyword != keyword and is_non_zero_file(trans_save_path + trans_df_file_name.lower()) is True:
-                    trans_df_jobs_csv = pd.read_csv(trans_save_path + trans_df_file_name.lower())
-                    df_jobs = df_jobs.append(trans_df_jobs_csv, ignore_index=True)
+                    trans_df_jobs_csv = pd.read_csv(
+                        trans_save_path + trans_df_file_name.lower())
+                    df_jobs = df_jobs.append(
+                        trans_df_jobs_csv, ignore_index=True)
 
             if file_.endswith('.xlsx'):
                 df_jobs_xlsx = pd.read_excel(file_)
                 df_jobs = df_jobs.append(df_jobs_xlsx, ignore_index=True)
                 if trans_keyword != keyword and is_non_zero_file(trans_save_path + trans_df_file_name.lower()) is True:
-                    trans_df_jobs_xlsx = pd.read_excel(trans_save_path + trans_df_file_name.lower().replace('csv', 'xlsx'))
-                    df_jobs = df_jobs.append(trans_df_jobs_xlsx, ignore_index=True)
+                    trans_df_jobs_xlsx = pd.read_excel(
+                        trans_save_path + trans_df_file_name.lower().replace('csv', 'xlsx'))
+                    df_jobs = df_jobs.append(
+                        trans_df_jobs_xlsx, ignore_index=True)
 
             if (not df_jobs.empty) and (len(df_jobs != 0)):
                 df_jobs = clean_df(df_jobs)
@@ -1291,7 +1336,7 @@ def clean_from_old(
                     save_path=save_path,
                     keyword_file=keyword_file.lower(),
                     df_file_name=df_file_name.lower(),
-                    clean_enabled = False,
+                    clean_enabled=False,
                 )
 
         else:
@@ -1305,22 +1350,24 @@ def clean_from_old(
 def make_job_id_v_sector_key_dict(
     site_from_list=False,
     site_list=['Indeed', 'Glassdoor', 'LinkedIn'],
-    all_save_path = f'job_id_vs_sector',
+    all_save_path=f'job_id_vs_sector',
     args=get_args(),
-    ):
+):
 
     print(
         f'NOTE: The function "make_job_id_v_sector_key_dict" contains the following optional (default) arguments:\n{get_default_args(make_job_id_v_sector_key_dict)}'
     )
 
-    sib_5_loc = validate_path(f'{args["parent_dir"]}Sectors + Age and Gender Composition of Industires and Jobs/Found Data/SBI_ALL_NACE_REV2.csv')
+    sib_5_loc = validate_path(
+        f'{args["parent_dir"]}Sectors + Age and Gender Composition of Industires and Jobs/Found Data/SBI_ALL_NACE_REV2.csv')
 
     # Get keywords and paths to df_jobs
     if site_from_list is True:
         for site in site_list:
             if args['print_enabled'] is True:
                 print(f'Getting job ids for {site}.')
-            df_jobs_paths = list((glob.glob(f'{scraped_data}/{site}/Data/*.csv')))
+            df_jobs_paths = list(
+                (glob.glob(f'{scraped_data}/{site}/Data/*.csv')))
             sector_vs_job_id_dict = make_job_id_v_sector_key_dict_helper(
                 df_jobs_paths=df_jobs_paths, all_save_path=f'{all_save_path}_{site}',
             )
@@ -1354,16 +1401,19 @@ def make_job_id_v_sector_key_dict_helper(
 
         for index, row in tqdm.tqdm(df_jobs.iterrows()):
             if row['Search Keyword'] not in [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']:
-                search_keyword = str(row['Search Keyword'].strip().lower().replace("-Noon's MacBook Pro",'').strip().lower())
+                search_keyword = str(row['Search Keyword'].strip().lower().replace(
+                    "-Noon's MacBook Pro", '').strip().lower())
                 for w_keyword, r_keyword in keyword_trans_dict.items():
                     if search_keyword == w_keyword.lower():
-                        df_jobs.loc[index, 'Search Keyword'] = r_keyword.strip().lower()
+                        df_jobs.loc[index,
+                                    'Search Keyword'] = r_keyword.strip().lower()
                         df_jobs.to_csv(path)
                 trans_keyword_list.append(search_keyword)
 
                 for sector, keywords_list in args['sbi_sectors_dict_full'].items():
                     if search_keyword in str(keywords_list):
-                        sector_vs_job_id_dict[str(sector)][str(search_keyword)].append(str(row['Job ID']))
+                        sector_vs_job_id_dict[str(sector)][str(
+                            search_keyword)].append(str(row['Job ID']))
 
                 # for code, sect_dict in sbi_sectors_dict.items():
                 #     if str(row['Search Keyword']) in str(sect_dict['Used_Sector_Keywords']):
@@ -1383,10 +1433,10 @@ def make_job_id_v_sector_key_dict_helper(
 # %%
 # Function to match job IDs with gender and age in dict
 def make_job_id_v_genage_key_dict(
-    site_from_list=False,
-    site_list=['Indeed', 'Glassdoor', 'LinkedIn'],
-    all_save_path = f'job_id_vs',
-    args=get_args()):
+        site_from_list=False,
+        site_list=['Indeed', 'Glassdoor', 'LinkedIn'],
+        all_save_path=f'job_id_vs',
+        args=get_args()):
 
     print(
         f'NOTE: The function "make_job_id_v_genage_key_dict" contains the following optional (default) arguments:\n{get_default_args(make_job_id_v_genage_key_dict)}'
@@ -1397,7 +1447,8 @@ def make_job_id_v_genage_key_dict(
         for site in tqdm.tqdm(site_list):
             if args['print_enabled'] is True:
                 print(f'Getting job ids for {site}.')
-            df_jobs_paths = list((glob.glob(f'{scraped_data}/{site}/Data/*.csv')))
+            df_jobs_paths = list(
+                (glob.glob(f'{scraped_data}/{site}/Data/*.csv')))
             job_id_dict = make_job_id_v_genage_key_dict_helper(
                 df_jobs_paths=df_jobs_paths, all_save_path=f'{all_save_path}_{site}'
             )
@@ -1425,10 +1476,12 @@ def make_job_id_v_genage_key_dict_helper(
         for index, row in tqdm.tqdm(df_jobs.iterrows()):
 
             if row['Search Keyword'] not in [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']:
-                search_keyword = str(row['Search Keyword'].replace("-Noon's MacBook Pro",'').strip().lower())
+                search_keyword = str(row['Search Keyword'].replace(
+                    "-Noon's MacBook Pro", '').strip().lower())
                 for w_keyword, r_keyword in keyword_trans_dict.items():
                     if search_keyword == w_keyword.lower():
-                        df_jobs.loc[index, 'Search Keyword'] = r_keyword.strip().lower()
+                        df_jobs.loc[index,
+                                    'Search Keyword'] = r_keyword.strip().lower()
                         df_jobs.to_csv(path)
                 trans_keyword_list.append(search_keyword)
 
@@ -1447,20 +1500,20 @@ def make_job_id_v_genage_key_dict_helper(
                     args['keywords_youngvocc'],
                     args['keywords_agevsect'],
                 ):
-                    if search_keyword == str(fem_keyword).strip().lower().replace("-Noon's MacBook Pro",''):
+                    if search_keyword == str(fem_keyword).strip().lower().replace("-Noon's MacBook Pro", ''):
                         job_id_dict['Female'].append(str(row['Job ID']))
                     else:
                         job_id_dict['Mixed Gender'].append(str(row['Job ID']))
-                    if search_keyword == str(male_keyword).strip().lower().replace("-Noon's MacBook Pro",''):
+                    if search_keyword == str(male_keyword).strip().lower().replace("-Noon's MacBook Pro", ''):
                         job_id_dict['Male'].append(str(row['Job ID']))
                     else:
                         job_id_dict['Mixed Gender'].append(str(row['Job ID']))
 
-                    if search_keyword == str(old_keyword).strip().lower().replace("-Noon's MacBook Pro",''):
+                    if search_keyword == str(old_keyword).strip().lower().replace("-Noon's MacBook Pro", ''):
                         job_id_dict['Older'].append(str(row['Job ID']))
                     else:
                         job_id_dict['Mixed Age'].append(str(row['Job ID']))
-                    if search_keyword == str(young_keyword).strip().lower().replace("-Noon's MacBook Pro",''):
+                    if search_keyword == str(young_keyword).strip().lower().replace("-Noon's MacBook Pro", ''):
                         job_id_dict['Young'].append(str(row['Job ID']))
                     else:
                         job_id_dict['Mixed Age'].append(str(row['Job ID']))
@@ -1487,7 +1540,7 @@ def split_df_jobs_to_df_sent(
     dff = df_for_analysis.assign(
         **{
             lst_col: df_for_analysis[lst_col]
-            .apply(lambda x: sent_tokenize(x))
+            .progress_apply(lambda x: sent_tokenize(x))
         }
     )
     df_final = pd.DataFrame(
@@ -1547,7 +1600,8 @@ def split_to_sentences(df_jobs, df_sentence_list=None, args=get_args()):
                                 print(
                                     f'Saving {df_jobs["Search Keyword"].iloc[0]} DF to txt.'
                                 )
-                            write_all_to_txt(search_keyword, job_id, age, df_jobs, args)
+                            write_all_to_txt(
+                                search_keyword, job_id, age, df_jobs, args)
                         elif args['txt_save'] is False:
                             if args['print_enabled'] is True:
                                 print(
@@ -1582,7 +1636,8 @@ def split_to_sentences(df_jobs, df_sentence_list=None, args=get_args()):
                 print(f'DF OF LENGTH {len(df_jobs)} passed.')
             try:
                 if args['print_enabled'] is True:
-                    print(f'Processing DF from platform: {df_jobs["Platform"].iloc[0]}')
+                    print(
+                        f'Processing DF from platform: {df_jobs["Platform"].iloc[0]}')
                     (
                         search_keyword,
                         job_id,
@@ -1596,8 +1651,10 @@ def split_to_sentences(df_jobs, df_sentence_list=None, args=get_args()):
                 df_sentence_list.append(df_sentence)
                 if args['txt_save'] is True:
                     if args['print_enabled'] is True:
-                        print(f'Saving {df_jobs["Search Keyword"].iloc[0]} DF to txt.')
-                    write_all_to_txt(search_keyword, job_id, age, df_jobs, args)
+                        print(
+                            f'Saving {df_jobs["Search Keyword"].iloc[0]} DF to txt.')
+                    write_all_to_txt(search_keyword, job_id,
+                                     age, df_jobs, args)
                 elif args['txt_save'] is False:
                     if args['print_enabled'] is True:
                         print(
@@ -1621,7 +1678,8 @@ def split_to_sentences(df_jobs, df_sentence_list=None, args=get_args()):
 
     try:
         if (not df_sentence.empty) and (args['save_enabled'] is True):
-            df_sentence_all.to_pickle(args['parent_dir'] + f'df_sentence_all_jobs.{args["file_save_format"]}')
+            df_sentence_all.to_pickle(
+                args['parent_dir'] + f'df_sentence_all_jobs.{args["file_save_format"]}')
             # pickle.dump(df_sentence_all, f, protocol=pickle.HIGHEST_PROTOCOL)
         elif args['save_enabled'] is False:
             if args['print_enabled'] is True:
@@ -1643,7 +1701,8 @@ def split_to_sentences_helper(df_jobs, args=get_args()):
             )
         try:
             search_keyword = '_'.join(
-                str(df_jobs['Search Keyword'].iloc[0]).lower().split(' ').replace("-Noon's MacBook Pro",'')
+                str(df_jobs['Search Keyword'].iloc[0]).lower().split(
+                    ' ').replace("-Noon's MacBook Pro", '')
             )
             if (df_jobs['Job ID'] == df_jobs['Job ID'].iloc[0]).all():
                 job_id = str(df_jobs['Job ID'].iloc[0])
@@ -1726,7 +1785,8 @@ def sent_tokenize_and_save_df(search_keyword, job_id, age, df_jobs, args=get_arg
             df_jobs.Language == str(args['language']), 'Language'
         ].count()
         if args['print_enabled'] is True:
-            print(f'{lang_num} jobs with language {str(args["language"])} found.')
+            print(
+                f'{lang_num} jobs with language {str(args["language"])} found.')
         if lang_num > 0:
             if args['print_enabled'] is True:
                 print(
@@ -1738,7 +1798,7 @@ def sent_tokenize_and_save_df(search_keyword, job_id, age, df_jobs, args=get_arg
 
                 # sentence_list = []
                 if row.loc['Language'] == str(args['language']):
-#                     sentence_list = [re.split(pattern, sent) for sent in list(sent_tokenize(row['Job Description']))]
+                    #                     sentence_list = [re.split(pattern, sent) for sent in list(sent_tokenize(row['Job Description']))]
                     sentence_list = [
                         sent
                         for sentence in list(nlp(row['Job Description']).sents)
@@ -1821,7 +1881,8 @@ def sent_tokenize_and_save_df(search_keyword, job_id, age, df_jobs, args=get_arg
                         f'Saving ALL sentences DF {sentence_dict["Search Keyword"]} of length {df_sentence_all.shape[0]} and job ID {df_sentence_all["Job ID"].iloc[0]} to csv.'
                     )
                 df_sentence_all.to_csv(
-                    path_to_csv + f'/ALL_{search_keyword}_sentences_df.{args["file_save_format_backup"]}',
+                    path_to_csv +
+                    f'/ALL_{search_keyword}_sentences_df.{args["file_save_format_backup"]}',
                     mode='w',
                     sep=',',
                     header=True,
@@ -1850,7 +1911,8 @@ def sent_tokenize_and_save_df(search_keyword, job_id, age, df_jobs, args=get_arg
                 print(
                     f'No valid language found in {df_jobs["Search Keyword"].iloc[0]} DF.'
                 )
-        sentence_list, sentence_dict, df_sentence, df_sentence_all = assign_all(4, None)
+        sentence_list, sentence_dict, df_sentence, df_sentence_all = assign_all(
+            4, None)
 
     return sentence_list, sentence_dict, df_sentence, df_sentence_all
 
@@ -2008,7 +2070,7 @@ def send_new_excel_to_gdrive(
     new_batch_job_txt_list=None,
     args=get_args(),
 ):
-    dest_path=validate_path(f'{args["content_analysis_dir"]}')
+    dest_path = validate_path(f'{args["content_analysis_dir"]}')
 
     print('-' * 20)
     print(
@@ -2053,7 +2115,8 @@ def send_new_excel_to_gdrive(
                             )
 
         try:
-            batch_counter_dict[coder_name] = list(set(batch_counter_dict[coder_name]))
+            batch_counter_dict[coder_name] = list(
+                set(batch_counter_dict[coder_name]))
             done_job_excel_list = list(set(done_job_excel_list))
         except Exception:
             pass
@@ -2076,7 +2139,7 @@ def send_new_excel_to_gdrive(
                                     done_job_excel
                                     for done_job_excel in done_job_excel_list
                                 )
-                            )
+                        )
                             and ('.DS_Store' not in new_job_excel)
                         ):
                             new_job_excel_list.append(
@@ -2118,7 +2181,8 @@ def send_new_excel_to_gdrive(
                     path_to_next_batch = coder_dest_folder + str(
                         f'{coder_name} Folder - Batch {max(int(i) for v in batch_counter_dict.values() for i in v) + 1}/'
                     )
-                    pathlib.Path(path_to_next_batch).mkdir(parents=True, exist_ok=True)
+                    pathlib.Path(path_to_next_batch).mkdir(
+                        parents=True, exist_ok=True)
                     for (
                         new_batch_job_excel,
                         new_batch_job_txt,
@@ -2126,9 +2190,11 @@ def send_new_excel_to_gdrive(
                         new_batch_job_excel_list, new_batch_job_txt_list
                     ):
                         try:
-                            shutil.move(new_batch_job_excel, path_to_next_batch)
+                            shutil.move(new_batch_job_excel,
+                                        path_to_next_batch)
                             if move_txt_file is True:
-                                shutil.move(new_batch_job_txt, path_to_next_batch)
+                                shutil.move(new_batch_job_txt,
+                                            path_to_next_batch)
                         except Exception:
                             pass
         elif len(new_batch_job_excel_list) <= 0:
@@ -2146,7 +2212,8 @@ def send_new_excel_to_gdrive(
                     if i not in batch_counter_dict[coder_name]
                 )
         try:
-            batch_counter_dict[coder_name] = list(set(batch_counter_dict[coder_name]))
+            batch_counter_dict[coder_name] = list(
+                set(batch_counter_dict[coder_name]))
         except Exception:
             pass
 
@@ -2158,12 +2225,12 @@ def send_new_excel_to_gdrive(
             print('No batch counter save enabled.')
 
 
-
 # %%
 # Function to open and clean dfs
 def open_and_clean_excel(
     EXCEL_PATHS=defaultdict(list),
-    front_columns=['Coder ID', 'Job ID', 'OG_Sentence ID', 'Sentence ID', 'Sentence'],
+    front_columns=['Coder ID', 'Job ID',
+                   'OG_Sentence ID', 'Sentence ID', 'Sentence'],
     cal_columns=[
         'Warmth',
         'Competence',
@@ -2177,7 +2244,7 @@ def open_and_clean_excel(
     args=get_args(),
 ):
 
-    dest_path=validate_path(f'{args["content_analysis_dir"]}')
+    dest_path = validate_path(f'{args["content_analysis_dir"]}')
 
     for lst in EXCEL_PATHS.values():
         lst[:] = list(set(lst))
@@ -2215,7 +2282,8 @@ def open_and_clean_excel(
                             and ('.txt' in done_job_excel_name)
                         )
                         and (
-                            is_non_zero_file(coder_dest_folder_path + '/' + done_job_excel_name) is False
+                            is_non_zero_file(
+                                coder_dest_folder_path + '/' + done_job_excel_name) is False
                         )
                     ):
                         coders_dict.pop(coder_number, None)
@@ -2257,21 +2325,25 @@ def open_and_clean_excel(
                 if df_coder.columns.str.contains('^Unnamed').all():
                     break
                 else:
-                    df_coder = clean_df(df_coder, str_variable=str_variable, reset=reset)
+                    df_coder = clean_df(
+                        df_coder, str_variable=str_variable, reset=reset)
                     df_coder = df_coder.drop(
                         df_coder.columns[
-                            df_coder.columns.str.contains('Coder Remarks', case=False)
+                            df_coder.columns.str.contains(
+                                'Coder Remarks', case=False)
                         ],
                         axis='columns',
                         errors='ignore',
                     )
-                    df_coder['Job ID'] = df_coder['Job ID'].fillna(method='ffill')
+                    df_coder['Job ID'] = df_coder['Job ID'].fillna(
+                        method='ffill')
                     for k, v in coders_dict.items():
                         if v == coder_key:
                             df_coder['Coder ID'] = k
                     df_coder[f'OG_{str_variable} ID'] = df_coder.index + 1
                     df_coder = df_coder.fillna(0)
-                    df_coder[str_variable] = df_coder[str_variable].apply(lambda sentence: sentence.strip().lower().replace('[^\w\s]', ''))
+                    df_coder[str_variable] = df_coder[str_variable].progress_apply(
+                        lambda sentence: sentence.strip().lower().replace('[^\w\s]', ''))
                     if df_coder[str_variable].isna().sum() > 0:
                         if args['print_enabled'] is True:
                             print(
@@ -2296,12 +2368,14 @@ def open_and_clean_excel(
             ]
             df_concat_coder_all.loc[:, cal_columns] = (
                 df_concat_coder_all.loc[:, cal_columns]
-                .apply(pd.to_numeric, downcast='integer', errors='coerce')
+                .progress_apply(pd.to_numeric, downcast='integer', errors='coerce')
             )
-            df_concat_coder_all = clean_df(df_concat_coder_all, str_variable=str_variable, reset=reset)
+            df_concat_coder_all = clean_df(
+                df_concat_coder_all, str_variable=str_variable, reset=reset)
             df_concat_coder_all.index = range(df_concat_coder_all.shape[0])
             if args['print_enabled'] is True:
-                print(f'Total of {len(df_concat_coder_all)} sentences in the dataset.')
+                print(
+                    f'Total of {len(df_concat_coder_all)} sentences in the dataset.')
             for var in cal_columns:
                 if (df_concat_coder_all[str(var)] == 1).sum() + (
                     df_concat_coder_all[str(var)] == 0
@@ -2315,7 +2389,8 @@ def open_and_clean_excel(
                         print(
                             f'Sum of "present" and "not present" {str(var)} labels is NOT equal to length of dataset.'
                         )
-                    raise ValueError('Problem with candidate trait labels count.')
+                    raise ValueError(
+                        'Problem with candidate trait labels count.')
         elif len(df_coder_list) <= 1:
             df_concat_coder_all = df_coder_list
 
