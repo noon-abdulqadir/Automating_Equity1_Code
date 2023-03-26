@@ -94,7 +94,6 @@ if set_conda:
                         os.system(f'{conda_env_path}/bin/pip install {lib}')
 
 try:
-
     import argparse
     import ast
     import collections
@@ -134,22 +133,15 @@ try:
     from threading import Thread
     from typing import Dict, List, Optional, Set, Tuple
 
-    # import bokeh
-    # import cardinality
     import cbsodata
     import en_core_web_sm
     import gensim
     import gensim.downloader as gensim_api
-
-    # from icecream import ic
     import imblearn
     import IPython
     import IPython.core
     import joblib
     import langdetect
-
-    # import libmaths as lm
-    # import lxml
     import matplotlib as mpl
     import matplotlib.gridspec as gridspec
     import matplotlib.image as img
@@ -160,17 +152,9 @@ try:
     import openpyxl
     import pandas as pd
     import plot_metric
-
-    # import pingouin as pg
-    # import plotly
-    # import plotly.express as px
-    # import plotly.graph_objects as go
-    # import progressbar
     import pyarrow as pa
     import pyarrow.parquet as pq
     import requests
-
-    # import researchpy as rp
     import scipy
     import seaborn as sns
     import selenium.webdriver as webdriver
@@ -178,32 +162,18 @@ try:
     import simpledorff
     import sklearn as sk
     import spacy
-
-    # import specification_curve as specy
+    import specification_curve as specy
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
-
-    # import xlsxwriter
-    # import xorbits.pandas as xpd
-    # import tensorflow as tf
-    # from tensorflow import keras
-    # from tensorflow.keras import backend as K
-    # from tensorflow.keras import layers, models
-    # from tensorflow.keras import preprocessing
-    # from tensorflow.keras import preprocessing as kprocessing
     import textblob
-
-    # import swifter
     import torch
     import torch.nn as nn
     import torch.nn.functional as F
     import tqdm
-
-    # import tqdm.auto
-    # from accelerate import Accelerator
     import transformers
     import urllib3
     import xgboost as xgb
+    import xlsxwriter
     from bs4 import BeautifulSoup
     from gensim import corpora, models
     from gensim.corpora import Dictionary
@@ -244,9 +214,6 @@ try:
     from IPython.display import HTML, Image, Markdown, display
     from ipywidgets import FloatSlider, interactive
     from joblib import parallel_backend
-
-    # from keras.layers import Activation, Dense
-    # from keras.models import Sequential
     from langdetect import DetectorFactory, detect, detect_langs
     from matplotlib.animation import FuncAnimation
     from mpl_toolkits.mplot3d import Axes3D
@@ -298,8 +265,6 @@ try:
     from selenium.webdriver.common.keys import Keys
     from selenium.webdriver.support import expected_conditions as EC
     from selenium.webdriver.support.ui import Select, WebDriverWait
-
-    # from sentence_transformers import SentenceTransformer, losses, util
     from sklearn import feature_selection, metrics, set_config, svm, utils
     from sklearn.base import BaseEstimator, TransformerMixin
     from sklearn.calibration import CalibratedClassifierCV, CalibrationDisplay
@@ -355,6 +320,7 @@ try:
     from sklearn.metrics import (
         ConfusionMatrixDisplay,
         accuracy_score,
+        average_precision_score,
         balanced_accuracy_score,
         brier_score_loss,
         classification_report,
@@ -414,6 +380,7 @@ try:
         has_fit_parameter,
     )
     from spacy.matcher import Matcher
+    from spacytextblob.spacytextblob import SpacyTextBlob
     from statannotations.Annotator import Annotator
     from statsmodels.formula.api import ols
     from statsmodels.graphics.factorplots import interaction_plot
@@ -421,6 +388,7 @@ try:
     from statsmodels.stats.outliers_influence import variance_inflation_factor
     from textblob import TextBlob, Word
     from textblob.en.inflect import pluralize, singularize
+    from tqdm.contrib.itertools import product as tqdm_product
     from transformers import (
         AutoModelForTokenClassification,
         AutoTokenizer,
@@ -438,12 +406,35 @@ try:
     )
     from transformers.trainer_pt_utils import get_parameter_names
     from webdriver_manager.chrome import ChromeDriverManager
-
-    # from whatthelang import WhatTheLang
     from xgboost import XGBClassifier
 
+    # from accelerate import Accelerator
+    # from icecream import ic
+    # import bokeh
+    # import cardinality
+    # import libmaths as lm
+    # import lxml
+    # import pingouin as pg
+    # import plotly
+    # import plotly.express as px
+    # import plotly.graph_objects as go
+    # import progressbar
+    # import researchpy as rp
+    # import xorbits.pandas as xpd
+    # import tensorflow as tf
+    # from tensorflow import keras
+    # from tensorflow.keras import backend as K
+    # from tensorflow.keras import layers, models
+    # from tensorflow.keras import preprocessing
+    # from tensorflow.keras import preprocessing as kprocessing
+    # import swifter
+    # import tqdm.auto
+    # from whatthelang import WhatTheLang
     # from xorbits.numpy import arange, argmax, cumsum
     # from yellowbrick.text import TSNEVisualizer
+    # from sentence_transformers import SentenceTransformer, losses, util
+    # from keras.layers import Activation, Dense
+    # from keras.models import Sequential
 
 except ImportError as error:
     module_name = str(error).split('named')[1]
@@ -518,6 +509,7 @@ stop_words = set(stopwords.words('english'))
 punctuations = list(string.punctuation)
 lemmatizer = WordNetLemmatizer()
 stemmer = PorterStemmer()
+sentim_analyzer = SentimentIntensityAnalyzer()
 
 # Spacy
 nlp = spacy.load('en_core_web_sm')
@@ -539,6 +531,7 @@ t = time.time()
 n_jobs = -1
 n_splits = 10
 n_repeats = 3
+refit = True
 class_weight = 'balanced'
 cv = RepeatedStratifiedKFold(
     n_splits=n_splits, n_repeats=n_repeats, random_state=random_state)
@@ -594,12 +587,12 @@ bert_model = BertForSequenceClassification.from_pretrained(
     bert_model_name).to(device)
 
 # Set display options
-IPython.core.page = print
-IPython.display.clear_output
-display(HTML('<style>.container { width:90% !important; }</style>'))
-InteractiveShell.ast_node_interactivity = 'all'
-csv.field_size_limit(sys.maxsize)
-warnings.filterwarnings('ignore', category=DeprecationWarning)
+# csv.field_size_limit(sys.maxsize)
+# IPython.core.page = print
+# IPython.display.clear_output
+# display(HTML('<style>.container { width:90% !important; }</style>'))
+# InteractiveShell.ast_node_interactivity = 'all'
+# warnings.filterwarnings('ignore', category=DeprecationWarning)
 # import pretty_errors
 # pretty_errors.configure(
 #     separator_character = '*',
@@ -624,17 +617,18 @@ errors = (
     NoAlertPresentException,
     TimeoutException,
 )
+
+# Plotting
 pp = pprint.PrettyPrinter(indent=4)
 tqdm.tqdm_notebook().pandas(desc='progress-bar')
 # pbar = progressbar.ProgressBar(maxval=10)
-
 mpl.use('MacOSX')
 mpl.style.use(f'{code_dir}/setup_module/apa.mplstyle-main/apa.mplstyle')
-mpl.rcParams['text.usetex'] = False
+mpl.rcParams['text.usetex'] = True
 font = {'family': 'arial', 'weight': 'normal', 'size': 10}
 mpl.rc('font', **font)
 plt.style.use('tableau-colorblind10')
-plt.set_cmap('PuBu_r')
+plt.set_cmap('Blues')
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 5000)
