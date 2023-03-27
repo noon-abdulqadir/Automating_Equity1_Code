@@ -4,45 +4,11 @@
 # To add a new markdown cell, type '# %% [markdown]'
 # %% [markdown]
 # ### Install packages and import
-# %%
-# #################################### PLEASE INSTALL LATEST CHROME WEBDRIVER #####################################
-# Uncomment to run as required
-# #     --install-option="--chromedriver-version= *.**" \
-#   --install-option="--chromedriver-checksums=4fecc99b066cb1a346035bf022607104,058cd8b7b4b9688507701b5e648fd821"
-# %%
-# ##### COPY THE LINES IN THIS COMMENT TO THE TOP OF NEW SCRIPTS #####
-# # Function to import this package to other files
-# import os
-# import sys
-# from pathlib import Path
-# code_dir = None
-# code_dir_name = 'Code'
-# unwanted_subdir_name = 'Analysis'
-# for _ in range(5):
-#     parent_path = str(Path.cwd().parents[_]).split('/')[-1]
-#     if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
-#         code_dir = str(Path.cwd().parents[_])
-#         if code_dir is not None:
-#             break
-# main_dir = str(Path(code_dir).parents[0])
-# scraped_data = f'{code_dir}/scraped_data'
-# sys.path.append(code_dir)
-# from setup_module.imports import *
-# from setup_module.params import *
-# from setup_module.scraping import *
-# from setup_module.classification import *
-# from setup_module.vectorizers_classifiers import *
-# warnings.filterwarnings("ignore", category=DeprecationWarning)
-#
-#
-# %%
-import contextlib
-import importlib
-import os
-import sys
-from pathlib import Path
 
-from dotenv.main import find_dotenv, load_dotenv
+# %%
+import os  # isort:skip # fmt:skip # noqa # nopep8
+import sys  # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path  # isort:skip # fmt:skip # noqa # nopep8
 
 mod = sys.modules[__name__]
 
@@ -65,6 +31,8 @@ for _ in range(5):
 # %autoreload 2
 
 # %%
+from dotenv.main import load_dotenv  # isort:skip # fmt:skip # noqa # nopep8
+
 envrc_path = Path.cwd().parents[0].joinpath('.envrc')
 load_dotenv(dotenv_path=envrc_path)
 conda_env_name = os.environ.get('CONDA_ENV_NAME')
@@ -104,6 +72,7 @@ try:
     import functools
     import gc
     import glob
+    import importlib
     import inspect
     import itertools
     import json
@@ -160,6 +129,7 @@ try:
     import selenium.webdriver as webdriver
     import selenium.webdriver.support.ui as ui
     import simpledorff
+    import sklearn
     import sklearn as sk
     import spacy
     import specification_curve as specy
@@ -266,7 +236,7 @@ try:
     from selenium.webdriver.common.keys import Keys
     from selenium.webdriver.support import expected_conditions as EC
     from selenium.webdriver.support.ui import Select, WebDriverWait
-    from sklearn import feature_selection, metrics, set_config, svm, utils
+    from sklearn import feature_selection, linear_model, metrics, set_config, svm, utils
     from sklearn.base import BaseEstimator, TransformerMixin
     from sklearn.calibration import CalibratedClassifierCV, CalibrationDisplay
     from sklearn.compose import ColumnTransformer
@@ -448,14 +418,6 @@ except ImportError as error:
 #         if '__' not in str(lib) and '_' not in str(lib):
 #             f.write(f'{lib}\n')
 
-# %%
-# Set random seed
-random_state = 42
-random.seed(random_state)
-np.random.seed(random_state)
-torch.manual_seed(random_state)
-DetectorFactory.seed = random_state
-cores = multiprocessing.cpu_count()
 
 # %%
 # Set paths
@@ -527,15 +489,17 @@ fasttext_path = os.path.abspath(
     f'{gensim_path}fasttext-wiki-news-subwords-300')
 
 # Classification
-# Sklearn variables
+# Model variables
 t = time.time()
 n_jobs = -1
 n_splits = 10
 n_repeats = 3
+random_state = 42
 refit = True
 class_weight = 'balanced'
 cv = RepeatedStratifiedKFold(
-    n_splits=n_splits, n_repeats=n_repeats, random_state=random_state)
+    n_splits=n_splits, n_repeats=n_repeats, random_state=random_state
+)
 scoring = 'recall'
 scores = ['recall', 'accuracy', 'f1', 'roc_auc',
           'explained_variance', 'matthews_corrcoef']
@@ -546,7 +510,6 @@ scorers = {
 }
 analysis_columns = ['Warmth', 'Competence']
 text_col = 'Job Description spacy_sentencized'
-
 metrics_dict = {
     'Mean Cross Validation Train Score': np.nan,
     'Mean Cross Validation Test Score': np.nan,
@@ -556,7 +519,6 @@ metrics_dict = {
     'Accuracy': np.nan,
     'Balanced Accuracy': np.nan,
     'Precision': np.nan,
-    'Average Precision': np.nan,
     'Recall': np.nan,
     'F1-score': np.nan,
     'Matthews Correlation Coefficient': np.nan,
@@ -573,7 +535,7 @@ metrics_dict = {
     'Normalized Confusion Matrix': np.nan
 }
 
-# BERT variables
+# Transformer variables
 max_length = 512
 returned_tensor = 'pt'
 cpu_counts = torch.multiprocessing.cpu_count()
@@ -581,43 +543,19 @@ device = torch.device('mps') if torch.has_mps and torch.backends.mps.is_built() 
 ) else torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 device_name = str(device.type)
 print(f'Using {device_name.upper()}')
+# Set random seed
+random.seed(random_state)
+np.random.seed(random_state)
+torch.manual_seed(random_state)
+DetectorFactory.seed = random_state
+cores = multiprocessing.cpu_count()
 bert_model_name = 'bert-base-uncased'
 bert_tokenizer = BertTokenizerFast.from_pretrained(
-    bert_model_name, strip_accents=True)
-bert_model = BertForSequenceClassification.from_pretrained(
-    bert_model_name).to(device)
-
-# Display variables
-# csv.field_size_limit(sys.maxsize)
-# IPython.core.page = print
-# IPython.display.clear_output
-# display(HTML('<style>.container { width:90% !important; }</style>'))
-# InteractiveShell.ast_node_interactivity = 'all'
-# warnings.filterwarnings('ignore', category=DeprecationWarning)
-# import pretty_errors
-# pretty_errors.configure(
-#     separator_character = '*',
-#     filename_display    = pretty_errors.FILENAME_EXTENDED,
-#     line_number_first   = True,
-#     display_link        = True,
-#     lines_before        = 5,
-#     lines_after         = 2,
-#     line_color          = pretty_errors.RED + '> ' + pretty_errors.default_config.line_color,
-#     code_color          = '  ' + pretty_errors.default_config.line_color,
-#     truncate_code       = True,
-#     display_locals      = True
-# )
-# pretty_errors.replace_stderr()
-
-errors = (
-    TypeError,
-    AttributeError,
-    ElementClickInterceptedException,
-    ElementNotInteractableException,
-    NoSuchElementException,
-    NoAlertPresentException,
-    TimeoutException,
+    bert_model_name, strip_accents=True
 )
+bert_model = BertForSequenceClassification.from_pretrained(
+    bert_model_name
+).to(device)
 
 # Plotting variables
 pp = pprint.PrettyPrinter(indent=4)
@@ -640,8 +578,39 @@ pd.set_option('display.colheader_justify', 'center')
 pd.set_option('display.precision', 3)
 pd.set_option('display.float_format', '{:.2f}'.format)
 
+# Display variables
+# csv.field_size_limit(sys.maxsize)
+# IPython.core.page = print
+# IPython.display.clear_output
+# display(HTML('<style>.container { width:90% !important; }</style>'))
+# InteractiveShell.ast_node_interactivity = 'all'
+# warnings.filterwarnings('ignore', category=DeprecationWarning)
+# import pretty_errors
+# pretty_errors.configure(
+#     separator_character = '*',
+#     filename_display    = pretty_errors.FILENAME_EXTENDED,
+#     line_number_first   = True,
+#     display_link        = True,
+#     lines_before        = 5,
+#     lines_after         = 2,
+#     line_color          = pretty_errors.RED + '> ' + pretty_errors.default_config.line_color,
+#     code_color          = '  ' + pretty_errors.default_config.line_color,
+#     truncate_code       = True,
+#     display_locals      = True
+# )
+# pretty_errors.replace_stderr()
 # lux.config.default_display = "lux"
 # lux.config.plotting_backend = "matplotlib"
+
+errors = (
+    TypeError,
+    AttributeError,
+    ElementClickInterceptedException,
+    ElementNotInteractableException,
+    NoSuchElementException,
+    NoAlertPresentException,
+    TimeoutException,
+)
 
 # %%
 # Analysis

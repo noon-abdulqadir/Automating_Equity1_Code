@@ -1,8 +1,7 @@
 # %%
-import importlib
-import os
-import sys
-from pathlib import Path
+import os  # isort:skip # fmt:skip # noqa # nopep8
+import sys  # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path  # isort:skip # fmt:skip # noqa # nopep8
 
 mod = sys.modules[__name__]
 
@@ -25,37 +24,32 @@ sys.path.append(code_dir)
 # %load_ext autoreload
 # %autoreload 2
 
-
 # %%
-from setup_module.imports import *
+from setup_module.imports import *  # isort:skip # fmt:skip # noqa # nopep8
 
 # %% [markdown]
 # ### READ DATA
 
 # %%
 # Variables
-random_state = 42
-random.seed(random_state)
-np.random.seed(random_state)
-torch.manual_seed(random_state)
-DetectorFactory.seed = random_state
-
-# Sklearn
+# Sklearn variables
 method = 'Supervised'
 final_models_save_path = f'{models_save_path}{method} Results/'
 t = time.time()
 n_jobs = -1
 n_splits = 10
 n_repeats = 3
+random_state = 42
 refit = True
 class_weight = 'balanced'
 cv = RepeatedStratifiedKFold(
     n_splits=n_splits, n_repeats=n_repeats, random_state=random_state
 )
-cores = multiprocessing.cpu_count()
 scoring = 'recall'
-scores = ['recall', 'accuracy', 'f1', 'roc_auc',
-          'explained_variance', 'matthews_corrcoef']
+scores = [
+    'recall', 'accuracy', 'f1', 'roc_auc',
+    'explained_variance', 'matthews_corrcoef'
+]
 scorers = {
     'precision_score': make_scorer(precision_score),
     'recall_score': make_scorer(recall_score),
@@ -88,11 +82,33 @@ metrics_dict = {
     'Normalized Confusion Matrix': np.nan
 }
 
-# Plotting
+# Transformer variables
+max_length = 512
+returned_tensor = 'pt'
+cpu_counts = torch.multiprocessing.cpu_count()
+device = torch.device('mps') if torch.has_mps and torch.backends.mps.is_built() and torch.backends.mps.is_available(
+) else torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
+device_name = str(device.type)
+print(f'Using {device_name.upper()}')
+# Set random seed
+random.seed(random_state)
+np.random.seed(random_state)
+torch.manual_seed(random_state)
+DetectorFactory.seed = random_state
+cores = multiprocessing.cpu_count()
+bert_model_name = 'bert-base-uncased'
+bert_tokenizer = BertTokenizerFast.from_pretrained(
+    bert_model_name, strip_accents=True
+)
+bert_model = BertForSequenceClassification.from_pretrained(
+    bert_model_name
+).to(device)
+
+# Plotting variables
 pp = pprint.PrettyPrinter(indent=4)
 tqdm.tqdm.pandas(desc='progress-bar')
 tqdm_auto.tqdm.pandas(desc='progress-bar')
-tqdm.tqdm_notebook().pandas(desc='progress-bar')
+tqdm.notebook.tqdm().pandas(desc='progress-bar')
 tqdm_auto.notebook_tqdm().pandas(desc='progress-bar')
 # pbar = progressbar.ProgressBar(maxval=10)
 mpl.use('MacOSX')
@@ -108,7 +124,6 @@ pd.set_option('display.width', 5000)
 pd.set_option('display.colheader_justify', 'center')
 pd.set_option('display.precision', 3)
 pd.set_option('display.float_format', '{:.2f}'.format)
-
 
 # %% [markdown]
 # ## Vectorizers
@@ -298,14 +313,14 @@ knn_params = {
     'KNeighborsClassifier__weights': ['uniform', 'distance'],
     'KNeighborsClassifier__n_neighbors': [2, 5, 15],
     'KNeighborsClassifier__algorithm': ['auto'],
-    # 'KNeighborsClassifier__leaf_size': [30, 50, 100, 200, 300, 500],
-    'KNeighborsClassifier__p': [1, 2, 3, 4, 5],
+    # 'KNeighborsClassifier__p': [1, 2, 3, 4, 5],
     # 'KNeighborsClassifier__metric': [
     #     'minkowski',
     #     'euclidean',
     #     'cosine',
     #     'correlation',
     # ],
+    # 'KNeighborsClassifier__leaf_size': [30, 50, 100, 200, 300, 500],
     # 'KNeighborsClassifier__metric_params': [None, {'p': 2}, {'p': 3}],
 }
 
@@ -314,14 +329,13 @@ knn = [knn_, knn_params]
 # Logistic Regression
 lr_ = LogisticRegression()
 lr_params = {
-    'LogisticRegression__penalty': ['elasticnet'],
     'LogisticRegression__class_weight': [class_weight],
     'LogisticRegression__random_state': [random_state],
-    'LogisticRegression__algorithm': ['auto'],
     'LogisticRegression__fit_intercept': [True, False],
     'LogisticRegression__multi_class': ['auto'],
-    'LogisticRegression__solver': ['lbfgs', 'liblinear', 'newton-cg', 'newton-cholesky', 'sag', 'saga'],
+    'LogisticRegression__solver': ['liblinear'],
     'LogisticRegression__C': [0.01, 1, 100],
+    # 'LogisticRegression__penalty': ['elasticnet'],
     # 'LogisticRegression__max_iter': [100, 200, 300, 500, 1000],
 }
 
@@ -342,14 +356,13 @@ pa_params = {
 pa = [pa_, pa_params]
 
 # Perceptron
-ptron_ = Perceptron()
+ptron_ = linear_model.Perceptron()
 ptron_params = {
     'Perceptron__penalty': ['elasticnet'],
     'Perceptron__random_state': [random_state],
     'Perceptron__fit_intercept': [True, False],
     'Perceptron__class_weight': [class_weight],
     'Perceptron__shuffle': [True, False],
-    'Perceptron__C': [0.01, 1, 100],
     # 'Perceptron__max_iter': [100, 200, 300, 500, 1000],
 }
 
@@ -390,8 +403,8 @@ dt_params = {
     'DecisionTreeClassifier__criterion': ['gini', 'entropy', 'log_loss'],
     'DecisionTreeClassifier__random_state': [random_state],
     'DecisionTreeClassifier__splitter': ['best', 'random'],
-    'DecisionTreeClassifier__max_features': ['auto'],
     'DecisionTreeClassifier__class_weight': [class_weight],
+    # 'DecisionTreeClassifier__max_features': ['auto'],
 }
 
 dt = [dt_, dt_params]
@@ -401,11 +414,11 @@ rf_ = RandomForestClassifier()
 rf_params = {
     'RandomForestClassifier__max_depth': [2, 5, 10],
     'RandomForestClassifier__n_estimators': [10, 20],
-    'RandomForestClassifier__max_features': ['auto'],
     'RandomForestClassifier__criterion': ['gini', 'entropy', 'log_loss'],
     'RandomForestClassifier__random_state': [random_state],
     'RandomForestClassifier__class_weight': [class_weight],
     'RandomForestClassifier__oob_score': [True],
+    # 'RandomForestClassifier__max_features': ['auto'],
 }
 
 rf = [rf_, rf_params]
@@ -428,7 +441,7 @@ gbc_ = GradientBoostingClassifier()
 gbc_params = {
     'GradientBoostingClassifier__random_state': [random_state],
     'GradientBoostingClassifier__loss': ['log_loss', 'deviance', 'exponential'],
-    'GradientBoostingClassifier__max_features': ['auto'],
+    # 'GradientBoostingClassifier__max_features': ['auto'],
 }
 
 gbc = [gbc_, gbc_params]

@@ -36,12 +36,11 @@
 #
 #
 # %%
-import itertools
-import os
-import sys
-from pathlib import Path
+import os  # isort:skip # fmt:skip # noqa # nopep8
+import sys  # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path  # isort:skip # fmt:skip # noqa # nopep8
 
-from setup_module.imports import *
+mod = sys.modules[__name__]
 
 code_dir = None
 code_dir_name = 'Code'
@@ -58,13 +57,12 @@ for _ in range(5):
         if code_dir is not None:
             break
 
-main_dir = str(Path(code_dir).parents[0])
-scraped_data = f'{code_dir}/scraped_data'
 sys.path.append(code_dir)
+# %load_ext autoreload
+# %autoreload 2
 
 # %%
-
-warnings.filterwarnings('ignore', category=DeprecationWarning)
+from setup_module.imports import *  # isort:skip # fmt:skip # noqa # nopep8
 
 # %%
 
