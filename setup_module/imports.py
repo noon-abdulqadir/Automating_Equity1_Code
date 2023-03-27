@@ -672,9 +672,9 @@ ivs_age_dummy_num = [
     'Age_Mixed',
     'Age_Younger',
 ]
-order_gender = ['Female', 'Mixed Gender', 'Male']
-order_age = ['Older', 'Mixed Age', 'Younger']
-ivs_dict = {'Gender': order_gender, 'Age': order_age}
+gender_order = ['Female', 'Mixed Gender', 'Male']
+age_order = ['Older', 'Mixed Age', 'Younger']
+ivs_dict = {'Gender': gender_order, 'Age': age_order}
 
 dvs = {}
 

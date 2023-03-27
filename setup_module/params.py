@@ -36,6 +36,9 @@
 #
 #
 # %%
+from setup_module.scraping import *
+from setup_module.imports import *
+from setup_module.classification import *
 import os
 import sys
 from pathlib import Path
@@ -59,11 +62,8 @@ main_dir = str(Path(code_dir).parents[0])
 scraped_data = f'{code_dir}/scraped_data'
 sys.path.append(code_dir)
 
-from setup_module.classification import *
 
 # %%
-from setup_module.imports import *
-from setup_module.scraping import *
 
 warnings.filterwarnings('ignore', category=DeprecationWarning)
 
@@ -98,7 +98,7 @@ analysis_df_from_manual = True
 task_enabled = False
 # language_model_enabled = False
 
-### CHANGE THIS TO GET NEW DATA FROM JSON FILES
+# CHANGE THIS TO GET NEW DATA FROM JSON FILES
 start_new_preprocessing = False
 ###
 id_dict_new = start_new_preprocessing
@@ -106,22 +106,22 @@ from_processing_function = start_new_preprocessing
 classification_final_from_post_cleanup = start_new_preprocessing
 classification_final_from_df_jobs_list = start_new_preprocessing
 ###
-stop_words=set(sw.words('english'))
-pattern={'True': r'[^a-zA-Z]', 'False': r'[^a-zA-Z0-9]'}
-main_from_function=True
-preprocessed_from_function=True
-ngrams_from_funtion=True
-embedding_from_function =True
-ngrams_enabled=True
-ngrams_from_funtion=True
-drop_cols_enabled=False
+stop_words = set(sw.words('english'))
+pattern = {'True': r'[^a-zA-Z]', 'False': r'[^a-zA-Z0-9]'}
+main_from_function = True
+preprocessed_from_function = True
+ngrams_from_funtion = True
+embedding_from_function = True
+ngrams_enabled = True
+ngrams_from_funtion = True
+drop_cols_enabled = False
 embedding_libraries_list = ['nltk', 'gensim']
-nltk_ngrams_dict={2: nltk.bigrams, 3: nltk.trigrams}
-ngrams_list=[1, 2, 3, 123]
+nltk_ngrams_dict = {2: nltk.bigrams, 3: nltk.trigrams}
+ngrams_list = [1, 2, 3, 123]
 embedding_models_dict = {
-                'w2v': [build_train_word2vec, word2vec_embeddings, Word2Vec],
-                'ft': [build_train_fasttext, fasttext_embeddings, FastText],
-            }
+    'w2v': [build_train_word2vec, word2vec_embeddings, Word2Vec],
+    'ft': [build_train_fasttext, fasttext_embeddings, FastText],
+}
 
 use_dict_for_classifiers_vectorizers = True
 select_best_enabled = True
@@ -167,7 +167,8 @@ t = time.time()
 cores = multiprocessing.cpu_count()
 model_sizes = [300, 100]
 scoring = 'recall'
-scores = ['recall', 'accuracy', 'precision', 'f1', 'roc_auc', 'explained_variance', 'matthews_corrcoef']
+scores = ['recall', 'accuracy', 'precision', 'f1',
+          'roc_auc', 'explained_variance', 'matthews_corrcoef']
 search_enabled = False
 metrics_list = [
     'Mean Validation Score',
@@ -276,9 +277,9 @@ final_competence_classifier = 'VotingClassifier'
 # Analysis
 # Setting Variables
 # ivs = ['Gender', 'Age']
-# order_gender = ['Female', 'Mixed Gender', 'Male']
-# order_age = ['Older Worker', 'Mixed Age', 'Younger']
-# ivs_dict = {'Gender': order_gender, 'Age': order_age}
+# gender_order = ['Female', 'Mixed Gender', 'Male']
+# age_order = ['Older Worker', 'Mixed Age', 'Younger']
+# ivs_dict = {'Gender': gender_order, 'Age': age_order}
 
 # dvs = {}
 # dvs_probas = {}
@@ -289,7 +290,7 @@ if analysis_df_from_manual is False:
     df_loc = f'_outliers_age_limit-{age_limit}_age_ratio-{age_ratio}_gender_ratio-{gender_ratio}'
     dataframes = {'df': None, 'df_mean': None}
     dv_cols = ['Warmth', 'Warmth_Probability',
-            'Competence', 'Competence_Probability']
+               'Competence', 'Competence_Probability']
 
 elif analysis_df_from_manual is True:
     df_loc = '_outliers'

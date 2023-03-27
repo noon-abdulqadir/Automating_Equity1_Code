@@ -36,9 +36,9 @@
 #
 #
 # %%
-import os # isort:skip # fmt:skip # noqa # nopep8
-import sys # isort:skip # fmt:skip # noqa # nopep8
-from pathlib import Path # isort:skip # fmt:skip # noqa # nopep8
+import os  # isort:skip # fmt:skip # noqa # nopep8
+import sys  # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path  # isort:skip # fmt:skip # noqa # nopep8
 
 mod = sys.modules[__name__]
 
@@ -387,19 +387,19 @@ def categorize_df_gender_age(
     # Arrange Categories
     try:
         df['Gender'] = df['Gender'].astype(
-            'category').cat.reorder_categories(order_gender, ordered=True)
+            'category').cat.reorder_categories(gender_order, ordered=True)
 
         df['Gender'] = pd.Categorical(
-            df['Gender'], categories=order_gender, ordered=True
+            df['Gender'], categories=gender_order, ordered=True
         )
     except ValueError as e:
         print(e)
     try:
         df['Age'] = df['Age'].astype(
-            'category').cat.reorder_categories(order_age, ordered=True)
+            'category').cat.reorder_categories(age_order, ordered=True)
 
         df['Age'] = pd.Categorical(
-            df['Age'], categories=order_age, ordered=True
+            df['Age'], categories=age_order, ordered=True
         )
     except ValueError as e:
         print(e)

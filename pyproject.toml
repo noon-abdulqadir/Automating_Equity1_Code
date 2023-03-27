@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "study1-code"
+version = "0.1.0"
+description = ""
+authors = ["Noon Abdulqadir (MFA Noon) <noon.abdulqadir@gmail.com>"]
+readme = "README.md"
+packages = [{include = "study1_code"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
