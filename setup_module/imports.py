@@ -145,6 +145,7 @@ try:
     import urllib3
     import xgboost as xgb
     import xlsxwriter
+    from accelerate import Accelerator, notebook_launcher
     from bs4 import BeautifulSoup
     from gensim import corpora, models
     from gensim.corpora import Dictionary
@@ -311,6 +312,7 @@ try:
     from sklearn.model_selection import (
         GridSearchCV,
         HalvingGridSearchCV,
+        HalvingRandomSearchCV,
         KFold,
         LeaveOneOut,
         RandomizedSearchCV,
@@ -361,6 +363,7 @@ try:
     from textblob.en.inflect import pluralize, singularize
     from tqdm.contrib.itertools import product as tqdm_product
     from transformers import (
+        AdamW,
         AutoModelForTokenClassification,
         AutoTokenizer,
         BertConfig,
@@ -378,7 +381,6 @@ try:
     from transformers.trainer_pt_utils import get_parameter_names
     from webdriver_manager.chrome import ChromeDriverManager
     from xgboost import XGBClassifier
-
 
 except ImportError as error:
     module_name = str(error).split('named')[1]
@@ -504,21 +506,24 @@ scoring = 'recall'
 scores = ['recall', 'accuracy', 'f1', 'roc_auc',
           'explained_variance', 'matthews_corrcoef']
 scorers = {
-    'precision_score': make_scorer(precision_score),
-    'recall_score': make_scorer(recall_score),
-    'accuracy_score': make_scorer(accuracy_score),
+    'precision_score': make_scorer(precision_score, zero_division=0),
+    'recall_score': make_scorer(recall_score, zero_division=0),
+    'accuracy_score': make_scorer(accuracy_score, zero_division=0),
 }
 analysis_columns = ['Warmth', 'Competence']
 text_col = 'Job Description spacy_sentencized'
 metrics_dict = {
-    'Mean Cross Validation Train Score': np.nan,
-    'Mean Cross Validation Test Score': np.nan,
-    f'Mean Explained Train Variance - {scoring.title()}': np.nan,
-    f'Mean Explained Test Variance - {scoring.title()}': np.nan,
+    'Train - Mean Cross Validation Score': np.nan,
+    f'Train - Mean Cross Validation - {scoring.title()}': np.nan,
+    f'Train - Mean Explained Variance - {scoring.title()}': np.nan,
+    'Test - Mean Cross Validation Score': np.nan,
+    f'Test - Mean Cross Validation - {scoring.title()}': np.nan,
+    f'Test - Mean Explained Variance - {scoring.title()}': np.nan,
     'Explained Variance': np.nan,
     'Accuracy': np.nan,
     'Balanced Accuracy': np.nan,
     'Precision': np.nan,
+    'Average Precision': np.nan,
     'Recall': np.nan,
     'F1-score': np.nan,
     'Matthews Correlation Coefficient': np.nan,
@@ -531,8 +536,9 @@ metrics_dict = {
     'Cohen’s Kappa': np.nan,
     'Geometric Mean': np.nan,
     'Classification Report': np.nan,
+    'Imbalanced Classification Report': np.nan,
     'Confusion Matrix': np.nan,
-    'Normalized Confusion Matrix': np.nan
+    'Normalized Confusion Matrix': np.nan,
 }
 
 # Transformer variables
@@ -556,6 +562,8 @@ bert_tokenizer = BertTokenizerFast.from_pretrained(
 bert_model = BertForSequenceClassification.from_pretrained(
     bert_model_name
 ).to(device)
+accelerator = Accelerator()
+optimizer = AdamW(bert_model.parameters(), lr=3e-5)
 
 # Plotting variables
 pp = pprint.PrettyPrinter(indent=4)

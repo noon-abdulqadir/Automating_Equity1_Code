@@ -58,14 +58,17 @@ scorers = {
 analysis_columns = ['Warmth', 'Competence']
 text_col = 'Job Description spacy_sentencized'
 metrics_dict = {
-    'Mean Cross Validation Train Score': np.nan,
-    'Mean Cross Validation Test Score': np.nan,
-    f'Mean Explained Train Variance - {scoring.title()}': np.nan,
-    f'Mean Explained Test Variance - {scoring.title()}': np.nan,
+    'Train - Mean Cross Validation Score': np.nan,
+    f'Train - Mean Cross Validation - {scoring.title()}': np.nan,
+    f'Train - Mean Explained Variance - {scoring.title()}': np.nan,
+    'Test - Mean Cross Validation Score': np.nan,
+    f'Test - Mean Cross Validation - {scoring.title()}': np.nan,
+    f'Test - Mean Explained Variance - {scoring.title()}': np.nan,
     'Explained Variance': np.nan,
     'Accuracy': np.nan,
     'Balanced Accuracy': np.nan,
     'Precision': np.nan,
+    'Average Precision': np.nan,
     'Recall': np.nan,
     'F1-score': np.nan,
     'Matthews Correlation Coefficient': np.nan,
@@ -78,8 +81,9 @@ metrics_dict = {
     'Cohen’s Kappa': np.nan,
     'Geometric Mean': np.nan,
     'Classification Report': np.nan,
+    'Imbalanced Classification Report': np.nan,
     'Confusion Matrix': np.nan,
-    'Normalized Confusion Matrix': np.nan
+    'Normalized Confusion Matrix': np.nan,
 }
 
 # Transformer variables
@@ -247,7 +251,7 @@ selectors_pipe = {
 smotetomek_ = SMOTETomek()
 smotetomek_params = {
     'SMOTETomek__random_state': [random_state],
-    'SMOTETomek__tomek': [TomekLinks(sampling_strategy='majority')],
+    'SMOTETomek__tomek': [TomekLinks(sampling_strategy='majority', n_jobs=n_jobs)],
 }
 smotetomek = [smotetomek_, smotetomek_params]
 
@@ -336,7 +340,7 @@ lr_params = {
     'LogisticRegression__solver': ['liblinear'],
     'LogisticRegression__C': [0.01, 1, 100],
     # 'LogisticRegression__penalty': ['elasticnet'],
-    # 'LogisticRegression__max_iter': [100, 200, 300, 500, 1000],
+    # 'LogisticRegression__max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],,
 }
 
 lr = [lr_, lr_params]
@@ -350,7 +354,7 @@ pa_params = {
     'PassiveAggressiveClassifier__class_weight': [class_weight],
     'PassiveAggressiveClassifier__shuffle': [True, False],
     'PassiveAggressiveClassifier__C': [0.01, 1, 100],
-    # 'PassiveAggressiveClassifier__max_iter': [100, 200, 300, 500, 1000],
+    # 'PassiveAggressiveClassifier__max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],,
 }
 
 pa = [pa_, pa_params]
@@ -363,7 +367,7 @@ ptron_params = {
     'Perceptron__fit_intercept': [True, False],
     'Perceptron__class_weight': [class_weight],
     'Perceptron__shuffle': [True, False],
-    # 'Perceptron__max_iter': [100, 200, 300, 500, 1000],
+    # 'Perceptron__max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],,
 }
 
 ptron = [ptron_, ptron_params]
@@ -375,7 +379,7 @@ sgd_params = {
     'SGDClassifier__random_state': [random_state],
     'SGDClassifier__fit_intercept': [True, False],
     'SGDClassifier__class_weight': [class_weight],
-    # 'SGDClassifier__max_iter': [100, 200, 300, 500, 1000],
+    # 'SGDClassifier__max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
 }
 
 sgd = [sgd_, sgd_params]
@@ -383,15 +387,13 @@ sgd = [sgd_, sgd_params]
 # SVM
 svm_ = LinearSVC()
 svm_params = {
-    'LinearSVC__penalty': ['elasticnet'],
     'LinearSVC__loss': ['hinge', 'squared_hinge'],
     'LinearSVC__random_state': [random_state],
     'LinearSVC__fit_intercept': [True, False],
     'LinearSVC__class_weight': [class_weight],
     'LinearSVC__C': [0.01, 1, 100],
-    'LinearSVC__gamma': ['scale', 'auto'],
+    'LinearSVC__max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
     # 'LinearSVC__multi_class': ['ovr', 'crammer_singer'],
-    # 'LinearSVC__max_iter': [100, 200, 300, 500, 1000],
 }
 
 svm = [svm_, svm_params]
