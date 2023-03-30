@@ -130,33 +130,39 @@ pd.set_option('display.precision', 3)
 pd.set_option('display.float_format', '{:.2f}'.format)
 
 # %% [markdown]
+# ### Helper function to join model names and params into pipe params
+
+
+def make_pipe_list(model, params):
+    return [model, {f'{model.__class__.__name__}__{param_name}': param_value for param_name, param_value in params.items()}]
+
+# %% [markdown]
 # ## Vectorizers
+
 
 # %%
 # CountVectorizer
 count_ = CountVectorizer()
 count_params = {
-    #     'TfidfVectorizer__stop_words': ['english'],
-    'CountVectorizer__analyzer': ['word'],
-    'CountVectorizer__ngram_range': [(1, 3)],
-    'CountVectorizer__lowercase': [True, False],
-    'CountVectorizer__max_df': [0.90, 0.85, 0.80, 0.75, 0.70],
-    'CountVectorizer__min_df': [0.10, 0.15, 0.20, 0.25, 0.30],
+    'analyzer': ['word'],
+    'ngram_range': [(1, 3)],
+    'lowercase': [True, False],
+    'max_df': [0.90, 0.85, 0.80, 0.75, 0.70],
+    'min_df': [0.10, 0.15, 0.20, 0.25, 0.30],
 }
-count = [count_, count_params]
+count = make_pipe_list(count_, count_params)
 
 # TfidfVectorizer
 tfidf_ = TfidfVectorizer()
 tfidf_params = {
-    #     'TfidfVectorizer__stop_words': ['english'],
-    'TfidfVectorizer__analyzer': ['word'],
-    'TfidfVectorizer__ngram_range': [(1, 3)],
-    'TfidfVectorizer__lowercase': [True, False],
-    'TfidfVectorizer___use_idf': [True, False],
-    'TfidfVectorizer__max_df': [0.90, 0.85, 0.80, 0.75, 0.70],
-    'TfidfVectorizer__min_df': [0.10, 0.15, 0.20, 0.25, 0.30],
+    'analyzer': ['word'],
+    'ngram_range': [(1, 3)],
+    'lowercase': [True, False],
+    '_use_idf': [True, False],
+    'max_df': [0.90, 0.85, 0.80, 0.75, 0.70],
+    'min_df': [0.10, 0.15, 0.20, 0.25, 0.30],
 }
-tfidf = [tfidf_, tfidf_params]
+tfidf = make_pipe_list(tfidf_, tfidf_params)
 
 # Vectorizers List
 vectorizers_list = [
@@ -196,39 +202,39 @@ vectorizers_pipe = {
 # SelectKBest
 selectkbest_ = SelectKBest()
 selectkbest_params = {
-    'SelectKBest__score_func': [f_classif, chi2, mutual_info_classif, f_regression, mutual_info_regression],
-    'SelectKBest__k': ['all'],
+    'score_func': [f_classif, chi2, mutual_info_classif, f_regression, mutual_info_regression],
+    'k': ['all'],
 }
-selectkbest = [selectkbest_, selectkbest_params]
+selectkbest = make_pipe_list(selectkbest_, selectkbest_params)
 
 # SelectPercentile
 selectperc_ = SelectPercentile()
 selectperc_params = {
-    'SelectPercentile__score_func': [f_classif, chi2, mutual_info_classif, f_regression, mutual_info_regression],
-    'SelectPercentile__percentile': [30, 40, 50, 60, 70, 80],
+    'score_func': [f_classif, chi2, mutual_info_classif, f_regression, mutual_info_regression],
+    'percentile': [30, 40, 50, 60, 70, 80],
 }
-selectperc = [selectperc_, selectperc_params]
+selectperc = make_pipe_list(selectperc_, selectperc_params)
 
 # SelectFpr
 selectfpr_ = SelectFpr()
 selectfpr_params = {
-    'SelectFpr__score_func': [f_classif, chi2, mutual_info_classif, f_regression, mutual_info_regression],
+    'score_func': [f_classif, chi2, mutual_info_classif, f_regression, mutual_info_regression],
 }
-selectfpr = [selectfpr_, selectfpr_params]
+selectfpr = make_pipe_list(selectfpr_, selectfpr_params)
 
 # SelectFdr
 selectfdr_ = SelectFdr()
 selectfdr_params = {
-    'SelectFdr__score_func': [f_classif, chi2, mutual_info_classif, f_regression, mutual_info_regression],
+    'score_func': [f_classif, chi2, mutual_info_classif, f_regression, mutual_info_regression],
 }
-selectfdr = [selectfdr_, selectfdr_params]
+selectfdr = make_pipe_list(selectfdr_, selectfdr_params)
 
 # SelectFwe
 selectfwe_ = SelectFwe()
 selectfwe_params = {
-    'SelectFwe__score_func': [f_classif, chi2, mutual_info_classif, f_regression, mutual_info_regression],
+    'score_func': [f_classif, chi2, mutual_info_classif, f_regression, mutual_info_regression],
 }
-selectfwe = [selectfwe_, selectfwe_params]
+selectfwe = make_pipe_list(selectfwe_, selectfwe_params)
 
 # Selectors List
 selectors_list = [
@@ -250,10 +256,10 @@ selectors_pipe = {
 # SMOTETomek Resampler
 smotetomek_ = SMOTETomek()
 smotetomek_params = {
-    'SMOTETomek__random_state': [random_state],
-    'SMOTETomek__tomek': [TomekLinks(sampling_strategy='majority', n_jobs=n_jobs)],
+    'random_state': [random_state],
+    'tomek': [TomekLinks(sampling_strategy='majority', n_jobs=n_jobs)],
 }
-smotetomek = [smotetomek_, smotetomek_params]
+smotetomek = make_pipe_list(smotetomek_, smotetomek_params)
 
 # Resampler List
 resamplers_list = [
@@ -274,187 +280,189 @@ resamplers_pipe = {
 # Dummy Classifier
 dummy_ = DummyClassifier()
 dummy_params = {
-    'DummyClassifier__strategy': [
+    'strategy': [
         'stratified',
         'most_frequent',
         'prior',
         'uniform',
     ],
-    'DummyClassifier__random_state': [random_state],
+    'random_state': [random_state],
 }
 
-dummy = [dummy_, dummy_params]
+dummy = make_pipe_list(dummy_, dummy_params)
 
 # Multinomial Naive Bayes
 nb_ = MultinomialNB()
 nb_params = {
-    'MultinomialNB__fit_prior': [True, False],
-    # 'MultinomialNB__alpha': [0.1, 0.2, 0.3],
+    'fit_prior': [True, False],
+    # 'alpha': [0.1, 0.2, 0.3],
 }
 
-nb = [nb_, nb_params]
+nb = make_pipe_list(nb_, nb_params)
 
 # Bernoulli Naive Bayes
 bnb_ = BernoulliNB()
 bnb_params = {
-    'BernoulliNB__fit_prior': [True],
-    'BernoulliNB__alpha': [0.1, 0.2, 0.3],
+    'fit_prior': [True],
+    'alpha': [0.1, 0.2, 0.3],
 }
 
-bnb = [bnb_, bnb_params]
+bnb = make_pipe_list(bnb_, bnb_params)
 
 # Gaussian Naive Bayes
 gnb_ = GaussianNB()
 gnb_params = {
-    'GaussianNB__var_smoothing': [1e-9],
+    'var_smoothing': [1e-9],
 }
 
-gnb = [gnb_, gnb_params]
+gnb = make_pipe_list(gnb_, gnb_params)
 
 # KNeighbors Classifier
 knn_ = KNeighborsClassifier()
 knn_params = {
-    'KNeighborsClassifier__weights': ['uniform', 'distance'],
-    'KNeighborsClassifier__n_neighbors': [2, 5, 15],
-    'KNeighborsClassifier__algorithm': ['auto'],
-    # 'KNeighborsClassifier__p': [1, 2, 3, 4, 5],
-    # 'KNeighborsClassifier__metric': [
+    'weights': ['uniform', 'distance'],
+    'n_neighbors': [2, 5, 15],
+    'algorithm': ['auto'],
+    # 'p': [1, 2, 3, 4, 5],
+    # 'metric': [
     #     'minkowski',
     #     'euclidean',
     #     'cosine',
     #     'correlation',
     # ],
-    # 'KNeighborsClassifier__leaf_size': [30, 50, 100, 200, 300, 500],
-    # 'KNeighborsClassifier__metric_params': [None, {'p': 2}, {'p': 3}],
+    # 'leaf_size': [30, 50, 100, 200, 300, 500],
+    # 'metric_params': [None, {'p': 2}, {'p': 3}],
 }
 
-knn = [knn_, knn_params]
+knn = make_pipe_list(knn_, knn_params)
 
 # Logistic Regression
 lr_ = LogisticRegression()
 lr_params = {
-    'LogisticRegression__class_weight': [class_weight],
-    'LogisticRegression__random_state': [random_state],
-    'LogisticRegression__fit_intercept': [True, False],
-    'LogisticRegression__multi_class': ['auto'],
-    'LogisticRegression__solver': ['liblinear'],
-    'LogisticRegression__C': [0.01, 1, 100],
-    # 'LogisticRegression__penalty': ['elasticnet'],
-    # 'LogisticRegression__max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],,
+    'class_weight': [class_weight],
+    'random_state': [random_state],
+    'fit_intercept': [True, False],
+    'multi_class': ['auto'],
+    'solver': ['liblinear'],
+    'C': [0.01, 1, 100],
+    # 'penalty': ['elasticnet'],
+    # 'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],,
 }
 
-lr = [lr_, lr_params]
+lr = make_pipe_list(lr_, lr_params)
 
 # Passive Aggressive
 pa_ = PassiveAggressiveClassifier()
 pa_params = {
-    'PassiveAggressiveClassifier__loss': ['hinge', 'squared_hinge'],
-    'PassiveAggressiveClassifier__random_state': [random_state],
-    'PassiveAggressiveClassifier__fit_intercept': [True, False],
-    'PassiveAggressiveClassifier__class_weight': [class_weight],
-    'PassiveAggressiveClassifier__shuffle': [True, False],
-    'PassiveAggressiveClassifier__C': [0.01, 1, 100],
-    # 'PassiveAggressiveClassifier__max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],,
+    'loss': ['hinge', 'squared_hinge'],
+    'random_state': [random_state],
+    'fit_intercept': [True, False],
+    'class_weight': [class_weight],
+    'shuffle': [True, False],
+    'C': [0.01, 0.50, 1, 5, 50, 100],
+    'average': [True, False],
+    'verbose': [1],
+    # 'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],,
 }
 
-pa = [pa_, pa_params]
+pa = make_pipe_list(pa_, pa_params)
 
 # Perceptron
 ptron_ = linear_model.Perceptron()
 ptron_params = {
-    'Perceptron__penalty': ['elasticnet'],
-    'Perceptron__random_state': [random_state],
-    'Perceptron__fit_intercept': [True, False],
-    'Perceptron__class_weight': [class_weight],
-    'Perceptron__shuffle': [True, False],
-    # 'Perceptron__max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],,
+    'penalty': ['elasticnet'],
+    'random_state': [random_state],
+    'fit_intercept': [True, False],
+    'class_weight': [class_weight],
+    'shuffle': [True, False],
+    # 'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],,
 }
 
-ptron = [ptron_, ptron_params]
+ptron = make_pipe_list(ptron_, ptron_params)
 
 # Stochastic Gradient Descent Aggressive
 sgd_ = SGDClassifier()
 sgd_params = {
-    'SGDClassifier__loss': ['hinge', 'squared_hinge'],
-    'SGDClassifier__random_state': [random_state],
-    'SGDClassifier__fit_intercept': [True, False],
-    'SGDClassifier__class_weight': [class_weight],
-    # 'SGDClassifier__max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
+    'loss': ['hinge', 'squared_hinge'],
+    'random_state': [random_state],
+    'fit_intercept': [True, False],
+    'class_weight': [class_weight],
+    # 'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
 }
 
-sgd = [sgd_, sgd_params]
+sgd = make_pipe_list(sgd_, sgd_params)
 
 # SVM
 svm_ = LinearSVC()
 svm_params = {
-    'LinearSVC__loss': ['hinge', 'squared_hinge'],
-    'LinearSVC__random_state': [random_state],
-    'LinearSVC__fit_intercept': [True, False],
-    'LinearSVC__class_weight': [class_weight],
-    'LinearSVC__C': [0.01, 1, 100],
-    'LinearSVC__max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
-    # 'LinearSVC__multi_class': ['ovr', 'crammer_singer'],
+    'loss': ['hinge', 'squared_hinge'],
+    'random_state': [random_state],
+    'fit_intercept': [True, False],
+    'class_weight': [class_weight],
+    'C': [0.01, 1, 100],
+    'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
+    # 'multi_class': ['ovr', 'crammer_singer'],
 }
 
-svm = [svm_, svm_params]
+svm = make_pipe_list(svm_, svm_params)
 
 # Decision Tree
 dt_ = DecisionTreeClassifier()
 dt_params = {
-    'DecisionTreeClassifier__max_depth': [2, 5, 10],
-    'DecisionTreeClassifier__criterion': ['gini', 'entropy', 'log_loss'],
-    'DecisionTreeClassifier__random_state': [random_state],
-    'DecisionTreeClassifier__splitter': ['best', 'random'],
-    'DecisionTreeClassifier__class_weight': [class_weight],
-    # 'DecisionTreeClassifier__max_features': ['auto'],
+    'max_depth': [2, 5, 10],
+    'criterion': ['gini', 'entropy', 'log_loss'],
+    'random_state': [random_state],
+    'splitter': ['best', 'random'],
+    'class_weight': [class_weight],
+    # 'max_features': ['auto'],
 }
 
-dt = [dt_, dt_params]
+dt = make_pipe_list(dt_, dt_params)
 
 # Random Forest
 rf_ = RandomForestClassifier()
 rf_params = {
-    'RandomForestClassifier__max_depth': [2, 5, 10],
-    'RandomForestClassifier__n_estimators': [10, 20],
-    'RandomForestClassifier__criterion': ['gini', 'entropy', 'log_loss'],
-    'RandomForestClassifier__random_state': [random_state],
-    'RandomForestClassifier__class_weight': [class_weight],
-    'RandomForestClassifier__oob_score': [True],
-    # 'RandomForestClassifier__max_features': ['auto'],
+    'max_depth': [2, 5, 10],
+    'n_estimators': [10, 20],
+    'criterion': ['gini', 'entropy', 'log_loss'],
+    'random_state': [random_state],
+    'class_weight': [class_weight],
+    'oob_score': [True],
+    # 'max_features': ['auto'],
 }
 
-rf = [rf_, rf_params]
+rf = make_pipe_list(rf_, rf_params)
 
 # Extra Trees
 et_ = ExtraTreesClassifier()
 et_params = {
-    'RandomForestClassifier__max_depth': [2, 5, 10],
-    'RandomForestClassifier__n_estimators': [10, 20],
-    'ExtraTreesClassifier__max_feature': ['auto'],
-    'ExtraTreesClassifier__random_state': [random_state],
-    'ExtraTreesClassifier__criterion': ['gini', 'entropy', 'log_loss'],
-    'ExtraTreesClassifier__class_weight': [class_weight],
+    'max_depth': [2, 5, 10],
+    'n_estimators': [10, 20],
+    'max_feature': ['auto'],
+    'random_state': [random_state],
+    'criterion': ['gini', 'entropy', 'log_loss'],
+    'class_weight': [class_weight],
 }
 
-et = [et_, et_params]
+et = make_pipe_list(et_, et_params)
 
 # Gradient Boosting
 gbc_ = GradientBoostingClassifier()
 gbc_params = {
-    'GradientBoostingClassifier__random_state': [random_state],
-    'GradientBoostingClassifier__loss': ['log_loss', 'deviance', 'exponential'],
-    # 'GradientBoostingClassifier__max_features': ['auto'],
+    'random_state': [random_state],
+    'loss': ['log_loss', 'deviance', 'exponential'],
+    # 'max_features': ['auto'],
 }
 
-gbc = [gbc_, gbc_params]
+gbc = make_pipe_list(gbc_, gbc_params)
 
 # AdaBoost
 ada_ = AdaBoostClassifier()
 ada_params = {
-    'AdaBoostClassifier__criterion': ['gini', 'entropy'],
-    'AdaBoostClassifier__random_state': [random_state],
-    'AdaBoostClassifier__n_estimators': [50, 100, 150],
-    'AdaBoostClassifier__base_estimator': [
+    'criterion': ['gini', 'entropy'],
+    'random_state': [random_state],
+    'n_estimators': [50, 100, 150],
+    'base_estimator': [
         SVC(kernel='linear'),
         LogisticRegression(),
         MultinomialNB(),
@@ -462,41 +470,41 @@ ada_params = {
     ],
 }
 
-ada = [ada_, ada_params]
+ada = make_pipe_list(ada_, ada_params)
 
 # XGBoost
 xgb_ = XGBClassifier()
 xgb_params = {
-    'XGBClassifier__seed': [random_state],
-    'XGBClassifier__eval_metric': ['logloss'],
-    'XGBClassifier__objective': ['binary:logistic'],
+    'seed': [random_state],
+    'eval_metric': ['logloss'],
+    'objective': ['binary:logistic'],
 }
 
-xgb = [xgb_, xgb_params]
+xgb = make_pipe_list(xgb_, xgb_params)
 
 # MLP Classifier
 mlpc_ = MLPClassifier()
 mlpc_params = {
-    'MLPClassifier__hidden_layer_sizes': [(100,), (50,), (25,), (10,), (5,), (1,)],
-    'MLPClassifier__activation': ['identity', 'logistic', 'tanh', 'relu'],
-    'MLPClassifier__solver': ['lbfgs', 'sgd', 'adam'],
-    'MLPClassifier__learning_rate': ['constant', 'invscaling', 'adaptive'],
-    'MLPClassifier__random_state': [random_state],
+    'hidden_layer_sizes': [(100,), (50,), (25,), (10,), (5,), (1,)],
+    'activation': ['identity', 'logistic', 'tanh', 'relu'],
+    'solver': ['lbfgs', 'sgd', 'adam'],
+    'learning_rate': ['constant', 'invscaling', 'adaptive'],
+    'random_state': [random_state],
 }
 
-mlpc = [mlpc_, mlpc_params]
+mlpc = make_pipe_list(mlpc_, mlpc_params)
 
 # MLP Regressor
 mlpr_ = MLPRegressor()
 mlpr_params = {
-    'MLPRegressor__hidden_layer_sizes': [(100,), (50,), (25,), (10,), (5,), (1,)],
-    'MLPRegressor__activation': ['identity', 'logistic', 'tanh', 'relu'],
-    'MLPRegressor__solver': ['lbfgs', 'sgd', 'adam'],
-    'MLPRegressor__learning_rate': ['constant', 'invscaling', 'adaptive'],
-    'MLPRegressor__random_state': [random_state],
+    'hidden_layer_sizes': [(100,), (50,), (25,), (10,), (5,), (1,)],
+    'activation': ['identity', 'logistic', 'tanh', 'relu'],
+    'solver': ['lbfgs', 'sgd', 'adam'],
+    'learning_rate': ['constant', 'invscaling', 'adaptive'],
+    'random_state': [random_state],
 }
 
-mlpr = [mlpr_, mlpr_params]
+mlpr = make_pipe_list(mlpr_, mlpr_params)
 
 # Classifiers List
 classifers_list = [

@@ -315,6 +315,7 @@ try:
         HalvingRandomSearchCV,
         KFold,
         LeaveOneOut,
+        PredefinedSplit,
         RandomizedSearchCV,
         RepeatedStratifiedKFold,
         ShuffleSplit,
@@ -556,6 +557,7 @@ torch.manual_seed(random_state)
 DetectorFactory.seed = random_state
 cores = multiprocessing.cpu_count()
 bert_model_name = 'bert-base-uncased'
+os.environ.get('TOKENIZERS_PARALLELISM')
 bert_tokenizer = BertTokenizerFast.from_pretrained(
     bert_model_name, strip_accents=True
 )
