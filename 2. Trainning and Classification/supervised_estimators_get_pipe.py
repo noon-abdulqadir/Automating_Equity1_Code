@@ -361,7 +361,6 @@ pa_params = {
     'shuffle': [True, False],
     'C': [0.01, 0.50, 1, 5, 50, 100],
     'average': [True, False],
-    'verbose': [1],
     # 'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],,
 }
 
