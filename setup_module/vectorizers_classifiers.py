@@ -36,9 +36,9 @@
 #
 #
 # %%
-import os # isort:skip # fmt:skip # noqa # nopep8
-import sys # isort:skip # fmt:skip # noqa # nopep8
-from pathlib import Path # isort:skip # fmt:skip # noqa # nopep8
+import os  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+import sys  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 
 mod = sys.modules[__name__]
 
@@ -62,11 +62,11 @@ sys.path.append(code_dir)
 # %autoreload 2
 
 # %%
-from setup_module.imports import *  # isort:skip # fmt:skip # noqa # nopep8
-from setup_module.params import * # isort:skip # fmt:skip # noqa # nopep8
-# from setup_module.scraping import * # isort:skip # fmt:skip # noqa # nopep8
-# from setup_module.post_collection_processing import * # isort:skip # fmt:skip # noqa # nopep8
-# from setup_module.classification import * # isort:skip # fmt:skip # noqa # nopep8
+from setup_module.imports import *  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from setup_module.params import *  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+# from setup_module.scraping import * # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+# from setup_module.post_collection_processing import * # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+# from setup_module.classification import * # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 
 warnings.filterwarnings('ignore', category=DeprecationWarning)
 

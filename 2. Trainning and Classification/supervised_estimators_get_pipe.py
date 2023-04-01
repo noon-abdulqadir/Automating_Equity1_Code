@@ -1,7 +1,7 @@
 # %%
-import os  # isort:skip # fmt:skip # noqa # nopep8
-import sys  # isort:skip # fmt:skip # noqa # nopep8
-from pathlib import Path  # isort:skip # fmt:skip # noqa # nopep8
+import os  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+import sys  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 
 mod = sys.modules[__name__]
 
@@ -25,7 +25,7 @@ sys.path.append(code_dir)
 # %autoreload 2
 
 # %%
-from setup_module.imports import *  # isort:skip # fmt:skip # noqa # nopep8
+from setup_module.imports import *  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 
 # %% [markdown]
 # ### READ DATA
@@ -346,7 +346,7 @@ lr_params = {
     'solver': ['liblinear'],
     'C': [0.01, 1, 100],
     # 'penalty': ['elasticnet'],
-    # 'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],,
+    # 'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
 }
 
 lr = make_pipe_list(lr_, lr_params)
@@ -361,7 +361,7 @@ pa_params = {
     'shuffle': [True, False],
     'C': [0.01, 0.50, 1, 5, 50, 100],
     'average': [True, False],
-    # 'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],,
+    # 'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
 }
 
 pa = make_pipe_list(pa_, pa_params)
@@ -374,7 +374,7 @@ ptron_params = {
     'fit_intercept': [True, False],
     'class_weight': [class_weight],
     'shuffle': [True, False],
-    # 'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],,
+    # 'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
 }
 
 ptron = make_pipe_list(ptron_, ptron_params)
@@ -500,6 +500,7 @@ mlpr_params = {
     'activation': ['identity', 'logistic', 'tanh', 'relu'],
     'solver': ['lbfgs', 'sgd', 'adam'],
     'learning_rate': ['constant', 'invscaling', 'adaptive'],
+    'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
     'random_state': [random_state],
 }
 
@@ -507,8 +508,8 @@ mlpr = make_pipe_list(mlpr_, mlpr_params)
 
 # Classifiers List
 classifers_list = [
-    dummy, nb, knn, lr, pa, ptron, svm, dt, rf, ada, xgb, mlpc,
-    # bnb, gnb, sgd, et, gbc, mlpr
+    dummy, nb, knn, lr, svm, dt, rf, ada, xgb, mlpc, mlpr, pa, ptron,
+    # bnb, gnb, sgd, et, gbc,
 ]
 
 # Classifiers Dict
@@ -518,29 +519,33 @@ classifiers_pipe = {
 }
 
 # Voting and Stacking Classifiers
+leftout_classifiers = [
+    'PassiveAggressiveClassifier', 'MLPRegressor', 'Perceptron', 'LinearSVC'
+]
 # Estimators for Voting and Stacking Classifiers
 voting_stacking_estimators = [
     (classifier_and_params[0].__class__.__name__, classifier_and_params[0])
     for classifier_and_params in classifers_list
+    if classifier_and_params[0].__class__.__name__ not in leftout_classifiers
 ]
 
 # Voting Classifier
 voting_ = VotingClassifier(estimators=voting_stacking_estimators)
 voting_params = {
-    'VotingClassifier__voting': ['soft', 'hard'],
-    'VotingClassifier__weights': [None],
+    'voting': ['soft', 'hard'],
+    'weights': [None],
 }
 
-voting = [voting_, voting_params]
+voting = make_pipe_list(voting_, voting_params)
 
 # Stacking Classifier
 stacking_ = StackingClassifier(estimators=voting_stacking_estimators)
 stacking_params = {
-    'StackingClassifier__stack_method': ['auto', 'predict_proba', 'decision_function', 'predict'],
-    'StackingClassifier__passthrough': [True, False],
+    'stack_method': ['auto', 'predict_proba', 'decision_function', 'predict'],
+    'passthrough': [True, False],
 }
 
-stacking = [stacking_, stacking_params]
+stacking = make_pipe_list(stacking_, stacking_params)
 
 # Add stacking and voting classifiers to classifiers list and pipe dict
 classifers_list.append(voting)

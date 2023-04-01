@@ -6,9 +6,9 @@
 # ### Install packages and import
 
 # %%
-import os  # isort:skip # fmt:skip # noqa # nopep8
-import sys  # isort:skip # fmt:skip # noqa # nopep8
-from pathlib import Path  # isort:skip # fmt:skip # noqa # nopep8
+import os  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+import sys  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 
 mod = sys.modules[__name__]
 
@@ -31,7 +31,7 @@ for _ in range(5):
 # %autoreload 2
 
 # %%
-from dotenv.main import load_dotenv  # isort:skip # fmt:skip # noqa # nopep8
+from dotenv.main import load_dotenv  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 
 envrc_path = Path.cwd().parents[0].joinpath('.envrc')
 load_dotenv(dotenv_path=envrc_path)
@@ -345,7 +345,12 @@ try:
     )
     from sklearn.svm import SVC, LinearSVC
     from sklearn.tree import DecisionTreeClassifier
-    from sklearn.utils import check_consistent_length, check_random_state, check_X_y
+    from sklearn.utils import (
+        check_array,
+        check_consistent_length,
+        check_random_state,
+        check_X_y,
+    )
     from sklearn.utils.class_weight import compute_class_weight
     from sklearn.utils.estimator_checks import check_estimator
     from sklearn.utils.validation import (
@@ -354,7 +359,6 @@ try:
         has_fit_parameter,
     )
     from spacy.matcher import Matcher
-    from spacytextblob.spacytextblob import SpacyTextBlob
     from statannotations.Annotator import Annotator
     from statsmodels.formula.api import ols
     from statsmodels.graphics.factorplots import interaction_plot
@@ -375,6 +379,7 @@ try:
         BertTokenizerFast,
         DistilBertForSequenceClassification,
         DistilBertTokenizerFast,
+        TextClassificationPipeline,
         TokenClassificationPipeline,
         Trainer,
         TrainingArguments,
@@ -388,7 +393,6 @@ except ImportError as error:
     print(f'The library {module_name} is not installed. Installing now.')
     # !conda install --channel apple --yes {module_name}
 
-# from accelerate import Accelerator
 # from icecream import ic
 # import bokeh
 # import cardinality
@@ -402,6 +406,7 @@ except ImportError as error:
 # import researchpy as rp
 # import xorbits.pandas as xpd
 # import tensorflow as tf
+# from spacytextblob.spacytextblob import SpacyTextBlob
 # from tensorflow import keras
 # from tensorflow.keras import backend as K
 # from tensorflow.keras import layers, models
