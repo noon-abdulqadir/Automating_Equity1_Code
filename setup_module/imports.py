@@ -368,7 +368,8 @@ try:
     from textblob.en.inflect import pluralize, singularize
     from tqdm.contrib.itertools import product as tqdm_product
     from transformers import (
-        AdamW,
+        AutoModel,
+        AutoModelForSequenceClassification,
         AutoModelForTokenClassification,
         AutoTokenizer,
         BertConfig,
@@ -379,10 +380,22 @@ try:
         BertTokenizerFast,
         DistilBertForSequenceClassification,
         DistilBertTokenizerFast,
+        GPT2Config,
+        GPT2ForSequenceClassification,
+        GPT2TokenizerFast,
+        GPTJConfig,
+        GPTJForSequenceClassification,
+        GPTJModel,
+        OpenAIGPTConfig,
+        OpenAIGPTForSequenceClassification,
+        OpenAIGPTTokenizerFast,
         TextClassificationPipeline,
+        TFGPTJForSequenceClassification,
+        TFGPTJModel,
         TokenClassificationPipeline,
         Trainer,
         TrainingArguments,
+        pipeline,
     )
     from transformers.trainer_pt_utils import get_parameter_names
     from webdriver_manager.chrome import ChromeDriverManager
@@ -519,6 +532,8 @@ scorers = {
 analysis_columns = ['Warmth', 'Competence']
 text_col = 'Job Description spacy_sentencized'
 metrics_dict = {
+    f'{scoring.title()} Best Score': np.nan,
+    f'{scoring.title()} Best Threshold': np.nan,
     'Train - Mean Cross Validation Score': np.nan,
     f'Train - Mean Cross Validation - {scoring.title()}': np.nan,
     f'Train - Mean Explained Variance - {scoring.title()}': np.nan,
@@ -534,10 +549,9 @@ metrics_dict = {
     'F1-score': np.nan,
     'Matthews Correlation Coefficient': np.nan,
     'Fowlkes–Mallows Index': np.nan,
+    'R2 Score': np.nan,
     'ROC': np.nan,
     'AUC': np.nan,
-    f'{scoring.title()} Best Threshold': np.nan,
-    f'{scoring.title()} Best Score': np.nan,
     'Log Loss/Cross Entropy': np.nan,
     'Cohen’s Kappa': np.nan,
     'Geometric Mean': np.nan,
@@ -561,16 +575,8 @@ np.random.seed(random_state)
 torch.manual_seed(random_state)
 DetectorFactory.seed = random_state
 cores = multiprocessing.cpu_count()
-bert_model_name = 'bert-base-uncased'
-os.environ.get('TOKENIZERS_PARALLELISM')
-bert_tokenizer = BertTokenizerFast.from_pretrained(
-    bert_model_name, strip_accents=True
-)
-bert_model = BertForSequenceClassification.from_pretrained(
-    bert_model_name
-).to(device)
 accelerator = Accelerator()
-optimizer = AdamW(bert_model.parameters(), lr=3e-5)
+os.environ.get('TOKENIZERS_PARALLELISM')
 
 # Plotting variables
 pp = pprint.PrettyPrinter(indent=4)

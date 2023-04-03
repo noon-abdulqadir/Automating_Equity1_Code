@@ -58,6 +58,8 @@ scorers = {
 analysis_columns = ['Warmth', 'Competence']
 text_col = 'Job Description spacy_sentencized'
 metrics_dict = {
+    f'{scoring.title()} Best Score': np.nan,
+    f'{scoring.title()} Best Threshold': np.nan,
     'Train - Mean Cross Validation Score': np.nan,
     f'Train - Mean Cross Validation - {scoring.title()}': np.nan,
     f'Train - Mean Explained Variance - {scoring.title()}': np.nan,
@@ -73,10 +75,9 @@ metrics_dict = {
     'F1-score': np.nan,
     'Matthews Correlation Coefficient': np.nan,
     'Fowlkes–Mallows Index': np.nan,
+    'R2 Score': np.nan,
     'ROC': np.nan,
     'AUC': np.nan,
-    f'{scoring.title()} Best Threshold': np.nan,
-    f'{scoring.title()} Best Score': np.nan,
     'Log Loss/Cross Entropy': np.nan,
     'Cohen’s Kappa': np.nan,
     'Geometric Mean': np.nan,
@@ -100,13 +101,8 @@ np.random.seed(random_state)
 torch.manual_seed(random_state)
 DetectorFactory.seed = random_state
 cores = multiprocessing.cpu_count()
-bert_model_name = 'bert-base-uncased'
-bert_tokenizer = BertTokenizerFast.from_pretrained(
-    bert_model_name, strip_accents=True
-)
-bert_model = BertForSequenceClassification.from_pretrained(
-    bert_model_name
-).to(device)
+accelerator = Accelerator()
+os.environ.get('TOKENIZERS_PARALLELISM')
 
 # Plotting variables
 pp = pprint.PrettyPrinter(indent=4)
@@ -295,7 +291,7 @@ dummy = make_pipe_list(dummy_, dummy_params)
 nb_ = MultinomialNB()
 nb_params = {
     'fit_prior': [True, False],
-    # 'alpha': [0.1, 0.2, 0.3],
+    'alpha': [0.1, 0.2, 0.3],
 }
 
 nb = make_pipe_list(nb_, nb_params)
@@ -344,7 +340,7 @@ lr_params = {
     'fit_intercept': [True, False],
     'multi_class': ['auto'],
     'solver': ['liblinear'],
-    'C': [0.01, 1, 100],
+    'C': [0.01, 0.5, 1, 5, 10, 15, 20, 30, 50, 100],
     # 'penalty': ['elasticnet'],
     # 'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
 }
@@ -359,7 +355,7 @@ pa_params = {
     'fit_intercept': [True, False],
     'class_weight': [class_weight],
     'shuffle': [True, False],
-    'C': [0.01, 0.50, 1, 5, 50, 100],
+    'C': [0.01, 0.5, 1, 5, 10, 15, 20, 30, 50, 100],
     'average': [True, False],
     # 'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
 }
@@ -398,7 +394,7 @@ svm_params = {
     'random_state': [random_state],
     'fit_intercept': [True, False],
     'class_weight': [class_weight],
-    'C': [0.01, 1, 100],
+    'C': [0.01, 0.5, 1, 5, 10, 15, 20, 30, 50, 100],
     'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
     # 'multi_class': ['ovr', 'crammer_singer'],
 }
@@ -552,3 +548,5 @@ classifers_list.append(voting)
 classifiers_pipe[voting[0].__class__.__name__] = voting
 classifers_list.append(stacking)
 classifiers_pipe[stacking[0].__class__.__name__] = stacking
+
+# %%
