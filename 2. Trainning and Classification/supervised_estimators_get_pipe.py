@@ -343,7 +343,7 @@ lr_params = {
     'solver': ['liblinear'],
     'C': [0.01, 0.5, 1, 5, 10, 15, 20, 30, 50, 100],
     # 'penalty': ['elasticnet'],
-    # 'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
+    # 'max_iter': [200000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000],
 }
 
 lr = make_pipe_list(lr_, lr_params)
@@ -358,7 +358,7 @@ pa_params = {
     'shuffle': [True, False],
     'C': [0.01, 0.5, 1, 5, 10, 15, 20, 30, 50, 100],
     'average': [True, False],
-    # 'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
+    'max_iter': [200000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000],
 }
 
 pa = make_pipe_list(pa_, pa_params)
@@ -371,7 +371,7 @@ ptron_params = {
     'fit_intercept': [True, False],
     'class_weight': [class_weight],
     'shuffle': [True, False],
-    # 'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
+    'max_iter': [200000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000],
 }
 
 ptron = make_pipe_list(ptron_, ptron_params)
@@ -383,7 +383,7 @@ sgd_params = {
     'random_state': [random_state],
     'fit_intercept': [True, False],
     'class_weight': [class_weight],
-    # 'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
+    'max_iter': [200000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000],
 }
 
 sgd = make_pipe_list(sgd_, sgd_params)
@@ -396,7 +396,7 @@ svm_params = {
     'fit_intercept': [True, False],
     'class_weight': [class_weight],
     'C': [0.01, 0.5, 1, 5, 10, 15, 20, 30, 50, 100],
-    'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
+    'max_iter': [200000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000],
     # 'multi_class': ['ovr', 'crammer_singer'],
 }
 
@@ -486,6 +486,7 @@ mlpc_params = {
     'solver': ['lbfgs', 'sgd', 'adam'],
     'learning_rate': ['constant', 'invscaling', 'adaptive'],
     'random_state': [random_state],
+    'max_iter': [200000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000],
 }
 
 mlpc = make_pipe_list(mlpc_, mlpc_params)
@@ -497,7 +498,7 @@ mlpr_params = {
     'activation': ['identity', 'logistic', 'tanh', 'relu'],
     'solver': ['lbfgs', 'sgd', 'adam'],
     'learning_rate': ['constant', 'invscaling', 'adaptive'],
-    'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
+    'max_iter': [200000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000],
     'random_state': [random_state],
 }
 
@@ -505,8 +506,8 @@ mlpr = make_pipe_list(mlpr_, mlpr_params)
 
 # Classifiers List
 classifers_list = [
-    dummy, nb, knn, lr, svm, dt, rf, ada, xgb, mlpc, mlpr, pa, ptron,
-    # bnb, gnb, sgd, et, gbc,
+    dummy, nb, knn, lr, svm, dt, rf, et, ada, xgb, mlpc, mlpr, pa, ptron, bnb, gnb, sgd, gbc,
+    # bnb, gnb, sgd, gbc,
 ]
 
 # Classifiers Dict
