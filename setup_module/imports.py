@@ -479,19 +479,22 @@ plot_save_path = f'{data_dir}plots/'
 # NLTK variables
 nltk_path = f'{llm_path}/nltk'
 nltk.data.path.append(nltk_path)
+if not os.path.exists(nltk_path):
+    os.mkdir(nltk_path)
 
 nltk_libs = [
     'words', 'stopwords', 'punkt', 'averaged_perceptron_tagger',
     'omw-1.4', 'wordnet', 'maxent_ne_chunker', 'vader_lexicon'
 ]
+available_nltk_libs = list(
+    set(
+        nltk_dir.split('.zip')[0].split('/')[-1]
+        for nltk_dir in glob.glob(f'{nltk_path}/*/*')
+    )
+)
 
-if len(glob.glob(f'{nltk_path}/*/!(*.zip)')) == 0:
-    for nltk_lib in nltk_libs:
-        nltk.download(nltk_lib, download_dir=nltk_path)
-else:
-    for nltk_lib, nltk_dir in tqdm_product(nltk_libs, glob.glob(f'{nltk_path}/*/!(*.zip)')):
-        if nltk_dir.split('/')[-1] == nltk_lib:
-            nltk.download(nltk_lib, download_dir=nltk_path)
+for nltk_lib in list(set(available_nltk_libs) ^ set(nltk_libs)):
+    nltk.download(nltk_lib, download_dir=nltk_path)
 
 # nltk.download_shell()
 
@@ -508,12 +511,13 @@ nlp = spacy.load('en_core_web_sm')
 
 # Gensim
 gensim_path = f'{str(llm_path)}gensim/'
+if not os.path.exists(nltk_path):
+    os.mkdir(gensim_path)
 gensim_api.base_dir = os.path.dirname(gensim_path)
 gensim_api.BASE_DIR = os.path.dirname(gensim_path)
 gensim_api.GENSIM_DATA_DIR = os.path.dirname(gensim_path)
 glove_path = f'{gensim_path}glove/'
-fasttext_path = os.path.abspath(
-    f'{gensim_path}fasttext-wiki-news-subwords-300')
+fasttext_path = os.path.abspath(f'{gensim_path}fasttext-wiki-news-subwords-300')
 
 # Classification
 # Model variables
