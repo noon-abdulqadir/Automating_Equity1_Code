@@ -190,6 +190,9 @@ scraped_data*/
 /data_main
 data_main/
 data_main/*
+/data
+data/
+data/*
 setup_module/WebDriver/
 setup_module/apa.mplstyle-main/
 Typesetting/
