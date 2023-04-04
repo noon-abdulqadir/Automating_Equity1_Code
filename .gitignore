@@ -130,15 +130,15 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
-# Environments
-.env
-.venv
-.envrc
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
+# # Environments
+# .env
+# .venv
+# .envrc
+# env/
+# venv/
+# ENV/
+# env.bak/
+# venv.bak/
 
 # Circle
 .circleci/
