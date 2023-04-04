@@ -485,8 +485,11 @@ nltk_libs = [
     'omw-1.4', 'wordnet', 'maxent_ne_chunker', 'vader_lexicon'
 ]
 
-for nltk_lib in nltk_libs:
-    for nltk_dir in glob.glob(f'{nltk_path}/*/!(*.zip)'):
+if len(glob.glob(f'{nltk_path}/*/!(*.zip)')) == 0:
+    for nltk_lib in nltk_libs:
+        nltk.download(nltk_lib, download_dir=nltk_path)
+else:
+    for nltk_lib, nltk_dir in tqdm_product(nltk_libs, glob.glob(f'{nltk_path}/*/!(*.zip)')):
         if nltk_dir.split('/')[-1] == nltk_lib:
             nltk.download(nltk_lib, download_dir=nltk_path)
 
