@@ -352,7 +352,7 @@ lr = make_pipe_list(lr_, lr_params)
 # Passive Aggressive
 pa_ = PassiveAggressiveClassifier()
 pa_params = {
-    'loss': ['hinge', 'squared_hinge'],
+    'loss': ['squared_hinge'],
     'random_state': [random_state],
     'fit_intercept': [True, False],
     'class_weight': [class_weight],
@@ -380,7 +380,7 @@ ptron = make_pipe_list(ptron_, ptron_params)
 # Stochastic Gradient Descent Aggressive
 sgd_ = SGDClassifier()
 sgd_params = {
-    'loss': ['hinge', 'squared_hinge'],
+    'loss': ['squared_hinge'],
     'random_state': [random_state],
     'fit_intercept': [True, False],
     'class_weight': [class_weight],
@@ -392,7 +392,7 @@ sgd = make_pipe_list(sgd_, sgd_params)
 # SVM
 svm_ = LinearSVC()
 svm_params = {
-    'loss': ['hinge', 'squared_hinge'],
+    'loss': ['squared_hinge'],
     'random_state': [random_state],
     'fit_intercept': [True, False],
     'class_weight': [class_weight],
