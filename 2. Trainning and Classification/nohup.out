@@ -750,3 +750,303 @@ Fitting 30 folds for each of 80000 candidates, totalling 2400000 fits
   warnings.warn(
 /home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/sklearn/svm/_base.py:1244: ConvergenceWarning: Liblinear failed to converge, increase the number of iterations.
   warnings.warn(
+Using CUDA
+0it [00:00, ?it/s]0it [00:00, ?it/s]
+Using CUDA
+0it [00:00, ?it/s]0it [00:00, ?it/s]
+Using CUDA
+0it [00:00, ?it/s]0it [00:00, ?it/s]
+########################################
+Starting!
+########################################
+Searching for existing estimators in directory:
+/home/nfatahelra/Study1_Code/data/classification models/Supervised Results/
+  0%|          | 0/56 [00:00<?, ?it/s]100%|██████████| 56/56 [00:00<00:00, 220752.84it/s]
+  0%|          | 0/2 [00:00<?, ?it/s]--------------------
+============================== TRAINING DATASET OF LENGTH 5978 ON WARMTH ==============================
+--------------------
+Vectorizers to be used (3):
+['CountVectorizer', 'TfidfVectorizer', 'FeatureUnion']
+Total number of vectorizer parameters = 22
+Selectors to be used (1):
+['SelectKBest']
+Total number of selector parameters = 2
+Resamplers to be used (1):
+['SMOTETomek']
+Total number of resamplers parameters = 2
+Classifers to be used (20):
+['DummyClassifier', 'MultinomialNB', 'KNeighborsClassifier', 'LogisticRegression', 'LinearSVC', 'DecisionTreeClassifier', 'RandomForestClassifier', 'ExtraTreesClassifier', 'AdaBoostClassifier', 'XGBClassifier', 'MLPClassifier', 'MLPRegressor', 'PassiveAggressiveClassifier', 'Perceptron', 'BernoulliNB', 'GaussianNB', 'SGDClassifier', 'GradientBoostingClassifier', 'VotingClassifier', 'StackingClassifier']
+Total number of classifers parameters = 85
+====================
+Splitting data into training and testing:
+Ratios: train_size = 0.75, test size = 0.1
+Done splitting data into training and testing sets.
+====================
+Training set shape: (4483,)
+----------
+Training set example:
+Factors)
+~~~~~~~~~~
+Testing set shape: (598,)
+----------
+Testing set example:
+You’ll be part of an international consulting firm where people are lead by its values and inspired by our purpose;
+~~~~~~~~~~
+Validation set shape: (897,)
+----------
+Validation set example:
+Also my client is HQ’d in Europe meaning you will have better visibility and find it easier to engage and collaborate with your peers and the senior stakeholders (no late night calls to the USA).
+~~~~~~~~~~
+Training data class weights:
+Ratio = 0.33 (0 = 0.67, 1 = 2.00)
+----------
+Testing data class weights:
+Ratio = 0.34 (0 = 0.67, 1 = 1.97)
+----------
+Validation data class weights:
+Ratio = 0.31 (0 = 0.65, 1 = 2.14)
+====================
+
+  0%|          | 0/60 [00:00<?, ?it/s][A--------------------
+Already trained Warmth - CountVectorizer + DummyClassifier
+--------------------
+Loading previous Xy.
+++++++++++++++++++++++++++++++
+========== Loading Xy from previous for Warmth ==========
+++++++++++++++++++++++++++++++
+Loading df_val_data from /home/nfatahelra/Study1_Code/data/classification models/Supervised Results/Supervised df_val_data - Warmth - (Save_protocol=5).pkl
+Loading df_test_data from /home/nfatahelra/Study1_Code/data/classification models/Supervised Results/Supervised df_test_data - Warmth - (Save_protocol=5).pkl
+Loading df_train_data from /home/nfatahelra/Study1_Code/data/classification models/Supervised Results/Supervised df_train_data - Warmth - (Save_protocol=5).pkl
+Done loading Xy from previous for Warmth!
+Done splitting data into training and testing sets.
+====================
+Training set shape: (4483,)
+----------
+Training set example:
+Factors)
+~~~~~~~~~~
+Testing set shape: (598,)
+----------
+Testing set example:
+You’ll be part of an international consulting firm where people are lead by its values and inspired by our purpose;
+~~~~~~~~~~
+Validation set shape: (897,)
+----------
+Validation set example:
+Also my client is HQ’d in Europe meaning you will have better visibility and find it easier to engage and collaborate with your peers and the senior stakeholders (no late night calls to the USA).
+~~~~~~~~~~
+Training data class weights:
+Ratio = 0.33 (0 = 0.67, 1 = 2.00)
+----------
+Testing data class weights:
+Ratio = 0.34 (0 = 0.67, 1 = 1.97)
+----------
+Validation data class weights:
+Ratio = 0.31 (0 = 0.65, 1 = 2.14)
+====================
+Done loading Xy from previous for Warmth!
+--------------------
+--------------------
+Already trained Warmth - CountVectorizer + MultinomialNB
+--------------------
+Loading previous Xy.
+++++++++++++++++++++++++++++++
+========== Loading Xy from previous for Warmth ==========
+++++++++++++++++++++++++++++++
+Loading df_val_data from /home/nfatahelra/Study1_Code/data/classification models/Supervised Results/Supervised df_val_data - Warmth - (Save_protocol=5).pkl
+Loading df_test_data from /home/nfatahelra/Study1_Code/data/classification models/Supervised Results/Supervised df_test_data - Warmth - (Save_protocol=5).pkl
+Loading df_train_data from /home/nfatahelra/Study1_Code/data/classification models/Supervised Results/Supervised df_train_data - Warmth - (Save_protocol=5).pkl
+Done loading Xy from previous for Warmth!
+Done splitting data into training and testing sets.
+====================
+Training set shape: (4483,)
+----------
+Training set example:
+Factors)
+~~~~~~~~~~
+Testing set shape: (598,)
+----------
+Testing set example:
+You’ll be part of an international consulting firm where people are lead by its values and inspired by our purpose;
+~~~~~~~~~~
+Validation set shape: (897,)
+----------
+Validation set example:
+Also my client is HQ’d in Europe meaning you will have better visibility and find it easier to engage and collaborate with your peers and the senior stakeholders (no late night calls to the USA).
+~~~~~~~~~~
+Training data class weights:
+Ratio = 0.33 (0 = 0.67, 1 = 2.00)
+----------
+Testing data class weights:
+Ratio = 0.34 (0 = 0.67, 1 = 1.97)
+----------
+Validation data class weights:
+Ratio = 0.31 (0 = 0.65, 1 = 2.14)
+====================
+Done loading Xy from previous for Warmth!
+--------------------
+--------------------
+Already trained Warmth - CountVectorizer + KNeighborsClassifier
+--------------------
+Loading previous Xy.
+++++++++++++++++++++++++++++++
+========== Loading Xy from previous for Warmth ==========
+++++++++++++++++++++++++++++++
+Loading df_val_data from /home/nfatahelra/Study1_Code/data/classification models/Supervised Results/Supervised df_val_data - Warmth - (Save_protocol=5).pkl
+Loading df_test_data from /home/nfatahelra/Study1_Code/data/classification models/Supervised Results/Supervised df_test_data - Warmth - (Save_protocol=5).pkl
+Loading df_train_data from /home/nfatahelra/Study1_Code/data/classification models/Supervised Results/Supervised df_train_data - Warmth - (Save_protocol=5).pkl
+Done loading Xy from previous for Warmth!
+Done splitting data into training and testing sets.
+====================
+Training set shape: (4483,)
+----------
+Training set example:
+Factors)
+~~~~~~~~~~
+Testing set shape: (598,)
+----------
+Testing set example:
+You’ll be part of an international consulting firm where people are lead by its values and inspired by our purpose;
+~~~~~~~~~~
+Validation set shape: (897,)
+----------
+Validation set example:
+Also my client is HQ’d in Europe meaning you will have better visibility and find it easier to engage and collaborate with your peers and the senior stakeholders (no late night calls to the USA).
+~~~~~~~~~~
+Training data class weights:
+Ratio = 0.33 (0 = 0.67, 1 = 2.00)
+----------
+Testing data class weights:
+Ratio = 0.34 (0 = 0.67, 1 = 1.97)
+----------
+Validation data class weights:
+Ratio = 0.31 (0 = 0.65, 1 = 2.14)
+====================
+Done loading Xy from previous for Warmth!
+--------------------
+--------------------
+Already trained Warmth - CountVectorizer + LogisticRegression
+--------------------
+Loading previous Xy.
+++++++++++++++++++++++++++++++
+========== Loading Xy from previous for Warmth ==========
+++++++++++++++++++++++++++++++
+Loading df_val_data from /home/nfatahelra/Study1_Code/data/classification models/Supervised Results/Supervised df_val_data - Warmth - (Save_protocol=5).pkl
+Loading df_test_data from /home/nfatahelra/Study1_Code/data/classification models/Supervised Results/Supervised df_test_data - Warmth - (Save_protocol=5).pkl
+Loading df_train_data from /home/nfatahelra/Study1_Code/data/classification models/Supervised Results/Supervised df_train_data - Warmth - (Save_protocol=5).pkl
+Done loading Xy from previous for Warmth!
+Done splitting data into training and testing sets.
+====================
+Training set shape: (4483,)
+----------
+Training set example:
+Factors)
+~~~~~~~~~~
+Testing set shape: (598,)
+----------
+Testing set example:
+You’ll be part of an international consulting firm where people are lead by its values and inspired by our purpose;
+~~~~~~~~~~
+Validation set shape: (897,)
+----------
+Validation set example:
+Also my client is HQ’d in Europe meaning you will have better visibility and find it easier to engage and collaborate with your peers and the senior stakeholders (no late night calls to the USA).
+~~~~~~~~~~
+Training data class weights:
+Ratio = 0.33 (0 = 0.67, 1 = 2.00)
+----------
+Testing data class weights:
+Ratio = 0.34 (0 = 0.67, 1 = 1.97)
+----------
+Validation data class weights:
+Ratio = 0.31 (0 = 0.65, 1 = 2.14)
+====================
+Done loading Xy from previous for Warmth!
+--------------------
+====================
+Saving Xy df_train_data at /home/nfatahelra/Study1_Code/data/classification models/Supervised Results/Supervised df_train_data - Warmth - (Save_protocol=5).pkl
+Saving Xy df_test_data at /home/nfatahelra/Study1_Code/data/classification models/Supervised Results/Supervised df_test_data - Warmth - (Save_protocol=5).pkl
+Saving Xy df_val_data at /home/nfatahelra/Study1_Code/data/classification models/Supervised Results/Supervised df_val_data - Warmth - (Save_protocol=5).pkl
+Done saving Xy!
+['df_train_data', 'df_test_data', 'df_val_data']
+====================
+--------------------
+============================== Using GridSearchCV ==============================
+--------------------
+GridSearchCV with:
+Pipe:
+Pipeline(steps=[('CountVectorizer', CountVectorizer()),
+                ('SelectKBest', SelectKBest()), ('SMOTETomek', SMOTETomek()),
+                ('LinearSVC', LinearSVC())])
+Params:
+{'CountVectorizer__analyzer': ['word'], 'CountVectorizer__ngram_range': [(1, 3)], 'CountVectorizer__lowercase': [True, False], 'CountVectorizer__max_df': [0.9, 0.85, 0.8, 0.75, 0.7], 'CountVectorizer__min_df': [0.1, 0.15, 0.2, 0.25, 0.3], 'SelectKBest__score_func': [<function f_classif at 0x7fe0c02f1240>, <function chi2 at 0x7fe0c02f1360>, <function mutual_info_classif at 0x7fe0c02f3b50>, <function f_regression at 0x7fe0c02f1480>, <function mutual_info_regression at 0x7fe0c02f3ac0>], 'SelectKBest__k': ['all'], 'LinearSVC__loss': ['hinge', 'squared_hinge'], 'LinearSVC__random_state': [42], 'LinearSVC__fit_intercept': [True, False], 'LinearSVC__class_weight': ['balanced'], 'LinearSVC__C': [0.01, 0.5, 1, 5, 10, 15, 20, 30, 50, 100], 'LinearSVC__max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000], 'LinearSVC__dual': [False]}
+++++++++++++++++++++++++++++++
+Fitting GridSearchCV
+n_iterations: 4
+n_required_iterations: 11
+n_possible_iterations: 4
+min_resources_: 120
+max_resources_: 5380
+aggressive_elimination: False
+factor: 3
+----------
+iter: 0
+n_candidates: 70000
+n_resources: 120
+Fitting 30 folds for each of 70000 candidates, totalling 2100000 fits
+  7%|▋         | 4/60 [00:02<00:30,  1.84it/s]
+  0%|          | 0/2 [00:02<?, ?it/s]
+joblib.externals.loky.process_executor._RemoteTraceback:
+"""
+Traceback (most recent call last):
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/joblib/externals/loky/process_executor.py", line 428, in _process_worker
+    r = call_item()
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/joblib/externals/loky/process_executor.py", line 275, in __call__
+    return self.fn(*self.args, **self.kwargs)
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/joblib/_parallel_backends.py", line 620, in __call__
+    return self.func(*args, **kwargs)
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/joblib/parallel.py", line 288, in __call__
+    return [func(*args, **kwargs)
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/joblib/parallel.py", line 288, in <listcomp>
+    return [func(*args, **kwargs)
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/sklearn/utils/parallel.py", line 123, in __call__
+    return self.function(*args, **kwargs)
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/sklearn/model_selection/_validation.py", line 686, in _fit_and_score
+    estimator.fit(X_train, y_train, **fit_params)
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/imblearn/pipeline.py", line 297, in fit
+    self._final_estimator.fit(Xt, yt, **fit_params_last_step)
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/sklearn/svm/_classes.py", line 274, in fit
+    self.coef_, self.intercept_, n_iter_ = _fit_liblinear(
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/sklearn/svm/_base.py", line 1223, in _fit_liblinear
+    solver_type = _get_liblinear_solver_type(multi_class, penalty, loss, dual)
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/sklearn/svm/_base.py", line 1062, in _get_liblinear_solver_type
+    raise ValueError(
+ValueError: Unsupported set of arguments: The combination of penalty='l2' and loss='hinge' are not supported when dual=False, Parameters: penalty='l2', loss='hinge', dual=False
+"""
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/nfatahelra/Study1_Code/2. Trainning and Classification/1. supervised_estimators_train.py", line 759, in <module>
+    searchcv = grid_search.fit(np.concatenate((X_train, X_val), axis=0), np.concatenate((y_train, y_val), axis=0))
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/sklearn/model_selection/_search_successive_halving.py", line 273, in fit
+    super().fit(X, y=y, groups=groups, **fit_params)
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/sklearn/model_selection/_search.py", line 874, in fit
+    self._run_search(evaluate_candidates)
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/sklearn/model_selection/_search_successive_halving.py", line 378, in _run_search
+    results = evaluate_candidates(
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/sklearn/model_selection/_search.py", line 821, in evaluate_candidates
+    out = parallel(
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/sklearn/utils/parallel.py", line 63, in __call__
+    return super().__call__(iterable_with_config)
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/joblib/parallel.py", line 1098, in __call__
+    self.retrieve()
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/joblib/parallel.py", line 975, in retrieve
+    self._output.extend(job.get(timeout=self.timeout))
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/site-packages/joblib/_parallel_backends.py", line 567, in wrap_future_result
+    return future.result(timeout=timeout)
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/concurrent/futures/_base.py", line 458, in result
+    return self.__get_result()
+  File "/home/nfatahelra/.conda/envs/study1_3.10/lib/python3.10/concurrent/futures/_base.py", line 403, in __get_result
+    raise self._exception
+ValueError: Unsupported set of arguments: The combination of penalty='l2' and loss='hinge' are not supported when dual=False, Parameters: penalty='l2', loss='hinge', dual=False
