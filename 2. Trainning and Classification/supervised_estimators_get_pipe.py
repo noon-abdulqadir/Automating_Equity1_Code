@@ -398,6 +398,7 @@ svm_params = {
     'class_weight': [class_weight],
     'C': [0.01, 0.5, 1, 5, 10, 15, 20, 30, 50, 100],
     'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
+    'dual': [False]
     # 'multi_class': ['ovr', 'crammer_singer'],
 }
 
