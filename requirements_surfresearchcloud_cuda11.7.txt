@@ -47,6 +47,7 @@ distlib==0.3.6
 distro==1.4.0
 distro-info===0.23ubuntu1
 docker==6.0.1
+en-core-web-sm @ https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0-py3-none-any.whl
 entrypoints==0.3
 executing==1.2.0
 fail2ban==0.11.1
