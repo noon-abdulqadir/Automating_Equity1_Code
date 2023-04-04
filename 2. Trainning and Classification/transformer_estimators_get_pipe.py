@@ -106,7 +106,7 @@ os.environ.get('TOKENIZERS_PARALLELISM')
 pp = pprint.PrettyPrinter(indent=4)
 tqdm.tqdm.pandas(desc='progress-bar')
 tqdm_auto.tqdm.pandas(desc='progress-bar')
-tqdm.notebook.tqdm().pandas(desc='progress-bar')
+# tqdm.notebook.tqdm().pandas(desc='progress-bar')
 tqdm_auto.notebook_tqdm().pandas(desc='progress-bar')
 # pbar = progressbar.ProgressBar(maxval=10)
 with contextlib.suppress(ImportError):
