@@ -319,7 +319,7 @@ gnb = make_pipe_list(gnb_, gnb_params)
 knn_ = KNeighborsClassifier()
 knn_params = {
     'weights': ['uniform', 'distance'],
-    'n_neighbors': [2, 5, 15],
+    'n_neighbors': [2, 5, 15, 30, 50],
     'algorithm': ['auto'],
     # 'p': [1, 2, 3, 4, 5],
     # 'metric': [
@@ -343,8 +343,8 @@ lr_params = {
     'multi_class': ['auto'],
     'solver': ['liblinear'],
     'C': [0.01, 0.5, 1, 5, 10, 15, 20, 30, 50, 100],
+    'max_iter': [200000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000],
     # 'penalty': ['elasticnet'],
-    # 'max_iter': [200000, 400000, 500000, 600000, 700000, 800000, 900000, 1000000],
 }
 
 lr = make_pipe_list(lr_, lr_params)
