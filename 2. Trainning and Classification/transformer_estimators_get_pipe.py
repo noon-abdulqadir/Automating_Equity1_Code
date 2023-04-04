@@ -109,7 +109,8 @@ tqdm_auto.tqdm.pandas(desc='progress-bar')
 tqdm.notebook.tqdm().pandas(desc='progress-bar')
 tqdm_auto.notebook_tqdm().pandas(desc='progress-bar')
 # pbar = progressbar.ProgressBar(maxval=10)
-mpl.use('MacOSX')
+with contextlib.suppress(ImportError):
+    mpl.use('MacOSX')
 mpl.style.use(f'{code_dir}/setup_module/apa.mplstyle-main/apa.mplstyle')
 mpl.rcParams['text.usetex'] = True
 font = {'family': 'arial', 'weight': 'normal', 'size': 10}

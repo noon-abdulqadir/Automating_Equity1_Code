@@ -194,7 +194,7 @@ data_main/*
 data/
 data/*
 setup_module/WebDriver/
-setup_module/apa.mplstyle-main/
+setup_module/
 Typesetting/
 OLD *
 /.luarc.json
