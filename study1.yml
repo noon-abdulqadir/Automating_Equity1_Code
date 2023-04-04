@@ -352,9 +352,9 @@ dependencies:
       - spacytextblob==4.0.0
       - specification-curve==0.3.1
       - sympy==1.12rc1
-      - torch==2.1.0.dev20230402
-      - torchaudio==2.1.0.dev20230402
-      - torchvision==0.16.0.dev20230402
+      - torch==2.1.0.dev20230403
+      - torchaudio==2.0.0.dev20230313
+      - torchvision==0.16.0.dev20230403
 variables:
   CONDA_SUBDIR: osx-arm64
 prefix: /opt/homebrew/Caskroom/mambaforge/base/envs/study1_3.10

@@ -119,6 +119,7 @@ try:
     import nltk.data
     import numpy as np
     import openpyxl
+    import optuna
     import pandas as pd
     import plot_metric
     import pyarrow as pa
@@ -359,6 +360,7 @@ try:
         has_fit_parameter,
     )
     from spacy.matcher import Matcher
+    from spacytextblob.spacytextblob import SpacyTextBlob
     from statannotations.Annotator import Annotator
     from statsmodels.formula.api import ols
     from statsmodels.graphics.factorplots import interaction_plot
@@ -419,7 +421,7 @@ except ImportError as error:
 # import researchpy as rp
 # import xorbits.pandas as xpd
 # import tensorflow as tf
-# from spacytextblob.spacytextblob import SpacyTextBlob
+
 # from tensorflow import keras
 # from tensorflow.keras import backend as K
 # from tensorflow.keras import layers, models
@@ -576,6 +578,7 @@ torch.manual_seed(random_state)
 DetectorFactory.seed = random_state
 cores = multiprocessing.cpu_count()
 accelerator = Accelerator()
+torch.autograd.set_detect_anomaly(True)
 os.environ.get('TOKENIZERS_PARALLELISM')
 
 # Plotting variables

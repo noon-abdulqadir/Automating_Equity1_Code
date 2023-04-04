@@ -102,6 +102,7 @@ torch.manual_seed(random_state)
 DetectorFactory.seed = random_state
 cores = multiprocessing.cpu_count()
 accelerator = Accelerator()
+torch.autograd.set_detect_anomaly(True)
 os.environ.get('TOKENIZERS_PARALLELISM')
 
 # Plotting variables
