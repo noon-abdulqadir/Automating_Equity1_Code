@@ -187,9 +187,9 @@ cython_debug/
 /scraped_data
 scraped_data/
 scraped_data*/
-/data
-data/
-data/*
+/data_main
+data_main/
+data_main/*
 setup_module/WebDriver/
 setup_module/apa.mplstyle-main/
 Typesetting/
