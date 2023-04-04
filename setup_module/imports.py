@@ -148,6 +148,7 @@ try:
     import xlsxwriter
     from accelerate import Accelerator, notebook_launcher
     from bs4 import BeautifulSoup
+    from dotenv.main import load_dotenv
     from gensim import corpora, models
     from gensim.corpora import Dictionary
     from gensim.models import (
