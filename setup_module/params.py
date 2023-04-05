@@ -286,13 +286,13 @@ final_competence_classifier = 'VotingClassifier'
 alpha = 0.050
 normality_tests_labels = ['Statistic', 'p-value']
 
-if analysis_df_from_manual is False:
+if not analysis_df_from_manual:
     df_loc = f'_outliers_age_limit-{age_limit}_age_ratio-{age_ratio}_gender_ratio-{gender_ratio}'
     dataframes = {'df': None, 'df_mean': None}
     dv_cols = ['Warmth', 'Warmth_Probability',
                'Competence', 'Competence_Probability']
 
-elif analysis_df_from_manual is True:
+else:
     df_loc = '_outliers'
     dataframes = {'df_manual': None, 'df_manual_mean': None}
     dv_cols = ['Warmth', 'Competence']

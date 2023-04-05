@@ -121,10 +121,12 @@ try:
     import openpyxl
     import optuna
     import pandas as pd
+    import pingouin as pg
     import plot_metric
     import pyarrow as pa
     import pyarrow.parquet as pq
     import requests
+    import researchpy as rp
     import scipy
     import seaborn as sns
     import selenium.webdriver as webdriver
@@ -649,6 +651,8 @@ errors = (
 site_list = ['Indeed', 'Glassdoor', 'LinkedIn']
 nan_list = [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']
 pattern = r'[\n]+|[,]{2,}|[|]{2,}|[\n\r]+|(?<=[a-z]\.)(?=\s*[A-Z])|(?=\:+[A-Z])'
+alpha = 0.050
+normality_tests_labels = ['Statistic', 'p-value']
 
 ivs = ['Gender', 'Age']
 ivs_all = [
@@ -707,7 +711,10 @@ gender_order = ['Female', 'Mixed Gender', 'Male']
 age_order = ['Older', 'Mixed Age', 'Younger']
 ivs_dict = {'Gender': gender_order, 'Age': age_order}
 
-dvs = {}
+dv_cols = [
+    'Warmth', 'Warmth_Probability',
+    'Competence', 'Competence_Probability'
+]
 
 cat_list = [
     'Job ID',
