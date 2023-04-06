@@ -154,7 +154,7 @@ tfidf_params = {
     'analyzer': ['word'],
     'ngram_range': [(1, 3)],
     'lowercase': [True, False],
-    '_use_idf': [True, False],
+    'use_idf': [True, False],
     'max_df': [0.85, 0.80, 0.75],
     'min_df': [ 0.15, 0.20, 0.25],
 }
@@ -408,11 +408,11 @@ dt = make_pipe_list(dt_, dt_params)
 rf_ = RandomForestClassifier()
 rf_params = {
     'max_depth': [2, 5, 10],
-    'n_estimators': [10, 20],
+    'n_estimators': [50, 100, 150],
     'criterion': ['gini', 'entropy', 'log_loss'],
     'random_state': [random_state],
     'class_weight': [class_weight],
-    'oob_score': [True],
+    # 'oob_score': [True],
     # 'max_features': ['auto'],
 }
 rf = make_pipe_list(rf_, rf_params)
@@ -421,7 +421,7 @@ rf = make_pipe_list(rf_, rf_params)
 et_ = ExtraTreesClassifier()
 et_params = {
     'max_depth': [2, 5, 10],
-    'n_estimators': [10, 20],
+    'n_estimators': [50, 100, 150],
     'max_feature': ['auto'],
     'random_state': [random_state],
     'criterion': ['gini', 'entropy', 'log_loss'],
@@ -515,7 +515,9 @@ classifiers_pipe_nonlinear = {
 ada_voting_stacking_estimators = [
     (classifier_and_params[0].__class__.__name__, classifier_and_params[0])
     for classifier_and_params in classifers_list_all
-    if hasattr(classifier_and_params[0], 'fit') and hasattr(classifier_and_params[0], 'predict') and classifier_and_params[0].__class__.__name__ != 'Perceptron'
+    if hasattr(classifier_and_params[0], 'fit') and hasattr(classifier_and_params[0], 'predict')
+    and classifier_and_params[0].__class__.__name__ != 'Perceptron'
+    and classifier_and_params[0].__class__.__name__ != 'PassiveAggressiveClassifier'
 ]
 # Linear
 ada_voting_stacking_estimators_linear = [
