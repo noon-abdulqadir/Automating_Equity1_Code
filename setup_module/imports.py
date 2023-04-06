@@ -757,7 +757,6 @@ dvs_all = [
 dvs_prob = [
     'Warmth_Probability', 'Competence_Probability',
 ]
-
 cat_list = [
     'Job ID',
     'Gender',
