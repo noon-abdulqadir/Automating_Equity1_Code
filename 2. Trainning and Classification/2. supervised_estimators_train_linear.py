@@ -595,7 +595,6 @@ assert len(df_manual) == df_manual_len, f'DATAFRAME MISSING DATA! DF SHOULD BE O
 
 
 # %%
-%%time
 print('#'*40)
 print('Starting!')
 print('#'*40)
