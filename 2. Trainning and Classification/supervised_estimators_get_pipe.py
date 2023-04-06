@@ -484,7 +484,7 @@ classifers_list_all = [
     if classifier_and_params not in classifier_ignore_list
 ]
 classifiers_list_linear = [
-    lr, svm, sgd, pa, ptron, mlpc,
+    lr, svm, sgd, pa, ptron, mlpc, mlpr
 ]
 classifiers_list_nonlinear = [
     classifier_and_params
