@@ -280,6 +280,7 @@ final_competence_classifier = 'VotingClassifier'
 # ivs = ['Gender', 'Age']
 # gender_order = ['Female', 'Mixed Gender', 'Male']
 # age_order = ['Older Worker', 'Mixed Age', 'Younger']
+# platform_order = ['LinkedIn', 'Indeed', 'Glassdoor']
 # ivs_dict = {'Gender': gender_order, 'Age': age_order}
 
 # dvs = {}

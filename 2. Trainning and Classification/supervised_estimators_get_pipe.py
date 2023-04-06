@@ -515,6 +515,7 @@ classifiers_pipe_nonlinear = {
 ada_voting_stacking_estimators = [
     (classifier_and_params[0].__class__.__name__, classifier_and_params[0])
     for classifier_and_params in classifers_list_all
+    if hasattr(classifier_and_params[0], 'fit') and hasattr(classifier_and_params[0], 'predict')
 ]
 # Linear
 ada_voting_stacking_estimators_linear = [

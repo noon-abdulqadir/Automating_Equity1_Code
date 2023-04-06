@@ -664,7 +664,7 @@ ivs_all = [
     'Gender_Male',
     'Gender_Female_n',
     'Gender_Male_n',
-    'Gender_Female_% per Sector'
+    'Gender_Female_% per Sector',
     'Gender_Male_% per Sector',
     'Age',
     'Age_Num',
@@ -697,7 +697,7 @@ ivs_perc = [
     'Age_Younger_% per Sector',
 ]
 ivs_gender_perc = [
-    'Gender_Female_% per Sector'
+    'Gender_Female_% per Sector',
     'Gender_Male_% per Sector',
 ]
 ivs_age_perc = [
@@ -746,15 +746,16 @@ ivs_age_dummy_num = [
 ]
 gender_order = ['Female', 'Mixed Gender', 'Male']
 age_order = ['Older', 'Mixed Age', 'Younger']
+platform_order = ['LinkedIn', 'Indeed', 'Glassdoor']
 ivs_dict = {'Gender': gender_order, 'Age': age_order}
 dvs = [
-    'Warmth', 'Competence'
+    'Warmth', 'Competence',
 ]
 dvs_all = [
-    'Warmth', 'Competence', 'Warmth_Probability', 'Competence_Probability'
+    'Warmth', 'Competence', 'Warmth_Probability', 'Competence_Probability',
 ]
 dvs_prob = [
-    'Warmth_Probability', 'Competence_Probability'
+    'Warmth_Probability', 'Competence_Probability',
 ]
 
 cat_list = [
