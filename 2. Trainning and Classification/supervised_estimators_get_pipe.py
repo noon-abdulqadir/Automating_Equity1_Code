@@ -518,6 +518,7 @@ ada_voting_stacking_estimators = [
     if hasattr(classifier_and_params[0], 'fit') and hasattr(classifier_and_params[0], 'predict')
     and classifier_and_params[0].__class__.__name__ != 'Perceptron'
     and classifier_and_params[0].__class__.__name__ != 'PassiveAggressiveClassifier'
+    and classifier_and_params[0].__class__.__name__ != 'XGBClassifier'
 ]
 # Linear
 ada_voting_stacking_estimators_linear = [
