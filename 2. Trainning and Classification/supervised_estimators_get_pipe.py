@@ -284,7 +284,6 @@ dummy_params = {
     ],
     'random_state': [random_state],
 }
-
 dummy = make_pipe_list(dummy_, dummy_params)
 
 # Multinomial Naive Bayes
@@ -293,7 +292,6 @@ nb_params = {
     'fit_prior': [True, False],
     'alpha': [0.1, 0.2, 0.3],
 }
-
 nb = make_pipe_list(nb_, nb_params)
 
 # Bernoulli Naive Bayes
@@ -302,7 +300,6 @@ bnb_params = {
     'fit_prior': [True, False],
     'alpha': [0.1, 0.2, 0.3],
 }
-
 bnb = make_pipe_list(bnb_, bnb_params)
 
 # Gaussian Naive Bayes
@@ -310,7 +307,6 @@ gnb_ = GaussianNB()
 gnb_params = {
     'var_smoothing': [1e-9],
 }
-
 gnb = make_pipe_list(gnb_, gnb_params)
 
 # KNeighbors Classifier
@@ -329,7 +325,6 @@ knn_params = {
     # 'leaf_size': [30, 50, 100, 200, 300, 500],
     # 'metric_params': [None, {'p': 2}, {'p': 3}],
 }
-
 knn = make_pipe_list(knn_, knn_params)
 
 # Logistic Regression
@@ -344,7 +339,6 @@ lr_params = {
     'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
     # 'penalty': ['elasticnet'],
 }
-
 lr = make_pipe_list(lr_, lr_params)
 
 # Passive Aggressive
@@ -359,7 +353,6 @@ pa_params = {
     'average': [True, False],
     'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
 }
-
 pa = make_pipe_list(pa_, pa_params)
 
 # Perceptron
@@ -372,7 +365,6 @@ ptron_params = {
     'shuffle': [True, False],
     'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
 }
-
 ptron = make_pipe_list(ptron_, ptron_params)
 
 # Stochastic Gradient Descent Aggressive
@@ -384,7 +376,6 @@ sgd_params = {
     'class_weight': [class_weight],
     'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
 }
-
 sgd = make_pipe_list(sgd_, sgd_params)
 
 # SVM
@@ -399,7 +390,6 @@ svm_params = {
     'dual': [False]
     # 'multi_class': ['ovr', 'crammer_singer'],
 }
-
 svm = make_pipe_list(svm_, svm_params)
 
 # Decision Tree
@@ -412,7 +402,6 @@ dt_params = {
     'class_weight': [class_weight],
     # 'max_features': ['auto'],
 }
-
 dt = make_pipe_list(dt_, dt_params)
 
 # Random Forest
@@ -426,7 +415,6 @@ rf_params = {
     'oob_score': [True],
     # 'max_features': ['auto'],
 }
-
 rf = make_pipe_list(rf_, rf_params)
 
 # Extra Trees
@@ -439,7 +427,6 @@ et_params = {
     'criterion': ['gini', 'entropy', 'log_loss'],
     'class_weight': [class_weight],
 }
-
 et = make_pipe_list(et_, et_params)
 
 # Gradient Boosting
@@ -449,24 +436,7 @@ gbc_params = {
     'loss': ['log_loss', 'deviance', 'exponential'],
     # 'max_features': ['auto'],
 }
-
 gbc = make_pipe_list(gbc_, gbc_params)
-
-# AdaBoost
-ada_ = AdaBoostClassifier()
-ada_params = {
-    'criterion': ['gini', 'entropy'],
-    'random_state': [random_state],
-    'n_estimators': [50, 100, 150],
-    'base_estimator': [
-        SVC(kernel='linear'),
-        LogisticRegression(),
-        MultinomialNB(),
-        DecisionTreeClassifier(),
-    ],
-}
-
-ada = make_pipe_list(ada_, ada_params)
 
 # XGBoost
 xgb_ = XGBClassifier()
@@ -475,7 +445,6 @@ xgb_params = {
     'eval_metric': ['logloss'],
     'objective': ['binary:logistic'],
 }
-
 xgb = make_pipe_list(xgb_, xgb_params)
 
 # MLP Classifier
@@ -488,7 +457,6 @@ mlpc_params = {
     'random_state': [random_state],
     'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
 }
-
 mlpc = make_pipe_list(mlpc_, mlpc_params)
 
 # MLP Regressor
@@ -501,7 +469,6 @@ mlpr_params = {
     'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
     'random_state': [random_state],
 }
-
 mlpr = make_pipe_list(mlpr_, mlpr_params)
 
 # Classifiers List
@@ -509,7 +476,7 @@ classifier_ignore_list = [
     et, bnb, gnb, gbc, sgd
 ]
 classifers_list = [
-    dummy, knn, lr, svm, dt, rf, ada, xgb, mlpc, mlpr, pa, ptron, et, bnb, gnb, gbc, sgd
+    dummy, knn, lr, svm, dt, rf, xgb, mlpc, mlpr, pa, ptron, et, bnb, gnb, gbc, sgd
 ]
 classifers_list_all = [
     classifier_and_params
@@ -545,20 +512,37 @@ classifiers_pipe_nonlinear = {
 # Voting and Stacking Classifiers
 # Estimators for Voting and Stacking Classifiers
 # All
-voting_stacking_estimators = [
+ada_voting_stacking_estimators = [
     (classifier_and_params[0].__class__.__name__, classifier_and_params[0])
     for classifier_and_params in classifers_list_all
 ]
 # Linear
-voting_stacking_estimators_linear = [
+ada_voting_stacking_estimators_linear = [
     (classifier_and_params[0].__class__.__name__, classifier_and_params[0])
     for classifier_and_params in classifiers_list_linear
 ]
 # Nonlinear
-voting_stacking_estimators_nonlinear = [
+ada_voting_stacking_estimators_nonlinear = [
     (classifier_and_params[0].__class__.__name__, classifier_and_params[0])
     for classifier_and_params in classifiers_list_nonlinear
 ]
+
+# AdaBoost Classifier
+ada_params = {
+    'random_state': [random_state],
+    'n_estimators': [50, 100, 150],
+    'learning_rate': [0.01, 0.1, 0.5, 1],
+    'algorithm': ['SAMME', 'SAMME.R'],
+}
+# All
+ada_ = AdaBoostClassifier(estimator=ada_voting_stacking_estimators)
+ada = make_pipe_list(ada_, ada_params)
+# Linear
+ada_linear_ = AdaBoostClassifier(estimator=ada_voting_stacking_estimators_linear)
+ada_linear = make_pipe_list(ada_linear_, ada_params)
+# Nonlinear
+ada_nonlinear_ = AdaBoostClassifier(estimator=ada_voting_stacking_estimators_nonlinear)
+ada_nonlinear = make_pipe_list(ada_nonlinear_, ada_params)
 
 # Voting Classifier
 voting_params = {
@@ -566,15 +550,13 @@ voting_params = {
     'weights': [None],
 }
 # All
-voting_ = VotingClassifier(estimators=voting_stacking_estimators)
+voting_ = VotingClassifier(estimators=ada_voting_stacking_estimators)
 voting = make_pipe_list(voting_, voting_params)
-
 # Linear
-voting_linear_ = VotingClassifier(estimators=voting_stacking_estimators_linear)
+voting_linear_ = VotingClassifier(estimators=ada_voting_stacking_estimators_linear)
 voting_linear = make_pipe_list(voting_linear_, voting_params)
-
 # Nonlinear
-voting_nonlinear_ = VotingClassifier(estimators=voting_stacking_estimators_nonlinear)
+voting_nonlinear_ = VotingClassifier(estimators=ada_voting_stacking_estimators_nonlinear)
 voting_nonlinear = make_pipe_list(voting_nonlinear_, voting_params)
 
 # Stacking Classifier
@@ -583,31 +565,35 @@ stacking_params = {
     'passthrough': [True, False],
 }
 # All
-stacking_ = StackingClassifier(estimators=voting_stacking_estimators)
+stacking_ = StackingClassifier(estimators=ada_voting_stacking_estimators)
 stacking = make_pipe_list(stacking_, stacking_params)
-
 # Linear
-stacking_linear_ = StackingClassifier(estimators=voting_stacking_estimators_linear)
+stacking_linear_ = StackingClassifier(estimators=ada_voting_stacking_estimators_linear)
 stacking_linear = make_pipe_list(stacking_linear_, stacking_params)
-
 # Nonlinear
-stacking_nonlinear_ = StackingClassifier(estimators=voting_stacking_estimators_nonlinear)
+stacking_nonlinear_ = StackingClassifier(estimators=ada_voting_stacking_estimators_nonlinear)
 stacking_nonlinear = make_pipe_list(stacking_nonlinear_, stacking_params)
 
-# Add stacking and voting classifiers to classifiers list and pipe dict
+# Add ada, voting and stacking classifiers to classifiers list and pipe dict
 # All
+classifers_list_all.append(ada)
+classifiers_pipe_all[ada[0].__class__.__name__] = ada
 classifers_list_all.append(voting)
 classifiers_pipe_all[voting[0].__class__.__name__] = voting
 classifers_list_all.append(stacking)
 classifiers_pipe_all[stacking[0].__class__.__name__] = stacking
 
 # Linear
+classifiers_list_linear.append(ada_linear)
+classifiers_pipe_linear[ada_linear[0].__class__.__name__] = ada_linear
 classifiers_list_linear.append(voting_linear)
 classifiers_pipe_linear[voting_linear[0].__class__.__name__] = voting_linear
 classifiers_list_linear.append(stacking_linear)
 classifiers_pipe_linear[stacking_linear[0].__class__.__name__] = stacking_linear
 
 # Nonlinear
+classifiers_list_nonlinear.append(ada_nonlinear)
+classifiers_pipe_nonlinear[ada_nonlinear[0].__class__.__name__] = ada_nonlinear
 classifiers_list_nonlinear.append(voting_nonlinear)
 classifiers_pipe_nonlinear[voting_nonlinear[0].__class__.__name__] = voting_nonlinear
 classifiers_list_nonlinear.append(stacking_nonlinear)
