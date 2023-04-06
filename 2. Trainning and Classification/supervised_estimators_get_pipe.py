@@ -465,6 +465,21 @@ mlpr_params = {
 }
 mlpr = make_pipe_list(mlpr_, mlpr_params)
 
+# AdaBoostClassifier
+ada_ = AdaBoostClassifier()
+ada_params = {
+    'random_state': [random_state],
+    'n_estimators': [50, 100, 150],
+    'learning_rate': [0.01, 0.1, 0.5, 1],
+    'algorithm': ['SAMME', 'SAMME.R'],
+    'estimator': [
+        SVC(probability=True, kernel='linear'),
+        LogisticRegression(),
+        MultinomialNB(),
+    ],
+}
+ada = make_pipe_list(ada_, ada_params)
+
 # Classifiers List
 classifier_ignore_list = [
     et, bnb, gnb, gbc, sgd,
@@ -502,21 +517,6 @@ classifiers_pipe_nonlinear = {
     classifier_and_params[0].__class__.__name__: classifier_and_params
     for classifier_and_params in classifiers_list_nonlinear
 }
-
-# AdaBoostClassifier
-ada_ = AdaBoostClassifier()
-ada_params = {
-    'random_state': [random_state],
-    'n_estimators': [50, 100, 150],
-    'learning_rate': [0.01, 0.1, 0.5, 1],
-    'algorithm': ['SAMME', 'SAMME.R'],
-    'estimator': [
-        SVC(probability=True, kernel='linear'),
-        LogisticRegression(),
-        MultinomialNB(),
-    ],
-}
-ada = make_pipe_list(ada_, ada_params)
 
 # Ensemble Classifiers
 # Estimators for Ensemble Classifiers
