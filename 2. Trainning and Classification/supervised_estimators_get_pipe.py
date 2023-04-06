@@ -509,8 +509,8 @@ classifiers_pipe_nonlinear = {
     for classifier_and_params in classifiers_list_nonlinear
 }
 
-# Voting and Stacking Classifiers
-# Estimators for Voting and Stacking Classifiers
+# Ensemble Classifiers
+# Estimators for Ensemble Classifiers
 # All
 ada_voting_stacking_estimators = [
     (classifier_and_params[0].__class__.__name__, classifier_and_params[0])
