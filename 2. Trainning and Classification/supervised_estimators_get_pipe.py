@@ -604,7 +604,7 @@ stacking = make_pipe_list(stacking_, stacking_params)
 classifiers_list_ensemble = [
     ada, voting, stacking
 ]
-classifier_pipe_ensemble = {
+classifiers_pipe_ensemble = {
     classifier_and_params[0].__class__.__name__: classifier_and_params
     for classifier_and_params in classifiers_list_ensemble
 }
