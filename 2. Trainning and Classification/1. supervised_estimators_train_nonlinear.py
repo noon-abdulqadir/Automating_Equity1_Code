@@ -637,17 +637,39 @@ for col in tqdm.tqdm(analysis_columns):
 
     assert len(df_manual[df_manual[str(col)].map(df_manual[str(col)].value_counts() > 1)]) != 0, f'Dataframe has no {col} values!'
 
-    # Split data
-    (
-        train, X_train, y_train,
-        test, X_test, y_test,
-        val, X_val, y_val,
-        train_class_weights, train_class_weights_ratio, train_class_weights_dict,
-        test_class_weights, test_class_weights_ratio, test_class_weights_dict,
-        val_class_weights, val_class_weights_ratio, val_class_weights_dict,
-    ) = split_data(
-        df_manual, col,
-    )
+    if len(glob.glob(f'{results_save_path}{method} df_*_data - {col} - (Save_protocol=*).pkl')) == 3:
+        # Load previous Xy
+        print('Loading previous Xy.')
+        (
+            X_train, y_train,
+            X_test, y_test,
+            X_val, y_val,
+            train_class_weights, train_class_weights_ratio, train_class_weights_dict,
+            test_class_weights_dict, test_class_weights_ratio, test_class_weights_dict,
+            val_class_weights, val_class_weights_ratio, val_class_weights_dict,
+        ) = load_Xy(
+            col
+        )
+    else:
+        print('Splitting data.')
+        # Split data
+        (
+            train, X_train, y_train,
+            test, X_test, y_test,
+            val, X_val, y_val,
+            train_class_weights, train_class_weights_ratio, train_class_weights_dict,
+            test_class_weights, test_class_weights_ratio, test_class_weights_dict,
+            val_class_weights, val_class_weights_ratio, val_class_weights_dict,
+        ) = split_data(
+            df_manual, col,
+        )
+        # Save Xy data
+        save_Xy(
+            X_train, y_train,
+            X_test, y_test,
+            X_val, y_val,
+            col,
+        )
 
     for (
         vectorizer_name, vectorizer_and_params
@@ -667,28 +689,8 @@ for col in tqdm.tqdm(analysis_columns):
                 f'Already trained {col} - {vectorizer_name} + {classifier_name}'
             )
             print('-'*20)
-            # Load previous Xy
-            print('Loading previous Xy.')
-            (
-                X_train, y_train,
-                X_test, y_test,
-                X_val, y_val,
-                train_class_weights, train_class_weights_ratio, train_class_weights_dict,
-                test_class_weights_dict, test_class_weights_ratio, test_class_weights_dict,
-                val_class_weights, val_class_weights_ratio, val_class_weights_dict,
-            ) = load_Xy(
-                col
-            )
-            print('-'*20)
             continue
-        else:
-            # Save Xy data
-            save_Xy(
-                X_train, y_train,
-                X_test, y_test,
-                X_val, y_val,
-                col,
-            )
+
         ## Normalize Xy for unusual classifiers before fitting
         if classifier_name == 'GaussianNB':
             X_train = X_train.todense()
