@@ -515,7 +515,7 @@ classifiers_pipe_nonlinear = {
 ada_voting_stacking_estimators = [
     (classifier_and_params[0].__class__.__name__, classifier_and_params[0])
     for classifier_and_params in classifers_list_all
-    if hasattr(classifier_and_params[0], 'fit') and hasattr(classifier_and_params[0], 'predict')
+    if hasattr(classifier_and_params[0], 'fit') and hasattr(classifier_and_params[0], 'predict') and classifier_and_params[0].__class__.__name__ != 'Perceptron'
 ]
 # Linear
 ada_voting_stacking_estimators_linear = [
@@ -538,12 +538,12 @@ ada_params = {
 # All
 ada_ = AdaBoostClassifier(estimator=ada_voting_stacking_estimators)
 ada = make_pipe_list(ada_, ada_params)
-# Linear
-ada_linear_ = AdaBoostClassifier(estimator=ada_voting_stacking_estimators_linear)
-ada_linear = make_pipe_list(ada_linear_, ada_params)
-# Nonlinear
-ada_nonlinear_ = AdaBoostClassifier(estimator=ada_voting_stacking_estimators_nonlinear)
-ada_nonlinear = make_pipe_list(ada_nonlinear_, ada_params)
+# # Linear
+# ada_linear_ = AdaBoostClassifier(estimator=ada_voting_stacking_estimators_linear)
+# ada_linear = make_pipe_list(ada_linear_, ada_params)
+# # Nonlinear
+# ada_nonlinear_ = AdaBoostClassifier(estimator=ada_voting_stacking_estimators_nonlinear)
+# ada_nonlinear = make_pipe_list(ada_nonlinear_, ada_params)
 
 # Voting Classifier
 voting_params = {
@@ -553,12 +553,12 @@ voting_params = {
 # All
 voting_ = VotingClassifier(estimators=ada_voting_stacking_estimators)
 voting = make_pipe_list(voting_, voting_params)
-# Linear
-voting_linear_ = VotingClassifier(estimators=ada_voting_stacking_estimators_linear)
-voting_linear = make_pipe_list(voting_linear_, voting_params)
-# Nonlinear
-voting_nonlinear_ = VotingClassifier(estimators=ada_voting_stacking_estimators_nonlinear)
-voting_nonlinear = make_pipe_list(voting_nonlinear_, voting_params)
+# # Linear
+# voting_linear_ = VotingClassifier(estimators=ada_voting_stacking_estimators_linear)
+# voting_linear = make_pipe_list(voting_linear_, voting_params)
+# # Nonlinear
+# voting_nonlinear_ = VotingClassifier(estimators=ada_voting_stacking_estimators_nonlinear)
+# voting_nonlinear = make_pipe_list(voting_nonlinear_, voting_params)
 
 # Stacking Classifier
 stacking_params = {
@@ -568,36 +568,44 @@ stacking_params = {
 # All
 stacking_ = StackingClassifier(estimators=ada_voting_stacking_estimators)
 stacking = make_pipe_list(stacking_, stacking_params)
-# Linear
-stacking_linear_ = StackingClassifier(estimators=ada_voting_stacking_estimators_linear)
-stacking_linear = make_pipe_list(stacking_linear_, stacking_params)
-# Nonlinear
-stacking_nonlinear_ = StackingClassifier(estimators=ada_voting_stacking_estimators_nonlinear)
-stacking_nonlinear = make_pipe_list(stacking_nonlinear_, stacking_params)
+# # Linear
+# stacking_linear_ = StackingClassifier(estimators=ada_voting_stacking_estimators_linear)
+# stacking_linear = make_pipe_list(stacking_linear_, stacking_params)
+# # Nonlinear
+# stacking_nonlinear_ = StackingClassifier(estimators=ada_voting_stacking_estimators_nonlinear)
+# stacking_nonlinear = make_pipe_list(stacking_nonlinear_, stacking_params)
 
-# Add ada, voting and stacking classifiers to classifiers list and pipe dict
-# All
-classifers_list_all.append(ada)
-classifiers_pipe_all[ada[0].__class__.__name__] = ada
-classifers_list_all.append(voting)
-classifiers_pipe_all[voting[0].__class__.__name__] = voting
-classifers_list_all.append(stacking)
-classifiers_pipe_all[stacking[0].__class__.__name__] = stacking
+# # Add ada, voting and stacking classifiers to classifiers list and pipe dict
+# # All
+# classifers_list_all.append(ada)
+# classifiers_pipe_all[ada[0].__class__.__name__] = ada
+# classifers_list_all.append(voting)
+# classifiers_pipe_all[voting[0].__class__.__name__] = voting
+# classifers_list_all.append(stacking)
+# classifiers_pipe_all[stacking[0].__class__.__name__] = stacking
 
-# Linear
-classifiers_list_linear.append(ada_linear)
-classifiers_pipe_linear[ada_linear[0].__class__.__name__] = ada_linear
-classifiers_list_linear.append(voting_linear)
-classifiers_pipe_linear[voting_linear[0].__class__.__name__] = voting_linear
-classifiers_list_linear.append(stacking_linear)
-classifiers_pipe_linear[stacking_linear[0].__class__.__name__] = stacking_linear
+# # Linear
+# classifiers_list_linear.append(ada_linear)
+# classifiers_pipe_linear[ada_linear[0].__class__.__name__] = ada_linear
+# classifiers_list_linear.append(voting_linear)
+# classifiers_pipe_linear[voting_linear[0].__class__.__name__] = voting_linear
+# classifiers_list_linear.append(stacking_linear)
+# classifiers_pipe_linear[stacking_linear[0].__class__.__name__] = stacking_linear
 
-# Nonlinear
-classifiers_list_nonlinear.append(ada_nonlinear)
-classifiers_pipe_nonlinear[ada_nonlinear[0].__class__.__name__] = ada_nonlinear
-classifiers_list_nonlinear.append(voting_nonlinear)
-classifiers_pipe_nonlinear[voting_nonlinear[0].__class__.__name__] = voting_nonlinear
-classifiers_list_nonlinear.append(stacking_nonlinear)
-classifiers_pipe_nonlinear[stacking_nonlinear[0].__class__.__name__] = stacking_nonlinear
+# # Nonlinear
+# classifiers_list_nonlinear.append(ada_nonlinear)
+# classifiers_pipe_nonlinear[ada_nonlinear[0].__class__.__name__] = ada_nonlinear
+# classifiers_list_nonlinear.append(voting_nonlinear)
+# classifiers_pipe_nonlinear[voting_nonlinear[0].__class__.__name__] = voting_nonlinear
+# classifiers_list_nonlinear.append(stacking_nonlinear)
+# classifiers_pipe_nonlinear[stacking_nonlinear[0].__class__.__name__] = stacking_nonlinear
 
+# Ensemble Classifiers
+classifiers_list_ensemble = [
+    ada, voting, stacking
+]
+classifier_pipe_ensemble = {
+    classifier_and_params[0].__class__.__name__: classifier_and_params
+    for classifier_and_params in classifiers_list_ensemble
+}
 # %%
