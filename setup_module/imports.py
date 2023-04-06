@@ -653,7 +653,8 @@ nan_list = [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']
 pattern = r'[\n]+|[,]{2,}|[|]{2,}|[\n\r]+|(?<=[a-z]\.)(?=\s*[A-Z])|(?=\:+[A-Z])'
 alpha = 0.050
 normality_tests_labels = ['Statistic', 'p-value']
-
+ngrams_list=[1, 2, 3, 123]
+embedding_libraries_list = ['spacy', 'nltk', 'gensim']
 ivs = ['Gender', 'Age']
 ivs_all = [
     'Gender',
