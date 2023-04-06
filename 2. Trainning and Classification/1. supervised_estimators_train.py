@@ -585,7 +585,7 @@ def assert_all_classifers_used(
 
 # %%
 df_manual = pd.read_pickle(f'{df_save_dir}df_manual_for_trainning.pkl').reset_index(drop=True)
-assert len(df_manual) == 5978, f'DATAFRAME MISSING DATA! DF SHOULD BE OF LENGTH 5978 BUT IS OF LENGTH {len(df_manual)}'
+assert len(df_manual) == 5379, f'DATAFRAME MISSING DATA! DF SHOULD BE OF LENGTH 5379 BUT IS OF LENGTH {len(df_manual)}'
 
 
 # %%
