@@ -505,50 +505,112 @@ mlpr_params = {
 mlpr = make_pipe_list(mlpr_, mlpr_params)
 
 # Classifiers List
+classifier_ignore_list = [
+    et, bnb, gnb, gbc, sgd
+]
 classifers_list = [
-    dummy, nb, knn, lr, svm, dt, rf, et, ada, xgb, mlpc, mlpr, pa, ptron, bnb, gnb, sgd, gbc,
-    # bnb, gnb, sgd, gbc,
+    dummy, knn, lr, svm, dt, rf, ada, xgb, mlpc, mlpr, pa, ptron, et, bnb, gnb, gbc, sgd
+]
+classifers_list_all = [
+    classifier_and_params
+    for classifier_and_params in classifers_list
+    if classifier_and_params not in classifier_ignore_list
+]
+classifiers_list_linear = [
+    lr, svm, sgd, pa, ptron, mlpc,
+]
+classifiers_list_nonlinear = [
+    classifier_and_params
+    for classifier_and_params in classifers_list_all
+    if classifier_and_params not in classifiers_list_linear
 ]
 
 # Classifiers Dict
-classifiers_pipe = {
+# All
+classifiers_pipe_all = {
     classifier_and_params[0].__class__.__name__: classifier_and_params
-    for classifier_and_params in classifers_list
+    for classifier_and_params in classifers_list_all
+}
+## Linear
+classifiers_pipe_linear = {
+    classifier_and_params[0].__class__.__name__: classifier_and_params
+    for classifier_and_params in classifiers_list_linear
+}
+# Nonlinear
+classifiers_pipe_nonlinear = {
+    classifier_and_params[0].__class__.__name__: classifier_and_params
+    for classifier_and_params in classifiers_list_nonlinear
 }
 
 # Voting and Stacking Classifiers
-leftout_classifiers = [
-    'PassiveAggressiveClassifier', 'MLPRegressor', 'Perceptron', 'LinearSVC'
-]
 # Estimators for Voting and Stacking Classifiers
+# All
 voting_stacking_estimators = [
     (classifier_and_params[0].__class__.__name__, classifier_and_params[0])
-    for classifier_and_params in classifers_list
-    if classifier_and_params[0].__class__.__name__ not in leftout_classifiers
+    for classifier_and_params in classifers_list_all
+]
+# Linear
+voting_stacking_estimators_linear = [
+    (classifier_and_params[0].__class__.__name__, classifier_and_params[0])
+    for classifier_and_params in classifiers_list_linear
+]
+# Nonlinear
+voting_stacking_estimators_nonlinear = [
+    (classifier_and_params[0].__class__.__name__, classifier_and_params[0])
+    for classifier_and_params in classifiers_list_nonlinear
 ]
 
 # Voting Classifier
-voting_ = VotingClassifier(estimators=voting_stacking_estimators)
 voting_params = {
     'voting': ['soft', 'hard'],
     'weights': [None],
 }
-
+# All
+voting_ = VotingClassifier(estimators=voting_stacking_estimators)
 voting = make_pipe_list(voting_, voting_params)
 
+# Linear
+voting_linear_ = VotingClassifier(estimators=voting_stacking_estimators_linear)
+voting_linear = make_pipe_list(voting_linear_, voting_params)
+
+# Nonlinear
+voting_nonlinear_ = VotingClassifier(estimators=voting_stacking_estimators_nonlinear)
+voting_nonlinear = make_pipe_list(voting_nonlinear_, voting_params)
+
 # Stacking Classifier
-stacking_ = StackingClassifier(estimators=voting_stacking_estimators)
 stacking_params = {
     'stack_method': ['auto', 'predict_proba', 'decision_function', 'predict'],
     'passthrough': [True, False],
 }
-
+# All
+stacking_ = StackingClassifier(estimators=voting_stacking_estimators)
 stacking = make_pipe_list(stacking_, stacking_params)
 
+# Linear
+stacking_linear_ = StackingClassifier(estimators=voting_stacking_estimators_linear)
+stacking_linear = make_pipe_list(stacking_linear_, stacking_params)
+
+# Nonlinear
+stacking_nonlinear_ = StackingClassifier(estimators=voting_stacking_estimators_nonlinear)
+stacking_nonlinear = make_pipe_list(stacking_nonlinear_, stacking_params)
+
 # Add stacking and voting classifiers to classifiers list and pipe dict
-classifers_list.append(voting)
-classifiers_pipe[voting[0].__class__.__name__] = voting
-classifers_list.append(stacking)
-classifiers_pipe[stacking[0].__class__.__name__] = stacking
+# All
+classifers_list_all.append(voting)
+classifiers_pipe_all[voting[0].__class__.__name__] = voting
+classifers_list_all.append(stacking)
+classifiers_pipe_all[stacking[0].__class__.__name__] = stacking
+
+# Linear
+classifiers_list_linear.append(voting_linear)
+classifiers_pipe_linear[voting_linear[0].__class__.__name__] = voting_linear
+classifiers_list_linear.append(stacking_linear)
+classifiers_pipe_linear[stacking_linear[0].__class__.__name__] = stacking_linear
+
+# Nonlinear
+classifiers_list_nonlinear.append(voting_nonlinear)
+classifiers_pipe_nonlinear[voting_nonlinear[0].__class__.__name__] = voting_nonlinear
+classifiers_list_nonlinear.append(stacking_nonlinear)
+classifiers_pipe_nonlinear[stacking_nonlinear[0].__class__.__name__] = stacking_nonlinear
 
 # %%
