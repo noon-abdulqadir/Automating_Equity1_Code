@@ -36,12 +36,13 @@
 #
 #
 # %%
-from setup_module.scraping import *
-from setup_module.imports import *
-from setup_module.classification import *
 import os
 import sys
 from pathlib import Path
+
+from setup_module.classification import *
+from setup_module.imports import *
+from setup_module.scraping import *
 
 code_dir = None
 code_dir_name = 'Code'
@@ -289,19 +290,19 @@ normality_tests_labels = ['Statistic', 'p-value']
 if not analysis_df_from_manual:
     df_loc = f'_outliers_age_limit-{age_limit}_age_ratio-{age_ratio}_gender_ratio-{gender_ratio}'
     dataframes = {'df': None, 'df_mean': None}
-    dv_cols = ['Warmth', 'Warmth_Probability',
+    dvs_all = ['Warmth', 'Warmth_Probability',
                'Competence', 'Competence_Probability']
 
 else:
     df_loc = '_outliers'
     dataframes = {'df_manual': None, 'df_manual_mean': None}
-    dv_cols = ['Warmth', 'Competence']
+    dvs_all = ['Warmth', 'Competence']
 
 zscores_list = [0, 1.96, 2.58, 3.29]
 
 outliers_remove = True
 
-# for dv in dv_cols:
+# for dv in dvs_all:
 #     if outliers_remove is False:
 #         zscores_list = [0]
 
@@ -321,7 +322,7 @@ outliers_remove = True
 #                     f'{dv}_Probability_Zscore{zscores}'
 #                 ] = f'{dv}_Outliers_Removed_Zscore{zscores}'
 
-for dv in dv_cols:
+for dv in dvs_all:
     if 'Probability' not in dv:
         dvs[f'{dv}'] = f'{dv}'
     if 'Probability' in dv:
