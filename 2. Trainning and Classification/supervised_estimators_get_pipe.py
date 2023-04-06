@@ -143,8 +143,8 @@ count_params = {
     'analyzer': ['word'],
     'ngram_range': [(1, 3)],
     'lowercase': [True, False],
-    'max_df': [0.90, 0.85, 0.80, 0.75, 0.70],
-    'min_df': [0.10, 0.15, 0.20, 0.25, 0.30],
+    'max_df': [0.85, 0.80, 0.75],
+    'min_df': [0.15, 0.20, 0.25],
 }
 count = make_pipe_list(count_, count_params)
 
@@ -155,8 +155,8 @@ tfidf_params = {
     'ngram_range': [(1, 3)],
     'lowercase': [True, False],
     '_use_idf': [True, False],
-    'max_df': [0.90, 0.85, 0.80, 0.75, 0.70],
-    'min_df': [0.10, 0.15, 0.20, 0.25, 0.30],
+    'max_df': [0.85, 0.80, 0.75],
+    'min_df': [ 0.15, 0.20, 0.25],
 }
 tfidf = make_pipe_list(tfidf_, tfidf_params)
 
@@ -198,7 +198,7 @@ vectorizers_pipe = {
 # SelectKBest
 selectkbest_ = SelectKBest()
 selectkbest_params = {
-    'score_func': [f_classif, chi2, mutual_info_classif, f_regression, mutual_info_regression],
+    'score_func': [f_classif, chi2, f_regression],
     'k': ['all'],
 }
 selectkbest = make_pipe_list(selectkbest_, selectkbest_params)
@@ -206,7 +206,7 @@ selectkbest = make_pipe_list(selectkbest_, selectkbest_params)
 # SelectPercentile
 selectperc_ = SelectPercentile()
 selectperc_params = {
-    'score_func': [f_classif, chi2, mutual_info_classif, f_regression, mutual_info_regression],
+    'score_func': [f_classif, chi2, f_regression],
     'percentile': [30, 40, 50, 60, 70, 80],
 }
 selectperc = make_pipe_list(selectperc_, selectperc_params)
@@ -214,21 +214,21 @@ selectperc = make_pipe_list(selectperc_, selectperc_params)
 # SelectFpr
 selectfpr_ = SelectFpr()
 selectfpr_params = {
-    'score_func': [f_classif, chi2, mutual_info_classif, f_regression, mutual_info_regression],
+    'score_func': [f_classif, chi2, f_regression],
 }
 selectfpr = make_pipe_list(selectfpr_, selectfpr_params)
 
 # SelectFdr
 selectfdr_ = SelectFdr()
 selectfdr_params = {
-    'score_func': [f_classif, chi2, mutual_info_classif, f_regression, mutual_info_regression],
+    'score_func': [f_classif, chi2, f_regression],
 }
 selectfdr = make_pipe_list(selectfdr_, selectfdr_params)
 
 # SelectFwe
 selectfwe_ = SelectFwe()
 selectfwe_params = {
-    'score_func': [f_classif, chi2, mutual_info_classif, f_regression, mutual_info_regression],
+    'score_func': [f_classif, chi2, f_regression],
 }
 selectfwe = make_pipe_list(selectfwe_, selectfwe_params)
 
@@ -299,7 +299,7 @@ nb = make_pipe_list(nb_, nb_params)
 # Bernoulli Naive Bayes
 bnb_ = BernoulliNB()
 bnb_params = {
-    'fit_prior': [True],
+    'fit_prior': [True, False],
     'alpha': [0.1, 0.2, 0.3],
 }
 
@@ -317,7 +317,7 @@ gnb = make_pipe_list(gnb_, gnb_params)
 knn_ = KNeighborsClassifier()
 knn_params = {
     'weights': ['uniform', 'distance'],
-    'n_neighbors': [2, 5, 15, 30, 50],
+    'n_neighbors': [5, 15, 30, 50],
     'algorithm': ['auto'],
     # 'p': [1, 2, 3, 4, 5],
     # 'metric': [
@@ -340,7 +340,7 @@ lr_params = {
     'fit_intercept': [True, False],
     'multi_class': ['auto'],
     'solver': ['liblinear'],
-    'C': [0.01, 0.5, 1, 5, 10, 15, 20, 30, 50, 100],
+    'C': [0.01, 0.5, 1, 5, 10, 15],
     'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
     # 'penalty': ['elasticnet'],
 }
@@ -355,7 +355,7 @@ pa_params = {
     'fit_intercept': [True, False],
     'class_weight': [class_weight],
     'shuffle': [True, False],
-    'C': [0.01, 0.5, 1, 5, 10, 15, 20, 30, 50, 100],
+    'C': [0.01, 0.5, 1, 5, 10, 15],
     'average': [True, False],
     'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
 }
@@ -394,7 +394,7 @@ svm_params = {
     'random_state': [random_state],
     'fit_intercept': [True, False],
     'class_weight': [class_weight],
-    'C': [0.01, 0.5, 1, 5, 10, 15, 20, 30, 50, 100],
+    'C': [0.01, 0.5, 1, 5, 10, 15],
     'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
     'dual': [False]
     # 'multi_class': ['ovr', 'crammer_singer'],
