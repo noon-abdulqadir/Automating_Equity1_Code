@@ -565,7 +565,7 @@ def save_Xy_search_cv_estimator(
 
 # %%
 # Assert that all classifiers were used
-def assert_all_classifers_used(
+def assert_all_classifiers_used(
     estimators_list=None, used_classifiers=None, results_save_path=results_save_path, method=method, classifiers_pipe=classifiers_pipe,
 ):
     if estimators_list is None:
@@ -587,8 +587,8 @@ def assert_all_classifers_used(
 # ### READ DATA
 
 # %%
-with open(f'{data_dir}df_manual_len.txt', 'rb') as f:
-    df_manual_len = int(pickle.load(f))
+with open(f'{data_dir}df_manual_len.txt', 'r') as f:
+    df_manual_len = int(f.read())
 
 df_manual = pd.read_pickle(f'{df_save_dir}df_manual_for_trainning.pkl').reset_index(drop=True)
 assert len(df_manual) == df_manual_len, f'DATAFRAME MISSING DATA! DF SHOULD BE OF LENGTH {df_manual_len} BUT IS OF LENGTH {len(df_manual)}'
@@ -614,7 +614,7 @@ for col in tqdm.tqdm(analysis_columns):
         f'Vectorizers to be used ({len(list(vectorizers_pipe.values()))}):\n{list(vectorizers_pipe.keys())}'
     )
     print(
-        f'Total number of vectorizer parameters = {sum([len(list(vectorizers_pipe.values())[i][1]) for i in range(len(vectorizers_pipe))])}'
+        f'Total number of vectorizer parameters = {sum([len(list(vectorizers_pipe.values())[i]) for i in range(len(vectorizers_pipe))])}'
     )
     print(
         f'Selectors to be used ({len(list(selectors_pipe.values()))}):\n{list(selectors_pipe.keys())}'
@@ -629,10 +629,10 @@ for col in tqdm.tqdm(analysis_columns):
         f'Total number of resamplers parameters = {sum([len(list(resamplers_pipe.values())[i][1]) for i in range(len(resamplers_pipe))])}'
     )
     print(
-        f'Classifers to be used ({len(list(classifiers_pipe.keys()))}):\n{list(classifiers_pipe.keys())}'
+        f'classifiers to be used ({len(list(classifiers_pipe.keys()))}):\n{list(classifiers_pipe.keys())}'
     )
     print(
-        f'Total number of classifers parameters = {sum([len(list(classifiers_pipe.values())[i][1]) for i in range(len(classifiers_pipe))])}'
+        f'Total number of classifiers parameters = {sum([len(list(classifiers_pipe.values())[i][1]) for i in range(len(classifiers_pipe))])}'
     )
 
     assert len(df_manual[df_manual[str(col)].map(df_manual[str(col)].value_counts() > 1)]) != 0, f'Dataframe has no {col} values!'
@@ -815,10 +815,7 @@ for col in tqdm.tqdm(analysis_columns):
         )
 
 # Assert that all classifiers were used
-assert_all_classifers_used()
+assert_all_classifiers_used()
 print('#'*40)
 print('DONE!')
 print('#'*40)
-
-
-# %%

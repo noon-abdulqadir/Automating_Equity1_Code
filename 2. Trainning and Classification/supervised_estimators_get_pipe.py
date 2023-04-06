@@ -167,29 +167,23 @@ vectorizers_list = [
 ]
 
 # BOW FeatureUnion
-transformer_list = []
-bow_params = {}
-for vectorizer_and_params in vectorizers_list:
-    transformer_list.append(
-        (vectorizer_and_params[0].__class__.__name__, vectorizer_and_params[0])
-    )
-    for k, v in vectorizer_and_params[1].items():
-        bow_params[f'FeatureUnion__{k}'] = v
-
+### BOW FeatureUnion
 bow_ = FeatureUnion(
-    transformer_list=[transformer_list]
+    transformer_list=[('CountVectorizer', count[0]), ('TfidfVectorizer', tfidf[0])]
 )
-bow = [bow_, bow_params]
+
+bow_params = count[1] | tfidf[1]
+
+bow = make_pipe_list(bow_, bow_params)
 
 # Vectorizers List append bow
-vectorizers_list.append(bow)
+vectorizers_list.append([bow_.set_params(**{key: value[0] for key, value in bow_params.items()})])
 
 # Vectorizers Dict
 vectorizers_pipe = {
     vectorizer_and_params[0].__class__.__name__: vectorizer_and_params
     for vectorizer_and_params in vectorizers_list
 }
-
 
 # %% [markdown]
 # ## Selectors
@@ -473,14 +467,14 @@ mlpr = make_pipe_list(mlpr_, mlpr_params)
 
 # Classifiers List
 classifier_ignore_list = [
-    et, bnb, gnb, gbc, sgd
+    et, bnb, gnb, gbc, sgd,
 ]
-classifers_list = [
+classifiers_list = [
     dummy, knn, lr, svm, dt, rf, xgb, mlpc, mlpr, pa, ptron, et, bnb, gnb, gbc, sgd
 ]
-classifers_list_all = [
+classifiers_list_all = [
     classifier_and_params
-    for classifier_and_params in classifers_list
+    for classifier_and_params in classifiers_list
     if classifier_and_params not in classifier_ignore_list
 ]
 classifiers_list_linear = [
@@ -488,7 +482,7 @@ classifiers_list_linear = [
 ]
 classifiers_list_nonlinear = [
     classifier_and_params
-    for classifier_and_params in classifers_list_all
+    for classifier_and_params in classifiers_list_all
     if classifier_and_params not in classifiers_list_linear
 ]
 
@@ -496,7 +490,7 @@ classifiers_list_nonlinear = [
 # All
 classifiers_pipe_all = {
     classifier_and_params[0].__class__.__name__: classifier_and_params
-    for classifier_and_params in classifers_list_all
+    for classifier_and_params in classifiers_list_all
 }
 ## Linear
 classifiers_pipe_linear = {
@@ -509,103 +503,57 @@ classifiers_pipe_nonlinear = {
     for classifier_and_params in classifiers_list_nonlinear
 }
 
-# Ensemble Classifiers
-# Estimators for Ensemble Classifiers
-# All
-ada_voting_stacking_estimators = [
-    (classifier_and_params[0].__class__.__name__, classifier_and_params[0])
-    for classifier_and_params in classifers_list_all
-    if hasattr(classifier_and_params[0], 'fit') and hasattr(classifier_and_params[0], 'predict')
-    and classifier_and_params[0].__class__.__name__ != 'Perceptron'
-    and classifier_and_params[0].__class__.__name__ != 'PassiveAggressiveClassifier'
-    and classifier_and_params[0].__class__.__name__ != 'XGBClassifier'
-]
-# Linear
-ada_voting_stacking_estimators_linear = [
-    (classifier_and_params[0].__class__.__name__, classifier_and_params[0])
-    for classifier_and_params in classifiers_list_linear
-]
-# Nonlinear
-ada_voting_stacking_estimators_nonlinear = [
-    (classifier_and_params[0].__class__.__name__, classifier_and_params[0])
-    for classifier_and_params in classifiers_list_nonlinear
-]
-
-# AdaBoost Classifier
+# AdaBoostClassifier
+ada_ = AdaBoostClassifier()
 ada_params = {
     'random_state': [random_state],
     'n_estimators': [50, 100, 150],
     'learning_rate': [0.01, 0.1, 0.5, 1],
     'algorithm': ['SAMME', 'SAMME.R'],
+    'estimator': [
+        SVC(probability=True, kernel='linear'),
+        LogisticRegression(),
+        MultinomialNB(),
+    ],
 }
-# All
-ada_ = AdaBoostClassifier(estimator=ada_voting_stacking_estimators)
 ada = make_pipe_list(ada_, ada_params)
-# # Linear
-# ada_linear_ = AdaBoostClassifier(estimator=ada_voting_stacking_estimators_linear)
-# ada_linear = make_pipe_list(ada_linear_, ada_params)
-# # Nonlinear
-# ada_nonlinear_ = AdaBoostClassifier(estimator=ada_voting_stacking_estimators_nonlinear)
-# ada_nonlinear = make_pipe_list(ada_nonlinear_, ada_params)
+
+# Ensemble Classifiers
+# Estimators for Ensemble Classifiers
+voting_stacking_estimators = [
+    # classifier_and_params[0].set_params(**{key.replace(f'{classifier_and_params[0].__class__.__name__}__', ''): value[0]
+    # for key, value in classifier_and_params[1].items()})
+    (classifier_and_params[0].__class__.__name__,
+    classifier_and_params[0].set_params(**{key.replace(f'{classifier_and_params[0].__class__.__name__}__', ''): value[0]
+    for key, value in classifier_and_params[1].items()}))
+    for classifier_and_params in classifiers_list_all
+    if hasattr(classifier_and_params[0], 'fit')
+    and hasattr(classifier_and_params[0], 'predict')
+    and hasattr(classifier_and_params[0], 'predict_proba')
+    # and hasattr(classifier_and_params[0], 'decision_function')
+    and classifier_and_params[0].__class__.__name__ != 'MLPRegressor'
+    # and classifier_and_params[0].__class__.__name__ != 'MLPClassifier'
+]
 
 # Voting Classifier
 voting_params = {
     'voting': ['soft', 'hard'],
     'weights': [None],
 }
-# All
-voting_ = VotingClassifier(estimators=ada_voting_stacking_estimators)
+voting_ = VotingClassifier(estimators=voting_stacking_estimators)
 voting = make_pipe_list(voting_, voting_params)
-# # Linear
-# voting_linear_ = VotingClassifier(estimators=ada_voting_stacking_estimators_linear)
-# voting_linear = make_pipe_list(voting_linear_, voting_params)
-# # Nonlinear
-# voting_nonlinear_ = VotingClassifier(estimators=ada_voting_stacking_estimators_nonlinear)
-# voting_nonlinear = make_pipe_list(voting_nonlinear_, voting_params)
 
 # Stacking Classifier
 stacking_params = {
     'stack_method': ['auto', 'predict_proba', 'decision_function', 'predict'],
     'passthrough': [True, False],
 }
-# All
-stacking_ = StackingClassifier(estimators=ada_voting_stacking_estimators)
+stacking_ = StackingClassifier(estimators=voting_stacking_estimators)
 stacking = make_pipe_list(stacking_, stacking_params)
-# # Linear
-# stacking_linear_ = StackingClassifier(estimators=ada_voting_stacking_estimators_linear)
-# stacking_linear = make_pipe_list(stacking_linear_, stacking_params)
-# # Nonlinear
-# stacking_nonlinear_ = StackingClassifier(estimators=ada_voting_stacking_estimators_nonlinear)
-# stacking_nonlinear = make_pipe_list(stacking_nonlinear_, stacking_params)
-
-# # Add ada, voting and stacking classifiers to classifiers list and pipe dict
-# # All
-# classifers_list_all.append(ada)
-# classifiers_pipe_all[ada[0].__class__.__name__] = ada
-# classifers_list_all.append(voting)
-# classifiers_pipe_all[voting[0].__class__.__name__] = voting
-# classifers_list_all.append(stacking)
-# classifiers_pipe_all[stacking[0].__class__.__name__] = stacking
-
-# # Linear
-# classifiers_list_linear.append(ada_linear)
-# classifiers_pipe_linear[ada_linear[0].__class__.__name__] = ada_linear
-# classifiers_list_linear.append(voting_linear)
-# classifiers_pipe_linear[voting_linear[0].__class__.__name__] = voting_linear
-# classifiers_list_linear.append(stacking_linear)
-# classifiers_pipe_linear[stacking_linear[0].__class__.__name__] = stacking_linear
-
-# # Nonlinear
-# classifiers_list_nonlinear.append(ada_nonlinear)
-# classifiers_pipe_nonlinear[ada_nonlinear[0].__class__.__name__] = ada_nonlinear
-# classifiers_list_nonlinear.append(voting_nonlinear)
-# classifiers_pipe_nonlinear[voting_nonlinear[0].__class__.__name__] = voting_nonlinear
-# classifiers_list_nonlinear.append(stacking_nonlinear)
-# classifiers_pipe_nonlinear[stacking_nonlinear[0].__class__.__name__] = stacking_nonlinear
 
 # Ensemble Classifiers
 classifiers_list_ensemble = [
-    ada, voting, stacking
+    voting, stacking
 ]
 classifiers_pipe_ensemble = {
     classifier_and_params[0].__class__.__name__: classifier_and_params
