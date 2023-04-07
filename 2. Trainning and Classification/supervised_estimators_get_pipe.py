@@ -482,10 +482,10 @@ ada = make_pipe_list(ada_, ada_params)
 
 # Classifiers List
 classifier_ignore_list = [
-    et, bnb, gnb, gbc, sgd,
+    et, bnb, gnb, sgd,
 ]
 classifiers_list = [
-    dummy, knn, lr, svm, dt, rf, xgb, mlpc, mlpr, pa, ptron, et, bnb, gnb, gbc, sgd
+    dummy, knn, lr, svm, dt, rf, xgb, mlpc, mlpr, pa, ptron, et, bnb, gnb, sgd
 ]
 classifiers_list_all = [
     classifier_and_params
@@ -493,7 +493,7 @@ classifiers_list_all = [
     if classifier_and_params not in classifier_ignore_list
 ]
 classifiers_list_linear = [
-    lr, sgd, pa, ptron, mlpc, mlpr, svm,
+    lr, sgd, pa, ptron, mlpc, mlpr, gbc, svm,
 ]
 classifiers_list_nonlinear = [
     classifier_and_params
@@ -537,11 +537,12 @@ voting_estimators = [
 # Voting Classifier
 voting_params = {
     'voting': ['soft'],
-    'estimators': voting_estimators,
+    'estimators': [voting_estimators],
 }
-voting_ = VotingClassifier()
+voting_ = VotingClassifier(estimators=voting_estimators)
 voting = make_pipe_list(voting_, voting_params)
 
+# HACK
 # Stacking Classifier
 stacking_estimators = [
     # classifier_and_params[0].set_params(**{key.replace(f'{classifier_and_params[0].__class__.__name__}__', ''): value[0]
@@ -550,25 +551,32 @@ stacking_estimators = [
     classifier_and_params[0].set_params(**{key.replace(f'{classifier_and_params[0].__class__.__name__}__', ''): value[0]
     for key, value in classifier_and_params[1].items()}))
     for classifier_and_params in classifiers_list_all
-    if hasattr(classifier_and_params[0], 'fit')
-    and hasattr(classifier_and_params[0], 'predict')
-    and hasattr(classifier_and_params[0], 'predict_proba')
-    if hasattr(classifier_and_params[0], 'decision_function')
+    # if hasattr(classifier_and_params[0], 'fit')
+    # and hasattr(classifier_and_params[0], 'predict')
+    if hasattr(classifier_and_params[0], 'predict_proba')
+    and hasattr(classifier_and_params[0], 'decision_function')
     # and classifier_and_params[0].__class__.__name__ != 'MLPRegressor'
     # and classifier_and_params[0].__class__.__name__ != 'MLPClassifier'
 ]
+# stacking_estimators = [('GradientBoostingClassifier', GradientBoostingClassifier()
+# ),
+# ('LogisticRegression',
+#   LogisticRegression(C=0.01, class_weight='balanced', max_iter=400000,
+#                      random_state=42, solver='liblinear'))]
 
 stacking_params = {
     'stack_method': ['auto', 'predict_proba', 'decision_function', 'predict'],
     'passthrough': [True, False],
-    'estimators': stacking_estimators,
+    'estimators': [stacking_estimators],
 }
-stacking_ = StackingClassifier()
+stacking_ = StackingClassifier(estimators=stacking_estimators)
 stacking = make_pipe_list(stacking_, stacking_params)
 
+# HACK
 # Ensemble Classifiers
 classifiers_list_ensemble = [
-    voting, stacking
+    # voting,
+    stacking
 ]
 classifiers_pipe_ensemble = {
     classifier_and_params[0].__class__.__name__: classifier_and_params
