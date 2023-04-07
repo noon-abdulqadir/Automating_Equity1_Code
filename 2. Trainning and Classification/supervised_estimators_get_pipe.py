@@ -166,24 +166,24 @@ vectorizers_list = [
     tfidf
 ]
 
-# BOW FeatureUnion
-### BOW FeatureUnion
-bow_ = FeatureUnion(
-    transformer_list=[('CountVectorizer', count[0]), ('TfidfVectorizer', tfidf[0])]
-)
-
-bow_params = count[1] | tfidf[1]
-
-bow = make_pipe_list(bow_, bow_params)
-
-# Vectorizers List append bow
-vectorizers_list.append([bow_.set_params(**{key: value[0] for key, value in bow_params.items()})])
-
 # Vectorizers Dict
 vectorizers_pipe = {
     vectorizer_and_params[0].__class__.__name__: vectorizer_and_params
     for vectorizer_and_params in vectorizers_list
 }
+
+# BOW FeatureUnion
+### BOW FeatureUnion
+bow_ = FeatureUnion(
+    transformer_list=[('CountVectorizer', count[0]), ('TfidfVectorizer', tfidf[0])]
+)
+bow_params = {**count[1], **tfidf[1]}
+bow = make_pipe_list(bow_, bow_params)
+
+# # Vectorizers List and Dict append bow
+vectorizers_list.append(bow_.set_params(**{key: value[0] for key, value in bow_params.items()}))
+vectorizers_pipe[bow[0].__class__.__name__] = bow
+
 
 # %% [markdown]
 # ## Selectors
