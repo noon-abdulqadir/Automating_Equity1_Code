@@ -529,7 +529,7 @@ voting_estimators = [
     for classifier_and_params in classifiers_list_all
     if hasattr(classifier_and_params[0], 'fit')
     and hasattr(classifier_and_params[0], 'predict')
-    # and hasattr(classifier_and_params[0], 'predict_proba')
+    and hasattr(classifier_and_params[0], 'predict_proba')
     # and hasattr(classifier_and_params[0], 'decision_function')
     and classifier_and_params[0].__class__.__name__ != 'MLPRegressor'
     # and classifier_and_params[0].__class__.__name__ != 'MLPClassifier'
