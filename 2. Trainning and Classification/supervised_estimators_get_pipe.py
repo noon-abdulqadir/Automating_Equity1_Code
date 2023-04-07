@@ -537,7 +537,7 @@ voting_estimators = [
 # Voting Classifier
 voting_params = {
     'voting': ['soft'],
-    'estimators': [voting_estimators],
+    'estimators': voting_estimators,
 }
 voting_ = VotingClassifier()
 voting = make_pipe_list(voting_, voting_params)
@@ -561,7 +561,7 @@ stacking_estimators = [
 stacking_params = {
     'stack_method': ['auto', 'predict_proba', 'decision_function', 'predict'],
     'passthrough': [True, False],
-    'estimators': [stacking_estimators],
+    'estimators': stacking_estimators,
 }
 stacking_ = StackingClassifier()
 stacking = make_pipe_list(stacking_, stacking_params)
