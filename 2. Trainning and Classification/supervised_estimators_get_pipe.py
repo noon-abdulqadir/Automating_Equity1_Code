@@ -491,10 +491,10 @@ ada = make_pipe_list(ada_, ada_params)
 
 # Classifiers List
 classifier_ignore_list = [
-    et, bnb, gnb, sgd, svm,
+    et, bnb, gnb, sgd,
 ]
 classifiers_list = [
-    dummy, knn, lr, svm, dt, rf, xgb, mlpc, mlpr, pa, ptron, et, bnb, gnb, sgd, svc, gbc
+    dummy, knn, lr, svm, dt, svm, rf, xgb, mlpc, mlpr, pa, ptron, et, bnb, gnb, sgd, svc, gbc
 ]
 classifiers_list_all = [
     classifier_and_params
@@ -502,8 +502,7 @@ classifiers_list_all = [
     if classifier_and_params not in classifier_ignore_list
 ]
 classifiers_list_linear = [
-    lr, sgd, pa, ptron, mlpc, mlpr, gbc, svc,
-    # svm,
+    lr, svm, svc, sgd, pa, ptron, mlpc, mlpr, gbc,
 ]
 classifiers_list_nonlinear = [
     classifier_and_params
