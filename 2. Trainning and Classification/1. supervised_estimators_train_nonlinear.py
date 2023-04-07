@@ -614,7 +614,7 @@ for col in tqdm.tqdm(analysis_columns):
         f'Vectorizers to be used ({len(list(vectorizers_pipe.values()))}):\n{list(vectorizers_pipe.keys())}'
     )
     print(
-        f'Total number of vectorizer parameters = {sum([len(list(vectorizers_pipe.values())[i][1]) for i in range(len(vectorizers_pipe))])}'
+        f'Total number of vectorizer parameters = {sum([len(list(vectorizers_pipe.values())[i]) for i in range(len(vectorizers_pipe))])}'
     )
     print(
         f'Selectors to be used ({len(list(selectors_pipe.values()))}):\n{list(selectors_pipe.keys())}'
