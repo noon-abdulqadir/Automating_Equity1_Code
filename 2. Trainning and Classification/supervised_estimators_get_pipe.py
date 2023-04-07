@@ -520,7 +520,30 @@ classifiers_pipe_nonlinear = {
 
 # Ensemble Classifiers
 # Estimators for Ensemble Classifiers
-voting_stacking_estimators = [
+voting_estimators = [
+    # classifier_and_params[0].set_params(**{key.replace(f'{classifier_and_params[0].__class__.__name__}__', ''): value[0]
+    # for key, value in classifier_and_params[1].items()})
+    (classifier_and_params[0].__class__.__name__,
+    classifier_and_params[0].set_params(**{key.replace(f'{classifier_and_params[0].__class__.__name__}__', ''): value[0]
+    for key, value in classifier_and_params[1].items()}))
+    for classifier_and_params in classifiers_list_all
+    if hasattr(classifier_and_params[0], 'fit')
+    and hasattr(classifier_and_params[0], 'predict')
+    # and hasattr(classifier_and_params[0], 'predict_proba')
+    # and hasattr(classifier_and_params[0], 'decision_function')
+    # and classifier_and_params[0].__class__.__name__ != 'MLPRegressor'
+    # and classifier_and_params[0].__class__.__name__ != 'MLPClassifier'
+]
+
+# Voting Classifier
+voting_params = {
+    'voting': ['soft'],
+}
+voting_ = VotingClassifier(estimators=voting_estimators)
+voting = make_pipe_list(voting_, voting_params)
+
+# Stacking Classifier
+stacking_estimators = [
     # classifier_and_params[0].set_params(**{key.replace(f'{classifier_and_params[0].__class__.__name__}__', ''): value[0]
     # for key, value in classifier_and_params[1].items()})
     (classifier_and_params[0].__class__.__name__,
@@ -530,24 +553,16 @@ voting_stacking_estimators = [
     if hasattr(classifier_and_params[0], 'fit')
     and hasattr(classifier_and_params[0], 'predict')
     and hasattr(classifier_and_params[0], 'predict_proba')
-    # and hasattr(classifier_and_params[0], 'decision_function')
-    and classifier_and_params[0].__class__.__name__ != 'MLPRegressor'
+    if hasattr(classifier_and_params[0], 'decision_function')
+    # and classifier_and_params[0].__class__.__name__ != 'MLPRegressor'
     # and classifier_and_params[0].__class__.__name__ != 'MLPClassifier'
 ]
 
-# Voting Classifier
-voting_params = {
-    'voting': ['soft'],
-}
-voting_ = VotingClassifier(estimators=voting_stacking_estimators)
-voting = make_pipe_list(voting_, voting_params)
-
-# Stacking Classifier
 stacking_params = {
     'stack_method': ['auto', 'predict_proba', 'decision_function', 'predict'],
     'passthrough': [True, False],
 }
-stacking_ = StackingClassifier(estimators=voting_stacking_estimators)
+stacking_ = StackingClassifier(estimators=stacking_estimators)
 stacking = make_pipe_list(stacking_, stacking_params)
 
 # Ensemble Classifiers
