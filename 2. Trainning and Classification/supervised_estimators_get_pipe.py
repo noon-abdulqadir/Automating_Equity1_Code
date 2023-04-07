@@ -493,7 +493,7 @@ classifiers_list_all = [
     if classifier_and_params not in classifier_ignore_list
 ]
 classifiers_list_linear = [
-    lr, svm, sgd, pa, ptron, mlpc, mlpr
+    lr, sgd, pa, ptron, mlpc, mlpr, svm,
 ]
 classifiers_list_nonlinear = [
     classifier_and_params
@@ -534,12 +534,12 @@ voting_estimators = [
     and classifier_and_params[0].__class__.__name__ != 'MLPRegressor'
     # and classifier_and_params[0].__class__.__name__ != 'MLPClassifier'
 ]
-
 # Voting Classifier
 voting_params = {
     'voting': ['soft'],
+    'estimators': [voting_estimators],
 }
-voting_ = VotingClassifier(estimators=voting_estimators)
+voting_ = VotingClassifier()
 voting = make_pipe_list(voting_, voting_params)
 
 # Stacking Classifier
@@ -561,8 +561,9 @@ stacking_estimators = [
 stacking_params = {
     'stack_method': ['auto', 'predict_proba', 'decision_function', 'predict'],
     'passthrough': [True, False],
+    'estimators': [stacking_estimators],
 }
-stacking_ = StackingClassifier(estimators=stacking_estimators)
+stacking_ = StackingClassifier()
 stacking = make_pipe_list(stacking_, stacking_params)
 
 # Ensemble Classifiers
