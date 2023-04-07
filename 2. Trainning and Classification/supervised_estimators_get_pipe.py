@@ -382,9 +382,18 @@ svm_params = {
     'C': [0.01, 0.5, 1, 5, 10, 15],
     'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
     'dual': [False]
-    # 'multi_class': ['ovr', 'crammer_singer'],
 }
 svm = make_pipe_list(svm_, svm_params)
+
+# SVC
+svc_ = SVC()
+svc_params = {
+    'random_state': [random_state],
+    'class_weight': [class_weight],
+    'C': [0.01, 0.5, 1, 5, 10, 15],
+    'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
+}
+svc = make_pipe_list(svm_, svm_params)
 
 # Decision Tree
 dt_ = DecisionTreeClassifier()
@@ -482,10 +491,10 @@ ada = make_pipe_list(ada_, ada_params)
 
 # Classifiers List
 classifier_ignore_list = [
-    et, bnb, gnb, sgd,
+    et, bnb, gnb, sgd, svm,
 ]
 classifiers_list = [
-    dummy, knn, lr, svm, dt, rf, xgb, mlpc, mlpr, pa, ptron, et, bnb, gnb, sgd
+    dummy, knn, lr, svm, dt, rf, xgb, mlpc, mlpr, pa, ptron, et, bnb, gnb, sgd, svc, gbc
 ]
 classifiers_list_all = [
     classifier_and_params
@@ -493,7 +502,8 @@ classifiers_list_all = [
     if classifier_and_params not in classifier_ignore_list
 ]
 classifiers_list_linear = [
-    lr, sgd, pa, ptron, mlpc, mlpr, gbc, svm,
+    lr, sgd, pa, ptron, mlpc, mlpr, gbc, svc,
+    # svm,
 ]
 classifiers_list_nonlinear = [
     classifier_and_params
@@ -531,7 +541,7 @@ voting_estimators = [
     and hasattr(classifier_and_params[0], 'predict')
     and hasattr(classifier_and_params[0], 'predict_proba')
     # and hasattr(classifier_and_params[0], 'decision_function')
-    and classifier_and_params[0].__class__.__name__ != 'MLPRegressor'
+    # and classifier_and_params[0].__class__.__name__ != 'MLPRegressor'
     # and classifier_and_params[0].__class__.__name__ != 'MLPClassifier'
 ]
 # Voting Classifier
@@ -567,7 +577,7 @@ stacking = make_pipe_list(stacking_, stacking_params)
 
 # Ensemble Classifiers
 classifiers_list_ensemble = [
-    # voting,
+    voting,
     stacking
 ]
 classifiers_pipe_ensemble = {
