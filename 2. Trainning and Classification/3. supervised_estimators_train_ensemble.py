@@ -433,7 +433,6 @@ def load_Xy(
         val_class_weights, val_class_weights_ratio, val_class_weights_dict,
     )
 
-
 # %%
 # Function to normalize unusual classifiers after fitting
 def normalize_after_fitting(estimator, X_train, y_train, X_test, y_test, searchcv):
