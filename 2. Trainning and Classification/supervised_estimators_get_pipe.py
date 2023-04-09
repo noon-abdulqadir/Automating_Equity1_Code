@@ -453,7 +453,7 @@ mlpc_params = {
     'solver': ['lbfgs', 'sgd', 'adam'],
     'learning_rate': ['constant', 'invscaling', 'adaptive'],
     'random_state': [random_state],
-    'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
+    'max_iter': [700000, 800000, 900000, 1000000, 1100000, 1200000, 1300000],
 }
 mlpc = make_pipe_list(mlpc_, mlpc_params)
 
