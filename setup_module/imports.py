@@ -576,6 +576,12 @@ metrics_dict = {
     'Normalized Confusion Matrix': np.nan,
 }
 
+# Set random seed
+random_state = 42
+random.seed(random_state)
+np.random.seed(random_state)
+torch.manual_seed(random_state)
+cores = multiprocessing.cpu_count()
 # Transformer variables
 max_length = 512
 returned_tensor = 'pt'
