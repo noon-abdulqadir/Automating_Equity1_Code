@@ -652,6 +652,15 @@ alpha = 0.050
 normality_tests_labels = ['Statistic', 'p-value']
 ngrams_list=[1, 2, 3, 123]
 embedding_libraries_list = ['spacy', 'nltk', 'gensim']
+dvs = [
+    'Warmth', 'Competence',
+]
+dvs_all = [
+    'Warmth', 'Competence', 'Warmth_Probability', 'Competence_Probability',
+]
+dvs_prob = [
+    'Warmth_Probability', 'Competence_Probability',
+]
 ivs = ['Gender', 'Age']
 ivs_all = [
     'Gender',
@@ -745,15 +754,6 @@ gender_order = ['Female', 'Mixed Gender', 'Male']
 age_order = ['Older', 'Mixed Age', 'Younger']
 platform_order = ['LinkedIn', 'Indeed', 'Glassdoor']
 ivs_dict = {'Gender': gender_order, 'Age': age_order}
-dvs = [
-    'Warmth', 'Competence',
-]
-dvs_all = [
-    'Warmth', 'Competence', 'Warmth_Probability', 'Competence_Probability',
-]
-dvs_prob = [
-    'Warmth_Probability', 'Competence_Probability',
-]
 cat_list = [
     'Job ID',
     'Gender',
@@ -940,3 +940,29 @@ def get_df_info(df, ivs_all=None):
             print(f'{iv} not available.')
 
     print('\n')
+
+# Function to order categories
+def categorize_df_gender_age(df, gender_order=None, age_order=None, ivs=None):
+    if gender_order is None:
+        gender_order = ['Female', 'Mixed Gender', 'Male']
+    if age_order is None:
+        age_order = ['Older', 'Mixed Age', 'Younger']
+    if ivs is None:
+        ivs = ['Gender', 'Age']
+    # Arrange Categories
+    for iv in ivs:
+        if iv == 'Gender':
+            order = gender_order
+        elif iv == 'Age':
+            order = age_order
+        try:
+            df[iv] = df[iv].astype('category').cat.reorder_categories(order, ordered=True)
+
+            df[iv] = pd.Categorical(
+                df[iv], categories=order, ordered=True
+            )
+            df[f'{iv}_Num'] = pd.to_numeric(df[iv].cat.codes).astype('int64')
+        except ValueError as e:
+            print(e)
+
+    return df
