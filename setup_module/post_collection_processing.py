@@ -441,14 +441,14 @@ def dummy_code_df_gender_age(df, print_info=False, args=get_args()):
     df.loc[df['Age'] == 'Young', ['Age_Num']] = 3
 
     if print_info is True:
-        df_gender_age_info(df)
+        get_df_info(df)
 
     return df
 
 
 # %%
-# Funtion to print df gender and age info
-def df_gender_age_info(
+# Funtion to print df gender and age info (also for warmth and competence)
+def get_df_info(
     df,
     ivs_all=ivs_all,
 ):
@@ -461,17 +461,17 @@ def df_gender_age_info(
             print('='*20)
             print(f'{iv}:')
             print('-'*20)
-            print(f'{iv} Counts:\n{df[f"{iv}"].value_counts()}')
+            print(f'{iv} Counts:\n{df[iv].value_counts()}')
             print('-'*20)
             print(
-                f'{iv} Percentages:\n{df[f"{iv}"].value_counts(normalize=True).mul(100).round(1).astype(float)}')
+                f'{iv} Percentages:\n{df[iv].value_counts(normalize=True).mul(100).round(1).astype(float)}')
             try:
                 print('-'*20)
                 print(
-                    f'{iv} Mean: {df[f"{iv}"].mean().round(2).astype(float)}')
+                    f'{iv} Mean: {df[iv].mean().round(2).astype(float)}')
                 print('-'*20)
                 print(
-                    f'{iv} Standard Deviation: {df[f"{iv}"].std().round(2).astype(float)}')
+                    f'{iv} Standard Deviation: {df[iv].std().round(2).astype(float)}')
             except Exception:
                 pass
         except Exception:
@@ -481,7 +481,7 @@ def df_gender_age_info(
 
 
 # %%
-# Funtion to print df gender and age info
+# Funtion to print df gender and age info (also for warmth and competence)
 def df_warm_comp_info(
     df, dvs_all=['Warmth', 'Warmth_Probability', 'Competence', 'Competence_Probability'], print_info=False,
 ):

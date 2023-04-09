@@ -28,7 +28,7 @@ sys.path.append(code_dir)
 # %%
 from setup_module.imports import * # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 from supervised_estimators_get_pipe import * # type:ignore # isort:skip # fmt:skip # noqa # nopep8
-method = 'Supervised'
+
 
 
 # %% [markdown]
@@ -101,12 +101,6 @@ device = torch.device('mps') if torch.has_mps and torch.backends.mps.is_built() 
 ) else torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 device_name = str(device.type)
 print(f'Using {device_name.upper()}')
-# Set random seed
-random.seed(random_state)
-np.random.seed(random_state)
-torch.manual_seed(random_state)
-DetectorFactory.seed = random_state
-cores = multiprocessing.cpu_count()
 
 # Plotting variables
 pp = pprint.PrettyPrinter(indent=4)
@@ -815,7 +809,7 @@ for col in tqdm.tqdm(analysis_columns):
         )
 
 # Assert that all classifiers were used
-assert_all_classifiers_used()
+# assert_all_classifiers_used(classifiers_pipe=classifiers_pipe)
 print('#'*40)
 print('DONE!')
 print('#'*40)
