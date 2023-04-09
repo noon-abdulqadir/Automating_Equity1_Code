@@ -31,6 +31,7 @@ from setup_module.imports import *  # type:ignore # isort:skip # fmt:skip # noqa
 # ### READ DATA
 
 # %%
+
 # Variables
 t = time.time()
 n_jobs = -1
@@ -93,13 +94,6 @@ device = torch.device('mps') if torch.has_mps and torch.backends.mps.is_built() 
 device_name = str(device.type)
 print(f'Using {device_name.upper()}')
 
-# Set random seed
-random.seed(random_state)
-np.random.seed(random_state)
-DetectorFactory.seed = random_state
-# torch.manual_seed(random_state)
-torch.Generator(device_name).manual_seed(random_state)
-cores = multiprocessing.cpu_count()
 accelerator = Accelerator()
 torch.autograd.set_detect_anomaly(True)
 os.environ.get('TOKENIZERS_PARALLELISM')

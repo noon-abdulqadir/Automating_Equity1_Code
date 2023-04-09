@@ -476,6 +476,9 @@ table_save_path = f'{data_dir}output tables/'
 plot_save_path = f'{data_dir}plots/'
 
 # %%
+
+
+# %%
 # Set LM settings
 # Preprocessing
 # NLTK variables
@@ -581,12 +584,6 @@ device = torch.device('mps') if torch.has_mps and torch.backends.mps.is_built() 
 ) else torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 device_name = str(device.type)
 print(f'Using {device_name.upper()}')
-# Set random seed
-random.seed(random_state)
-np.random.seed(random_state)
-torch.manual_seed(random_state)
-DetectorFactory.seed = random_state
-cores = multiprocessing.cpu_count()
 accelerator = Accelerator()
 torch.autograd.set_detect_anomaly(True)
 os.environ.get('TOKENIZERS_PARALLELISM')
@@ -691,7 +688,7 @@ ivs_age_count = [
     'Age_Younger_n',
 ]
 ivs_perc = [
-    'Gender_Female_% per Sector'
+    'Gender_Female_% per Sector',
     'Gender_Male_% per Sector',
     'Age_Older_% per Sector',
     'Age_Younger_% per Sector',
@@ -904,3 +901,42 @@ keyword_trans_dict = {
 #     json.dump(keyword_trans_dict, f)
 
 # %%
+# Commonly used functions
+## Funtion to print df gender and age info (also for warmth and competence)
+def get_df_info(df, ivs_all=None):
+    if ivs_all is None:
+        ivs_all = [
+            'Gender',
+            'Gender_Num',
+            'Gender_Female',
+            'Gender_Mixed',
+            'Gender_Male',
+            'Age',
+            'Age_Num',
+            'Age_Older',
+            'Age_Mixed',
+            'Age_Younger',
+        ]
+    # Print Info
+    print('\nDF INFO:\n')
+    df.info()
+
+    for iv in ivs_all:
+        try:
+            print('='*20)
+            print(f'{iv}:')
+            print('-'*20)
+            print(f'{iv} Counts:\n{df[iv].value_counts()}')
+            print('-'*20)
+            print(f'{iv} Percentages:\n{df[iv].value_counts(normalize=True).mul(100).round(1).astype(float)}')
+            try:
+                print('-'*20)
+                print(f'{iv} Mean: {df[iv].mean().round(2).astype(float)}')
+                print('-'*20)
+                print(f'{iv} Standard Deviation: {df[iv].std().round(2).astype(float)}')
+            except Exception:
+                pass
+        except Exception:
+            print(f'{iv} not available.')
+
+    print('\n')

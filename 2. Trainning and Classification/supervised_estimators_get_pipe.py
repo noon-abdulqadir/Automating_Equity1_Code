@@ -31,6 +31,7 @@ from setup_module.imports import *  # type:ignore # isort:skip # fmt:skip # noqa
 # ### READ DATA
 
 # %%
+
 # Variables
 # Sklearn variables
 method = 'Supervised'
@@ -95,12 +96,6 @@ device = torch.device('mps') if torch.has_mps and torch.backends.mps.is_built() 
 ) else torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 device_name = str(device.type)
 print(f'Using {device_name.upper()}')
-# Set random seed
-random.seed(random_state)
-np.random.seed(random_state)
-torch.manual_seed(random_state)
-DetectorFactory.seed = random_state
-cores = multiprocessing.cpu_count()
 accelerator = Accelerator()
 torch.autograd.set_detect_anomaly(True)
 os.environ.get('TOKENIZERS_PARALLELISM')
