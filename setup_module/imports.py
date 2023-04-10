@@ -242,7 +242,7 @@ try:
     from selenium.webdriver.support import expected_conditions as EC
     from selenium.webdriver.support.ui import Select, WebDriverWait
     from sklearn import feature_selection, linear_model, metrics, set_config, svm, utils
-    from sklearn.base import BaseEstimator, TransformerMixin
+    from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
     from sklearn.calibration import CalibratedClassifierCV, CalibrationDisplay
     from sklearn.compose import ColumnTransformer
     from sklearn.datasets import (
@@ -357,6 +357,7 @@ try:
     )
     from sklearn.utils.class_weight import compute_class_weight
     from sklearn.utils.estimator_checks import check_estimator
+    from sklearn.utils.metaestimators import available_if
     from sklearn.utils.validation import (
         check_is_fitted,
         column_or_1d,

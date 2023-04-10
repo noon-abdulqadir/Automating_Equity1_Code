@@ -571,7 +571,8 @@ def assert_all_classifiers_used(
         classifier_name = estimator_path.split(f'{results_save_path}{method} ')[1].split(' + ')[1].split(' (Save_protocol=')[0]
         used_classifiers.append(classifier_name)
 
-    assert set(classifiers_pipe.keys()) == set(used_classifiers), 'Not all classifiers were used!'
+    assert set(list(classifiers_pipe.keys())) == set(used_classifiers), f'Not all classifiers were used!\nAvaliable Classifiers:\n{set(list(classifiers_pipe.keys()))}\nUsed Classifiers:\n{set(used_classifiers)}\nLeftout Classifiers:\n{set(list(classifiers_pipe.keys())) ^ set(used_classifiers)}'
+    print('All classifiers were used!')
 
 
 # %% [markdown]
@@ -810,7 +811,7 @@ for col in tqdm.tqdm(analysis_columns):
         )
 
 # # Assert that all classifiers were used
-# assert_all_classifiers_used(classifiers_pipe=classifiers_pipe)
+assert_all_classifiers_used(classifiers_pipe=classifiers_pipe)
 print('#'*40)
 print('DONE!')
 print('#'*40)
