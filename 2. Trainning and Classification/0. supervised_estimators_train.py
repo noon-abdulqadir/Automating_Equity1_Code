@@ -29,14 +29,13 @@ sys.path.append(code_dir)
 from setup_module.imports import * # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 from supervised_estimators_get_pipe import * # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 
+
 # %% [markdown]
 # ### Set variables
 
 # %%
 # Variables
 method = 'Supervised'
-classifiers_list = classifiers_list_nonlinear
-classifiers_pipe = classifiers_pipe_nonlinear
 results_save_path = f'{models_save_path}{method} Results/'
 done_xy_save_path = f'{results_save_path}Search+Xy/'
 t = time.time()
@@ -99,6 +98,12 @@ device = torch.device('mps') if torch.has_mps and torch.backends.mps.is_built() 
 ) else torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 device_name = str(device.type)
 print(f'Using {device_name.upper()}')
+# Set random seed
+random_state = 42
+random.seed(random_state)
+np.random.seed(random_state)
+torch.manual_seed(random_state)
+cores = multiprocessing.cpu_count()
 
 # Plotting variables
 pp = pprint.PrettyPrinter(indent=4)
@@ -808,7 +813,7 @@ for col in tqdm.tqdm(analysis_columns):
             col, vectorizer_name, classifier_name,
         )
 
-# # Assert that all classifiers were used
+# Assert that all classifiers were used
 assert_all_classifiers_used(classifiers_pipe=classifiers_pipe)
 print('#'*40)
 print('DONE!')

@@ -431,7 +431,7 @@ et = make_pipe_list(et_, et_params)
 gbc_ = GradientBoostingClassifier()
 gbc_params = {
     'random_state': [random_state],
-    'loss': ['squared_error', 'absolute_error', 'huber', 'quantile'],
+    'loss': ['log_loss', 'deviance', 'exponential'],
     # 'max_features': ['auto'],
 }
 gbc = make_pipe_list(gbc_, gbc_params)
@@ -457,31 +457,31 @@ mlpc_params = {
 }
 mlpc = make_pipe_list(mlpc_, mlpc_params)
 
-# AdaBoostClassifier
-ada_ = AdaBoostClassifier()
-ada_params = {
-    'random_state': [random_state],
-    'n_estimators': [50, 100, 150],
-    'learning_rate': [0.01, 0.1, 0.5, 1],
-    'algorithm': ['SAMME', 'SAMME.R'],
-    'estimator': [
-        SVC(probability=True, kernel='linear'),
-        LogisticRegression(),
-        MultinomialNB(),
-    ],
-}
-ada = make_pipe_list(ada_, ada_params)
+# # AdaBoostClassifier
+# ada_ = AdaBoostClassifier()
+# ada_params = {
+#     'random_state': [random_state],
+#     'n_estimators': [50, 100, 150],
+#     'learning_rate': [0.01, 0.1, 0.5, 1],
+#     'algorithm': ['SAMME', 'SAMME.R'],
+#     'estimator': [
+#         SVC(probability=True, kernel='linear'),
+#         LogisticRegression(),
+#         MultinomialNB(),
+#     ],
+# }
+# ada = make_pipe_list(ada_, ada_params)
 
 # Classifiers List
 classifier_ignore_list = [
-    et, bnb, gnb, sgd,
-]
-classifiers_list = [
-    dummy, knn, lr, svm, dt, svm, rf, xgb, mlpc, pa, ptron, et, bnb, gnb, sgd, svc, gbc
+    et, bnb, gnb,
 ]
 classifiers_list_all = [
+    dummy, knn, lr, svm, dt, rf, xgb, mlpc, pa, ptron, sgd, svc, gbc, et, bnb, gnb,
+]
+classifiers_list = [
     classifier_and_params
-    for classifier_and_params in classifiers_list
+    for classifier_and_params in classifiers_list_all
     if classifier_and_params not in classifier_ignore_list
 ]
 classifiers_list_linear = [
@@ -490,70 +490,121 @@ classifiers_list_linear = [
 classifiers_list_nonlinear = [
     classifier_and_params
     for classifier_and_params in classifiers_list_all
-    if classifier_and_params not in classifiers_list_linear
+    if classifier_and_params not in classifier_ignore_list
+    and classifier_and_params not in classifiers_list_linear
 ]
 
 # Classifiers Dict
 # All
-classifiers_pipe_all = {
+classifiers_pipe = {
     classifier_and_params[0].__class__.__name__: classifier_and_params
-    for classifier_and_params in classifiers_list_all
+    for classifier_and_params in classifiers_list
+    if classifier_and_params not in classifier_ignore_list
 }
 ## Linear
 classifiers_pipe_linear = {
     classifier_and_params[0].__class__.__name__: classifier_and_params
     for classifier_and_params in classifiers_list_linear
+    if classifier_and_params not in classifier_ignore_list
 }
 # Nonlinear
 classifiers_pipe_nonlinear = {
     classifier_and_params[0].__class__.__name__: classifier_and_params
     for classifier_and_params in classifiers_list_nonlinear
+    if classifier_and_params not in classifier_ignore_list
 }
 
 # Ensemble Classifiers
-# Estimators for Ensemble Classifiers
+# Voting Classifier
+## Estimators for VotingClassifier
 voting_estimators = [
     (classifier_and_params[0].__class__.__name__,
     classifier_and_params[0].set_params(**{key.replace(f'{classifier_and_params[0].__class__.__name__}__', ''): value[0]
     for key, value in classifier_and_params[1].items()}))
-    for classifier_and_params in classifiers_list_all
-    if hasattr(classifier_and_params[0], 'fit')
+    for classifier_and_params in classifiers_list
+    if classifier_and_params not in classifier_ignore_list
+    and hasattr(classifier_and_params[0], 'fit')
     and hasattr(classifier_and_params[0], 'predict')
     and hasattr(classifier_and_params[0], 'predict_proba')
 ]
-# Voting Classifier
+voting_ = VotingClassifier(estimators=voting_estimators)
 voting_params = {
     'voting': ['soft'],
-    'estimators': [voting_estimators],
+    # 'estimators': [voting_estimators],
 }
-voting_ = VotingClassifier(estimators=voting_estimators)
 voting = make_pipe_list(voting_, voting_params)
 
+# AdaBoostClassifier for VotingClassifier
+ada_voting_estimators = [
+    classifier_and_params
+    for classifier_and_params in voting_estimators
+    if 'sample_weight' in inspect.getfullargspec(classifier_and_params[1].fit)[0]
+]
+ada_voting_estimators_params = {
+    key.replace(f'{voting[0].__class__.__name__}__', ''): value[0]
+    for key, value in voting[1].items()
+}
+ada_voting_ = AdaBoostClassifier(estimator=VotingClassifier(ada_voting_estimators).set_params(**ada_voting_estimators_params))
+ada_voting_params = {
+    'random_state': [random_state],
+    'n_estimators': [50, 100, 150],
+    'learning_rate': [0.01, 0.1, 0.5, 1],
+    'algorithm': ['SAMME', 'SAMME.R'],
+}
+ada_voting = make_pipe_list(ada_voting_, ada_voting_params)
+
 # Stacking Classifier
+## Estimators for VotingClassifier
 stacking_estimators = [
     (classifier_and_params[0].__class__.__name__,
     classifier_and_params[0].set_params(**{key.replace(f'{classifier_and_params[0].__class__.__name__}__', ''): value[0]
     for key, value in classifier_and_params[1].items()}))
-    for classifier_and_params in classifiers_list_all
-    if hasattr(classifier_and_params[0], 'predict_proba')
+    for classifier_and_params in classifiers_list
+    if classifier_and_params not in classifier_ignore_list
+    and hasattr(classifier_and_params[0], 'predict_proba')
     and hasattr(classifier_and_params[0], 'decision_function')
-
 ]
+stacking_ = StackingClassifier(estimators=stacking_estimators)
 stacking_params = {
     'stack_method': ['auto', 'predict_proba', 'decision_function', 'predict'],
     'passthrough': [True, False],
-    'estimators': [stacking_estimators],
+    # 'estimators': [stacking_estimators],
 }
-stacking_ = StackingClassifier(estimators=stacking_estimators)
 stacking = make_pipe_list(stacking_, stacking_params)
+
+# AdaBoostClassifier for StackingClassifier
+ada_stacking_estimators = [
+    classifier_and_params
+    for classifier_and_params in stacking_estimators
+    if 'sample_weight' in inspect.getfullargspec(classifier_and_params[1].fit)[0]
+]
+ada_stacking_estimators_params = {
+    key.replace(f'{stacking[0].__class__.__name__}__', ''): value[0]
+    for key, value in stacking[1].items()
+}
+ada_stacking_ = AdaBoostClassifier(estimator=StackingClassifier(ada_stacking_estimators).set_params(**ada_stacking_estimators_params))
+ada_stacking_params = {
+    'random_state': [random_state],
+    'n_estimators': [50, 100, 150],
+    'learning_rate': [0.01, 0.1, 0.5, 1],
+    'algorithm': ['SAMME', 'SAMME.R'],
+}
+ada_stacking = make_pipe_list(ada_stacking_, ada_stacking_params)
 
 # Ensemble Classifiers
 classifiers_list_ensemble = [
     voting,
-    stacking
+    stacking,
+    ada_voting,
+    # ada_stacking,
 ]
 classifiers_pipe_ensemble = {
     classifier_and_params[0].__class__.__name__: classifier_and_params
     for classifier_and_params in classifiers_list_ensemble
 }
+
+# Add Ensemble Classifiers to Classifiers List and Dict
+classifiers_list.extend(classifiers_list_ensemble)
+classifiers_pipe |= classifiers_pipe_ensemble
+
 # %%
