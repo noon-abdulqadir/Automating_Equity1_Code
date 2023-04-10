@@ -30,7 +30,6 @@ from setup_module.imports import * # type:ignore # isort:skip # fmt:skip # noqa 
 from supervised_estimators_get_pipe import * # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 
 
-
 # %% [markdown]
 # ### Set variables
 
@@ -101,6 +100,12 @@ device = torch.device('mps') if torch.has_mps and torch.backends.mps.is_built() 
 ) else torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 device_name = str(device.type)
 print(f'Using {device_name.upper()}')
+# Set random seed
+random_state = 42
+random.seed(random_state)
+np.random.seed(random_state)
+torch.manual_seed(random_state)
+cores = multiprocessing.cpu_count()
 
 # Plotting variables
 pp = pprint.PrettyPrinter(indent=4)
@@ -543,16 +548,21 @@ def save_Xy_search_cv_estimator(
     print('='*20)
     for file_name, file_ in data_dict.items():
         save_path = done_xy_save_path if file_name != 'Estimator' else results_save_path
-        print(f'Saving {file_name} at {save_path}')
-        if not isinstance(file_, pd.DataFrame) and file_name == 'Estimator' and 'df_' not in file_name:
-            with open(
-                f'{save_path}{method} {file_name}{path_suffix}', 'wb'
-            ) as f:
-                joblib.dump(file_, f, compress=compression, protocol=protocol)
-        elif isinstance(file_, pd.DataFrame) and file_name != 'Estimator' and 'df_' in file_name:
+        if file_name == 'Estimator' and 'df_' not in file_name:
+            if classifier_name != 'XGBClassifier':
+                with open(
+                    f'{save_path}{method} {file_name}{path_suffix}', 'wb'
+                ) as f:
+                    joblib.dump(file_, f, compress=compression, protocol=protocol)
+            else:
+                file_.save_model(
+                    f'{save_path}{method} {file_name}{path_suffix.replace('pkl', 'json')}'
+                )
+        elif file_name != 'Estimator' and 'df_' in file_name:
             file_.to_pickle(
                 f'{save_path}{method} {file_name}{path_suffix}', protocol=protocol
             )
+        print(f'Saved {file_name} at {save_path}')
     print(f'Done saving Xy, CV data, and estimator!\n{list(data_dict.keys())}')
     print('='*20)
 
@@ -810,7 +820,7 @@ for col in tqdm.tqdm(analysis_columns):
             col, vectorizer_name, classifier_name,
         )
 
-# # Assert that all classifiers were used
+# Assert that all classifiers were used
 assert_all_classifiers_used(classifiers_pipe=classifiers_pipe)
 print('#'*40)
 print('DONE!')

@@ -338,7 +338,7 @@ class SpecificationCurve:
 
 # [docs]
     def plot(
-        self, save_path=None, pretty_plots: bool = True, preferred_spec: List[None] = [], show_plot: bool = True, return_fig=False, plot_title=None
+        self, save_path=None, pretty_plots: bool = True, preferred_spec: List[None] = [], show_plot: bool = True, plot_title=None, return_fig: bool = False
     ) -> None:
         """Makes plots of fitted specification curve.
 
@@ -347,8 +347,8 @@ class SpecificationCurve:
             pretty_plots (bool, optional): whether to use this package's figure formatting. Defaults to True.
             preferred_spec (list, optional): preferred specification. Defaults to [].
             show_plot (bool, optional): whether to show the plot. Defaults to True.
-            return_fig (bool, optional): whether to return the figure. Defaults to False.
             plot_title (_type_, optional): title of the plot. Defaults to None.
+            return_fig (bool, optional): whether to return the figure. Defaults to False.
         """
         if pretty_plots:
             _pretty_plots()
@@ -546,10 +546,10 @@ class SpecificationCurve:
             plt.savefig(save_path, dpi=300)
         if show_plot:
             plt.show()
-        if return_fig:
-            return fig
         if plot_title is not None:
             fig.suptitle(plot_title)
+        if return_fig:
+            return fig
 
 
 

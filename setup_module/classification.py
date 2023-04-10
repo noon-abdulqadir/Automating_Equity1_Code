@@ -1561,7 +1561,6 @@ def optimization(
         plt.ylabel('True Positive Rate')
         plt.xlabel('False Positive Rate')
         # plt.savefig('roccurve.svg', bbox_inches='tight')
-        plt.show()
         metrics.plot_roc_curve(classifier, X_test, y_test)
         plt.show()
 

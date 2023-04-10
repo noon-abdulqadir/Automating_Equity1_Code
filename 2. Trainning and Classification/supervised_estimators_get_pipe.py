@@ -515,6 +515,18 @@ classifiers_pipe_nonlinear = {
 }
 
 # Ensemble Classifiers
+ada_params = {
+    'random_state': [random_state],
+    'n_estimators': [50, 100, 150],
+    'learning_rate': [0.01, 0.1, 0.5, 1],
+    'algorithm': ['SAMME', 'SAMME.R'],
+}
+bagging_params = {
+    'random_state': [random_state],
+    'n_estimators': [50, 100, 150],
+    'max_samples': [0.5, 1.0],
+    'max_features': [0.5, 1.0],
+}
 # Voting Classifier
 ## Estimators for VotingClassifier
 voting_estimators = [
@@ -523,6 +535,7 @@ voting_estimators = [
     for key, value in classifier_and_params[1].items()}))
     for classifier_and_params in classifiers_list
     if classifier_and_params not in classifier_ignore_list
+    and classifier_and_params[0].__class__.__name__ != 'DummyClassifier'
     and hasattr(classifier_and_params[0], 'fit')
     and hasattr(classifier_and_params[0], 'predict')
     and hasattr(classifier_and_params[0], 'predict_proba')
@@ -554,6 +567,20 @@ ada_voting_params = {
 }
 ada_voting = make_pipe_list(ada_voting_, ada_voting_params)
 
+# BaggingClassifier for VotingClassifier
+bagging_voting_estimators = [
+    classifier_and_params
+    for classifier_and_params in voting_estimators
+    if classifier_and_params[0] != 'DummyClassifier'
+    and 'sample_weight' in inspect.getfullargspec(classifier_and_params[1].fit)[0]
+]
+bagging_voting_estimators_params = {
+    key.replace(f'{voting[0].__class__.__name__}__', ''): value[0]
+    for key, value in voting[1].items()
+}
+bagging_voting_ = BaggingClassifier(estimator=VotingClassifier(bagging_voting_estimators).set_params(**bagging_voting_estimators_params))
+bagging_voting = make_pipe_list(bagging_voting_, bagging_params)
+
 # Stacking Classifier
 ## Estimators for VotingClassifier
 stacking_estimators = [
@@ -562,6 +589,7 @@ stacking_estimators = [
     for key, value in classifier_and_params[1].items()}))
     for classifier_and_params in classifiers_list
     if classifier_and_params not in classifier_ignore_list
+    and classifier_and_params[0].__class__.__name__ != 'DummyClassifier'
     and hasattr(classifier_and_params[0], 'predict_proba')
     and hasattr(classifier_and_params[0], 'decision_function')
 ]
@@ -584,13 +612,29 @@ ada_stacking_estimators_params = {
     for key, value in stacking[1].items()
 }
 ada_stacking_ = AdaBoostClassifier(estimator=StackingClassifier(ada_stacking_estimators).set_params(**ada_stacking_estimators_params))
-ada_stacking_params = {
+ada_stacking = make_pipe_list(ada_stacking_, ada_params)
+
+# BaggingClassifier for StackingClassifier
+bagging_stacking_estimators = [
+    classifier_and_params
+    for classifier_and_params in stacking_estimators
+    if classifier_and_params[0] != 'DummyClassifier'
+    and 'sample_weight' in inspect.getfullargspec(classifier_and_params[1].fit)[0]
+]
+bagging_stacking_estimators_params = {
+    key.replace(f'{stacking[0].__class__.__name__}__', ''): value[0]
+    for key, value in stacking[1].items()
+}
+bagging_stacking_ = BaggingClassifier(estimator=StackingClassifier(bagging_stacking_estimators).set_params(**bagging_stacking_estimators_params))
+bagging_stacking_params = {
     'random_state': [random_state],
     'n_estimators': [50, 100, 150],
-    'learning_rate': [0.01, 0.1, 0.5, 1],
-    'algorithm': ['SAMME', 'SAMME.R'],
+    'max_samples': [0.5, 0.75, 1],
+    'max_features': [0.5, 0.75, 1],
+    'bootstrap': [True, False],
+    'bootstrap_features': [True, False],
 }
-ada_stacking = make_pipe_list(ada_stacking_, ada_stacking_params)
+bagging_stacking = make_pipe_list(bagging_stacking_, bagging_params)
 
 # Ensemble Classifiers
 classifiers_list_ensemble = [
@@ -598,6 +642,8 @@ classifiers_list_ensemble = [
     stacking,
     ada_voting,
     # ada_stacking,
+    bagging_voting,
+    # bagging_stacking,
 ]
 classifiers_pipe_ensemble = {
     classifier_and_params[0].__class__.__name__: classifier_and_params
