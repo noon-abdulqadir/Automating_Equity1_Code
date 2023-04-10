@@ -431,7 +431,7 @@ et = make_pipe_list(et_, et_params)
 gbc_ = GradientBoostingClassifier()
 gbc_params = {
     'random_state': [random_state],
-    'loss': ['log_loss', 'deviance', 'exponential'],
+    'loss': ['squared_error', 'absolute_error', 'huber', 'quantile'],
     # 'max_features': ['auto'],
 }
 gbc = make_pipe_list(gbc_, gbc_params)
