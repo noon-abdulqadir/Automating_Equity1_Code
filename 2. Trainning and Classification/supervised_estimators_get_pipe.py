@@ -457,18 +457,6 @@ mlpc_params = {
 }
 mlpc = make_pipe_list(mlpc_, mlpc_params)
 
-# MLP Regressor
-mlpr_ = MLPRegressor()
-mlpr_params = {
-    'hidden_layer_sizes': [(100,), (50,), (25,), (10,), (5,), (1,)],
-    'activation': ['identity', 'logistic', 'tanh', 'relu'],
-    'solver': ['sgd', 'adam'],#['lbfgs', 'sgd', 'adam'],
-    'learning_rate': ['constant', 'invscaling', 'adaptive'],
-    'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
-    'random_state': [random_state],
-}
-mlpr = make_pipe_list(mlpr_, mlpr_params)
-
 # AdaBoostClassifier
 ada_ = AdaBoostClassifier()
 ada_params = {
@@ -489,7 +477,7 @@ classifier_ignore_list = [
     et, bnb, gnb, sgd,
 ]
 classifiers_list = [
-    dummy, knn, lr, svm, dt, svm, rf, xgb, mlpc, mlpr, pa, ptron, et, bnb, gnb, sgd, svc, gbc
+    dummy, knn, lr, svm, dt, svm, rf, xgb, mlpc, pa, ptron, et, bnb, gnb, sgd, svc, gbc
 ]
 classifiers_list_all = [
     classifier_and_params
@@ -497,7 +485,7 @@ classifiers_list_all = [
     if classifier_and_params not in classifier_ignore_list
 ]
 classifiers_list_linear = [
-    lr, svm, svc, sgd, pa, ptron, mlpc, mlpr, gbc,
+    lr, svm, svc, sgd, pa, ptron, mlpc, gbc,
 ]
 classifiers_list_nonlinear = [
     classifier_and_params
@@ -525,8 +513,6 @@ classifiers_pipe_nonlinear = {
 # Ensemble Classifiers
 # Estimators for Ensemble Classifiers
 voting_estimators = [
-    # classifier_and_params[0].set_params(**{key.replace(f'{classifier_and_params[0].__class__.__name__}__', ''): value[0]
-    # for key, value in classifier_and_params[1].items()})
     (classifier_and_params[0].__class__.__name__,
     classifier_and_params[0].set_params(**{key.replace(f'{classifier_and_params[0].__class__.__name__}__', ''): value[0]
     for key, value in classifier_and_params[1].items()}))
@@ -534,9 +520,6 @@ voting_estimators = [
     if hasattr(classifier_and_params[0], 'fit')
     and hasattr(classifier_and_params[0], 'predict')
     and hasattr(classifier_and_params[0], 'predict_proba')
-    # and hasattr(classifier_and_params[0], 'decision_function')
-    # and classifier_and_params[0].__class__.__name__ != 'MLPRegressor'
-    # and classifier_and_params[0].__class__.__name__ != 'MLPClassifier'
 ]
 # Voting Classifier
 voting_params = {
@@ -548,18 +531,13 @@ voting = make_pipe_list(voting_, voting_params)
 
 # Stacking Classifier
 stacking_estimators = [
-    # classifier_and_params[0].set_params(**{key.replace(f'{classifier_and_params[0].__class__.__name__}__', ''): value[0]
-    # for key, value in classifier_and_params[1].items()})
     (classifier_and_params[0].__class__.__name__,
     classifier_and_params[0].set_params(**{key.replace(f'{classifier_and_params[0].__class__.__name__}__', ''): value[0]
     for key, value in classifier_and_params[1].items()}))
     for classifier_and_params in classifiers_list_all
-    # if hasattr(classifier_and_params[0], 'fit')
-    # and hasattr(classifier_and_params[0], 'predict')
     if hasattr(classifier_and_params[0], 'predict_proba')
     and hasattr(classifier_and_params[0], 'decision_function')
-    # and classifier_and_params[0].__class__.__name__ != 'MLPRegressor'
-    # and classifier_and_params[0].__class__.__name__ != 'MLPClassifier'
+
 ]
 stacking_params = {
     'stack_method': ['auto', 'predict_proba', 'decision_function', 'predict'],
