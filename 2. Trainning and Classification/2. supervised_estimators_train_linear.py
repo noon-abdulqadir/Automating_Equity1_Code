@@ -556,7 +556,7 @@ def save_Xy_search_cv_estimator(
                     joblib.dump(file_, f, compress=compression, protocol=protocol)
             else:
                 file_.save_model(
-                    f'{save_path}{method} {file_name}{path_suffix.replace('pkl', 'json')}'
+                    f'{save_path}{method} {file_name}{path_suffix.replace("pkl", "json")}'
                 )
         elif file_name != 'Estimator' and 'df_' in file_name:
             file_.to_pickle(
