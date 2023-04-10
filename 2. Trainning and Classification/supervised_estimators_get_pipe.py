@@ -538,7 +538,8 @@ voting = make_pipe_list(voting_, voting_params)
 ada_voting_estimators = [
     classifier_and_params
     for classifier_and_params in voting_estimators
-    if 'sample_weight' in inspect.getfullargspec(classifier_and_params[1].fit)[0]
+    if classifier_and_params[0] != 'DummyClassifier'
+    and 'sample_weight' in inspect.getfullargspec(classifier_and_params[1].fit)[0]
 ]
 ada_voting_estimators_params = {
     key.replace(f'{voting[0].__class__.__name__}__', ''): value[0]
@@ -576,7 +577,7 @@ stacking = make_pipe_list(stacking_, stacking_params)
 ada_stacking_estimators = [
     classifier_and_params
     for classifier_and_params in stacking_estimators
-    if 'sample_weight' in inspect.getfullargspec(classifier_and_params[1].fit)[0]
+    if classifier_and_params[0] != 'DummyClassifier' and 'sample_weight' in inspect.getfullargspec(classifier_and_params[1].fit)[0]
 ]
 ada_stacking_estimators_params = {
     key.replace(f'{stacking[0].__class__.__name__}__', ''): value[0]
@@ -596,7 +597,7 @@ classifiers_list_ensemble = [
     voting,
     stacking,
     ada_voting,
-    # ada_stacking,
+    ada_stacking,
 ]
 classifiers_pipe_ensemble = {
     classifier_and_params[0].__class__.__name__: classifier_and_params

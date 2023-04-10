@@ -775,6 +775,28 @@ cat_list = [
     'English Requirement',
     'Dutch Requirement'
 ]
+controls = [
+        '% Sector per Workforce',
+        'Job Description num_words',
+        'English Requirement', 'Dutch Requirement',
+        # 'Platform',
+        # 'Platform_LinkedIn', 'Platform_Indeed', 'Platform_Glassdoor',
+        # 'Job Description num_unique_words',
+        # 'Job Description num_chars',
+        # 'Job Description num_chars_no_whitespact_and_punt',
+        # 'Industry', 'Sector_n',
+]
+
+# n_grams_counts = []
+# for embedding_library, ngram_num in tqdm_product(embedding_libraries_list, ngrams_list):
+#     controls.extend(
+#         [
+#             f'Job Description {embedding_library}_{ngram_num}grams_count',
+#             f'Job Description {embedding_library}_{ngram_num}grams_abs_word_freq',
+#             f'Job Description {embedding_library}_{ngram_num}grams_abs_word_perc',
+#             f'Job Description {embedding_library}_{ngram_num}grams_abs_word_perc_cum'
+#         ]
+#     )
 
 # %%
 # Fix Keywords
