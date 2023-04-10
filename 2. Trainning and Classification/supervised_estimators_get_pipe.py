@@ -450,7 +450,7 @@ mlpc_ = MLPClassifier()
 mlpc_params = {
     'hidden_layer_sizes': [(100,), (50,), (25,), (10,), (5,), (1,)],
     'activation': ['identity', 'logistic', 'tanh', 'relu'],
-    'solver': ['lbfgs', 'sgd', 'adam'],
+    'solver': ['sgd', 'adam'],#['lbfgs', 'sgd', 'adam'],
     'learning_rate': ['constant', 'invscaling', 'adaptive'],
     'random_state': [random_state],
     'max_iter': [700000, 800000, 900000, 1000000, 1100000, 1200000, 1300000],
@@ -462,7 +462,7 @@ mlpr_ = MLPRegressor()
 mlpr_params = {
     'hidden_layer_sizes': [(100,), (50,), (25,), (10,), (5,), (1,)],
     'activation': ['identity', 'logistic', 'tanh', 'relu'],
-    'solver': ['lbfgs', 'sgd', 'adam'],
+    'solver': ['sgd', 'adam'],#['lbfgs', 'sgd', 'adam'],
     'learning_rate': ['constant', 'invscaling', 'adaptive'],
     'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
     'random_state': [random_state],

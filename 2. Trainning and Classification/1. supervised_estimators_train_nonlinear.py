@@ -807,7 +807,7 @@ for col in tqdm.tqdm(analysis_columns):
             col, vectorizer_name, classifier_name,
         )
 
-# Assert that all classifiers were used
+# # Assert that all classifiers were used
 # assert_all_classifiers_used(classifiers_pipe=classifiers_pipe)
 print('#'*40)
 print('DONE!')
