@@ -549,14 +549,14 @@ def save_Xy_search_cv_estimator(
     print('='*20)
     saved_files_list = []
     for file_name, file_ in data_dict.items():
-        print(f'Saving {file_name} at {save_path}')
         save_path = done_xy_save_path if file_name != 'Estimator' else results_save_path
+        print(f'Saving {file_name} at {save_path}')
         if 'df_' not in file_name:
             with open(
                 f'{save_path}{method} {file_name}{path_suffix}', 'wb'
             ) as f:
                 joblib.dump(file_, f, compress=compression, protocol=protocol)
-            saved_files.append(file_name)
+            saved_files_list.append(file_name)
         else:
             file_.to_pickle(
                 f'{save_path}{method} {file_name}{path_suffix}', protocol=protocol
