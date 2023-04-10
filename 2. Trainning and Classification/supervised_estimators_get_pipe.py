@@ -597,7 +597,7 @@ classifiers_list_ensemble = [
     voting,
     stacking,
     ada_voting,
-    ada_stacking,
+    # ada_stacking,
 ]
 classifiers_pipe_ensemble = {
     classifier_and_params[0].__class__.__name__: classifier_and_params
