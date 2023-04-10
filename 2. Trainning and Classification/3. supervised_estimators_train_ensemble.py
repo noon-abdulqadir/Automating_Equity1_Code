@@ -547,23 +547,23 @@ def save_Xy_search_cv_estimator(
 
     # Save files
     print('='*20)
+    saved_files_list = []
     for file_name, file_ in data_dict.items():
+        print(f'Saving {file_name} at {save_path}')
         save_path = done_xy_save_path if file_name != 'Estimator' else results_save_path
-        if file_name == 'Estimator' and 'df_' not in file_name:
-            if classifier_name != 'XGBClassifier':
-                with open(
-                    f'{save_path}{method} {file_name}{path_suffix}', 'wb'
-                ) as f:
-                    joblib.dump(file_, f, compress=compression, protocol=protocol)
-            else:
-                file_.save_model(
-                    f'{save_path}{method} {file_name}{path_suffix.replace("pkl", "json")}'
-                )
-        elif file_name != 'Estimator' and 'df_' in file_name:
+        if 'df_' not in file_name:
+            with open(
+                f'{save_path}{method} {file_name}{path_suffix}', 'wb'
+            ) as f:
+                joblib.dump(file_, f, compress=compression, protocol=protocol)
+            saved_files.append(file_name)
+        else:
             file_.to_pickle(
                 f'{save_path}{method} {file_name}{path_suffix}', protocol=protocol
             )
-        print(f'Saved {file_name} at {save_path}')
+            saved_files_list.append(file_name)
+
+    assert set(data_dict.keys()) == set(saved_files_list), f'Not all files were saved! Missing: {set(data_dict.keys()) ^ set(saved_files_list)}'
     print(f'Done saving Xy, CV data, and estimator!\n{list(data_dict.keys())}')
     print('='*20)
 
