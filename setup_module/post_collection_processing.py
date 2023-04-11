@@ -336,8 +336,6 @@ def clean_df(
             df_jobs.loc[(df_jobs['Search Keyword'] == str(
                 w_keyword)), 'Search Keyword'] = r_keyword
 
-    df_jobs = df_jobs.reset_index(drop=True)
-
     return df_jobs
 
 
@@ -385,24 +383,21 @@ def categorize_df_gender_age(
     df,
 ):
     # Arrange Categories
-    try:
+    with contextlib.suppress(ValueError):
         df['Gender'] = df['Gender'].astype(
             'category').cat.reorder_categories(gender_order, ordered=True)
 
         df['Gender'] = pd.Categorical(
             df['Gender'], categories=gender_order, ordered=True
         )
-    except ValueError as e:
-        print(e)
-    try:
+
+    with contextlib.suppress(ValueError):
         df['Age'] = df['Age'].astype(
             'category').cat.reorder_categories(age_order, ordered=True)
 
         df['Age'] = pd.Categorical(
             df['Age'], categories=age_order, ordered=True
         )
-    except ValueError as e:
-        print(e)
 
     return df
 
@@ -470,9 +465,11 @@ def get_df_info(df, ivs_all=None):
             print('='*20)
             print(f'{iv}:')
             print('-'*20)
-            print(f'{iv} Counts:\n{df[iv].value_counts()}')
-            print('-'*20)
-            print(f'{iv} Percentages:\n{df[iv].value_counts(normalize=True).mul(100).round(1).astype(float)}')
+            if len(df[iv].value_counts()) > 5:
+                print(f'{iv} Counts:\n{df[iv].value_counts()}')
+                print('-'*20)
+                print(f'{iv} Percentages:\n{df[iv].value_counts(normalize=True).mul(100).round(1).astype(float)}')
+                print('-'*20)
             min_val = df[iv].min()
             max_val = df[iv].max()
             if min_val not in [0, 1]:
@@ -488,7 +485,6 @@ def get_df_info(df, ivs_all=None):
             print(f'{iv} not available.')
 
     print('\n')
-
 
 
 # %%
@@ -892,7 +888,7 @@ def load_merge_dict_df(
         try:
             jobs_from_df_old_jobs = df_old_jobs.reset_index().to_dict('records')
         except Exception:
-            jobs_from_df_old_jobs = df_old_jobs.reset_index(drop=True).to_dict(
+            jobs_from_df_old_jobs = df_old_jobs.to_dict(
                 'records'
             )
 
@@ -955,7 +951,6 @@ def save_df(
             search_keyword = df_jobs['Search Keyword'].iloc[0].lower().replace(
                 "-Noon's MacBook Pro", '')
         except KeyError:
-            df_jobs = df_jobs.reset_index(drop=True)
             search_keyword = df_jobs['Search Keyword'].iloc[0].lower().replace(
                 "-Noon's MacBo an and.  ok Pro", '')
         except IndexError:
