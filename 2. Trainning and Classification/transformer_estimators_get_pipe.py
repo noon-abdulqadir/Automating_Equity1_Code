@@ -31,8 +31,8 @@ from setup_module.imports import *  # type:ignore # isort:skip # fmt:skip # noqa
 # ### READ DATA
 
 # %%
-
 # Variables
+method = 'Transformers'
 t = time.time()
 n_jobs = -1
 n_splits = 10

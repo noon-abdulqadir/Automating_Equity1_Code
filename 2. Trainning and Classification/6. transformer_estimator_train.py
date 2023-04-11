@@ -28,7 +28,6 @@ sys.path.append(code_dir)
 # %%
 from setup_module.imports import *  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 from transformer_estimators_get_pipe import * # type:ignore # isort:skip # fmt:skip # noqa # nopep8
-method = 'Transformers'
 
 
 # %%
@@ -40,12 +39,18 @@ torch.manual_seed(random_state)
 cores = multiprocessing.cpu_count()
 
 # Transformer variables
+method = 'Transformers'
 results_save_path = f'{models_save_path}{method} Results/'
+with open(f'{data_dir}{method}_results_save_path.txt', 'w') as f:
+        f.write(results_save_path)
 if not os.path.exists(results_save_path):
     os.makedirs(results_save_path)
 done_xy_save_path = f'{results_save_path}Search+Xy/'
+with open(f'{data_dir}{method}_done_xy_save_path.txt', 'w') as f:
+        f.write(done_xy_save_path)
 if not os.path.exists(done_xy_save_path):
     os.makedirs(done_xy_save_path)
+
 t = time.time()
 n_jobs = -1
 n_splits = 10
@@ -1032,7 +1037,7 @@ df_manual = pd.read_pickle(f'{df_save_dir}df_manual_for_trainning.pkl').reset_in
 assert len(df_manual) == df_manual_len, f'DATAFRAME MISSING DATA! DF SHOULD BE OF LENGTH {df_manual_len} BUT IS OF LENGTH {len(df_manual)}'
 print(f'Dataframe loaded with shape: {df_manual.shape}')
 
-# # # HACK REMOVE THIS!!!!!!
+# # HACK REMOVE THIS!!!!!!
 # df_manual = df_manual.groupby(analysis_columns).sample(n=600).reset_index(drop=True)
 
 
@@ -1150,44 +1155,44 @@ for col in tqdm.tqdm(analysis_columns):
         print('-'*20)
         print('Passing data and arguments to Trainer.')
         estimator = Trainer(
-            # model=model,
+            # model_init=model_init,
+            # args=TrainingArguments(**training_args_dict_for_best_trial),
+            model=model,
+            args=TrainingArguments(**training_args_dict),
             tokenizer=tokenizer,
-            # args=TrainingArguments(**training_args_dict),
-            args=TrainingArguments(**training_args_dict_for_best_trial),
             train_dataset=train_dataset,
             eval_dataset=val_dataset,
             preprocess_logits_for_metrics=preprocess_logits_for_metrics_y_pred_prob,
             compute_metrics=compute_metrics,
             # data_collator=transformers.DataCollatorWithPadding(tokenizer),
-            model_init=model_init,
         )
         if estimator.place_model_on_device:
             estimator.model.to(device)
 
-        # Hyperparameter search
-        print('-'*20)
-        print(f'Starting hyperparameter search for {col}.')
-        best_trial = estimator.hyperparameter_search(
-            direction='maximize',
-            backend='optuna',
-            n_trials=10,
-            hp_space=optuna_hp_space,
-            sampler=optuna.samplers.TPESampler(seed=random_state),
-            pruner=optuna.pruners.SuccessiveHalvingPruner(),
-            compute_objective=compute_objective,
-            n_jobs=n_jobs,
-        )
-        estimator.save_state()
-        estimator.save_metrics('all', metrics_dict)
-        estimator.save_model(output_dir)
-        accelerator.save(estimator.state, f'{output_dir}/accelerator')
-        print('Done hyperparameter search!')
-        print('-'*20)
+        # # Hyperparameter search
+        # print('-'*20)
+        # print(f'Starting hyperparameter search for {col}.')
+        # best_trial = estimator.hyperparameter_search(
+        #     direction='maximize',
+        #     backend='optuna',
+        #     n_trials=10,
+        #     hp_space=optuna_hp_space,
+        #     sampler=optuna.samplers.TPESampler(seed=random_state),
+        #     pruner=optuna.pruners.SuccessiveHalvingPruner(),
+        #     compute_objective=compute_objective,
+        #     n_jobs=n_jobs,
+        # )
+        # estimator.save_state()
+        # estimator.save_metrics('all', metrics_dict)
+        # estimator.save_model(output_dir)
+        # accelerator.save(estimator.state, f'{output_dir}/accelerator')
+        # print('Done hyperparameter search!')
+        # print('-'*20)
 
         # Train trainer
         print('-'*20)
         print(f'Starting training for {col}.')
-        estimator.train(trial=best_trial)
+        estimator.train()#trial=best_trial)
         estimator.save_state()
         estimator.save_metrics('all', metrics_dict)
         estimator.save_model(output_dir)

@@ -39,11 +39,16 @@ method = 'Supervised'
 classifiers_list = classifiers_list_nonlinear
 classifiers_pipe = classifiers_pipe_nonlinear
 results_save_path = f'{models_save_path}{method} Results/'
+with open(f'{data_dir}{method}_results_save_path.txt', 'w') as f:
+    f.write(results_save_path)
 if not os.path.exists(results_save_path):
     os.makedirs(results_save_path)
 done_xy_save_path = f'{results_save_path}Search+Xy/'
+with open(f'{data_dir}{method}_done_xy_save_path.txt', 'w') as f:
+    f.write(done_xy_save_path)
 if not os.path.exists(done_xy_save_path):
     os.makedirs(done_xy_save_path)
+
 t = time.time()
 n_jobs = -1
 n_splits = 10
