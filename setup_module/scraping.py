@@ -941,7 +941,6 @@ def get_only_df(df_sectors, col_name, opp_col_name):
     df_only = df_only.reset_index()
     df_only = df_only.loc[df_only[opp_col_name] == 'Total']
     df_only = df_only.drop(columns=[opp_col_name, 'Total'])
-    df_only = df_only.reset_index(drop=True)
     df_only.name = col_name
 
     return df_only
@@ -1028,14 +1027,12 @@ def get_sector_df_from_cbs(
     df_total_only = df_total_only.loc[(df_total_only['Gender'] == 'Total') & (
         df_total_only['Age'] == 'Total')]
     df_total_only = df_total_only.drop(columns=['Gender', 'Age'])
-    df_total_only = df_total_only.reset_index(drop=True)
     df_total_only = df_total_only.rename(columns={'n': 'Total Workforce'})
     df_total_only.name = 'Total'
 
     # Merge all
     df_sectors_all = pd.merge(
         pd.merge(df_gender_only, df_age_only, how='outer'), df_total_only, how='outer')
-    df_sectors_all = df_sectors_all.reset_index(drop=True)
 
     # Take out "All economic activities" row
     au = df_sectors_all.loc[df_sectors_all['Sector Name']
@@ -1043,7 +1040,6 @@ def get_sector_df_from_cbs(
     au.loc[au['Code'] != 'A-U', 'Code'] = 'A-U'
     df_sectors_all = df_sectors_all[df_sectors_all['Sector Name']
                                     != 'All economic activities']
-    df_sectors_all = df_sectors_all.reset_index(drop=True)
     df_sectors_all = df_sectors_all.groupby(['Code'], as_index=True).agg({'Sector Name': 'first', **dict.fromkeys(
         df_sectors_all.loc[:, ~df_sectors_all.columns.isin(['Code', 'Sector Name'])].columns.to_list(), 'sum')})
     df_sectors_all = df_sectors_all.reset_index()

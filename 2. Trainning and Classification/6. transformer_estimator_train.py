@@ -361,7 +361,6 @@ def split_data(df, col, analysis_columns=analysis_columns, text_col=text_col):
 
     df = df.dropna(subset=analysis_columns, how='any')
     df = df.loc[df[text_col].str.len() >= 5]
-    df = df.reset_index(drop=True)
     print(f'DF length: {len(df)}')
 
     train, test = train_test_split(
@@ -1033,12 +1032,12 @@ def assert_all_classifiers_used(
 with open(f'{data_dir}df_manual_len.txt', 'r') as f:
     df_manual_len = int(f.read())
 
-df_manual = pd.read_pickle(f'{df_save_dir}df_manual_for_trainning.pkl').reset_index(drop=True)
+df_manual = pd.read_pickle(f'{df_save_dir}df_manual_for_trainning.pkl')
 assert len(df_manual) == df_manual_len, f'DATAFRAME MISSING DATA! DF SHOULD BE OF LENGTH {df_manual_len} BUT IS OF LENGTH {len(df_manual)}'
 print(f'Dataframe loaded with shape: {df_manual.shape}')
 
 # # HACK REMOVE THIS!!!!!!
-# df_manual = df_manual.groupby(analysis_columns).sample(n=600).reset_index(drop=True)
+# df_manual = df_manual.groupby(analysis_columns).sample(n=600)
 
 
 # %%

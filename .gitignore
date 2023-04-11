@@ -184,9 +184,9 @@ cython_debug/
 .Rproj.user
 
 # Directories
-/scraped_data
-scraped_data/
-scraped_data*/
+scraped_data/*/Data/
+scraped_data/*/Found Data/
+scraped_data/Coding Material/
 /data_main
 data_main/
 data_main/*

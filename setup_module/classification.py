@@ -823,7 +823,6 @@ def simple_preprocess_df(
                 if preprocessing_enabled is True:
                     df_jobs_to_be_processed['Job Description_cleaned'] = (
                         df_jobs_to_be_processed['Job Description']
-                        .reset_index(drop=True)
                         .progress_apply(
                             lambda row: custom_tokenizer(str(row), numbers_cleaned=numbers_cleaned, stemming_enabled=stemming_enabled,
                                                          lemmatization_enabled=lemmatization_enabled, pattern=pattern, stop_words=stop_words, return_tokens=False)
@@ -1104,7 +1103,6 @@ def get_and_viz_df_dict(dataframes, df_loc, args=get_args()):
 #     if (df_jobs[str(col)].isna().sum() > 0) or (df_jobs[str(col)].isnull().sum() > 0):
 #         print(f'{df_jobs.isna()} missing values found in df_jobs')
 
-#     df_jobs = df_jobs.reset_index(drop=True)
 #     # df_jobs.fillna('0')
 
 #     # Specify data and target columns and make array

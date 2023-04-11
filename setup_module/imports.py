@@ -954,9 +954,11 @@ def get_df_info(df, ivs_all=None):
             print('='*20)
             print(f'{iv}:')
             print('-'*20)
-            print(f'{iv} Counts:\n{df[iv].value_counts()}')
-            print('-'*20)
-            print(f'{iv} Percentages:\n{df[iv].value_counts(normalize=True).mul(100).round(1).astype(float)}')
+            if len(df[iv].value_counts()) > 5:
+                print(f'{iv} Counts:\n{df[iv].value_counts()}')
+                print('-'*20)
+                print(f'{iv} Percentages:\n{df[iv].value_counts(normalize=True).mul(100).round(1).astype(float)}')
+                print('-'*20)
             min_val = df[iv].min()
             max_val = df[iv].max()
             if min_val not in [0, 1]:
@@ -987,14 +989,12 @@ def categorize_df_gender_age(df, gender_order=None, age_order=None, ivs=None):
             order = gender_order
         elif iv == 'Age':
             order = age_order
-        try:
+        with contextlib.suppress(ValueError):
             df[iv] = df[iv].astype('category').cat.reorder_categories(order, ordered=True)
 
             df[iv] = pd.Categorical(
                 df[iv], categories=order, ordered=True
             )
             df[f'{iv}_Num'] = pd.to_numeric(df[iv].cat.codes).astype('int64')
-        except ValueError as e:
-            print(e)
 
     return df
