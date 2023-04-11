@@ -931,7 +931,6 @@ keyword_trans_dict = {
 
 # %%
 # Commonly used functions
-## Funtion to print df gender and age info (also for warmth and competence)
 def get_df_info(df, ivs_all=None):
     if ivs_all is None:
         ivs_all = [
@@ -958,13 +957,17 @@ def get_df_info(df, ivs_all=None):
             print(f'{iv} Counts:\n{df[iv].value_counts()}')
             print('-'*20)
             print(f'{iv} Percentages:\n{df[iv].value_counts(normalize=True).mul(100).round(1).astype(float)}')
-            try:
+            min_val = df[iv].min()
+            max_val = df[iv].max()
+            if min_val not in [0, 1]:
+                print(f'Min {iv} value: {min_val}')
+            if max_val not in [1, 3]:
+                print(f'Max {iv} value: {max_val}')
+            with contextlib.suppress(Exception):
                 print('-'*20)
                 print(f'{iv} Mean: {df[iv].mean().round(2).astype(float)}')
                 print('-'*20)
                 print(f'{iv} Standard Deviation: {df[iv].std().round(2).astype(float)}')
-            except Exception:
-                pass
         except Exception:
             print(f'{iv} not available.')
 

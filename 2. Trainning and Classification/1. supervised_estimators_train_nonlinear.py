@@ -318,6 +318,7 @@ def split_data(df, col, text_col=text_col, analysis_columns=analysis_columns):
     df = df.dropna(subset=analysis_columns, how='any')
     df = df.loc[df[text_col].str.len() >= 5]
     df = df.reset_index(drop=True)
+    print(f'DF length: {len(df)}')
 
     train, test = train_test_split(
         df, train_size=1-test_split, test_size=test_split, random_state=random_state
