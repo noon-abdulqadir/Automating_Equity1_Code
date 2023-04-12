@@ -122,7 +122,7 @@ accelerator = Accelerator()
 torch.autograd.set_detect_anomaly(True)
 os.environ.get('TOKENIZERS_PARALLELISM')
 best_trial_args = [
-    'learning_rate', 'num_train_epochs', 'per_device_train_batch_size', 'warmup_steps', 'weight_decay'
+    'num_train_epochs', 'per_device_train_batch_size', 'per_device_eval_batch_size', 'learning_rate', 'warmup_steps', 'weight_decay'
 ]
 training_args_dict = {
     'seed': random_state,
@@ -131,12 +131,13 @@ training_args_dict = {
     'logging_steps': 100,
     'evaluation_strategy': 'epoch',
     'save_strategy': 'epoch',
-    'torch_compile': bool(transformers.file_utils.is_torch_available()),
+    # 'torch_compile': bool(transformers.file_utils.is_torch_available()),
     'use_mps_device': bool(device_name == 'mps' and torch.backends.mps.is_available()),
     'optim': 'adamw_torch',
-    'save_total_limit': 1,
+    # 'save_total_limit': 1,
     'load_best_model_at_end': True,
     'metric_for_best_model': 'recall_score',
+    # The below metrics are used by hyperparameter search
     'num_train_epochs': 3,
     'per_device_train_batch_size': 16,
     'per_device_eval_batch_size': 20,
@@ -1036,9 +1037,6 @@ df_manual = pd.read_pickle(f'{df_save_dir}df_manual_for_trainning.pkl')
 assert len(df_manual) == df_manual_len, f'DATAFRAME MISSING DATA! DF SHOULD BE OF LENGTH {df_manual_len} BUT IS OF LENGTH {len(df_manual)}'
 print(f'Dataframe loaded with shape: {df_manual.shape}')
 
-# # HACK REMOVE THIS!!!!!!
-# df_manual = df_manual.groupby(analysis_columns).sample(n=600)
-
 
 # %%
 print('#'*40)
@@ -1114,7 +1112,7 @@ for col in tqdm.tqdm(analysis_columns):
         vectorizer_name = ''.join(model.name_or_path.split('-')).upper()
         classifier_name = model.__class__.__name__
         output_dir = training_args_dict['output_dir'] = training_args_dict_for_best_trial['output_dir'] = f'{results_save_path}{method} Estimator - {col} - {vectorizer_name} + {classifier_name} (Save_protocol={pickle.HIGHEST_PROTOCOL}).model'
-        log_dir = training_args_dict['logging_dir'] = training_args_dict_for_best_trial['logging_dir'] = f'{results_save_path}{method} Estimator - {col} - {vectorizer_name} + {classifier_name} (Save_protocol={pickle.HIGHEST_PROTOCOL}).log'
+        # log_dir = training_args_dict['logging_dir'] = training_args_dict_for_best_trial['logging_dir'] = f'{results_save_path}{method} Estimator - {col} - {vectorizer_name} + {classifier_name} (Save_protocol={pickle.HIGHEST_PROTOCOL}).log'
 
         # Encode data
         (
@@ -1154,44 +1152,44 @@ for col in tqdm.tqdm(analysis_columns):
         print('-'*20)
         print('Passing data and arguments to Trainer.')
         estimator = Trainer(
-            # model_init=model_init,
-            # args=TrainingArguments(**training_args_dict_for_best_trial),
-            model=model,
-            args=TrainingArguments(**training_args_dict),
+            model_init=model_init,
+            args=TrainingArguments(**training_args_dict_for_best_trial),
+            # model=model,
+            # args=TrainingArguments(**training_args_dict),
             tokenizer=tokenizer,
             train_dataset=train_dataset,
             eval_dataset=val_dataset,
             preprocess_logits_for_metrics=preprocess_logits_for_metrics_y_pred_prob,
             compute_metrics=compute_metrics,
-            # data_collator=transformers.DataCollatorWithPadding(tokenizer),
+            data_collator=transformers.DataCollatorWithPadding(tokenizer),
         )
         if estimator.place_model_on_device:
             estimator.model.to(device)
 
-        # # Hyperparameter search
-        # print('-'*20)
-        # print(f'Starting hyperparameter search for {col}.')
-        # best_trial = estimator.hyperparameter_search(
-        #     direction='maximize',
-        #     backend='optuna',
-        #     n_trials=10,
-        #     hp_space=optuna_hp_space,
-        #     sampler=optuna.samplers.TPESampler(seed=random_state),
-        #     pruner=optuna.pruners.SuccessiveHalvingPruner(),
-        #     compute_objective=compute_objective,
-        #     n_jobs=n_jobs,
-        # )
-        # estimator.save_state()
-        # estimator.save_metrics('all', metrics_dict)
-        # estimator.save_model(output_dir)
-        # accelerator.save(estimator.state, f'{output_dir}/accelerator')
-        # print('Done hyperparameter search!')
-        # print('-'*20)
+        # Hyperparameter search
+        print('-'*20)
+        print(f'Starting hyperparameter search for {col}.')
+        best_trial = estimator.hyperparameter_search(
+            direction='maximize',
+            backend='optuna',
+            n_trials=10,
+            hp_space=optuna_hp_space,
+            sampler=optuna.samplers.TPESampler(seed=random_state),
+            pruner=optuna.pruners.SuccessiveHalvingPruner(),
+            compute_objective=compute_objective,
+            n_jobs=n_jobs,
+        )
+        estimator.save_state()
+        estimator.save_metrics('all', metrics_dict)
+        estimator.save_model(output_dir)
+        accelerator.save(estimator.state, f'{output_dir}/accelerator')
+        print('Done hyperparameter search!')
+        print('-'*20)
 
         # Train trainer
         print('-'*20)
         print(f'Starting training for {col}.')
-        estimator.train()#trial=best_trial)
+        estimator.train(trial=best_trial)
         estimator.save_state()
         estimator.save_metrics('all', metrics_dict)
         estimator.save_model(output_dir)
@@ -1231,7 +1229,7 @@ for col in tqdm.tqdm(analysis_columns):
         print('-'*20)
 
 # Assert that all classifiers were used
-assert_all_classifiers_used(classifiers_pipe=classifiers_pipe)
+assert_all_classifiers_used()
 print('#'*40)
 print('DONE!')
 print('#'*40)
