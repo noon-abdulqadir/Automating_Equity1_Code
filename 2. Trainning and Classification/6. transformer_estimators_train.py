@@ -417,8 +417,8 @@ class ToDataset(torch.utils.data.Dataset):
         self.encoded = encoded
 
     def __getitem__(self, idx):
-        item = {key: val[idx] for key, val in self.encodings.items()}
-        item['labels'] = self.encoded[idx]
+        item = {key: torch.tensor(val[idx], device=device).clone().detach() for key, val in self.encodings.items()}
+        item['labels'] = torch.tensor(self.encoded[idx], device=device).clone().detach()
         return item
 
     def __len__(self):
@@ -1152,10 +1152,10 @@ for col in tqdm.tqdm(analysis_columns):
         print('-'*20)
         print('Passing data and arguments to Trainer.')
         estimator = Trainer(
-            model_init=model_init,
-            args=TrainingArguments(**training_args_dict_for_best_trial),
-            # model=model,
-            # args=TrainingArguments(**training_args_dict),
+            # model_init=model_init,
+            # args=TrainingArguments(**training_args_dict_for_best_trial),
+            model=model,
+            args=TrainingArguments(**training_args_dict),
             tokenizer=tokenizer,
             train_dataset=train_dataset,
             eval_dataset=val_dataset,
@@ -1166,30 +1166,30 @@ for col in tqdm.tqdm(analysis_columns):
         if estimator.place_model_on_device:
             estimator.model.to(device)
 
-        # Hyperparameter search
-        print('-'*20)
-        print(f'Starting hyperparameter search for {col}.')
-        best_trial = estimator.hyperparameter_search(
-            direction='maximize',
-            backend='optuna',
-            n_trials=10,
-            hp_space=optuna_hp_space,
-            sampler=optuna.samplers.TPESampler(seed=random_state),
-            pruner=optuna.pruners.SuccessiveHalvingPruner(),
-            compute_objective=compute_objective,
-            n_jobs=n_jobs,
-        )
-        estimator.save_state()
-        estimator.save_metrics('all', metrics_dict)
-        estimator.save_model(output_dir)
-        accelerator.save(estimator.state, f'{output_dir}/accelerator')
-        print('Done hyperparameter search!')
-        print('-'*20)
+        # # Hyperparameter search
+        # print('-'*20)
+        # print(f'Starting hyperparameter search for {col}.')
+        # best_trial = estimator.hyperparameter_search(
+        #     direction='maximize',
+        #     backend='optuna',
+        #     n_trials=10,
+        #     hp_space=optuna_hp_space,
+        #     sampler=optuna.samplers.TPESampler(seed=random_state),
+        #     pruner=optuna.pruners.SuccessiveHalvingPruner(),
+        #     compute_objective=compute_objective,
+        #     n_jobs=n_jobs,
+        # )
+        # estimator.save_state()
+        # estimator.save_metrics('all', metrics_dict)
+        # estimator.save_model(output_dir)
+        # accelerator.save(estimator.state, f'{output_dir}/accelerator')
+        # print('Done hyperparameter search!')
+        # print('-'*20)
 
         # Train trainer
         print('-'*20)
         print(f'Starting training for {col}.')
-        estimator.train(trial=best_trial)
+        estimator.train()#trial=best_trial)
         estimator.save_state()
         estimator.save_metrics('all', metrics_dict)
         estimator.save_model(output_dir)
