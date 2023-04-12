@@ -450,11 +450,19 @@ def get_df_info(df, ivs_all=None):
             'Gender_Female',
             'Gender_Mixed',
             'Gender_Male',
+            'Gender_Female_n',
+            'Gender_Male_n',
+            'Gender_Female_% per Sector',
+            'Gender_Male_% per Sector',
             'Age',
             'Age_Num',
             'Age_Older',
             'Age_Mixed',
             'Age_Younger',
+            'Age_Older_n',
+            'Age_Younger_n',
+            'Age_Older_% per Sector',
+            'Age_Younger_% per Sector',
         ]
     # Print Info
     print('\nDF INFO:\n')
@@ -465,17 +473,13 @@ def get_df_info(df, ivs_all=None):
             print('='*20)
             print(f'{iv}:')
             print('-'*20)
-            if len(df[iv].value_counts()) > 5:
+            if len(df[iv].value_counts()) < 5:
                 print(f'{iv} Counts:\n{df[iv].value_counts()}')
                 print('-'*20)
                 print(f'{iv} Percentages:\n{df[iv].value_counts(normalize=True).mul(100).round(1).astype(float)}')
                 print('-'*20)
-            min_val = df[iv].min()
-            max_val = df[iv].max()
-            if min_val not in [0, 1]:
-                print(f'Min {iv} value: {min_val}')
-            if max_val not in [1, 3]:
-                print(f'Max {iv} value: {max_val}')
+            print(f'Min {iv} value: {df[iv].min()}')
+            print(f'Max {iv} value: {df[iv].max()}')
             with contextlib.suppress(Exception):
                 print('-'*20)
                 print(f'{iv} Mean: {df[iv].mean().round(2).astype(float)}')
@@ -485,6 +489,7 @@ def get_df_info(df, ivs_all=None):
             print(f'{iv} not available.')
 
     print('\n')
+
 
 
 # %%
