@@ -799,6 +799,82 @@ controls = [
 #     )
 
 # %%
+# Commonly used functions
+def get_df_info(df, ivs_all=None):
+    if ivs_all is None:
+        ivs_all = [
+            'Gender',
+            'Gender_Num',
+            'Gender_Female',
+            'Gender_Mixed',
+            'Gender_Male',
+            'Gender_Female_n',
+            'Gender_Male_n',
+            'Gender_Female_% per Sector',
+            'Gender_Male_% per Sector',
+            'Age',
+            'Age_Num',
+            'Age_Older',
+            'Age_Mixed',
+            'Age_Younger',
+            'Age_Older_n',
+            'Age_Younger_n',
+            'Age_Older_% per Sector',
+            'Age_Younger_% per Sector',
+        ]
+    # Print Info
+    print('\nDF INFO:\n')
+    df.info()
+
+    for iv in ivs_all:
+        try:
+            print('='*20)
+            print(f'{iv}:')
+            print('-'*20)
+            if len(df[iv].value_counts()) < 5:
+                print(f'{iv} Counts:\n{df[iv].value_counts()}')
+                print('-'*20)
+                print(f'{iv} Percentages:\n{df[iv].value_counts(normalize=True).mul(100).round(1).astype(float)}')
+                print('-'*20)
+            print(f'Min {iv} value: {df[iv].min()}')
+            print(f'Max {iv} value: {df[iv].max()}')
+            with contextlib.suppress(Exception):
+                print('-'*20)
+                print(f'{iv} Mean: {df[iv].mean().round(2).astype(float)}')
+                print('-'*20)
+                print(f'{iv} Standard Deviation: {df[iv].std().round(2).astype(float)}')
+        except Exception:
+            print(f'{iv} not available.')
+
+    print('\n')
+
+
+# Function to order categories
+def categorize_df_gender_age(df, gender_order=None, age_order=None, ivs=None):
+    if gender_order is None:
+        gender_order = ['Female', 'Mixed Gender', 'Male']
+    if age_order is None:
+        age_order = ['Older', 'Mixed Age', 'Younger']
+    if ivs is None:
+        ivs = ['Gender', 'Age']
+    # Arrange Categories
+    for iv in ivs:
+        if iv == 'Gender':
+            order = gender_order
+        elif iv == 'Age':
+            order = age_order
+        with contextlib.suppress(ValueError):
+            df[iv] = df[iv].astype('category').cat.reorder_categories(order, ordered=True)
+
+            df[iv] = pd.Categorical(
+                df[iv], categories=order, ordered=True
+            )
+            df[f'{iv}_Num'] = pd.to_numeric(df[iv].cat.codes).astype('int64')
+
+    return df
+
+
+# %%
 # Fix Keywords
 keyword_trans_dict = {
     'landbouw': 'agriculture',
@@ -928,73 +1004,3 @@ keyword_trans_dict = {
 
 # with open(f'{code_dir}/scraped_data/CBS/Data/keyword_trans_dict.txt', 'w') as f:
 #     json.dump(keyword_trans_dict, f)
-
-# %%
-# Commonly used functions
-def get_df_info(df, ivs_all=None):
-    if ivs_all is None:
-        ivs_all = [
-            'Gender',
-            'Gender_Num',
-            'Gender_Female',
-            'Gender_Mixed',
-            'Gender_Male',
-            'Age',
-            'Age_Num',
-            'Age_Older',
-            'Age_Mixed',
-            'Age_Younger',
-        ]
-    # Print Info
-    print('\nDF INFO:\n')
-    df.info()
-
-    for iv in ivs_all:
-        try:
-            print('='*20)
-            print(f'{iv}:')
-            print('-'*20)
-            if len(df[iv].value_counts()) > 5:
-                print(f'{iv} Counts:\n{df[iv].value_counts()}')
-                print('-'*20)
-                print(f'{iv} Percentages:\n{df[iv].value_counts(normalize=True).mul(100).round(1).astype(float)}')
-                print('-'*20)
-            min_val = df[iv].min()
-            max_val = df[iv].max()
-            if min_val not in [0, 1]:
-                print(f'Min {iv} value: {min_val}')
-            if max_val not in [1, 3]:
-                print(f'Max {iv} value: {max_val}')
-            with contextlib.suppress(Exception):
-                print('-'*20)
-                print(f'{iv} Mean: {df[iv].mean().round(2).astype(float)}')
-                print('-'*20)
-                print(f'{iv} Standard Deviation: {df[iv].std().round(2).astype(float)}')
-        except Exception:
-            print(f'{iv} not available.')
-
-    print('\n')
-
-# Function to order categories
-def categorize_df_gender_age(df, gender_order=None, age_order=None, ivs=None):
-    if gender_order is None:
-        gender_order = ['Female', 'Mixed Gender', 'Male']
-    if age_order is None:
-        age_order = ['Older', 'Mixed Age', 'Younger']
-    if ivs is None:
-        ivs = ['Gender', 'Age']
-    # Arrange Categories
-    for iv in ivs:
-        if iv == 'Gender':
-            order = gender_order
-        elif iv == 'Age':
-            order = age_order
-        with contextlib.suppress(ValueError):
-            df[iv] = df[iv].astype('category').cat.reorder_categories(order, ordered=True)
-
-            df[iv] = pd.Categorical(
-                df[iv], categories=order, ordered=True
-            )
-            df[f'{iv}_Num'] = pd.to_numeric(df[iv].cat.codes).astype('int64')
-
-    return df
