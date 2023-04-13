@@ -143,45 +143,28 @@ pd.set_option('display.float_format', '{:.2f}'.format)
 # %%
 def get_existing_files(
     results_save_path= results_save_path,
-    col_names_list=None,
+    estimator_names_list=None,
     vectorizer_names_list=None,
     classifier_names_list=None,
 ):
-    if col_names_list is None:
-        col_names_list = []
-    if vectorizer_names_list is None:
-        vectorizer_names_list = []
-    if classifier_names_list is None:
-        classifier_names_list = []
+    if estimator_names_list is None:
+        estimator_names_list = []
 
     print(f'Searching for existing estimators in directory:\n{results_save_path}')
 
-    for estimators_file in glob.glob(f'{results_save_path}*.pkl'):
+    for estimators_file in tqdm.tqdm(glob.glob(f'{results_save_path}*.pkl')):
         if f'{method} Estimator - ' in estimators_file:
-            col_names_list.append(
-                col := estimators_file.split(f'{method} Estimator - ')[-1].split(' - ')[0]
-            )
-            vectorizer_names_list.append(
-                vectorizer_name := estimators_file.split(f'{col} - ')[-1].split(' + ')[0]
-            )
-            classifier_names_list.append(
-                classifier_name := estimators_file.split(f'{vectorizer_name} + ')[-1].split(' (Save_protocol=')[0]
-            )
 
-    estimator_names_list = [
-        f'{col} - {vectorizer_name} + {classifier_name}'
-        for col, vectorizer_name, classifier_name in tqdm_product(
-            list(set(col_names_list)),
-            list(set(vectorizer_names_list)),
-            list(set(classifier_names_list)),
-        )
-    ]
+            col=estimators_file.split(f'{method} Estimator - ')[-1].split(' - ')[0]
+            vectorizer_name=estimators_file.split(f'{col} - ')[-1].split(' + ')[0]
+            classifier_name=estimators_file.split(f'{vectorizer_name} + ')[-1].split(' (Save_protocol=')[0]
+
+            estimator_names_list.append(f'{col} - {vectorizer_name} + {classifier_name}')
+
     return (
-        list(set(col_names_list)),
-        list(set(vectorizer_names_list)),
-        list(set(classifier_names_list)),
         list(set(estimator_names_list))
     )
+
 
 
 # %%
@@ -620,7 +603,7 @@ analysis_columns = ['Warmth', 'Competence']
 text_col = 'Job Description spacy_sentencized'
 
 # Get existing estimators
-col_names_list, vectorizer_names_list, classifier_names_list, estimator_names_list = get_existing_files()
+estimator_names_list = get_existing_files()
 
 for col in tqdm.tqdm(analysis_columns):
 
