@@ -476,6 +476,14 @@ table_save_path = f'{data_dir}output tables/'
 # plots dir
 plot_save_path = f'{data_dir}plots/'
 
+# Make sure path exist and make dir if not
+all_dir_list = [
+    code_dir, scraped_data, data_dir, df_save_dir, llm_path, models_save_path,
+]
+for proj_dir in all_dir_list:
+    if not os.path.exists(proj_dir):
+        os.mkdir(proj_dir)
+
 # %%
 
 
@@ -717,7 +725,7 @@ ivs_age_perc = [
     'Age_Older_% per Sector',
     'Age_Younger_% per Sector',
 ]
-ivs_all_dummy_num = [
+ivs_dummy_num = [
     'Gender_Num',
     'Gender_Female',
     'Gender_Mixed',
@@ -727,7 +735,7 @@ ivs_all_dummy_num = [
     'Age_Mixed',
     'Age_Younger',
 ]
-ivs_all_dummy = [
+ivs_dummy = [
     'Gender_Female',
     'Gender_Mixed',
     'Gender_Male',

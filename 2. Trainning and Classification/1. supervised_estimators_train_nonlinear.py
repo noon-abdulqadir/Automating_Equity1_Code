@@ -157,15 +157,16 @@ def get_existing_files(
     print(f'Searching for existing estimators in directory:\n{results_save_path}')
 
     for estimators_file in glob.glob(f'{results_save_path}*.pkl'):
-        col_names_list.append(
-            col := estimators_file.split(f'{method} Estimator - ')[-1].split(' - ')[0]
-        )
-        vectorizer_names_list.append(
-            vectorizer_name := estimators_file.split(f'{col} - ')[-1].split(' + ')[0]
-        )
-        classifier_names_list.append(
-            classifier_name := estimators_file.split(f'{vectorizer_name} + ')[-1].split(' (Save_protocol=')[0]
-        )
+        if f'{method} Estimator - ' in estimators_file:
+            col_names_list.append(
+                col := estimators_file.split(f'{method} Estimator - ')[-1].split(' - ')[0]
+            )
+            vectorizer_names_list.append(
+                vectorizer_name := estimators_file.split(f'{col} - ')[-1].split(' + ')[0]
+            )
+            classifier_names_list.append(
+                classifier_name := estimators_file.split(f'{vectorizer_name} + ')[-1].split(' (Save_protocol=')[0]
+            )
 
     estimator_names_list = [
         f'{col} - {vectorizer_name} + {classifier_name}'
