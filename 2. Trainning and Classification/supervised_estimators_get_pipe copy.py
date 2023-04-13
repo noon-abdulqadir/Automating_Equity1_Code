@@ -31,11 +31,8 @@ from setup_module.imports import *  # type:ignore # isort:skip # fmt:skip # noqa
 # ### READ DATA
 
 # %%
-
 # Variables
-# Sklearn variables
-method = 'Supervised'
-final_models_save_path = f'{models_save_path}{method} Results/'
+# Sklearn Variables
 t = time.time()
 n_jobs = -1
 n_splits = 10
@@ -121,8 +118,9 @@ pd.set_option('display.precision', 3)
 pd.set_option('display.float_format', '{:.2f}'.format)
 
 # %% [markdown]
+# Supervised Pipeline
+# %% [markdown]
 # ### Helper function to join model names and params into pipe params
-
 
 def make_pipe_list(model, params):
     return [model, {f'{model.__class__.__name__}__{param_name}': param_value for param_name, param_value in params.items()}]
@@ -651,5 +649,37 @@ classifiers_pipe_ensemble = {
 # Add Ensemble Classifiers to Classifiers List and Dict
 classifiers_list.extend(classifiers_list_ensemble)
 classifiers_pipe |= classifiers_pipe_ensemble
+
+# %% [markdown]
+# Transformers Pipeline
+transformers_model_names = ['bert-base-uncased', 'ydshieh/tiny-random-gptj-for-sequence-classification']
+
+transformers_pipe = {
+    'BertForSequenceClassification': {
+        'model_name': 'bert-base-uncased',
+        'config': BertConfig,
+        'tokenizer': BertTokenizerFast,
+        'model': BertForSequenceClassification,
+    },
+    'GPT2ForSequenceClassification': {
+        'model_name': 'gpt2',
+        'config': GPT2Config,
+        'tokenizer': GPT2TokenizerFast,
+        'model': GPT2ForSequenceClassification,
+    },
+    # 'GPTJForSequenceClassification': {
+    #     'model_name': 'ydshieh/tiny-random-gptj-for-sequence-classification',
+    #     'config': GPTJConfig,
+    #     'tokenizer': AutoTokenizer,
+    #     'model': GPTJForSequenceClassification,
+    # },
+    # 'OpenAIGPTForSequenceClassification': {
+    #     'model_name': 'openai-gpt',
+    #     'config': OpenAIGPTConfig,
+    #     'tokenizer': OpenAIGPTTokenizerFast,
+    #     'model': OpenAIGPTForSequenceClassification,
+    # },
+}
+
 
 # %%
