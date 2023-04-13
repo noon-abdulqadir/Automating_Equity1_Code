@@ -564,7 +564,7 @@ def save_Xy_search_cv_estimator(
 # %%
 # Assert that all classifiers were used
 def assert_all_classifiers_used(
-    estimators_list=None, used_classifiers=None, results_save_path=results_save_path, method=method, classifiers_pipe=classifiers_pipe,
+    classifiers_pipe, estimators_list=None, used_classifiers=None, results_save_path=results_save_path, method=method
 ):
     if estimators_list is None:
         estimators_list = []
