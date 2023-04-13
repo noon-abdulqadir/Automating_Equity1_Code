@@ -27,7 +27,7 @@ sys.path.append(code_dir)
 
 # %%
 from setup_module.imports import * # type:ignore # isort:skip # fmt:skip # noqa # nopep8
-from supervised_estimators_get_pipe import * # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from estimators_get_pipe import * # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 
 
 # %% [markdown]

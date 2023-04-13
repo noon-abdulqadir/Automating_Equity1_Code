@@ -32,7 +32,6 @@ from setup_module.imports import *  # type:ignore # isort:skip # fmt:skip # noqa
 
 # %%
 # Variables
-method = 'Transformers'
 t = time.time()
 n_jobs = -1
 n_splits = 10
@@ -117,11 +116,11 @@ pd.set_option('display.width', 5000)
 pd.set_option('display.colheader_justify', 'center')
 pd.set_option('display.precision', 3)
 pd.set_option('display.float_format', '{:.2f}'.format)
-transformer_model_names = ['bert-base-uncased', 'ydshieh/tiny-random-gptj-for-sequence-classification']
 
 
 # %% [markdown]
-# Transformer Dict
+# Transformer Variables
+transformer_model_names = ['bert-base-uncased', 'ydshieh/tiny-random-gptj-for-sequence-classification']
 
 transformers_pipe = {
     'BertForSequenceClassification': {

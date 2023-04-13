@@ -1166,6 +1166,13 @@ for col in tqdm.tqdm(analysis_columns):
         if estimator.place_model_on_device:
             estimator.model.to(device)
 
+        estimator.save_state()
+        estimator.save_metrics('all', metrics_dict)
+        estimator.save_model(output_dir)
+        accelerator.save(estimator.state, f'{output_dir}/accelerator')
+        print('Done hyperparameter search!')
+        print('-'*20)
+
         # # Hyperparameter search
         # print('-'*20)
         # print(f'Starting hyperparameter search for {col}.')
