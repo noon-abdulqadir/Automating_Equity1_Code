@@ -1176,23 +1176,23 @@ for col in tqdm.tqdm(analysis_columns):
         print('Done training!')
         print('-'*20)
 
-        # # Evaluate
-        # print('-'*20)
-        # print(f'Evaluating estimator for {col}.')
-        # eval_metrics_dict = estimator.evaluate()
-        # y_val_pred = eval_metrics_dict.pop('eval_y_pred')
-        # y_val_pred_prob = eval_metrics_dict.pop('eval_y_pred_prob')
-        # eval_metrics_dict = clean_metrics_dict(eval_metrics_dict, list(eval_metrics_dict.keys())[0].split('_')[0])
-        # print('Done evaluating!')
+        # Evaluate
+        print('-'*20)
+        print(f'Evaluating estimator for {col}.')
+        eval_metrics_dict = estimator.evaluate()
+        y_val_pred = eval_metrics_dict.pop('eval_y_pred')
+        y_val_pred_prob = eval_metrics_dict.pop('eval_y_pred_prob')
+        eval_metrics_dict = clean_metrics_dict(eval_metrics_dict, list(eval_metrics_dict.keys())[0].split('_')[0])
+        print('Done evaluating!')
 
-        # # Get predictions
-        # print(f'Getting prediction results for {col}.')
-        # y_test_pred_logits, y_test_labels, test_metrics_dict = estimator.predict(test_dataset)
-        # y_test_pred = test_metrics_dict.pop('test_y_pred')
-        # y_test_pred_prob = test_metrics_dict.pop('test_y_pred_prob')
-        # test_metrics_dict = clean_metrics_dict(test_metrics_dict, list(test_metrics_dict.keys())[0].split('_')[0])
-        # print('Done predicting!')
-        # print('-'*20)
+        # Get predictions
+        print(f'Getting prediction results for {col}.')
+        y_test_pred_logits, y_test_labels, test_metrics_dict = estimator.predict(test_dataset)
+        y_test_pred = test_metrics_dict.pop('test_y_pred')
+        y_test_pred_prob = test_metrics_dict.pop('test_y_pred_prob')
+        test_metrics_dict = clean_metrics_dict(test_metrics_dict, list(test_metrics_dict.keys())[0].split('_')[0])
+        print('Done predicting!')
+        print('-'*20)
 
         # Save model
         print('-'*20)
