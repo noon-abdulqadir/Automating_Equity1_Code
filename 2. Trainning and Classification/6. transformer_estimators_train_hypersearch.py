@@ -39,7 +39,7 @@ torch.manual_seed(random_state)
 cores = multiprocessing.cpu_count()
 
 # Transformer variables
-method = 'Transformers'
+method = 'Transformers Hypersearch'
 results_save_path = f'{models_save_path}{method} Results/'
 with open(f'{data_dir}{method}_results_save_path.txt', 'w') as f:
     f.write(results_save_path)
