@@ -323,7 +323,7 @@ lr_params = {
     'multi_class': ['auto'],
     'solver': ['liblinear'],
     'C': [0.01, 0.5, 1, 5, 10, 15],
-    'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
+    'max_iter': [700000, 800000, 900000, 1000000, 1100000, 1200000, 1300000],
     # 'penalty': ['elasticnet'],
 }
 lr = make_pipe_list(lr_, lr_params)
@@ -338,7 +338,7 @@ pa_params = {
     'shuffle': [True, False],
     'C': [0.01, 0.5, 1, 5, 10, 15],
     'average': [True, False],
-    'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
+    'max_iter': [700000, 800000, 900000, 1000000, 1100000, 1200000, 1300000],
 }
 pa = make_pipe_list(pa_, pa_params)
 
@@ -350,7 +350,7 @@ ptron_params = {
     'fit_intercept': [True, False],
     'class_weight': [class_weight],
     'shuffle': [True, False],
-    'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
+    'max_iter': [700000, 800000, 900000, 1000000, 1100000, 1200000, 1300000],
 }
 ptron = make_pipe_list(ptron_, ptron_params)
 
@@ -361,7 +361,7 @@ sgd_params = {
     'random_state': [random_state],
     'fit_intercept': [True, False],
     'class_weight': [class_weight],
-    'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
+    'max_iter': [700000, 800000, 900000, 1000000, 1100000, 1200000, 1300000],
 }
 sgd = make_pipe_list(sgd_, sgd_params)
 
@@ -373,7 +373,7 @@ svm_params = {
     'fit_intercept': [True, False],
     'class_weight': [class_weight],
     'C': [0.01, 0.5, 1, 5, 10, 15],
-    'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
+    'max_iter': [700000, 800000, 900000, 1000000, 1100000, 1200000, 1300000],
     'dual': [False]
 }
 svm = make_pipe_list(svm_, svm_params)
@@ -384,7 +384,7 @@ svc_params = {
     'random_state': [random_state],
     'class_weight': [class_weight],
     'C': [0.01, 0.5, 1, 5, 10, 15],
-    'max_iter': [400000, 500000, 600000, 700000, 800000, 900000, 1000000],
+    'max_iter': [700000, 800000, 900000, 1000000, 1100000, 1200000, 1300000],
 }
 svc = make_pipe_list(svm_, svm_params)
 
