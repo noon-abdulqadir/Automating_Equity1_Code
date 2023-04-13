@@ -1161,11 +1161,10 @@ for col in tqdm.tqdm(analysis_columns):
             eval_dataset=val_dataset,
             preprocess_logits_for_metrics=preprocess_logits_for_metrics_y_pred_prob,
             compute_metrics=compute_metrics,
-            data_collator=transformers.DataCollatorWithPadding(tokenizer),
+            # data_collator=transformers.DataCollatorWithPadding(tokenizer),
         )
         if estimator.place_model_on_device:
             estimator.model.to(device)
-
         estimator.save_state()
         estimator.save_metrics('all', metrics_dict)
         estimator.save_model(output_dir)
