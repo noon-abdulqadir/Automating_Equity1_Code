@@ -36,8 +36,16 @@ from estimators_get_pipe import * # type:ignore # isort:skip # fmt:skip # noqa #
 # %%
 # Variables
 method = 'Supervised'
-classifiers_list = classifiers_list_linear
-classifiers_pipe = classifiers_pipe_linear
+classifiers_type = 'linear'
+if classifiers_type == 'nonlinear':
+    classifiers_pipe = classifiers_pipe_nonlinear
+elif classifiers_type == 'linear':
+    classifiers_pipe = classifiers_pipe_linear
+elif classifiers_type == 'ensemble':
+    classifiers_pipe = classifiers_pipe_ensemble
+elif classifiers_type == 'all':
+    classifiers_pipe = classifiers_pipe
+
 results_save_path = f'{models_save_path}{method} Results/'
 with open(f'{data_dir}{method}_results_save_path.txt', 'w') as f:
     f.write(results_save_path)
@@ -173,7 +181,7 @@ def save_Xy(
     X_test, y_test,
     X_val, y_val,
     col,
-    results_save_path=results_save_path,
+    models_save_path=models_save_path, results_save_path=results_save_path,
     method=method, done_xy_save_path=done_xy_save_path,
     compression=None, protocol=None, path_suffix=None, data_dict=None
 ):
@@ -221,7 +229,7 @@ def save_Xy(
     # Save files
     print('='*20)
     for file_name, file_ in data_dict.items():
-        save_path = f'{results_save_path}{method} {file_name}{path_suffix}'
+        save_path = f'{models_save_path}{file_name}{path_suffix}'
         print(f'Saving Xy {file_name} at {save_path}')
         file_.to_pickle(
             save_path, protocol=protocol
@@ -360,7 +368,7 @@ def split_data(df, col, text_col=text_col, analysis_columns=analysis_columns):
 # %%
 def load_Xy(
     col,
-    results_save_path=results_save_path, method=method,
+    models_save_path=models_save_path, results_save_path=results_save_path, method=method,
     path_suffix=None, data_dict=None, protocol=None,
 ):
     if data_dict is None:
@@ -374,8 +382,8 @@ def load_Xy(
     print(f'{"="*10} Loading Xy from previous for {col} {"="*10}')
     print('+'*30)
     # Read all dfs
-    for file_path in glob.glob(f'{results_save_path}*{path_suffix}'):
-        file_name = file_path.split(f'{results_save_path}{method} ')[-1].split(path_suffix)[0]
+    for file_path in glob.glob(f'{models_save_path}*{path_suffix}'):
+        file_name = file_path.split(f'{models_save_path}')[-1].split(path_suffix)[0]
         print(f'Loading {file_name} from {file_path}')
         if path_suffix in file_path and 'df_' in file_name and 'cv_results' not in file_name:
             data_dict[file_name] = pd.read_pickle(file_path)
@@ -494,12 +502,16 @@ def save_Xy_search_cv_estimator(
     check_consistent_length(X_test, y_test, y_test_pred, y_test_pred_prob)
     check_consistent_length(X_val, y_val, y_val_pred, y_val_pred_prob)
 
+    # Make data dict
+    data_dict['Estimator'] = estimator
+    data_dict['Grid Search'] = grid_search
+    data_dict['SearchCV'] = searchcv
     # Make df_cv_results
-    df_cv_results = pd.DataFrame(
+    data_dict['df_cv_results'] = pd.DataFrame(
         cv_results
     )
     # Make df_train_data
-    df_train_data = pd.DataFrame(
+    data_dict['df_train_data'] = pd.DataFrame(
         {
             'X_train': X_train,
             'y_train': y_train,
@@ -508,7 +520,7 @@ def save_Xy_search_cv_estimator(
         },
     )
     # Make df_test_data
-    df_test_data = pd.DataFrame(
+    data_dict['df_test_data'] = pd.DataFrame(
         {
             'X_test': X_test,
             'y_test': y_test,
@@ -517,7 +529,7 @@ def save_Xy_search_cv_estimator(
         },
     )
     # Make df_val_data
-    df_val_data = pd.DataFrame(
+    data_dict['df_val_data'] = pd.DataFrame(
         {
             'X_val': X_val,
             'y_val': y_val,
@@ -526,14 +538,7 @@ def save_Xy_search_cv_estimator(
         },
     )
 
-    # Make data dict
-    data_dict['Grid Search'] = grid_search
-    data_dict['SearchCV'] = searchcv
-    data_dict['df_cv_results'] = df_cv_results
-    data_dict['df_train_data'] = df_train_data
-    data_dict['df_test_data'] = df_test_data
-    data_dict['df_val_data'] = df_val_data
-    data_dict['Estimator'] = estimator
+    # Make df_feature_importances
     if df_feature_importances is not None:
         data_dict['df_feature_importances'] = df_feature_importances
 
@@ -548,13 +553,11 @@ def save_Xy_search_cv_estimator(
                 f'{save_path}{method} {file_name}{path_suffix}', 'wb'
             ) as f:
                 joblib.dump(file_, f, compress=compression, protocol=protocol)
-            saved_files_list.append(file_name)
         else:
             file_.to_pickle(
                 f'{save_path}{method} {file_name}{path_suffix}', protocol=protocol
             )
-            saved_files_list.append(file_name)
-
+        saved_files_list.append(file_name)
     assert set(data_dict.keys()) == set(saved_files_list), f'Not all files were saved! Missing: {set(data_dict.keys()) ^ set(saved_files_list)}'
     print(f'Done saving Xy, CV data, and estimator!\n{list(data_dict.keys())}')
     print('='*20)
@@ -613,7 +616,7 @@ for col in tqdm.tqdm(analysis_columns):
         f'Vectorizers to be used ({len(list(vectorizers_pipe.values()))}):\n{list(vectorizers_pipe.keys())}'
     )
     print(
-        f'Total number of vectorizer parameters = {sum([len(list(vectorizers_pipe.values())[i][1]) for i in range(len(vectorizers_pipe))])}'
+        f'Total number of vectorizer parameters = {sum([len(list(vectorizers_pipe.values())[i]) for i in range(len(vectorizers_pipe))])}'
     )
     print(
         f'Selectors to be used ({len(list(selectors_pipe.values()))}):\n{list(selectors_pipe.keys())}'
@@ -636,7 +639,7 @@ for col in tqdm.tqdm(analysis_columns):
 
     assert len(df_manual[df_manual[str(col)].map(df_manual[str(col)].value_counts() > 1)]) != 0, f'Dataframe has no {col} values!'
 
-    if len(glob.glob(f'{results_save_path}{method} df_*_data - {col} - (Save_protocol=*).pkl')) == 3:
+    if len(glob.glob(f'{models_save_path}df_*_data - {col} - (Save_protocol=*).pkl')) == 3:
         # Load previous Xy
         print('Loading previous Xy.')
         (

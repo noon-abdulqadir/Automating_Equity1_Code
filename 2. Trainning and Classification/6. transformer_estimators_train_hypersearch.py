@@ -39,7 +39,7 @@ torch.manual_seed(random_state)
 cores = multiprocessing.cpu_count()
 
 # Transformer variables
-method = 'Transformers Hypersearch'
+method = 'Transformers'
 results_save_path = f'{models_save_path}{method} Results/'
 with open(f'{data_dir}{method}_results_save_path.txt', 'w') as f:
     f.write(results_save_path)
@@ -258,7 +258,7 @@ def save_Xy(
     # Save files
     print('='*20)
     for file_name, file_ in data_dict.items():
-        save_path = f'{results_save_path}{method} {file_name}{path_suffix}'
+        save_path = f'{models_save_path}{file_name}{path_suffix}'
         print(f'Saving Xy {file_name} at {save_path}')
         file_.to_pickle(
             save_path, protocol=protocol
@@ -490,8 +490,8 @@ def load_Xy(
     print(f'{"="*10} Loading Xy from previous for {col} {"="*10}')
     print('+'*30)
     # Read all dfs
-    for file_path in glob.glob(f'{results_save_path}*{path_suffix}'):
-        file_name = file_path.split(f'{results_save_path}{method} ')[-1].split(path_suffix)[0]
+    for file_path in glob.glob(f'{models_save_path}*{path_suffix}'):
+        file_name = file_path.split(f'{models_save_path}')[-1].split(path_suffix)[0]
         print(f'Loading {file_name} from {file_path}')
         if path_suffix in file_path and 'df_' in file_name and 'cv_results' not in file_name:
             data_dict[file_name] = pd.read_pickle(file_path)
@@ -558,7 +558,7 @@ def optuna_hp_space(trial):
 # Compute objective for hyperparameter tuning
 # https://github.com/huggingface/transformers/issues/13019
 def compute_objective(metrics_dict):
-    return metrics_dict['eval_Recall']
+    return metrics_dict['recall']
 
 # %%
 def compute_metrics_with_y_pred(
