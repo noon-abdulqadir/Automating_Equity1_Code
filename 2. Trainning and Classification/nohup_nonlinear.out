@@ -236,5 +236,5 @@ Used Classifiers:
 {'DecisionTreeClassifier', 'GradientBoostingClassifier', 'KNeighborsClassifier', 'AdaBoostClassifier', 'PassiveAggressiveClassifier', 'StackingClassifier', 'XGBClassifier', 'DummyClassifier', 'LinearSVC',
 'LogisticRegression', 'Perceptron', 'RandomForestClassifier', 'BaggingClassifier', 'MLPClassifier', 'SGDClassifier', 'VotingClassifier'}
 Leftout Classifiers:
-{'PassiveAggressiveClassifier', 'Perceptron', 'SGDClassifier', 'VotingClassifier', 'GradientBoostingClassifier', 'AdaBoostClassifier', 'StackingClassifier', 'LinearSVC', 'LogisticRegression', 
+{'PassiveAggressiveClassifier', 'Perceptron', 'SGDClassifier', 'VotingClassifier', 'GradientBoostingClassifier', 'AdaBoostClassifier', 'StackingClassifier', 'LinearSVC', 'LogisticRegression',
 'BaggingClassifier', 'MLPClassifier'}
