@@ -655,9 +655,9 @@ def set_language_requirement(
     # Language requirements
     # Dutch
     print('Setting Dutch language requirements.')
-    if 'Dutch Requirement' in df_jobs.columns:
-        df_jobs = df_jobs.drop(columns=['Dutch Requirement'])
-    df_jobs['Dutch Requirement'] = np.where(
+    if 'Dutch Requirement in Sentence' in df_jobs.columns:
+        df_jobs = df_jobs.drop(columns=['Dutch Requirement in Sentence'])
+    df_jobs['Dutch Requirement in Sentence'] = np.where(
         df_jobs[str_variable].str.contains(dutch_requirement_pattern),
         'Yes',
         'No',
@@ -665,9 +665,9 @@ def set_language_requirement(
 
     # English
     print('Setting English language requirements.')
-    if 'English Requirement' in df_jobs.columns:
-        df_jobs = df_jobs.drop(columns=['English Requirement'])
-    df_jobs['English Requirement'] = np.where(
+    if 'English Requirement in Sentence' in df_jobs.columns:
+        df_jobs = df_jobs.drop(columns=['English Requirement in Sentence'])
+    df_jobs['English Requirement in Sentence'] = np.where(
         df_jobs[str_variable].str.contains(english_requirement_pattern),
         'Yes',
         'No',
@@ -1560,7 +1560,7 @@ def split_df_jobs_to_df_sent(
     )
     df_final = pd.DataFrame(
         {
-            col: np.repeat(dff[col].values, dff[lst_col].str.len())
+            col: np.repeat(dff[col].values, dff[lst_col].apply(len))
             for col in dff.columns.difference([lst_col])
         }
     ).assign(**{lst_col: np.concatenate(dff[lst_col].values)})[dff.columns.to_list()]
@@ -1809,7 +1809,7 @@ def sent_tokenize_and_save_df(search_keyword, job_id, age, df_jobs, args=get_arg
                 )
             sentence_dict = {}
             for index, row in df_jobs.iterrows():
-                pattern = r'[\n]+|[,]{2,}|[|]{2,}|[\n\r]+|(?<=[a-z]\.)(?=\s*[A-Z])|(?=\:+[A-Z])'
+                pattern = r'[\n]+|[,]{2,}|[|]{2,}|[\n\r]+|(?<=[a-z]\.)\s*(?=[A-Z])|(?<=[a-z]\.)(?=[A-Z])|(?=\:+[A-Z])|(?<=[a-zA-Z]\:*\.*|\,*|\s*)\s*(?=The|This|There|Then|Where|When|Ability|Support|Liaise|Contribute|Build|Advise|Detail|Avail|Must|Minimum|Excellent|Fluent)'
 
                 # sentence_list = []
                 if row.loc['Language'] == str(args['language']):
