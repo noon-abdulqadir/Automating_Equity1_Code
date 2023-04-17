@@ -345,7 +345,7 @@ def split_data(df, col, analysis_columns=analysis_columns, text_col=text_col):
     print(f'Ratios: train_size = {train_ratio}, test size = {test_ratio}, validation size = {validation_ratio}')
 
     df = df.dropna(subset=analysis_columns, how='any')
-    df = df.loc[df[text_col].str.len() >= 5]
+    df = df.loc[df[text_col].apply(len) >= 5]
     print(f'DF length: {len(df)}')
 
     train, test = train_test_split(

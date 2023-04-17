@@ -86,7 +86,6 @@ try:
     import platform
     import pprint
     import random
-    import re
     import shutil
     import socket
     import string
@@ -125,6 +124,7 @@ try:
     import plot_metric
     import pyarrow as pa
     import pyarrow.parquet as pq
+    import regex as re
     import requests
     import researchpy as rp
     import scipy
@@ -478,11 +478,21 @@ plot_save_path = f'{data_dir}plots/'
 
 # Make sure path exist and make dir if not
 all_dir_list = [
-    code_dir, scraped_data, data_dir, df_save_dir, llm_path, models_save_path,
+    scraped_data, data_dir, df_save_dir, llm_path, models_save_path,
 ]
 for proj_dir in all_dir_list:
     if not os.path.exists(proj_dir):
         os.mkdir(proj_dir)
+
+# scraped_data sites_dir
+site_list = ['Indeed', 'Glassdoor', 'LinkedIn']
+for site in site_list:
+    if not os.path.exists(f'{scraped_data}{site}'):
+        os.mkdir(f'{scraped_data}{site}')
+
+# scraped_data CBS dir
+if not os.path.exists(f'{scraped_data}CBS'):
+    os.mkdir(f'{scraped_data}CBS')
 
 # %%
 
@@ -660,9 +670,20 @@ errors = (
 # %%
 # Analysis
 # Set Variables
-site_list = ['Indeed', 'Glassdoor', 'LinkedIn']
-nan_list = [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']
-pattern = r'[\n]+|[,]{2,}|[|]{2,}|[\n\r]+|(?<=[a-z]\.)(?=\s*[A-Z])|(?=\:+[A-Z])'
+nan_list = [
+    None, 'None', [], '[]', '"', -1, '-1', 0, '0', 'nan', np.nan, 'Nan', u'\uf0b7', u'\u200b', u'', u' ', u'  ', u'   ', '', ' ', '  ', '   ',
+]
+non_whitespace_nan_list = nan_list[:nan_list.index('')]
+
+sentence_beginners = 'A|The|This|There|Then|What|Where|When|How|Ability|Support|Provide|Liaise|Contribute|Collaborate|Build|Advise|Detail|Avail|Must|Minimum|Excellent|Fluent'
+pattern_1 = r'[\n]+[\s]*|[\,\s]{3,}(?<![A-Z]+)(?=[A-Z])|[\|\s]{3,}(?<![A-Z]+)(?=[A-Z])|[\:]+[\s]*(?<![A-Z]+)(?=[A-Z])|[\;]+[\s]*(?<![A-Z]+)(?=[A-Z])|[\n\r]+[\s]*(?<![A-Z]+)(?=[A-Z])'
+pattern_2 = r'(?<=[a-z]\.+|\:+|\;+|\S)(?<![\(|\&]+)(?<![A-Z]+)(?=[A-Z])'
+pattern_3 = rf'\s+(?={sentence_beginners})\s*'
+pattern = re.compile(f'{pattern_1} | {pattern_2} | {pattern_3}', re.VERBOSE)
+
+dutch_requirement_pattern = r'[Dd]utch [Pp]referred | [Dd]utch [Re]quired | [Dd]utch [Ll]anguage |[Pp]roficient in [Dd]utch |[Ss]peak [Dd]utch | [Kk]now [Dd]utch | [Ff]luent in [Dd]utch | [Dd]utch [Nn]ative | * [Dd]utch [Ll]evel'
+english_requirement_pattern = r'[Ee]nglish [Pp]referred | [Ee]nglish [Re]quired | [Ee]nglish [Ll]anguage |[Pp]roficient in [Ee]nglish |[Ss]peak [Ee]nglish | [Kk]now [Ee]nglish | [Ff]luent in [Ee]nglish | [Ee]nglish [Nn]ative | * [Ee]nglish [Ll]evel'
+
 alpha = 0.050
 normality_tests_labels = ['Statistic', 'p-value']
 ngrams_list=[1, 2, 3, 123]
@@ -670,11 +691,11 @@ embedding_libraries_list = ['spacy', 'nltk', 'gensim']
 dvs = [
     'Warmth', 'Competence',
 ]
-dvs_all = [
-    'Warmth', 'Competence', 'Warmth_Probability', 'Competence_Probability',
-]
 dvs_prob = [
     'Warmth_Probability', 'Competence_Probability',
+]
+dvs_all = [
+    'Warmth', 'Competence', 'Warmth_Probability', 'Competence_Probability',
 ]
 ivs = ['Gender', 'Age']
 ivs_all = [
@@ -694,6 +715,14 @@ ivs_all = [
     'Age_Younger',
     'Age_Older_n',
     'Age_Younger_n',
+    'Age_Older_% per Sector',
+    'Age_Younger_% per Sector',
+]
+ivs_cat_and_perc = [
+    'Gender',
+    'Age',
+    'Gender_Female_% per Sector',
+    'Gender_Male_% per Sector',
     'Age_Older_% per Sector',
     'Age_Younger_% per Sector',
 ]
@@ -760,7 +789,7 @@ ivs_age_dummy_num = [
     'Age_Mixed',
     'Age_Younger',
 ]
-ivs_age_dummy_num = [
+ivs_age_dummy = [
     'Age_Older',
     'Age_Mixed',
     'Age_Younger',
@@ -780,13 +809,13 @@ cat_list = [
     'Age_Younger',
     'Gender_Mixed',
     'Language',
-    'English Requirement',
-    'Dutch Requirement'
+    'English Requirement in Sentence',
+    'Dutch Requirement in Sentence'
 ]
 controls = [
         '% Sector per Workforce',
         'Job Description num_words',
-        'English Requirement', 'Dutch Requirement',
+        'English Requirement in Sentence', 'Dutch Requirement in Sentence',
         # 'Platform',
         # 'Platform_LinkedIn', 'Platform_Indeed', 'Platform_Glassdoor',
         # 'Job Description num_unique_words',
@@ -880,6 +909,33 @@ def categorize_df_gender_age(df, gender_order=None, age_order=None, ivs=None):
             df[f'{iv}_Num'] = pd.to_numeric(df[iv].cat.codes).astype('int64')
 
     return df
+
+
+# %%
+def get_word_num_and_frequency(row, text_col):
+
+    with open(f'{data_dir}punctuations.txt', 'rb') as f:
+        custom_punct_chars = pickle.load(f)
+    row['Job Description num_words'] = len(str(row[text_col]).split())
+    row['Job Description num_unique_words'] = len(set(str(row[text_col]).split()))
+    row['Job Description num_chars'] = len(str(row[text_col]))
+    row['Job Description num_chars_no_whitespact_and_punt'] = len(
+        [
+            c
+            for c in str(row[text_col])
+            if c not in custom_punct_chars and c not in list(string.punctuation) and c in list(string.printable) and c not in list(string.whitespace) and c != ' '
+        ]
+    )
+    row['Job Description num_punctuations'] = len(
+        [
+            c
+            for c in str(row[text_col])
+            if c in custom_punct_chars and c in list(string.punctuation) and c in list(string.printable) and c not in list(string.whitespace) and c != ' '
+        ]
+    )
+
+    return row
+
 
 
 # %%
