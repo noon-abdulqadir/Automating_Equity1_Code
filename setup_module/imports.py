@@ -89,6 +89,7 @@ try:
     import shutil
     import socket
     import string
+    import subprocess
     import tempfile
     import time
     import typing
