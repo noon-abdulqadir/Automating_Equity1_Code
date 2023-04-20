@@ -25,7 +25,7 @@
 #         if code_dir is not None:
 #             break
 # main_dir = str(Path(code_dir).parents[0])
-# scraped_data = f'{code_dir}/scraped_data'
+# scraped_data = f'{code_dir}1. Scraping/'
 # sys.path.append(code_dir)
 # from setup_module.imports import *
 # from setup_module.params import *
@@ -622,7 +622,7 @@ def clean_and_translate_keyword_list(
 
 
 # %%
-def save_trans_keyword_list(trans_keyword_list, parent_dir=validate_path(f'{code_dir}/scraped_data/CBS/Data/')):
+def save_trans_keyword_list(trans_keyword_list, parent_dir=validate_path(f'{code_dir}/1. Scraping/CBS/Data/')):
 
     for keyword in trans_keyword_list:
         for w_keyword, r_keyword in keyword_trans_dict.items():
@@ -653,7 +653,7 @@ def save_trans_keyword_list(trans_keyword_list, parent_dir=validate_path(f'{code
 # cbs_scraping
 # %%
 # Function to get translated and cleaned keyword list
-def get_trans_keyword_list(parent_dir=validate_path(f'{code_dir}/scraped_data/CBS/Data/')):
+def get_trans_keyword_list(parent_dir=validate_path(f'{code_dir}/1. Scraping/CBS/Data/')):
 
     with open(f'{parent_dir}trans_keyword_list.txt', 'r') as f:
         trans_keyword_list = [line.rstrip(' \n') for line in f]
@@ -667,7 +667,7 @@ def get_trans_keyword_list(parent_dir=validate_path(f'{code_dir}/scraped_data/CB
 
 def get_sbi_sectors_list(
     save_enabled=True,
-    parent_dir=validate_path(f'{code_dir}/scraped_data/CBS/'),
+    parent_dir=scraped_data,
 ):
 
     sib_5_loc = validate_path(f'{parent_dir}Found Data/SBI_ALL_NACE_REV2.csv')
@@ -758,7 +758,7 @@ def get_sbi_sectors_list(
 # %% CBS Data request
 def get_cbs_odata(
     sectors_file_path: str = validate_path(
-        f'{code_dir}/scraped_data/CBS/Found Data/'),
+        f'{code_dir}/1. Scraping/CBS/Found Data/'),
     table_url='https://opendata.cbs.nl/ODataAPI/OData/',
     table_id='81434ENG',
     addition_url='/UntypedDataSet',
@@ -951,7 +951,7 @@ def get_only_df(df_sectors, col_name, opp_col_name):
 
 def get_sector_df_from_cbs(
     save_enabled: bool = True,
-    parent_dir=validate_path(f'{code_dir}/scraped_data/CBS/'),
+    parent_dir=scraped_data,
     cols=['Industry class / branch (SIC2008)', 'Sex of employee',
           'Other characteristics employee', 'Employment/Jobs (x 1 000)'],
     get_cbs_odata_enabled=False,
@@ -1147,7 +1147,7 @@ def read_and_save_keyword_list(
     save_enabled: bool = True,
     translate_enabled: bool = False,
     sectors_file_path: str = validate_path(
-        f'{code_dir}/scraped_data/CBS/Found Data/'),
+        f'{code_dir}/1. Scraping/CBS/Found Data/'),
     use_top10_data: bool = False,
     age_limit: int = 45,
     age_ratio: int = 10,
@@ -1267,7 +1267,7 @@ def read_and_save_keyword_list(
     }
     if save_enabled is True:
         with open(
-            f'{code_dir}/scraped_data/CBS/Data/keywords_dict.json', 'w', encoding='utf8'
+            f'{code_dir}/1. Scraping/CBS/Data/keywords_dict.json', 'w', encoding='utf8'
         ) as f:
             json.dump(keywords_dict, f)
 
@@ -1308,7 +1308,7 @@ def read_and_save_keyword_list(
 # %%
 def get_keywords_from_cbs(
     save_enabled: bool = True,
-    keywords_file_path: str = f'{code_dir}/scraped_data/CBS/Found Data/Sectors List/',
+    keywords_file_path: str = f'{code_dir}/1. Scraping/CBS/Found Data/Sectors List/',
     cols=['Industry class / branch (SIC2008)', 'Sex of employee',
           'Other characteristics employee', 'Employment/Jobs (x 1 000)'],
     age_limit: int = 45,

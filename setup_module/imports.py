@@ -457,7 +457,7 @@ code_dir = f'{code_dir}/'
 sys.path.append(code_dir)
 
 # scraping dir
-scraped_data = f'{code_dir}scraped_data/'
+scraped_data = f'{code_dir}1. Scraping/'
 
 # data dir
 data_dir = f'{code_dir}data/'
@@ -466,7 +466,7 @@ data_dir = f'{code_dir}data/'
 df_save_dir = f'{data_dir}final dfs/'
 
 # lang models dir
-llm_path = f'{data_dir}Language Models'
+llm_path = f'{data_dir}Language Models/'
 
 # models dir
 models_save_path = f'{data_dir}classification models/'
@@ -502,7 +502,7 @@ if not os.path.exists(f'{scraped_data}CBS'):
 # Set LM settings
 # Preprocessing
 # NLTK variables
-nltk_path = f'{llm_path}/nltk'
+nltk_path = f'{llm_path}nltk'
 nltk.data.path.append(nltk_path)
 if not os.path.exists(nltk_path):
     os.mkdir(nltk_path)
@@ -1062,10 +1062,10 @@ keyword_trans_dict = {
     'other service activity': 'staff',
     'afvalbeheer': 'waste management'}
 
-# with open(f'{code_dir}/scraped_data/CBS/Data/keyword_trans_dict.txt', 'w') as f:
+# with open(f'{code_dir}/1. Scraping/CBS/Data/keyword_trans_dict.txt', 'w') as f:
 #     json.dump(keyword_trans_dict, f)
 
 # %%
 
-# with open(f'{code_dir}/scraped_data/CBS/Data/keyword_trans_dict.txt', 'w') as f:
+# with open(f'{code_dir}/1. Scraping/CBS/Data/keyword_trans_dict.txt', 'w') as f:
 #     json.dump(keyword_trans_dict, f)
