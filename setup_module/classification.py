@@ -25,7 +25,7 @@
 #         if code_dir is not None:
 #             break
 # main_dir = str(Path(code_dir).parents[0])
-# scraped_data = f'{code_dir}/scraped_data'
+# scraped_data = f'{code_dir}1. Scraping/'
 # sys.path.append(code_dir)
 # from setup_module.imports import *
 # from setup_module.params import *
@@ -59,7 +59,7 @@ for _ in range(5):
             break
 
 main_dir = str(Path(code_dir).parents[0])
-scraped_data = f'{code_dir}/scraped_data'
+scraped_data = f'{code_dir}1. Scraping/'
 sys.path.append(code_dir)
 
 # %%
