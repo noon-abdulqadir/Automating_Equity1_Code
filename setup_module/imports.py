@@ -525,7 +525,7 @@ for nltk_lib in list(set(available_nltk_libs) ^ set(nltk_libs)):
 
 # nltk.download_shell()
 
-stop_words = set(stopwords.words('english'))
+# stop_words = set(stopwords.words('english'))
 punctuations = list(string.punctuation)
 lemmatizer = WordNetLemmatizer()
 stemmer = PorterStemmer()
