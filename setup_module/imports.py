@@ -527,10 +527,10 @@ for nltk_lib in list(set(available_nltk_libs) ^ set(nltk_libs)):
 
 # HACK
 # stop_words = set(stopwords.words('english'))
-punctuations = list(string.punctuation)
-lemmatizer = WordNetLemmatizer()
-stemmer = PorterStemmer()
-sentim_analyzer = SentimentIntensityAnalyzer()
+# punctuations = list(string.punctuation)
+# lemmatizer = WordNetLemmatizer()
+# stemmer = PorterStemmer()
+# sentim_analyzer = SentimentIntensityAnalyzer()
 
 # Spacy variables
 nlp = spacy.load('en_core_web_sm')
