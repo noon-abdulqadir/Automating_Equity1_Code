@@ -601,7 +601,7 @@ print('#'*40)
 print('Starting!')
 print('#'*40)
 
-analysis_columns = ['Warmth', 'Competence']
+analysis_columns = ['Competence']
 text_col = 'Job Description spacy_sentencized'
 
 # Get existing estimators
