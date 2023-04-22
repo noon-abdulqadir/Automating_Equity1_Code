@@ -128,6 +128,7 @@ try:
     import regex as re
     import requests
     import researchpy as rp
+    import rpy2
     import scipy
     import seaborn as sns
     import selenium.webdriver as webdriver
@@ -387,6 +388,7 @@ try:
         BertTokenizerFast,
         DistilBertForSequenceClassification,
         DistilBertTokenizerFast,
+        EarlyStoppingCallback,
         GPT2Config,
         GPT2ForSequenceClassification,
         GPT2TokenizerFast,
