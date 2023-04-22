@@ -503,49 +503,48 @@ if not os.path.exists(f'{scraped_data}CBS'):
 # %%
 # Set LM settings
 # Preprocessing
-# NLTK variables
-nltk_path = f'{llm_path}nltk'
-nltk.data.path.append(nltk_path)
-if not os.path.exists(nltk_path):
-    os.mkdir(nltk_path)
+# # NLTK variables
+# nltk_path = f'{llm_path}nltk'
+# nltk.data.path.append(nltk_path)
+# if not os.path.exists(nltk_path):
+#     os.mkdir(nltk_path)
 
-nltk_libs = [
-    'words', 'stopwords', 'punkt', 'averaged_perceptron_tagger',
-    'omw-1.4', 'wordnet', 'maxent_ne_chunker', 'vader_lexicon'
-]
-available_nltk_libs = list(
-    set(
-        nltk_dir.split('.zip')[0].split('/')[-1]
-        for nltk_dir in glob.glob(f'{nltk_path}/*/*')
-    )
-)
+# nltk_libs = [
+#     'words', 'stopwords', 'punkt', 'averaged_perceptron_tagger',
+#     'omw-1.4', 'wordnet', 'maxent_ne_chunker', 'vader_lexicon'
+# ]
+# available_nltk_libs = list(
+#     set(
+#         nltk_dir.split('.zip')[0].split('/')[-1]
+#         for nltk_dir in glob.glob(f'{nltk_path}/*/*')
+#     )
+# )
 
-for nltk_lib in list(set(available_nltk_libs) ^ set(nltk_libs)):
-    nltk.download(nltk_lib, download_dir=nltk_path)
+# for nltk_lib in list(set(available_nltk_libs) ^ set(nltk_libs)):
+#     nltk.download(nltk_lib, download_dir=nltk_path)
 
-# nltk.download_shell()
+# # nltk.download_shell()
 
-# HACK
 # stop_words = set(stopwords.words('english'))
 # punctuations = list(string.punctuation)
 # lemmatizer = WordNetLemmatizer()
 # stemmer = PorterStemmer()
 # sentim_analyzer = SentimentIntensityAnalyzer()
 
-# Spacy variables
-nlp = spacy.load('en_core_web_sm')
-# nlp = en_core_web_sm.load()
-# nlp = spacy.load('en_core_web_trf')
+# # Spacy variables
+# nlp = spacy.load('en_core_web_sm')
+# # nlp = en_core_web_sm.load()
+# # nlp = spacy.load('en_core_web_trf')
 
-# Gensim
-gensim_path = f'{str(llm_path)}gensim/'
-if not os.path.exists(nltk_path):
-    os.mkdir(gensim_path)
-gensim_api.base_dir = os.path.dirname(gensim_path)
-gensim_api.BASE_DIR = os.path.dirname(gensim_path)
-gensim_api.GENSIM_DATA_DIR = os.path.dirname(gensim_path)
-glove_path = f'{gensim_path}glove/'
-fasttext_path = os.path.abspath(f'{gensim_path}fasttext-wiki-news-subwords-300')
+# # Gensim
+# gensim_path = f'{str(llm_path)}gensim/'
+# if not os.path.exists(nltk_path):
+#     os.mkdir(gensim_path)
+# gensim_api.base_dir = os.path.dirname(gensim_path)
+# gensim_api.BASE_DIR = os.path.dirname(gensim_path)
+# gensim_api.GENSIM_DATA_DIR = os.path.dirname(gensim_path)
+# glove_path = f'{gensim_path}glove/'
+# fasttext_path = os.path.abspath(f'{gensim_path}fasttext-wiki-news-subwords-300')
 
 # Classification
 # Model variables
