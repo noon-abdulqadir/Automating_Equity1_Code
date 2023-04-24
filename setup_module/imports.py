@@ -246,6 +246,7 @@ try:
     from sklearn import feature_selection, linear_model, metrics, set_config, svm, utils
     from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
     from sklearn.calibration import CalibratedClassifierCV, CalibrationDisplay
+    from sklearn.cluster import KMeans
     from sklearn.compose import ColumnTransformer
     from sklearn.datasets import (
         load_files,
@@ -724,6 +725,18 @@ ivs_all = [
 ivs_cat_and_perc = [
     'Gender',
     'Age',
+    'Gender_Female_% per Sector',
+    'Gender_Male_% per Sector',
+    'Age_Older_% per Sector',
+    'Age_Younger_% per Sector',
+]
+ivs_dummy_and_perc = [
+    'Gender_Female',
+    'Gender_Mixed',
+    'Gender_Male',
+    'Age_Older',
+    'Age_Mixed',
+    'Age_Younger',
     'Gender_Female_% per Sector',
     'Gender_Male_% per Sector',
     'Age_Older_% per Sector',
