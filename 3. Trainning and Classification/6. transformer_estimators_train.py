@@ -122,7 +122,7 @@ accelerator = Accelerator()
 torch.autograd.set_detect_anomaly(True)
 os.environ.get('TOKENIZERS_PARALLELISM')
 best_trial_args = [
-    'num_train_epochs', 'per_device_train_batch_size', 'per_device_eval_batch_size', 'learning_rate', 'warmup_steps', 'weight_decay'
+    'num_train_epochs', 'learning_rate',
 ]
 training_args_dict = {
     'seed': random_state,
@@ -138,13 +138,13 @@ training_args_dict = {
     'use_mps_device': bool(device_name == 'mps' and torch.backends.mps.is_available()),
     'optim': 'adamw_torch',
     'load_best_model_at_end': True,
-    # The below metrics are used by hyperparameter search
-    'num_train_epochs': 3,
     'per_device_train_batch_size': 16,
     'per_device_eval_batch_size': 20,
-    'learning_rate': 5e-5,
     'warmup_steps': 100,
     'weight_decay': 0.01,
+    # The below metrics are used by hyperparameter search
+    'num_train_epochs': 3,
+    'learning_rate': 5e-5,
 }
 training_args_dict_for_best_trial = {
     arg_name: arg_
