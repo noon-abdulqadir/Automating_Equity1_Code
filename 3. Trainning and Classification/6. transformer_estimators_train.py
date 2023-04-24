@@ -126,18 +126,18 @@ best_trial_args = [
 ]
 training_args_dict = {
     'seed': random_state,
-    # 'resume_from_checkpoint': True,
-    # 'overwrite_output_dir': True,
-    'logging_steps': 100,
-    'evaluation_strategy': 'epoch',
-    'save_strategy': 'epoch',
+    'resume_from_checkpoint': True,
+    'overwrite_output_dir': True,
+    'logging_steps': 500,
+    'evaluation_strategy': 'steps',
+    'eval_steps': 500,
+    'save_strategy': 'steps',
+    'save_steps': 500,
+    # 'metric_for_best_model': 'recall',
     # 'torch_compile': bool(transformers.file_utils.is_torch_available()),
     'use_mps_device': bool(device_name == 'mps' and torch.backends.mps.is_available()),
     'optim': 'adamw_torch',
-    # 'save_total_limit': 1,
     'load_best_model_at_end': True,
-    'metric_for_best_model': 'recall',
-    'label_names':[0, 1],
     # The below metrics are used by hyperparameter search
     'num_train_epochs': 3,
     'per_device_train_batch_size': 16,
@@ -189,7 +189,7 @@ def get_existing_files(
 
     print(f'Searching for existing estimators in directory:\n{results_save_path}')
 
-    for estimators_file in tqdm.tqdm(glob.glob(f'{results_save_path}*.pkl')):
+    for estimators_file in tqdm.tqdm(glob.glob(f'{results_save_path}*.*')):
         if f'{method} Estimator - ' in estimators_file:
 
             col=estimators_file.split(f'{method} Estimator - ')[-1].split(' - ')[0]
@@ -396,17 +396,17 @@ def split_data(df, col, analysis_columns=analysis_columns, text_col=text_col):
 
 # %%
 class ToDataset(torch.utils.data.Dataset):
-    def __init__(self, encodings, encoded):
+    def __init__(self, encodings, labels):
         self.encodings = encodings
-        self.encoded = encoded
+        self.labels = labels
 
     def __getitem__(self, idx):
         item = {key: torch.tensor(val[idx], device=device).clone().detach() for key, val in self.encodings.items()}
-        item['labels'] = torch.tensor(self.encoded[idx], device=device).clone().detach()
+        item['labels'] = torch.tensor(self.labels[idx], device=device).clone().detach()
         return item
 
     def __len__(self):
-        return len(self.encoded)
+        return len(self.encodings['input_ids'])
 
 
 # %%
@@ -421,8 +421,8 @@ def print_Xy_encodings(
     check_consistent_length(X_val, y_val, val_dataset)
 
     # Check encodings
-    assert all(y_train == train_dataset.encoded), 'y_train and train_dataset encoded are not the same'
-    assert all(y_test == test_dataset.encoded), 'y_test and test_dataset encoded are not the same'
+    assert all(y_train == train_dataset.labels), 'y_train and train_dataset labels are not the same'
+    assert all(y_test == test_dataset.labels), 'y_test and test_dataset labels are not the same'
 
     print('Done encoding training, testing, and validation sets.')
     print('='*20)
@@ -676,12 +676,13 @@ def compute_metrics_all(
         'Cohen’s Kappa': float(kappa),
         'Geometric Mean': float(gmean),
         'Classification Report': report,
-        'Imbalanced Classification Report': imblearn_report,
-        'Confusion Matrix': cm,
-        'Normalized Confusion Matrix': cm_normalized,
+        'Imbalanced Classification Report': str(imblearn_report),
+        'Confusion Matrix': str(cm),
+        'Normalized Confusion Matrix': str(cm_normalized),
         'y_pred': y_pred,
         'y_pred_prob': y_pred_prob,
     }
+    print('Done appending metrics to dict.')
 
     return metrics_dict
 
@@ -725,7 +726,7 @@ def preprocess_logits_for_metrics_y_pred_prob(y_pred_logits, y_labels):
     print('-'*20)
     print('Getting y_pred_prob through softmax of y_pred_logits.')
     try:
-        y_pred_prob_array = torch.nn.functional.softmax(y_pred_logits_tensor, dim=-1).clone().detach().cpu().numpy()
+        y_pred_prob_array = torch.nn.functional.softmax(y_pred_logits_tensor, dim=-1).cpu().numpy()
         print('Using torch.nn.functional.softmax.')
     except Exception:
         y_pred_prob_array = scipy.special.softmax(y_pred_logits, axis=-1)
@@ -762,7 +763,7 @@ def preprocess_logits_for_metrics_y_pred(y_pred_prob_array):
     print('-'*20)
     print('Getting y_pred through argmax of y_pred_prob.')
     try:
-        y_pred_array = torch.argmax(y_pred_prob_tensor, axis=-1).clone().detach().cpu().numpy()
+        y_pred_array = torch.argmax(y_pred_prob_tensor, axis=-1).cpu().numpy()
         print('Using torch.argmax.')
     except Exception:
         y_pred_array = y_pred_prob.argmax(axis=-1)
@@ -806,7 +807,7 @@ def preprocess_logits_for_metrics_in_compute_metrics(y_pred_logits):
     y_pred_logits_tensor = torch.tensor(y_pred_logits, device=device)
     print('Getting y_pred through argmax of y_pred_logits...')
     try:
-        y_pred_array = torch.argmax(y_pred_logits_tensor, axis=-1).clone().detach().cpu().numpy()
+        y_pred_array = torch.argmax(y_pred_logits_tensor, axis=-1).cpu().numpy()
         print('Using torch.argmax.')
     except Exception:
         y_pred_array = y_pred_logits.argmax(axis=-1)
@@ -822,7 +823,7 @@ def preprocess_logits_for_metrics_in_compute_metrics(y_pred_logits):
     print('-'*20)
     print('Getting y_pred_prob through softmax of y_pred_logits...')
     try:
-        y_pred_prob_array = torch.nn.functional.softmax(y_pred_logits_tensor, dim=-1).clone().detach().cpu().numpy()
+        y_pred_prob_array = torch.nn.functional.softmax(y_pred_logits_tensor, dim=-1).cpu().numpy()
         print('Using torch.nn.functional.softmax.')
     except Exception:
         y_pred_prob_array = scipy.special.softmax(y_pred_logits, axis=-1)
@@ -902,7 +903,7 @@ def save_Xy_estimator(
     X_train, y_train, train_dataset,
     X_test, y_test, y_test_pred, y_test_pred_prob, test_dataset,
     X_val, y_val, y_val_pred, y_val_pred_prob, val_dataset,
-    estimator, accelerator,
+    estimator, accelerator, eval_metrics_dict, test_metrics_dict,
     col, vectorizer_name, classifier_name,
     results_save_path=results_save_path,
     method=method, done_xy_save_path=done_xy_save_path,
@@ -926,6 +927,10 @@ def save_Xy_estimator(
     # Make data dict
     data_dict['Estimator'] = estimator
     data_dict['accelerator'] = accelerator
+    data_dict['eval_metrics_dict'] = eval_metrics_dict
+    data_dict['test_metrics_dict'] = test_metrics_dict
+
+    # Make df_train_data
     data_dict['df_train_data'] = pd.DataFrame(
         {
             'X_train': X_train,
@@ -964,14 +969,18 @@ def save_Xy_estimator(
             else results_save_path
         )
         print(f'Saving {file_name} at {save_path}')
-        if not isinstance(file_, pd.DataFrame) and file_name == 'Estimator' and 'df_' not in file_name:
+        if not isinstance(file_, pd.DataFrame) and file_name == 'Estimator' and 'df_' not in file_name and 'metrics_dict' not in file_name:
             # Save as .model
             file_.save_model(f'{save_path}{method} {file_name}{path_suffix.replace("pkl", "model")}')
             saved_files_list.append(file_name)
-        elif not isinstance(file_, pd.DataFrame) and file_name == 'accelerator' and 'df_' not in file_name:
+        elif not isinstance(file_, pd.DataFrame) and file_name == 'accelerator' and 'df_' not in file_name and 'metrics_dict' not in file_name:
             file_.save(estimator.state, f'{save_path}{method} Estimator{path_suffix.replace("pkl", "model")}/accelerator')
             saved_files_list.append(file_name)
-        elif isinstance(file_, pd.DataFrame) and file_name != 'Estimator' and file_name != 'accelerator' and 'df_' in file_name:
+        elif isinstance(file_, dict) and file_name != 'Estimator' and file_name != 'accelerator' and 'df_' not in file_name and 'metrics_dict' in file_name:
+            with open(f'{save_path}{method} {file_name}{path_suffix}', 'wb') as f:
+                pickle.dump(file_, f, protocol=protocol)
+            saved_files_list.append(file_name)
+        elif isinstance(file_, pd.DataFrame) and file_name != 'Estimator' and file_name != 'accelerator' and 'df_' in file_name and 'metrics_dict' not in file_name:
             file_.to_pickle(
                 f'{save_path}{method} {file_name}{path_suffix}', protocol=protocol
             )
@@ -992,9 +1001,10 @@ def assert_all_classifiers_used(
     if used_classifiers is None:
         used_classifiers = []
 
-    for estimator_path in glob.glob(f'{results_save_path}{method} Estimator - *.pkl'):
-        classifier_name = estimator_path.split(f'{results_save_path}{method} ')[1].split(' + ')[1].split(' (Save_protocol=')[0]
-        used_classifiers.append(classifier_name)
+    for estimator_path in glob.glob(f'{results_save_path}{method} Estimator - *.*'):
+        if f'{method} Estimator - ' in estimator_path:
+            classifier_name = estimator_path.split(f'{results_save_path}{method} ')[1].split(' + ')[1].split(' (Save_protocol=')[0]
+            used_classifiers.append(classifier_name)
 
     assert set(list(classifiers_pipe.keys())) == set(used_classifiers), f'Not all classifiers were used!\nAvaliable Classifiers:\n{set(list(classifiers_pipe.keys()))}\nUsed Classifiers:\n{set(used_classifiers)}\nLeftout Classifiers:\n{set(list(classifiers_pipe.keys())) ^ set(used_classifiers)}'
     print('All classifiers were used!')
@@ -1022,6 +1032,7 @@ print('#'*40)
 print('Starting!')
 print('#'*40)
 
+# Define columns to be used
 analysis_columns = ['Warmth', 'Competence']
 text_col = 'Job Description spacy_sentencized'
 
@@ -1038,7 +1049,7 @@ for col in tqdm.tqdm(analysis_columns):
     )
     assert len(df_manual[df_manual[str(col)].map(df_manual[str(col)].value_counts() > 1)]) != 0, f'Dataframe has no {col} values!'
 
-    if len(glob.glob(f'{results_save_path}{method} df_*_data - {col} - (Save_protocol=*).pkl')) == 3:
+    if (len(glob.glob(f'{results_save_path}{method} df_*_data - {col} - (Save_protocol=*).pkl')) == 3) or (len(glob.glob(f'{results_save_path}{method} df_*_data - {col} - (Save_protocol=*).pkl')) == 6):
         # Load previous Xy
         print('Loading previous Xy.')
         (
@@ -1076,11 +1087,11 @@ for col in tqdm.tqdm(analysis_columns):
     for transformer_name, transformer_dict in tqdm.tqdm(transformers_pipe.items()):
         model_name = transformer_dict['model_name']
         config = transformer_dict['config'].from_pretrained(model_name)
-        tokenizer = transformer_dict['tokenizer'].from_pretrained(model_name)
+        tokenizer = transformer_dict['tokenizer'].from_pretrained(model_name, num_labels=2)
+        model = transformer_dict['model'].from_pretrained(model_name, config=config,).to(device)
         if tokenizer.pad_token is None:
             tokenizer.pad_token = tokenizer.eos_token
             model.resize_token_embeddings(len(tokenizer))
-        model = transformer_dict['model'].from_pretrained(model_name, config=config,).to(device)
         if model.config.pad_token_id is None:
             try:
                 model.config.pad_token_id = tokenizer.pad_token_id
@@ -1091,7 +1102,7 @@ for col in tqdm.tqdm(analysis_columns):
         vectorizer_name = ''.join(model.name_or_path.split('-')).upper()
         classifier_name = model.__class__.__name__
         output_dir = training_args_dict['output_dir'] = training_args_dict_for_best_trial['output_dir'] = f'{results_save_path}{method} Estimator - {col} - {vectorizer_name} + {classifier_name} (Save_protocol={pickle.HIGHEST_PROTOCOL}).model'
-        # log_dir = training_args_dict['logging_dir'] = training_args_dict_for_best_trial['logging_dir'] = f'{results_save_path}{method} Estimator - {col} - {vectorizer_name} + {classifier_name} (Save_protocol={pickle.HIGHEST_PROTOCOL}).log'
+        log_dir = training_args_dict['logging_dir'] = training_args_dict_for_best_trial['logging_dir'] = f'{results_save_path}{method} Estimator - {col} - {vectorizer_name} + {classifier_name} (Save_protocol={pickle.HIGHEST_PROTOCOL}).log'
 
         # Encode data
         (
@@ -1131,46 +1142,45 @@ for col in tqdm.tqdm(analysis_columns):
         print('-'*20)
         print('Passing data and arguments to Trainer.')
         estimator = Trainer(
-            # model_init=model_init,
-            # args=TrainingArguments(**training_args_dict_for_best_trial),
-            model=model,
-            args=TrainingArguments(**training_args_dict),
+            model_init=model_init,
+            args=TrainingArguments(**training_args_dict_for_best_trial),
+            # model=model,
+            # args=TrainingArguments(**training_args_dict),
             tokenizer=tokenizer,
             train_dataset=train_dataset,
             eval_dataset=val_dataset,
             preprocess_logits_for_metrics=preprocess_logits_for_metrics_y_pred_prob,
             compute_metrics=compute_metrics,
-            data_collator=transformers.DataCollatorWithPadding(tokenizer),
+            callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
+            # data_collator=transformers.DataCollatorWithPadding(tokenizer),
         )
         if estimator.place_model_on_device:
             estimator.model.to(device)
 
-        # # Hyperparameter search
-        # print('-'*20)
-        # print(f'Starting hyperparameter search for {col}.')
-        # best_trial = estimator.hyperparameter_search(
-        #     direction='maximize',
-        #     backend='optuna',
-        #     n_trials=10,
-        #     hp_space=optuna_hp_space,
-        #     sampler=optuna.samplers.TPESampler(seed=random_state),
-        #     pruner=optuna.pruners.SuccessiveHalvingPruner(),
-        #     compute_objective=compute_objective,
-        #     n_jobs=n_jobs,
-        # )
-        # estimator.save_state()
-        # estimator.save_metrics('all', metrics_dict)
-        # estimator.save_model(output_dir)
-        # accelerator.save(estimator.state, f'{output_dir}/accelerator')
-        # print('Done hyperparameter search!')
-        # print('-'*20)
+        # Hyperparameter search
+        print('-'*20)
+        print(f'Starting hyperparameter search for {col}.')
+        best_trial = estimator.hyperparameter_search(
+            direction='maximize',
+            backend='optuna',
+            n_trials=10,
+            hp_space=optuna_hp_space,
+            sampler=optuna.samplers.TPESampler(seed=random_state),
+            pruner=optuna.pruners.SuccessiveHalvingPruner(),
+            compute_objective=compute_objective,
+            n_jobs=n_jobs,
+        )
+        estimator.save_state()
+        estimator.save_model(output_dir)
+        accelerator.save(estimator.state, f'{output_dir}/accelerator')
+        print('Done hyperparameter search!')
+        print('-'*20)
 
         # Train trainer
         print('-'*20)
-        print(f'Starting training for {col}.')
-        estimator.train()#trial=best_trial)
+        print(f'Starting training for {col} using {classifier_name}.')
+        estimator.train(resume_from_checkpoint=True, trial=best_trial)
         estimator.save_state()
-        estimator.save_metrics('all', metrics_dict)
         estimator.save_model(output_dir)
         accelerator.save(estimator.state, f'{output_dir}/accelerator')
         print('Done training!')
@@ -1180,6 +1190,7 @@ for col in tqdm.tqdm(analysis_columns):
         print('-'*20)
         print(f'Evaluating estimator for {col}.')
         eval_metrics_dict = estimator.evaluate()
+        estimator.save_metrics('all', eval_metrics_dict)
         y_val_pred = eval_metrics_dict.pop('eval_y_pred')
         y_val_pred_prob = eval_metrics_dict.pop('eval_y_pred_prob')
         eval_metrics_dict = clean_metrics_dict(eval_metrics_dict, list(eval_metrics_dict.keys())[0].split('_')[0])
@@ -1188,6 +1199,7 @@ for col in tqdm.tqdm(analysis_columns):
         # Get predictions
         print(f'Getting prediction results for {col}.')
         y_test_pred_logits, y_test_labels, test_metrics_dict = estimator.predict(test_dataset)
+        estimator.save_metrics('all', test_metrics_dict)
         y_test_pred = test_metrics_dict.pop('test_y_pred')
         y_test_pred_prob = test_metrics_dict.pop('test_y_pred_prob')
         test_metrics_dict = clean_metrics_dict(test_metrics_dict, list(test_metrics_dict.keys())[0].split('_')[0])
@@ -1201,14 +1213,14 @@ for col in tqdm.tqdm(analysis_columns):
             X_train, y_train, train_dataset,
             X_test, y_test, y_test_pred, y_test_pred_prob, test_dataset,
             X_val, y_val, y_val_pred, y_val_pred_prob, val_dataset,
-            estimator, accelerator,
+            estimator, accelerator, eval_metrics_dict, test_metrics_dict,
             col, vectorizer_name, classifier_name,
         )
         print('Done training!')
         print('-'*20)
 
 # Assert that all classifiers were used
-assert_all_classifiers_used(classifiers_pipe=classifiers_pipe)
+assert_all_classifiers_used(classifiers_pipe=transformers_pipe)
 print('#'*40)
 print('DONE!')
 print('#'*40)
