@@ -684,8 +684,8 @@ pattern_2 = r'(?<=[a-z]\.+|\:+|\;+|\S)(?<![\(|\&]+)(?<![A-Z]+)(?=[A-Z])'
 pattern_3 = rf'\s+(?={sentence_beginners})\s*'
 pattern = re.compile(f'{pattern_1} | {pattern_2} | {pattern_3}', re.VERBOSE)
 
-dutch_requirement_pattern = r'[Dd]utch [Pp]referred | [Dd]utch [Re]quired | [Dd]utch [Ll]anguage |[Pp]roficient in [Dd]utch |[Ss]peak [Dd]utch | [Kk]now [Dd]utch | [Ff]luent in [Dd]utch | [Dd]utch [Nn]ative | * [Dd]utch [Ll]evel'
-english_requirement_pattern = r'[Ee]nglish [Pp]referred | [Ee]nglish [Re]quired | [Ee]nglish [Ll]anguage |[Pp]roficient in [Ee]nglish |[Ss]peak [Ee]nglish | [Kk]now [Ee]nglish | [Ff]luent in [Ee]nglish | [Ee]nglish [Nn]ative | * [Ee]nglish [Ll]evel'
+dutch_requirement_pattern = r'[Dd]utch [Pp]referred | [Dd]utch [Re]quired | [Dd]utch [Ll]anguage |[Pp]roficient in [Dd]utch |[Ss]peak [Dd]utch | [Kk]now [Dd]utch | [Ff]luent in [Dd]utch | [Dd]utch [Nn]ative | * [Dd]utch [Ll]evel | [Dd]utch [Ss]peaking | [Dd]utch [Ss]peaker | [iI]deally [Dd]utch'
+english_requirement_pattern = r'[Ee]nglish [Pp]referred | [Ee]nglish [Re]quired | [Ee]nglish [Ll]anguage |[Pp]roficient in [Ee]nglish |[Ss]peak [Ee]nglish | [Kk]now [Ee]nglish | [Ff]luent in [Ee]nglish | [Ee]nglish [Nn]ative | * [Ee]nglish [Ll]evel | [Ee]nglish [Ss]peaking | [Ee]nglish [Ss]peaker | [iI]deally [Ee]nglish'
 
 alpha = 0.050
 normality_tests_labels = ['Statistic', 'p-value']
