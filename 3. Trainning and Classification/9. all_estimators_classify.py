@@ -212,7 +212,7 @@ class ImbTrainer(Trainer):
 
 # %%
 # Function to get y_pred and y_pred_prob
-def preprocess_logits_for_metrics_in_compute_metrics(y_pred_logits):
+def preprocess_logits_for_metrics_from_logits(y_pred_logits):
 
     # Create a DeepSpeed engine
     engine, _ = deepspeed.initialize()
@@ -378,7 +378,7 @@ for col in tqdm.tqdm(analysis_columns):
         # Get predictions
         print(f'Getting prediction results for {col}.')
         estimator = Trainer(
-            model=engine.module,# HACK
+            model=engine,# HACK
             tokenizer=tokenizer,
             # args=TrainingArguments(**training_args_dict),
             # preprocess_logits_for_metrics=preprocess_logits_for_metrics_y_pred_prob,
@@ -391,7 +391,7 @@ for col in tqdm.tqdm(analysis_columns):
         print('-'*20)
         print('Classifying data.')
         y_pred_logits, y_labels = estimator.predict(dataset)
-        y_pred_array, y_pred, y_pred_prob_array, y_pred_prob = preprocess_logits_for_metrics_in_compute_metrics(y_pred_logits)
+        y_pred_array, y_pred, y_pred_prob_array, y_pred_prob = preprocess_logits_for_metrics_from_logits(y_pred_logits)
         df_jobs[col] = y_pred
         df_jobs[f'{col}_Probability'] = y_pred_prob
 

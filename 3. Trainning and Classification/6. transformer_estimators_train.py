@@ -800,7 +800,7 @@ def compute_metrics(
 
 # %%
 # Function to get y_pred and y_pred_prob
-def preprocess_logits_for_metrics_in_compute_metrics(y_pred_logits):
+def preprocess_logits_for_metrics_from_logits(y_pred_logits):
 
     # Get y_pred
     print('-'*20)
@@ -859,7 +859,7 @@ def compute_metrics_from_logits(
     # Get y_test_pred and y_test_pred_prob
     (
         y_pred_array, y_pred, y_pred_prob_array, y_pred_prob
-    ) = preprocess_logits_for_metrics_in_compute_metrics(y_pred_logits)
+    ) = preprocess_logits_for_metrics_from_logits(y_pred_logits)
 
     return compute_metrics_all(y_labels, y_pred, y_pred_prob)
 
