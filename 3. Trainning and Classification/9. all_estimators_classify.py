@@ -214,20 +214,23 @@ class ImbTrainer(Trainer):
 # Function to get y_pred and y_pred_prob
 def preprocess_logits_for_metrics_in_compute_metrics(y_pred_logits):
 
+    # Create a DeepSpeed engine
+    engine, _ = deepspeed.initialize()
+
     # Get y_pred
     print('-'*20)
     y_pred_logits_tensor = torch.tensor(y_pred_logits, device=device)
     print('Getting y_pred through argmax of y_pred_logits...')
     try:
-        y_pred_array = torch.argmax(y_pred_logits_tensor, axis=-1).cpu().numpy()
+        y_pred_array = engine.module(torch.argmax(y_pred_logits_tensor, axis=-1)).cpu().numpy()
         print('Using torch.argmax.')
     except Exception:
-        y_pred_array = y_pred_logits.argmax(axis=-1)
+        y_pred_array = engine.module(y_pred_logits.argmax(axis=-1))
         print('Using np.argmax.')
     print(f'y_pred_array shape: {y_pred_array.shape}')
     print('-'*20)
     print('Flattening y_pred...')
-    y_pred = [bert_label2id[l] for l in y_pred_array.flatten().tolist()]
+    y_pred = y_pred_array.flatten().tolist()
     print(f'y_pred length: {len(y_pred)}')
     print('-'*20)
 
@@ -235,10 +238,10 @@ def preprocess_logits_for_metrics_in_compute_metrics(y_pred_logits):
     print('-'*20)
     print('Getting y_pred_prob through softmax of y_pred_logits...')
     try:
-        y_pred_prob_array = torch.nn.functional.softmax(y_pred_logits_tensor, dim=-1).cpu().numpy()
+        y_pred_prob_array = engine.module(torch.nn.functional.softmax(y_pred_logits_tensor, dim=-1)).cpu().numpy()
         print('Using torch.nn.functional.softmax.')
     except Exception:
-        y_pred_prob_array = scipy.special.softmax(y_pred_logits, axis=-1)
+        y_pred_prob_array = engine.module(scipy.special.softmax(y_pred_logits, axis=-1))
         print('Using scipy.special.softmax.')
     # from: https://discuss.huggingface.co/t/different-results-predicting-from-trainer-and-model/12922
     assert all(y_pred_prob_array.argmax(axis=-1) == y_pred_array), 'Argmax of y_pred_prob_array does not match y_pred_array.'
@@ -249,7 +252,7 @@ def preprocess_logits_for_metrics_in_compute_metrics(y_pred_logits):
     print(f'y_pred length: {len(y_pred_prob)}')
     print('-'*20)
 
-    y_pred_logits_tensor.detach()
+    y_pred_logits_tensor.clone().detach()
 
     return (
         y_pred_array, y_pred, y_pred_prob_array, y_pred_prob
@@ -357,7 +360,20 @@ for col in tqdm.tqdm(analysis_columns):
         # Deepseed
         from deepspeed import DeepSpeedEngine
         from deepspeed.ops.adam import FusedAdam
-        engine, _, _ = DeepSpeedEngine.initialize(model=fitted_estimator, local_rank=0)
+        from transformers.integrations import deepspeed
+
+        # define the DeepSpeed configuration
+        deepspeed_config = DeepSpeedConfig(
+            zero_allow_untested_optimizer=True,
+            zero_optimization_level=3,
+            zero_optimization={},
+            enable_zero=False,
+            partition_activations=False,
+            partition_weights=[1],
+            fp16={'enabled': True},
+            offload_optimizer={'device': 'nvme', 'nvme_path': '/raid/'},
+        )
+        engine, _, _ = DeepSpeedEngine.initialize(model=fitted_estimator, local_rank=0, config=deepspeed_config)
 
         # Get predictions
         print(f'Getting prediction results for {col}.')
