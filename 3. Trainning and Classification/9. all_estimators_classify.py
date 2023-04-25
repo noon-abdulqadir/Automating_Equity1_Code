@@ -360,7 +360,6 @@ for col in tqdm.tqdm(analysis_columns):
         # Deepseed
         from deepspeed import DeepSpeedEngine
         from deepspeed.ops.adam import FusedAdam
-        from transformers.integrations import deepspeed
 
         # define the DeepSpeed configuration
         deepspeed_config = DeepSpeedConfig(
