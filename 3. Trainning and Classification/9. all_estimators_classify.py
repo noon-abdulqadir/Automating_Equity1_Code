@@ -113,7 +113,7 @@ accelerator = Accelerator()
 torch.autograd.set_detect_anomaly(True)
 os.environ.get('TOKENIZERS_PARALLELISM')
 best_trial_args = [
-    'num_train_epochs', 'learning_rate',
+    'num_train_epochs', 'learning_rate', 'weight_decay', 'warmup_steps',
 ]
 training_args_dict = {
     'seed': random_state,
@@ -129,13 +129,13 @@ training_args_dict = {
     'use_mps_device': bool(device_name == 'mps' and torch.backends.mps.is_available()),
     'optim': 'adamw_torch',
     'load_best_model_at_end': True,
-    'per_device_train_batch_size': 16,
-    'per_device_eval_batch_size': 20,
-    'warmup_steps': 100,
-    'weight_decay': 0.01,
     # The below metrics are used by hyperparameter search
     'num_train_epochs': 3,
     'learning_rate': 5e-5,
+    'per_device_train_batch_size': 16,
+    'per_device_eval_batch_size': 20,
+    'weight_decay': 0.01,
+    'warmup_steps': 100,
 }
 training_args_dict_for_best_trial = {
     arg_name: arg_
@@ -358,19 +358,34 @@ for col in tqdm.tqdm(analysis_columns):
 
         # HACK
         # Deepseed
-        import deepspeed
         from deepspeed import DeepSpeedConfig, DeepSpeedEngine
         from deepspeed.ops.adam import FusedAdam
+        from deepspeed.runtime import deepspeed_engine as deepspeed
 
-        # define the DeepSpeed configuration
-        engine, _, _ = deepspeed.DeepSpeedEngine.initialize(model=fitted_estimator, local_rank=0)
+        # Initialize the DeepSpeed engine
+        deepspeed_config = {
+            'train_micro_batch_size_per_gpu': 4,
+            'optimizer': {
+                'type': FusedAdam,
+                'params': {
+                    'lr': 1e-5,
+                    'eps': 1e-6,
+                    'betas': (0.9, 0.999),
+                    'weight_decay': 0.01,
+                }
+            },
+            'fp16': {
+                'enabled': True
+            }
+        }
+        engine, _, _ = deepspeed.initialize(model=model, config_params=deepspeed_config)
 
         # Get predictions
         print(f'Getting prediction results for {col}.')
         estimator = Trainer(
             model=engine,# HACK
             tokenizer=tokenizer,
-            # args=TrainingArguments(**training_args_dict),
+            args=TrainingArguments(**training_args_dict),
             # preprocess_logits_for_metrics=preprocess_logits_for_metrics_y_pred_prob,
             # callbacks=[EarlyStoppingCallback(early_stopping_patience=3)],
             # data_collator=transformers.DataCollatorWithPadding(tokenizer),
