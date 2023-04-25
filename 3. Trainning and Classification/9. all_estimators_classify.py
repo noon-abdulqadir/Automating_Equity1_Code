@@ -358,11 +358,12 @@ for col in tqdm.tqdm(analysis_columns):
 
         # HACK
         # Deepseed
-        from deepspeed import DeepSpeedEngine
+        import deepspeed
+        from deepspeed import DeepSpeedConfig, DeepSpeedEngine
         from deepspeed.ops.adam import FusedAdam
 
         # define the DeepSpeed configuration
-        deepspeed_config = DeepSpeedConfig(
+        deepspeed_config = deepspeed.DeepSpeedConfig(
             zero_allow_untested_optimizer=True,
             zero_optimization_level=3,
             zero_optimization={},
@@ -372,7 +373,7 @@ for col in tqdm.tqdm(analysis_columns):
             fp16={'enabled': True},
             offload_optimizer={'device': 'nvme', 'nvme_path': '/raid/'},
         )
-        engine, _, _ = DeepSpeedEngine.initialize(model=fitted_estimator, local_rank=0, config=deepspeed_config)
+        engine, _, _ = deepspeed.DeepSpeedEngine.initialize(model=fitted_estimator, local_rank=0, config=deepspeed_config)
 
         # Get predictions
         print(f'Getting prediction results for {col}.')
