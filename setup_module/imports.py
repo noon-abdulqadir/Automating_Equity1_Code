@@ -736,11 +736,11 @@ ivs_dummy_and_perc = [
     'Gender_Female',
     'Gender_Mixed',
     'Gender_Male',
+    'Gender_Female_% per Sector',
+    'Gender_Male_% per Sector',
     'Age_Older',
     'Age_Mixed',
     'Age_Younger',
-    'Gender_Female_% per Sector',
-    'Gender_Male_% per Sector',
     'Age_Older_% per Sector',
     'Age_Younger_% per Sector',
 ]
