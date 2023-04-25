@@ -353,10 +353,16 @@ for col in tqdm.tqdm(analysis_columns):
             fitted_estimator, tokenizer, dataset
         )
 
+        # HACK
+        # Deepseed
+        from deepspeed import DeepSpeedEngine
+        from deepspeed.ops.adam import FusedAdam
+        engine, _, _ = DeepSpeedEngine.initialize(model=fitted_estimator, local_rank=0)
+
         # Get predictions
         print(f'Getting prediction results for {col}.')
         estimator = Trainer(
-            model=fitted_estimator,
+            model=engine.module,# HACK
             tokenizer=tokenizer,
             # args=TrainingArguments(**training_args_dict),
             # preprocess_logits_for_metrics=preprocess_logits_for_metrics_y_pred_prob,
