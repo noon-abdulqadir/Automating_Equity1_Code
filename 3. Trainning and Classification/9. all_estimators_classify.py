@@ -364,11 +364,8 @@ for col in tqdm.tqdm(analysis_columns):
 
         # define the DeepSpeed configuration
         deepspeed_config = deepspeed.DeepSpeedConfig(
-            zero_optimization_level=3,
             zero_optimization={},
-            enable_zero=False,
             partition_activations=False,
-            partition_weights=[1],
             fp16={'enabled': True},
             offload_optimizer={'device': 'nvme', 'nvme_path': '/raid/'},
         )
