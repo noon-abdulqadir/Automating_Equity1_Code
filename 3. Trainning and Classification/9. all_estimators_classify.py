@@ -363,11 +363,7 @@ for col in tqdm.tqdm(analysis_columns):
         from deepspeed.ops.adam import FusedAdam
 
         # define the DeepSpeed configuration
-        deepspeed_config = deepspeed.DeepSpeedConfig(
-            fp16={'enabled': True},
-            offload_optimizer={'device': 'nvme', 'nvme_path': '/raid/'},
-        )
-        engine, _, _ = deepspeed.DeepSpeedEngine.initialize(model=fitted_estimator, local_rank=0, config=deepspeed_config)
+        engine, _, _ = deepspeed.DeepSpeedEngine.initialize(model=fitted_estimator, local_rank=0)
 
         # Get predictions
         print(f'Getting prediction results for {col}.')
