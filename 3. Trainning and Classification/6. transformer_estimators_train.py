@@ -401,8 +401,8 @@ class ToDataset(torch.utils.data.Dataset):
         self.labels = labels
 
     def __getitem__(self, idx):
-        item = {key: torch.tensor(val[idx], device=device).clone().detach() for key, val in self.encodings.items()}
-        item['labels'] = torch.tensor(self.labels[idx], device=device).clone().detach()
+        item = {key: val[idx].clone().detach().to(device) for key, val in self.encodings.items()}
+        item['labels'] = torch.tensor(self.labels[idx], device=device).clone().detach().requires_grad_(True)
         return item
 
     def __len__(self):
