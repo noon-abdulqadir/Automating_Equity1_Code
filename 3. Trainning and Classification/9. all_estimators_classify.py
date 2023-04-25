@@ -175,7 +175,7 @@ class ToDataset(torch.utils.data.Dataset):
 
     def __getitem__(self, idx):
         return {
-            key: torch.tensor(val[idx], device=device).clone().detach()
+            key: val[idx].clone().detach().to(device)
             for key, val in self.encodings.items()
         }
 
