@@ -377,6 +377,7 @@ try:
     from textblob.en.inflect import pluralize, singularize
     from tqdm.contrib.itertools import product as tqdm_product
     from transformers import (
+        AdamW,
         AutoModel,
         AutoModelForSequenceClassification,
         AutoModelForTokenClassification,
@@ -405,6 +406,7 @@ try:
         TokenClassificationPipeline,
         Trainer,
         TrainingArguments,
+        get_linear_schedule_with_warmup,
         pipeline,
     )
     from transformers.trainer_pt_utils import get_parameter_names

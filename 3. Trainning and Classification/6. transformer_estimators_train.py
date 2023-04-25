@@ -1049,7 +1049,7 @@ for col in tqdm.tqdm(analysis_columns):
     )
     assert len(df_manual[df_manual[str(col)].map(df_manual[str(col)].value_counts() > 1)]) != 0, f'Dataframe has no {col} values!'
 
-    if (len(glob.glob(f'{results_save_path}{method} df_*_data - {col} - (Save_protocol=*).pkl')) == 3) or (len(glob.glob(f'{results_save_path}{method} df_*_data - {col} - (Save_protocol=*).pkl')) == 6):
+    if (len(glob.glob(f'{models_save_path}df_*_data - {col} - (Save_protocol=*).pkl')) == 3) or (len(glob.glob(f'{models_save_path}df_*_data - {col} - (Save_protocol=*).pkl')) == 6):
         # Load previous Xy
         print('Loading previous Xy.')
         (
