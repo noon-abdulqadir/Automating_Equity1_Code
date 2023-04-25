@@ -364,7 +364,6 @@ for col in tqdm.tqdm(analysis_columns):
 
         # define the DeepSpeed configuration
         deepspeed_config = deepspeed.DeepSpeedConfig(
-            zero_allow_untested_optimizer=True,
             zero_optimization_level=3,
             zero_optimization={},
             enable_zero=False,
