@@ -815,7 +815,7 @@ def preprocess_logits_for_metrics_from_logits(y_pred_logits):
     print(f'y_pred_array shape: {y_pred_array.shape}')
     print('-'*20)
     print('Flattening y_pred...')
-    y_pred = [bert_label2id[l] for l in y_pred_array.flatten().tolist()]
+    y_pred = y_pred_array.flatten().tolist()
     print(f'y_pred length: {len(y_pred)}')
     print('-'*20)
 
