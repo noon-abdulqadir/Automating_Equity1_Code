@@ -1173,7 +1173,7 @@ def plot_df(
 
 # %%
 def plot_confusion_matrix_percentage(
-    col, cm, classifier_name, vectorizer_name, cmap=plt.cm.Blues
+    col, cm, classifier_name, vectorizer_name, cmap=cmap_colorblind_blues_and_grays
 ):
     cm_title = f'{col} Confusion matrix: {classifier_name} + {vectorizer_name}'
     print('\n')
@@ -1465,7 +1465,7 @@ def evaluate_multi_classif(y_test, predicted, y_test_pred, scoring='recall', pri
     # Plot confusion matrix
     cm = metrics.confusion_matrix(y_test, predicted)
     fig, ax = plt.subplots()
-    sns.heatmap(cm, annot=True, fmt='d', ax=ax, cmap=plt.cm.Blues, cbar=False)
+    sns.heatmap(cm, annot=True, fmt='d', ax=ax, cmap=cmap_colorblind_blues_and_grays, cbar=False)
     ax.set(xlabel='Pred', ylabel='True', xticklabels=classes,
            yticklabels=classes, title='Confusion matrix')
     plt.yticks(rotation=0)

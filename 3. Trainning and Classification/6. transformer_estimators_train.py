@@ -152,26 +152,6 @@ training_args_dict_for_best_trial = {
     if arg_name not in best_trial_args
 }
 
-# Plotting variables
-pp = pprint.PrettyPrinter(indent=4)
-tqdm.tqdm.pandas(desc='progress-bar')
-tqdm_auto.tqdm.pandas(desc='progress-bar')
-# tqdm.notebook.tqdm().pandas(desc='progress-bar')
-tqdm_auto.notebook_tqdm().pandas(desc='progress-bar')
-# pbar = progressbar.ProgressBar(maxval=10)
-mpl.style.use(f'{code_dir}/setup_module/apa.mplstyle-main/apa.mplstyle')
-mpl.rcParams['text.usetex'] = False
-font = {'family': 'arial', 'weight': 'normal', 'size': 10}
-mpl.rc('font', **font)
-plt.style.use('tableau-colorblind10')
-plt.set_cmap('Blues')
-pd.set_option('display.max_rows', None)
-pd.set_option('display.max_columns', None)
-pd.set_option('display.width', 5000)
-pd.set_option('display.colheader_justify', 'center')
-pd.set_option('display.precision', 3)
-pd.set_option('display.float_format', '{:.2f}'.format)
-
 
 # %% [markdown]
 # # Functions
@@ -402,7 +382,7 @@ class ToDataset(torch.utils.data.Dataset):
 
     def __getitem__(self, idx):
         item = {key: val[idx].clone().detach().to(device) for key, val in self.encodings.items()}
-        item['labels'] = torch.tensor(self.labels[idx], device=device).clone().detach().requires_grad_(True)
+        item['labels'] = torch.tensor(self.labels[idx], device=device).clone().detach()
         return item
 
     def __len__(self):
