@@ -97,25 +97,6 @@ accelerator = Accelerator()
 torch.autograd.set_detect_anomaly(True)
 os.environ.get('TOKENIZERS_PARALLELISM')
 
-# Plotting variables
-pp = pprint.PrettyPrinter(indent=4)
-tqdm.tqdm.pandas(desc='progress-bar')
-tqdm_auto.tqdm.pandas(desc='progress-bar')
-# tqdm.notebook.tqdm().pandas(desc='progress-bar')
-tqdm_auto.notebook_tqdm().pandas(desc='progress-bar')
-# pbar = progressbar.ProgressBar(maxval=10)
-mpl.style.use(f'{code_dir}/setup_module/apa.mplstyle-main/apa.mplstyle')
-mpl.rcParams['text.usetex'] = False
-font = {'family': 'arial', 'weight': 'normal', 'size': 10}
-mpl.rc('font', **font)
-plt.style.use('tableau-colorblind10')
-plt.set_cmap('Blues')
-pd.set_option('display.max_rows', None)
-pd.set_option('display.max_columns', None)
-pd.set_option('display.width', 5000)
-pd.set_option('display.colheader_justify', 'center')
-pd.set_option('display.precision', 3)
-pd.set_option('display.float_format', '{:.2f}'.format)
 
 # %% [markdown]
 # Supervised Pipeline

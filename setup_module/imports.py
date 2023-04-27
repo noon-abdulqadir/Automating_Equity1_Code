@@ -602,11 +602,11 @@ metrics_dict = {
 }
 
 # Set random seed
-random_state = 42
 random.seed(random_state)
 np.random.seed(random_state)
 torch.manual_seed(random_state)
 cores = multiprocessing.cpu_count()
+
 # Transformer variables
 max_length = 512
 returned_tensor = 'pt'
@@ -615,9 +615,47 @@ device = torch.device('mps') if torch.has_mps and torch.backends.mps.is_built() 
 ) else torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 device_name = str(device.type)
 print(f'Using {device_name.upper()}')
+# Set random seed
+random_state = 42
+random.seed(random_state)
+np.random.seed(random_state)
+torch.manual_seed(random_state)
+cores = multiprocessing.cpu_count()
+torch.Generator(device_name).manual_seed(random_state)
+cores = multiprocessing.cpu_count()
 accelerator = Accelerator()
 torch.autograd.set_detect_anomaly(True)
 os.environ.get('TOKENIZERS_PARALLELISM')
+best_trial_args = [
+    'num_train_epochs', 'learning_rate', 'weight_decay', 'warmup_steps',
+]
+training_args_dict = {
+    'seed': random_state,
+    'resume_from_checkpoint': True,
+    'overwrite_output_dir': True,
+    'logging_steps': 500,
+    'evaluation_strategy': 'steps',
+    'eval_steps': 500,
+    'save_strategy': 'steps',
+    'save_steps': 500,
+    # 'metric_for_best_model': 'recall',
+    # 'torch_compile': bool(transformers.file_utils.is_torch_available()),
+    'use_mps_device': bool(device_name == 'mps' and torch.backends.mps.is_available()),
+    'optim': 'adamw_torch',
+    'load_best_model_at_end': True,
+    'per_device_train_batch_size': 16,
+    'per_device_eval_batch_size': 20,
+    # The below metrics are used by hyperparameter search
+    'num_train_epochs': 3,
+    'learning_rate': 5e-5,
+    'weight_decay': 0.01,
+    'warmup_steps': 100,
+}
+training_args_dict_for_best_trial = {
+    arg_name: arg_
+    for arg_name, arg_ in training_args_dict.items()
+    if arg_name not in best_trial_args
+}
 
 # Plotting variables
 pp = pprint.PrettyPrinter(indent=4)
@@ -626,12 +664,34 @@ tqdm_auto.tqdm.pandas(desc='progress-bar')
 # # tqdm.notebook.tqdm().pandas(desc='progress-bar')
 tqdm_auto.notebook_tqdm().pandas(desc='progress-bar')
 # pbar = progressbar.ProgressBar(maxval=10)
+font = {
+    'family': 'Times New Roman',
+    'weight': 'normal',
+    'size': 10
+}
 mpl.style.use(f'{code_dir}/setup_module/apa.mplstyle-main/apa.mplstyle')
 mpl.rcParams['text.usetex'] = False
-font = {'family': 'arial', 'weight': 'normal', 'size': 10}
 mpl.rc('font', **font)
 plt.style.use('tableau-colorblind10')
-plt.set_cmap('Blues')
+plt.rc('font', **font)
+colorblind_hex_colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
+cmap_colorblind = mpl.colors.LinearSegmentedColormap.from_list(name='cmap_colorblind', colors=colorblind_hex_colors)
+with contextlib.suppress(ValueError):
+    plt.colormaps.register(cmap=cmap_colorblind)
+
+colorblind_hex_colors_blues_and_grays = [
+    colorblind_hex_colors[i]
+    for i in [9, 2, 6, 7, 4, 0]
+]
+colorblind_hex_colors_blues_and_grays = sorted(
+    colorblind_hex_colors_blues_and_grays * 3,
+    key=colorblind_hex_colors_blues_and_grays.index
+)
+
+cmap_colorblind_blues_and_grays = mpl.colors.LinearSegmentedColormap.from_list(name='colorblind_hex_colors_blues_and_grays', colors=colorblind_hex_colors_blues_and_grays)
+with contextlib.suppress(ValueError):
+    plt.colormaps.register(cmap=cmap_colorblind_blues_and_grays)
+plt.set_cmap(cmap_colorblind_blues_and_grays)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 5000)
