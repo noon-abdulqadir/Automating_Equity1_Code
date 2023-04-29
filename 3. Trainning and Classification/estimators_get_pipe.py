@@ -331,7 +331,7 @@ ptron_params = {
     'fit_intercept': [True, False],
     'class_weight': [class_weight],
     'shuffle': [True, False],
-    'max_iter': [700000, 800000, 900000, 1000000, 1100000, 1200000, 1300000],
+    'max_iter': [700, 800, 900, 1000, 1100, 1200, 1300],
 }
 ptron = make_pipe_list(ptron_, ptron_params)
 
