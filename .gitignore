@@ -190,6 +190,7 @@ cython_debug/
 1. Scraping/*/Data/
 1. Scraping/*/Found Data/
 1. Scraping/Coding Material/
+2. Cleaning and Preprocessing/Coding Material/
 scraped_data/*/Data/
 scraped_data/*/Found Data/
 scraped_data/Coding Material/
