@@ -1,3 +1,7 @@
+This repository contains the code and data for the paper Bias in Candidate Sourcing Communication. Every directory contains a README.md file explaining the contents. Please tart at directory [1. Scraping](./1.%20Scraping/)
+
+***Note that some functions are imported from [setup_module](./setup_module) directory.***
+
 ### Bias in Candidate Sourcing Communication:
 #### Investigating Stereotypical Gender- And Age-Related Frames in Online Job Advertisements at the Sectoral Level
 

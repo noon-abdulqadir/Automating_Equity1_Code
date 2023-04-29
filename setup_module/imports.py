@@ -222,10 +222,12 @@ try:
         anderson,
         chi2_contingency,
         f_oneway,
+        levene,
         mannwhitneyu,
         normaltest,
         shapiro,
         stats,
+        ttest_ind,
     )
     from selenium.common.exceptions import *
     from selenium.common.exceptions import (
@@ -893,9 +895,10 @@ cat_list = [
 controls = [
         '% Sector per Workforce',
         'Job Description num_words',
-        'English Requirement in Sentence', 'Dutch Requirement in Sentence',
-        # 'Platform',
-        # 'Platform_LinkedIn', 'Platform_Indeed', 'Platform_Glassdoor',
+        'English Requirement in Job Ad_Yes', 'Dutch Requirement in Job Ad_Yes',
+        'Platform_LinkedIn', 'Platform_Indeed', 'Platform_Glassdoor',
+        'English Requirement in Job Ad', 'Dutch Requirement in Job Ad',
+        'Platform',
         # 'Job Description num_unique_words',
         # 'Job Description num_chars',
         # 'Job Description num_chars_no_whitespact_and_punt',
