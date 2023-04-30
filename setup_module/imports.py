@@ -103,7 +103,8 @@ try:
     from typing import Dict, List, Optional, Set, Tuple
 
     import cbsodata
-    import en_core_web_sm
+
+    # import en_core_web_sm
     import gensim
     import gensim.downloader as gensim_api
     import imblearn
@@ -537,7 +538,7 @@ stemmer = PorterStemmer()
 sentim_analyzer = SentimentIntensityAnalyzer()
 
 # Spacy variables
-nlp = spacy.load('en_core_web_sm')
+# nlp = spacy.load('en_core_web_sm')
 # nlp = en_core_web_sm.load()
 # nlp = spacy.load('en_core_web_trf')
 
