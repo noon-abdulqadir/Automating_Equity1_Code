@@ -806,6 +806,16 @@ ivs_dummy_and_perc = [
     'Age_Older_% per Sector',
     'Age_Younger_% per Sector',
 ]
+ivs_count_and_perc = [
+    'Gender_Female_n',
+    'Gender_Male_n',
+    'Gender_Female_% per Sector',
+    'Gender_Male_% per Sector',
+    'Age_Older_n',
+    'Age_Younger_n',
+    'Age_Older_% per Sector',
+    'Age_Younger_% per Sector',
+]
 ivs_count = [
     'Gender_Female_n',
     'Gender_Male_n',
