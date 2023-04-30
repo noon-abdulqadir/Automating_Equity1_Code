@@ -907,12 +907,13 @@ controls = [
         'Job Description num_words',
         'English Requirement in Job Ad_Yes', 'Dutch Requirement in Job Ad_Yes',
         'Platform_LinkedIn', 'Platform_Indeed', 'Platform_Glassdoor',
+        # Main controls = [:6], Extra controls = [6:]
         'English Requirement in Job Ad', 'Dutch Requirement in Job Ad',
         'Platform',
-        # 'Job Description num_unique_words',
-        # 'Job Description num_chars',
-        # 'Job Description num_chars_no_whitespact_and_punt',
-        # 'Industry', 'Sector_n',
+        'Job Description num_unique_words',
+        'Job Description num_chars',
+        'Job Description num_chars_no_whitespact_and_punt',
+        'Industry', 'Sector_n',
 ]
 
 # n_grams_counts = []
