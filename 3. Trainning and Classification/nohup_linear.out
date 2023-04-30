@@ -133,3 +133,8 @@ iter: 0
 n_candidates: 27216
 n_resources: 120
 Fitting 30 folds for each of 27216 candidates, totalling 816480 fits
+----------
+iter: 1
+n_candidates: 9072
+n_resources: 360
+Fitting 30 folds for each of 9072 candidates, totalling 272160 fits
