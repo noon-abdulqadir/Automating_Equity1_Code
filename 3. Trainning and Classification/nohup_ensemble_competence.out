@@ -1,0 +1,135 @@
+Using MPS
+0it [00:00, ?it/s]0it [00:00, ?it/s]
+Using MPS
+Using MPS
+Dataframe loaded with shape: (5947, 68)
+########################################
+Starting!
+########################################
+Searching for existing estimators in directory:
+/Users/nyxinsane/Documents/Work - UvA/Automating Equity/Study 1/Study1_Code/data/classification models/Supervised Results/
+  0%|          | 0/82 [00:00<?, ?it/s]100%|██████████| 82/82 [00:00<00:00, 525891.33it/s]
+  0%|          | 0/1 [00:00<?, ?it/s]--------------------
+============================== TRAINING DATASET OF LENGTH 5947 ON COMPETENCE ==============================
+--------------------
+Vectorizers to be used (3):
+['CountVectorizer', 'TfidfVectorizer', 'FeatureUnion']
+Total number of vectorizer parameters = 6
+Selectors to be used (1):
+['SelectKBest']
+Total number of selector parameters = 2
+Resamplers to be used (1):
+['SMOTETomek']
+Total number of resamplers parameters = 2
+classifiers to be used (3):
+['VotingClassifier', 'StackingClassifier', 'BaggingClassifier']
+Total number of classifiers parameters = 7
+Loading previous Xy.
+++++++++++++++++++++++++++++++
+========== Loading Xy from previous for Competence ==========
+++++++++++++++++++++++++++++++
+Loading df_test_data from /Users/nyxinsane/Documents/Work - UvA/Automating Equity/Study 1/Study1_Code/data/classification models/df_test_data - Competence - (Save_protocol=5).pkl
+Loading df_train_data from /Users/nyxinsane/Documents/Work - UvA/Automating Equity/Study 1/Study1_Code/data/classification models/df_train_data - Competence - (Save_protocol=5).pkl
+Loading df_val_data from /Users/nyxinsane/Documents/Work - UvA/Automating Equity/Study 1/Study1_Code/data/classification models/df_val_data - Competence - (Save_protocol=5).pkl
+Done loading Xy from previous for Competence!
+Done splitting data into training and testing sets.
+====================
+Training set shape: (4446,)
+----------
+Training set example:
+This internship is for you if:
+~~~~~~~~~~
+Testing set shape: (593,)
+----------
+Testing set example:
+General switchboard number +44 (0)207 801 3380.
+~~~~~~~~~~
+Validation set shape: (889,)
+----------
+Validation set example:
+Effective ability to prioritize tasks and deliver on deadlines, with high performance standards and a commitment to excellence.
+~~~~~~~~~~
+Training data class weights:
+Ratio = 0.88 (0 = 0.94, 1 = 1.07)
+----------
+Testing data class weights:
+Ratio = 0.86 (0 = 0.93, 1 = 1.08)
+----------
+Validation data class weights:
+Ratio = 0.85 (0 = 0.92, 1 = 1.09)
+====================
+Done loading Xy from previous for Competence!
+
+  0%|          | 0/9 [00:00<?, ?it/s][A--------------------
+Already trained Competence - CountVectorizer + VotingClassifier
+--------------------
+--------------------
+Already trained Competence - CountVectorizer + StackingClassifier
+--------------------
+--------------------
+Already trained Competence - CountVectorizer + BaggingClassifier
+--------------------
+--------------------
+Already trained Competence - TfidfVectorizer + VotingClassifier
+--------------------
+--------------------
+Already trained Competence - TfidfVectorizer + StackingClassifier
+--------------------
+--------------------
+Already trained Competence - TfidfVectorizer + BaggingClassifier
+--------------------
+--------------------
+Already trained Competence - FeatureUnion + VotingClassifier
+--------------------
+--------------------
+Already trained Competence - FeatureUnion + StackingClassifier
+--------------------
+--------------------
+============================== Using GridSearchCV ==============================
+--------------------
+GridSearchCV with:
+Pipe:
+Pipeline(steps=[('FeatureUnion',
+                 FeatureUnion(transformer_list=[('CountVectorizer',
+                                                 CountVectorizer(max_df=0.85,
+                                                                 min_df=0.15,
+                                                                 ngram_range=(1,
+                                                                              3))),
+                                                ('TfidfVectorizer',
+                                                 TfidfVectorizer(max_df=0.85,
+                                                                 min_df=0.15,
+                                                                 ngram_range=(1,
+                                                                              3)))])),
+                ('SelectKBest', SelectKBest()),
+                ('BaggingClassifier',
+                 BaggingClassifier(estimator=VotingClassifier(estimators=[('LogisticRegressi...
+                                                                                              random_state=42,
+                                                                                              solver='liblinear')),
+                                                                          ('DecisionTreeClassifier',
+                                                                           DecisionTreeClassifier(class_weight='balanced',
+                                                                                                  max_depth=2,
+                                                                                                  random_state=42)),
+                                                                          ('RandomForestClassifier',
+                                                                           RandomForestClassifier(class_weight='balanced',
+                                                                                                  max_depth=2,
+                                                                                                  n_estimators=50,
+                                                                                                  random_state=42)),
+                                                                          ('GradientBoostingClassifier',
+                                                                           GradientBoostingClassifier(random_state=42))],
+                                                              voting='soft')))])
+Params:
+{'FeatureUnion__CountVectorizer__analyzer': ['word'], 'FeatureUnion__CountVectorizer__ngram_range': [(1, 3)], 'FeatureUnion__CountVectorizer__lowercase': [True, False], 'FeatureUnion__CountVectorizer__max_df': [0.85, 0.8, 0.75], 'FeatureUnion__CountVectorizer__min_df': [0.15, 0.2, 0.25], 'FeatureUnion__TfidfVectorizer__analyzer': ['word'], 'FeatureUnion__TfidfVectorizer__ngram_range': [(1, 3)], 'FeatureUnion__TfidfVectorizer__lowercase': [True, False], 'FeatureUnion__TfidfVectorizer__use_idf': [True, False], 'FeatureUnion__TfidfVectorizer__max_df': [0.85, 0.8, 0.75], 'FeatureUnion__TfidfVectorizer__min_df': [0.15, 0.2, 0.25], 'SelectKBest__score_func': [<function f_classif at 0x29d762ef0>, <function chi2 at 0x29d763010>, <function f_regression at 0x29d763130>], 'SelectKBest__k': ['all'], 'BaggingClassifier__random_state': [42], 'BaggingClassifier__n_estimators': [50, 100, 150], 'BaggingClassifier__max_samples': [0.5, 1.0], 'BaggingClassifier__max_features': [0.5, 1.0]}
+++++++++++++++++++++++++++++++
+Fitting GridSearchCV
+n_iterations: 4
+n_required_iterations: 10
+n_possible_iterations: 4
+min_resources_: 120
+max_resources_: 5335
+aggressive_elimination: False
+factor: 3
+----------
+iter: 0
+n_candidates: 23328
+n_resources: 120
+Fitting 30 folds for each of 23328 candidates, totalling 699840 fits

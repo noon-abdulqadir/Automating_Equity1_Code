@@ -331,7 +331,7 @@ ptron_params = {
     'fit_intercept': [True, False],
     'class_weight': [class_weight],
     'shuffle': [True, False],
-    'max_iter': [700, 800, 900, 1000, 1100, 1200, 1300],
+    'max_iter': [700000, 800000, 900000, 1000000, 1100000, 1200000, 1300000],
 }
 ptron = make_pipe_list(ptron_, ptron_params)
 
@@ -354,7 +354,7 @@ svm_params = {
     'fit_intercept': [True, False],
     'class_weight': [class_weight],
     'C': [0.01, 0.5, 1, 5, 10, 15],
-    'max_iter': [700000, 800000, 900000, 1000000, 1100000, 1200000, 1300000],
+    'max_iter': [700, 800, 900, 1000, 1100, 1200, 1300],
     'dual': [False]
 }
 svm = make_pipe_list(svm_, svm_params)
@@ -365,9 +365,9 @@ svc_params = {
     'random_state': [random_state],
     'class_weight': [class_weight],
     'C': [0.01, 0.5, 1, 5, 10, 15],
-    'max_iter': [700000, 800000, 900000, 1000000, 1100000, 1200000, 1300000],
+    'max_iter': [700, 800, 900, 1000, 1100, 1200, 1300],
 }
-svc = make_pipe_list(svm_, svm_params)
+svc = make_pipe_list(svc_, svc_params)
 
 # Decision Tree
 dt_ = DecisionTreeClassifier()
@@ -436,27 +436,12 @@ mlpc_params = {
 }
 mlpc = make_pipe_list(mlpc_, mlpc_params)
 
-# # AdaBoostClassifier
-# ada_ = AdaBoostClassifier()
-# ada_params = {
-#     'random_state': [random_state],
-#     'n_estimators': [50, 100, 150],
-#     'learning_rate': [0.01, 0.1, 0.5, 1],
-#     'algorithm': ['SAMME', 'SAMME.R'],
-#     'estimator': [
-#         SVC(probability=True, kernel='linear'),
-#         LogisticRegression(),
-#         MultinomialNB(),
-#     ],
-# }
-# ada = make_pipe_list(ada_, ada_params)
-
 # Classifiers List
 classifier_ignore_list = [
     et, bnb, gnb,
 ]
 classifiers_list_all = [
-    dummy, knn, lr, svm, dt, rf, xgb, mlpc, pa, ptron, sgd, svc, gbc, et, bnb, gnb,
+    dummy, knn, lr, dt, rf, xgb, mlpc, pa, ptron, sgd, gbc, et, bnb, gnb, svm, svc,
 ]
 classifiers_list = [
     classifier_and_params
@@ -464,7 +449,7 @@ classifiers_list = [
     if classifier_and_params not in classifier_ignore_list
 ]
 classifiers_list_linear = [
-    lr, svm, svc, sgd, pa, ptron, mlpc, gbc,
+    lr, sgd, pa, ptron, mlpc, gbc, #svm, svc,
 ]
 classifiers_list_nonlinear = [
     classifier_and_params
@@ -617,7 +602,7 @@ bagging_stacking = make_pipe_list(bagging_stacking_, bagging_params)
 classifiers_list_ensemble = [
     voting,
     stacking,
-    ada_voting,
+    # ada_voting,
     # ada_stacking,
     bagging_voting,
     # bagging_stacking,
