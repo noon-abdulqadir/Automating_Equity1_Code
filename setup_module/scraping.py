@@ -1156,8 +1156,6 @@ def get_keyword_list(
 
 # %%
 # Function to access args
-
-
 def get_args(
     language='en',
     save_enabled=True,
