@@ -129,6 +129,8 @@ try:
     import requests
     import researchpy as rp
     import rpy2
+    import rpy2.ipython.html
+    import rpy2.robjects as robjects
     import scipy
     import seaborn as sns
     import selenium.webdriver as webdriver
@@ -216,6 +218,8 @@ try:
     from nltk.tokenize import WordPunctTokenizer
     from pandas.api.types import is_numeric_dtype, is_object_dtype, is_string_dtype
     from plot_metric.functions import BinaryClassification
+    from rpy2.robjects.packages import importr
+    from rpy2.robjects.vectors import StrVector
     from scipy import spatial, stats
     from scipy.special import softmax
     from scipy.stats import (
@@ -571,8 +575,10 @@ scorers = {
     'recall_score': make_scorer(recall_score, zero_division=0),
     'accuracy_score': make_scorer(accuracy_score, zero_division=0),
 }
+protocol = pickle.HIGHEST_PROTOCOL
 analysis_columns = ['Warmth', 'Competence']
 text_col = 'Job Description spacy_sentencized'
+classified_columns = ['Warmth_Probability', 'Competence_Probability']
 metrics_dict = {
     f'{scoring.title()} Best Score': np.nan,
     f'{scoring.title()} Best Threshold': np.nan,
@@ -678,8 +684,7 @@ plt.style.use('tableau-colorblind10')
 plt.rc('font', **font)
 colorblind_hex_colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 cmap_colorblind = mpl.colors.LinearSegmentedColormap.from_list(name='cmap_colorblind', colors=colorblind_hex_colors)
-with contextlib.suppress(ValueError):
-    plt.colormaps.register(cmap=cmap_colorblind)
+plt.colormaps.register(cmap=cmap_colorblind)
 
 colorblind_hex_colors_blues_and_grays = [
     colorblind_hex_colors[i]
@@ -691,8 +696,7 @@ colorblind_hex_colors_blues_and_grays = sorted(
 )
 
 cmap_colorblind_blues_and_grays = mpl.colors.LinearSegmentedColormap.from_list(name='colorblind_hex_colors_blues_and_grays', colors=colorblind_hex_colors_blues_and_grays)
-with contextlib.suppress(ValueError):
-    plt.colormaps.register(cmap=cmap_colorblind_blues_and_grays)
+plt.colormaps.register(cmap=cmap_colorblind_blues_and_grays)
 plt.set_cmap(cmap_colorblind_blues_and_grays)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -700,6 +704,7 @@ pd.set_option('display.width', 5000)
 pd.set_option('display.colheader_justify', 'center')
 pd.set_option('display.precision', 3)
 pd.set_option('display.float_format', '{:.2f}'.format)
+warnings.filterwarnings('ignore')
 
 # Display variables
 # csv.field_size_limit(sys.maxsize)
@@ -752,7 +757,7 @@ pattern = re.compile(f'{pattern_1} | {pattern_2} | {pattern_3}', re.VERBOSE)
 dutch_requirement_pattern = r'[Dd]utch [Pp]referred | [Dd]utch [Re]quired | [Dd]utch [Ll]anguage |[Pp]roficient in [Dd]utch |[Ss]peak [Dd]utch | [Kk]now [Dd]utch | [Ff]luent in [Dd]utch | [Dd]utch [Nn]ative | * [Dd]utch [Ll]evel | [Dd]utch [Ss]peaking | [Dd]utch [Ss]peaker | [iI]deally [Dd]utch'
 english_requirement_pattern = r'[Ee]nglish [Pp]referred | [Ee]nglish [Re]quired | [Ee]nglish [Ll]anguage |[Pp]roficient in [Ee]nglish |[Ss]peak [Ee]nglish | [Kk]now [Ee]nglish | [Ff]luent in [Ee]nglish | [Ee]nglish [Nn]ative | * [Ee]nglish [Ll]evel | [Ee]nglish [Ss]peaking | [Ee]nglish [Ss]peaker | [iI]deally [Ee]nglish'
 
-alpha = 0.050
+alpha = np.float64(0.050)
 normality_tests_labels = ['Statistic', 'p-value']
 ngrams_list=[1, 2, 3, 123]
 embedding_libraries_list = ['spacy', 'nltk', 'gensim']
@@ -906,14 +911,16 @@ controls = [
         '% Sector per Workforce',
         'Job Description num_words',
         'English Requirement in Job Ad_Yes', 'Dutch Requirement in Job Ad_Yes',
-        'Platform_LinkedIn', 'Platform_Indeed', 'Platform_Glassdoor',
+        # Main controls = [:4], Extra controls = [4:]
+        'Platform_LinkedIn', 'Platform_Indeed',
         # Main controls = [:6], Extra controls = [6:]
-        'English Requirement in Job Ad', 'Dutch Requirement in Job Ad',
-        'Platform',
-        'Job Description num_unique_words',
-        'Job Description num_chars',
-        'Job Description num_chars_no_whitespact_and_punt',
-        'Industry', 'Sector_n',
+        'Platform_Glassdoor',
+        # 'English Requirement in Job Ad', 'Dutch Requirement in Job Ad',
+        # 'Platform',
+        # 'Job Description num_unique_words',
+        # 'Job Description num_chars',
+        # 'Job Description num_chars_no_whitespact_and_punt',
+        # 'Industry', 'Sector_n',
 ]
 
 # n_grams_counts = []

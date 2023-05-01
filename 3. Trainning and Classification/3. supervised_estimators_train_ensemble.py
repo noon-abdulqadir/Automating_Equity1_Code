@@ -77,8 +77,10 @@ scorers = {
     'recall_score': make_scorer(recall_score, zero_division=0),
     'accuracy_score': make_scorer(accuracy_score, zero_division=0),
 }
+protocol = pickle.HIGHEST_PROTOCOL
 analysis_columns = ['Warmth', 'Competence']
 text_col = 'Job Description spacy_sentencized'
+classified_columns = ['Warmth_Probability', 'Competence_Probability']
 metrics_dict = {
     f'{scoring.title()} Best Score': np.nan,
     f'{scoring.title()} Best Threshold': np.nan,
