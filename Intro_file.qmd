@@ -1,0 +1,83 @@
+---
+title: 'imports'
+format:
+  html:
+    code-fold: true
+jupyter: study1_3.10
+---
+
+```{python}
+import os # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+import sys # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+
+mod = sys.modules[__name__]
+
+code_dir = None
+code_dir_name = 'Code'
+unwanted_subdir_name = 'Analysis'
+
+if code_dir_name not in str(Path.cwd()).split('/')[-1]:
+    for _ in range(5):
+
+        parent_path = str(Path.cwd().parents[_]).split('/')[-1]
+
+        if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
+
+            code_dir = str(Path.cwd().parents[_])
+
+            if code_dir is not None:
+                break
+else:
+    code_dir = Path.cwd()
+sys.path.append(code_dir)
+
+# %load_ext autoreload
+# %autoreload 2
+
+# %%
+# Set paths
+# MAIN DIR
+main_dir = f'{str(Path(code_dir).parents[0])}/'
+
+# code_dir
+code_dir = f'{code_dir}/'
+sys.path.append(code_dir)
+
+# scraping dir
+scraped_data = f'{code_dir}1. Scraping/'
+
+# data dir
+data_dir = f'{code_dir}data/'
+
+# df save sir
+df_save_dir = f'{data_dir}final dfs/'
+
+# lang models dir
+llm_path = f'{data_dir}Language Models/'
+
+# models dir
+models_save_path = f'{data_dir}classification models/'
+
+# output tables dir
+table_save_path = f'{data_dir}output tables/'
+
+# plots dir
+plot_save_path = f'{data_dir}plots/'
+
+# Make sure path exist and make dir if not
+all_dir_list = [
+    scraped_data, data_dir, df_save_dir, llm_path, models_save_path,
+]
+
+```
+
+To get relevant directories, run the python code above.
+
+* Cleaned and preprocessed mannualy annotated job ads data (df_manual) is stored in the data directory. You can find the data in:
+  - [data](../data) &rarr; [final dfs](../data/final%20dfs/) &rarr; [df_manual_for_training.pkl](../data/final%20dfs/df_manual_for_training.pkl)
+* Cleaned and preprocessed classifier labeled job ads data (df_jobs) is stored in the scraping directory. You can find the data in:
+  - [data](../data) &rarr; [final dfs](../data/final%20dfs/) &rarr; [df_jobs_for_analysis.pkl](../data/final%20dfs/df_jobs_for_analysis.pkl)
+* Analysis output can be found in the following directories:
+    - Visuals: [data](../data) &rarr; [plots](../data/plots)
+    - Tables: [data](../data) &rarr; [output tables](../data/output%20tables)

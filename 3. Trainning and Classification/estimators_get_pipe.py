@@ -1,7 +1,7 @@
 # %%
-import os  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
-import sys  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
-from pathlib import Path  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+import os # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+import sys # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 
 mod = sys.modules[__name__]
 
@@ -9,20 +9,24 @@ code_dir = None
 code_dir_name = 'Code'
 unwanted_subdir_name = 'Analysis'
 
-for _ in range(5):
+if code_dir_name not in str(Path.cwd()).split('/')[-1]:
+    for _ in range(5):
 
-    parent_path = str(Path.cwd().parents[_]).split('/')[-1]
+        parent_path = str(Path.cwd().parents[_]).split('/')[-1]
 
-    if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
+        if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
 
-        code_dir = str(Path.cwd().parents[_])
+            code_dir = str(Path.cwd().parents[_])
 
-        if code_dir is not None:
-            break
-
+            if code_dir is not None:
+                break
+else:
+    code_dir = Path.cwd()
 sys.path.append(code_dir)
+
 # %load_ext autoreload
 # %autoreload 2
+
 
 # %%
 from setup_module.imports import *  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
@@ -354,7 +358,7 @@ svm_params = {
     'fit_intercept': [True, False],
     'class_weight': [class_weight],
     'C': [0.01, 0.5, 1, 5, 10, 15],
-    'max_iter': [700, 800, 900, 1000, 1100, 1200, 1300],
+    'max_iter': [700000, 800000, 900000, 1000000, 1100000, 1200000, 1300000],
     'dual': [False]
 }
 svm = make_pipe_list(svm_, svm_params)
@@ -449,7 +453,7 @@ classifiers_list = [
     if classifier_and_params not in classifier_ignore_list
 ]
 classifiers_list_linear = [
-    lr, sgd, pa, ptron, mlpc, gbc, #svm, svc,
+    lr, sgd, pa, ptron, mlpc, gbc, svm, svc,
 ]
 classifiers_list_nonlinear = [
     classifier_and_params
@@ -602,7 +606,7 @@ bagging_stacking = make_pipe_list(bagging_stacking_, bagging_params)
 classifiers_list_ensemble = [
     voting,
     stacking,
-    # ada_voting,
+    ada_voting,
     # ada_stacking,
     bagging_voting,
     # bagging_stacking,
@@ -639,14 +643,6 @@ transformers_pipe = {
     #     'tokenizer': AutoTokenizer,
     #     'model': GPTJForSequenceClassification,
     # },
-    # 'OpenAIGPTForSequenceClassification': {
-    #     'model_name': 'openai-gpt',
-    #     'config': OpenAIGPTConfig,
-    #     'tokenizer': OpenAIGPTTokenizerFast,
-    #     'model': OpenAIGPTForSequenceClassification,
-    # },
 }
-
-# f'{BertForSequenceClassification=}'.split('=')[0]
 
 # %%

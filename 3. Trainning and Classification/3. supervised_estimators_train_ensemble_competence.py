@@ -9,18 +9,21 @@ code_dir = None
 code_dir_name = 'Code'
 unwanted_subdir_name = 'Analysis'
 
-for _ in range(5):
+if code_dir_name not in str(Path.cwd()).split('/')[-1]:
+    for _ in range(5):
 
-    parent_path = str(Path.cwd().parents[_]).split('/')[-1]
+        parent_path = str(Path.cwd().parents[_]).split('/')[-1]
 
-    if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
+        if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
 
-        code_dir = str(Path.cwd().parents[_])
+            code_dir = str(Path.cwd().parents[_])
 
-        if code_dir is not None:
-            break
-
+            if code_dir is not None:
+                break
+else:
+    code_dir = Path.cwd()
 sys.path.append(code_dir)
+
 # %load_ext autoreload
 # %autoreload 2
 

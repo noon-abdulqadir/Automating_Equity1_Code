@@ -2,69 +2,34 @@
 # %%
 # To add a new cell, type '# %%'
 # To add a new markdown cell, type '# %% [markdown]'
-# %% [markdown]
-# ### Install packages and import
-# %%
-# #################################### PLEASE INSTALL LATEST CHROME WEBDRIVER #####################################
-# Uncomment to run as required
-# #     --install-option="--chromedriver-version= *.**" \
-#   --install-option="--chromedriver-checksums=4fecc99b066cb1a346035bf022607104,058cd8b7b4b9688507701b5e648fd821"
-# %%
-# ##### COPY THE LINES IN THIS COMMENT TO THE TOP OF NEW SCRIPTS #####
-# # Function to import this package to other files
-# import os
-# import sys
-# from pathlib import Path
-# code_dir = None
-# code_dir_name = 'Code'
-# unwanted_subdir_name = 'Analysis'
-# for _ in range(5):
-#     parent_path = str(Path.cwd().parents[_]).split('/')[-1]
-#     if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
-#         code_dir = str(Path.cwd().parents[_])
-#         if code_dir is not None:
-#             break
-# main_dir = str(Path(code_dir).parents[0])
-# scraped_data = f'{code_dir}1. Scraping/'
-# sys.path.append(code_dir)
-# from setup_module.imports import *
-# from setup_module.params import *
-# from setup_module.scraping import *
-# from setup_module.classification import *
-# from setup_module.vectorizers_classifiers import *
-# warnings.filterwarnings("ignore", category=DeprecationWarning)
-#
-#
-# %%
-import os
-import sys
-from pathlib import Path
+import os # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+import sys # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 
-from setup_module.imports import *
-from setup_module.scraping import *
+mod = sys.modules[__name__]
 
 code_dir = None
 code_dir_name = 'Code'
 unwanted_subdir_name = 'Analysis'
 
-for _ in range(5):
+if code_dir_name not in str(Path.cwd()).split('/')[-1]:
+    for _ in range(5):
 
-    parent_path = str(Path.cwd().parents[_]).split('/')[-1]
+        parent_path = str(Path.cwd().parents[_]).split('/')[-1]
 
-    if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
+        if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
 
-        code_dir = str(Path.cwd().parents[_])
+            code_dir = str(Path.cwd().parents[_])
 
-        if code_dir is not None:
-            break
-
-main_dir = str(Path(code_dir).parents[0])
-scraped_data = f'{code_dir}1. Scraping/'
+            if code_dir is not None:
+                break
+else:
+    code_dir = Path.cwd()
 sys.path.append(code_dir)
 
-# %%
+# %load_ext autoreload
+# %autoreload 2
 
-warnings.filterwarnings('ignore', category=DeprecationWarning)
 
 # %%
 # preprocessing
@@ -1564,7 +1529,7 @@ def optimization(
 
         df_ROC_plot = pd.DataFrame(dict(fpr=fpr, tpr=tpr))
         print('ROC CURVE FOR PREDICTED')
-        bc = BinaryClassification(y_test, y_test_pred, labels=['0', '1'])
+        bc = plot_metric_functions.BinaryClassification(y_test, y_test_pred, labels=['0', '1'])
         # Figures
         plt.figure(figsize=(5, 5))
         bc.plot_roc_curve()
