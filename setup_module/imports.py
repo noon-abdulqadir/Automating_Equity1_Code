@@ -16,16 +16,19 @@ code_dir = None
 code_dir_name = 'Code'
 unwanted_subdir_name = 'Analysis'
 
-for _ in range(5):
+if code_dir_name not in str(Path.cwd()).split('/')[-1]:
+    for _ in range(5):
 
-    parent_path = str(Path.cwd().parents[_]).split('/')[-1]
+        parent_path = str(Path.cwd().parents[_]).split('/')[-1]
 
-    if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
+        if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
 
-        code_dir = str(Path.cwd().parents[_])
+            code_dir = str(Path.cwd().parents[_])
 
-        if code_dir is not None:
-            break
+            if code_dir is not None:
+                break
+else:
+    code_dir = Path.cwd()
 
 # %load_ext autoreload
 # %autoreload 2
@@ -140,6 +143,7 @@ try:
     import sklearn as sk
     import spacy
     import specification_curve as specy
+    import statsmodels
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
     import textblob
@@ -684,7 +688,8 @@ plt.style.use('tableau-colorblind10')
 plt.rc('font', **font)
 colorblind_hex_colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 cmap_colorblind = mpl.colors.LinearSegmentedColormap.from_list(name='cmap_colorblind', colors=colorblind_hex_colors)
-plt.colormaps.register(cmap=cmap_colorblind)
+with contextlib.suppress(ValueError):
+    plt.colormaps.register(cmap=cmap_colorblind)
 
 colorblind_hex_colors_blues_and_grays = [
     colorblind_hex_colors[i]
@@ -696,7 +701,8 @@ colorblind_hex_colors_blues_and_grays = sorted(
 )
 
 cmap_colorblind_blues_and_grays = mpl.colors.LinearSegmentedColormap.from_list(name='colorblind_hex_colors_blues_and_grays', colors=colorblind_hex_colors_blues_and_grays)
-plt.colormaps.register(cmap=cmap_colorblind_blues_and_grays)
+with contextlib.suppress(ValueError):
+    plt.colormaps.register(cmap=cmap_colorblind_blues_and_grays)
 plt.set_cmap(cmap_colorblind_blues_and_grays)
 pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
@@ -849,6 +855,19 @@ ivs_age_perc = [
     'Age_Older_% per Sector',
     'Age_Younger_% per Sector',
 ]
+ivs_dummy = [
+    'Gender_Female',
+    'Gender_Mixed',
+    'Gender_Male',
+    'Age_Older',
+    'Age_Mixed',
+    'Age_Younger',
+]
+ivs_num = [
+    'Gender_Num',
+    'Age_Num',
+]
+
 ivs_dummy_num = [
     'Gender_Num',
     'Gender_Female',
@@ -859,13 +878,13 @@ ivs_dummy_num = [
     'Age_Mixed',
     'Age_Younger',
 ]
-ivs_dummy = [
-    'Gender_Female',
-    'Gender_Mixed',
-    'Gender_Male',
-    'Age_Older',
-    'Age_Mixed',
-    'Age_Younger',
+ivs_num_and_perc = [
+    'Gender_Num',
+    'Gender_Female_% per Sector',
+    'Gender_Male_% per Sector',
+    'Age_Num',
+    'Age_Older_% per Sector',
+    'Age_Younger_% per Sector',
 ]
 ivs_gender_dummy_num = [
     'Gender_Num',
@@ -912,9 +931,9 @@ controls = [
         'Job Description num_words',
         'English Requirement in Job Ad_Yes', 'Dutch Requirement in Job Ad_Yes',
         # Main controls = [:4], Extra controls = [4:]
-        'Platform_LinkedIn', 'Platform_Indeed',
+        'Platform_Indeed', 'Platform_Glassdoor',
         # Main controls = [:6], Extra controls = [6:]
-        'Platform_Glassdoor',
+        'Platform_LinkedIn',
         # 'English Requirement in Job Ad', 'Dutch Requirement in Job Ad',
         # 'Platform',
         # 'Job Description num_unique_words',
@@ -972,8 +991,8 @@ def get_df_info(df, ivs_all=None):
                 print('-'*20)
                 print(f'{iv} Percentages:\n{df[iv].value_counts(normalize=True).mul(100).round(1).astype(float)}')
                 print('-'*20)
-            print(f'Min {iv} value: {df[iv].min()}')
-            print(f'Max {iv} value: {df[iv].max()}')
+            print(f'Min {iv} value: {df[iv].min().round(3).astype(float)}')
+            print(f'Max {iv} value: {df[iv].max().round(3).astype(float)}')
             with contextlib.suppress(Exception):
                 print('-'*20)
                 print(f'{iv} Mean: {df[iv].mean().round(2).astype(float)}')
