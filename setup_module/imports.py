@@ -98,7 +98,7 @@ try:
     import typing
     import unicodedata
     import warnings
-    from collections import defaultdict
+    from collections import Counter, defaultdict
     from io import StringIO
     from random import randrange
     from subprocess import call
