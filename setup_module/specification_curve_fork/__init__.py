@@ -486,7 +486,7 @@ class SpecificationCurve:
         if plot_title is None:
             axarr[0].set_title('Specification curve analysis')
         else:
-            axarr[0].set_title(plot_title, fontsize=10)
+            axarr[0].set_title(plot_title, fontsize=12)
         max_height = self.df_r['conf_int'].apply(lambda x: x.max()).max()
         min_height = self.df_r['conf_int'].apply(lambda x: x.min()).min()
         ylims = (min_height / 1.2, 1.2 * max_height)
@@ -521,7 +521,7 @@ class SpecificationCurve:
                     )
                     ax.add_patch(sq)
             ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-            ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+            ax.yaxis.set_major_locator(ticker.AutoLocator())
             ax.set_yticks(range(len(list(df_sp_sl.index.values))))
             # Add text on the RHS that describes what each block is
             ax.text(
@@ -531,11 +531,11 @@ class SpecificationCurve:
                     block_df.loc[block_df['group_index'] == ax_num, 'group'].iloc[0]
                 ],
                 rotation=-90,
-                fontsize=11,
+                fontsize=12,
                 horizontalalignment='center',
                 verticalalignment='center',
             )
-            ax.set_yticklabels(list(df_sp_sl.index.values), fontsize=12)
+            ax.set_yticklabels(list(df_sp_sl.index.values), fontsize=10.5)
             ax.set_xticklabels([])
             ax.set_ylim(-hei, len(df_sp_sl) - hei * 4)
             ax.set_xlim(-wid, len(df_sp_sl.columns))
@@ -545,7 +545,7 @@ class SpecificationCurve:
             ax.set_xticks([], minor=True)
             ax.set_xticks([])
             ax.set_xlim(-wid, len(df_spec.columns))
-
+        plt.tight_layout()
         if save_path is not None:
             plt.savefig(save_path, dpi=300)
         if show_plot:

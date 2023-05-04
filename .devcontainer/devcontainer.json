@@ -4,8 +4,13 @@
 	"name": "Miniconda (Python 3)",
 	"build": {
 		"context": "..",
-		"dockerfile": "Dockerfile"
+		"dockerfile": "Dockerfile",
 	},
+    "customizations": {
+        "vscode": {
+          "extensions": ["ms-python.vscode-pylance", "ms-python.python", "ms-toolsai.jupyter"]
+        }
+      },
 	"features": {
 		"ghcr.io/devcontainers/features/git:1": {
 			"ppa": true,
