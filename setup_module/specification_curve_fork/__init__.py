@@ -486,7 +486,7 @@ class SpecificationCurve:
         if plot_title is None:
             axarr[0].set_title('Specification curve analysis')
         else:
-            axarr[0].set_title(plot_title, fontsize=12)
+            axarr[0].set_title(plot_title, fontsize=14)
         max_height = self.df_r['conf_int'].apply(lambda x: x.max()).max()
         min_height = self.df_r['conf_int'].apply(lambda x: x.min()).min()
         ylims = (min_height / 1.2, 1.2 * max_height)

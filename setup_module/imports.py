@@ -146,6 +146,7 @@ try:
     import statsmodels
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
+    import statsmodels.regression.mixed_linear_model as sm_mlm
     import textblob
     import torch
     import torch.nn as nn
@@ -381,6 +382,8 @@ try:
     from statannotations.Annotator import Annotator
     from statsmodels.formula.api import ols
     from statsmodels.graphics.factorplots import interaction_plot
+    from statsmodels.multivariate.multivariate_ols import _MultivariateOLS
+    from statsmodels.regression.linear_model import RegressionResults
     from statsmodels.stats.diagnostic import het_white
     from statsmodels.stats.outliers_influence import variance_inflation_factor
     from textblob import TextBlob, Word
@@ -912,6 +915,23 @@ gender_order = ['Female', 'Mixed Gender', 'Male']
 age_order = ['Older', 'Mixed Age', 'Younger']
 platform_order = ['LinkedIn', 'Indeed', 'Glassdoor']
 ivs_dict = {'Gender': gender_order, 'Age': age_order}
+# Models dict
+sm_models = {
+    'Logistic': sm.Logit,
+    'OLS': sm.OLS,
+}
+# DVs dict
+dvs_for_analysis = {
+    'binary': ['Categorical Warmth and Competence', dvs],
+    'probability': ['Probability Warmth and Competence', dvs_prob],
+    'binary and probability': ['Categorical and Probability Warmth and Competence', dvs_all],
+}
+# IVs dict
+ivs_for_analysis = {
+    'categories': ['Categorical Gender and Age', ivs_dummy],
+    'percentages': ['PPS Gender and Age', ivs_perc],
+    'categories and percentages': ['Categorical and PPS Gender and Age', ivs_dummy_and_perc],
+}
 cat_list = [
     'Job ID',
     'Gender',
@@ -931,9 +951,9 @@ controls = [
         'Job Description num_words',
         'English Requirement in Job Ad_Yes', 'Dutch Requirement in Job Ad_Yes',
         # Main controls = [:4], Extra controls = [4:]
-        'Platform_Indeed', 'Platform_Glassdoor',
+        # 'Platform_Indeed', 'Platform_Glassdoor',
         # Main controls = [:6], Extra controls = [6:]
-        'Platform_LinkedIn',
+        # 'Platform_LinkedIn',
         # 'English Requirement in Job Ad', 'Dutch Requirement in Job Ad',
         # 'Platform',
         # 'Job Description num_unique_words',
