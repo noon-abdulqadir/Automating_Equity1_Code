@@ -147,6 +147,7 @@ try:
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
     import statsmodels.regression.mixed_linear_model as sm_mlm
+    import statsmodels.stats.api as sms
     import textblob
     import torch
     import torch.nn as nn
@@ -379,9 +380,11 @@ try:
     )
     from spacy.matcher import Matcher
     from spacytextblob.spacytextblob import SpacyTextBlob
+    from stargazer.stargazer import Stargazer
     from statannotations.Annotator import Annotator
     from statsmodels.formula.api import ols
     from statsmodels.graphics.factorplots import interaction_plot
+    from statsmodels.iolib.summary2 import summary_col
     from statsmodels.multivariate.multivariate_ols import _MultivariateOLS
     from statsmodels.regression.linear_model import RegressionResults
     from statsmodels.stats.diagnostic import het_white
@@ -814,6 +817,20 @@ ivs_dummy_and_perc = [
     'Gender_Male',
     'Gender_Female_% per Sector',
     'Gender_Male_% per Sector',
+    'Age_Older',
+    'Age_Mixed',
+    'Age_Younger',
+    'Age_Older_% per Sector',
+    'Age_Younger_% per Sector',
+]
+ivs_gender_dummy_and_perc = [
+    'Gender_Female',
+    'Gender_Mixed',
+    'Gender_Male',
+    'Gender_Female_% per Sector',
+    'Gender_Male_% per Sector',
+]
+ivs_age_dummy_and_perc = [
     'Age_Older',
     'Age_Mixed',
     'Age_Younger',
