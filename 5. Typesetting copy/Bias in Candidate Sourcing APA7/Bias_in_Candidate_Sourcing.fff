@@ -1,7 +1,0 @@
-\begin{figure*}[hbt]
-\ifnextchar[{\eatarg}{}
-
-    \caption{Distribution of Warmth and Competence positive and negative classes}
-    \includegraphics[bb=0in 0in 2.5in 2.5in, height=2.5in, width=2.5in]{Figure1.png}
-    \label{fig:1}
-\end{figure*}
