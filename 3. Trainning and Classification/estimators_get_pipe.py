@@ -159,9 +159,9 @@ bow_ = FeatureUnion(
 bow_params = {**count[1], **tfidf[1]}
 bow = make_pipe_list(bow_, bow_params)
 
-# # Vectorizers List and Dict append bow
-# vectorizers_list.append(bow_.set_params(**{key: value[0] for key, value in bow_params.items()}))
-# vectorizers_pipe[bow[0].__class__.__name__] = bow
+# Vectorizers List and Dict append bow
+vectorizers_list.append(bow_.set_params(**{key: value[0] for key, value in bow_params.items()}))
+vectorizers_pipe[bow[0].__class__.__name__] = bow
 
 
 # %% [markdown]
@@ -443,7 +443,7 @@ mlpc = make_pipe_list(mlpc_, mlpc_params)
 
 # Classifiers List
 classifier_ignore_list = [
-    svc, et, bnb, gnb,
+    svm, svc, et, bnb, gnb, ptron,
 ]
 classifiers_list_all = [
     dummy, nb, knn, lr, dt, rf, svm, svc, xgb, mlpc, pa, ptron, sgd, gbc, et, bnb, gnb,
@@ -455,6 +455,11 @@ classifiers_list = [
 ]
 classifiers_list_linear = [
     lr, nb, svm, svc, sgd, mlpc, pa, ptron, gbc,
+]
+classifiers_list_linear = [
+    classifier_and_params
+    for classifier_and_params in classifiers_list_all
+    if classifier_and_params not in classifier_ignore_list
 ]
 classifiers_list_nonlinear = [
     classifier_and_params
