@@ -1,0 +1,857 @@
+% Bias in Candidate Sourcing
+\documentclass[man]{apa7}
+
+% Referencing Packages
+\usepackage[american]{babel}
+\usepackage{csquotes}
+\usepackage[style=apa,sortcites=true,sorting=nyt,backend=biber]{biblatex}
+\DeclareLanguageMapping{american}{american-apa}
+\addbibresource{bibliography.bib}
+
+% Other Packages
+\usepackage{graphicx}
+\usepackage{enumitem}
+\usepackage{longtable}
+\usepackage[longtable]{multirow}
+\usepackage{threeparttablex}
+\usepackage{booktabs}
+\usepackage{nicematrix}
+\usepackage{multirow}
+\usepackage{float}
+\usepackage{array}
+\usepackage{setspace}
+\usepackage{textgreek}
+\usepackage{endnotes}
+\usepackage[font=normal,skip=0pt]{caption}
+
+% Make new column types
+\setstretch{1.0}
+% Top align
+\newcolumntype{C}[1]{>{\centering\arraybackslash\setstretch{1.0}}p{#1\columnwidth}}
+\newcolumntype{L}[1]{>{\raggedright\arraybackslash\setstretch{1.0}}p{#1\columnwidth}}
+\newcolumntype{R}[1]{>{\raggedleft\arraybackslash\setstretch{1.0}}p{#1\columnwidth}}
+% Bottom align
+\newcolumntype{S}[1]{>{\centering\arraybackslash\setstretch{1.0}\vspace{0}}b{#1\columnwidth}}
+\newcolumntype{A}[1]{>{\raggedright\arraybackslash\setstretch{1.0}\vspace{0}}b{#1\columnwidth}}
+\newcolumntype{D}[1]{>{\raggedleft\arraybackslash\setstretch{1.0}\vspace{0}}b{#1\columnwidth}}
+
+% Title Page
+\title{Bias in Candidate Sourcing Communication:\\
+Investigating Stereotypical Gender- And Age-Related Frames in Online Job Advertisements at the Sectoral Level}
+\shorttitle{Bias in Candidate Sourcing Communication}
+
+\authorsnames[1,1,{2},1,1]{Noon M.F. Abdulqadir, Anne Kroon, Martine van Selm, Margot van der Goot, and Rens Vliegenthart}
+\authorsaffiliations{{Amsterdam School of Communication Research (ASCoR)},
+{Erasmus School of History, Culture and Communication}}
+
+\leftheader{Noon et al.}
+
+\abstract{Studies show the extent to which job advertisements contain stereotypical wordings correlates with the level of segregation in an occupational domain. However, limited research links the framing of job ads to social category-based occupational segregation at the macro-sectoral level. Guided by the stereotype content model, we operationalize stereotypical warmth and competence-related frames in candidate sourcing communication and investigate their presence in job ads from occupational sectors with varying gender and age segregation. Automated content analysis was conducted on a dataset of online job ads sentences (\textit{n}=307154). Results indicate warmth-related frames are most observed in ads from female (vs. male) and younger (vs. older and mixed-age) dominated sectors. Conversely, competence-related frames are most observed in ads from male (vs. female and mixed-gender) and older (vs. younger and mixed-age) dominated sectors. Taken together, we present an operationalization of stereotypical warmth- and competence-related frames in early employer communication and posit that social categorization framing may be at play.}
+
+\keywords{Stereotype content model, social categorization frames, horizontal occupational segregation, automated content analysis}
+
+\authornote{
+   \addORCIDlink{Noon M.F. Abdulqadir}{https://orcid.org/0000-0002-6243-9241}
+
+   \addORCIDlink{Anne Kroon}{https://orcid.org/0000-0001-7600-7979}
+
+   \addORCIDlink{Martine van Selm}{https://orcid.org/0000-0001-9188-4021}
+
+   \addORCIDlink{Margot van der Goot}{https://orcid.org/0000-0001-6904-6515}
+
+   \addORCIDlink{Rens Vliegenthart}{https://orcid.org/0000-0003-2401-2914}
+
+   \qquad We have no conflicts of interests to disclose.
+
+   \qquad Correspondence concerning this article should be addressed to Noon Abdulqadir, Postbus 15791, 1001 NG Amsterdam. Email: noon.abdulqadir@uva.nl
+
+   \qquad \textbf{Suggested citation:} Noon, M. A., Kroon, A. C., van Selm, M., van der Goot, M., and Vliegenthart, R. (2021). Bias in Candidate Sourcing Communication: Investigating Stereotypical Gender- and Age-Related Frames of Online Job Advertisements at the Sectoral Level.}
+
+% Main Body
+\begin{document}
+
+% Appendices
+\appendix
+\section{Appendix A}
+\label{app:A}
+
+% \begin{table}
+%     \caption{Warmth multiple regression model (Full Model) and specification curve analysis (SCA) regression models and results}
+%     \label{tab:sca_warmth}
+%     \centering
+%     \begin{NiceTabular}{@{} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4}}
+%     \toprule
+%     \multicolumn{11}{l}{OLS specification curve: Probability Warmth x Categorical and PPS Gender and Age}
+%     \midrule
+%     ~ & Warmth Full Model & Warmth Model 1 & Warmth Model 2 & Warmth Model 3 & Warmth Model 4 & Warmth Model 5 & Warmth Model 6 & Warmth Model 7 & Warmth Model 8 & Warmth Model 9 & Warmth Model 10 \\
+%     \midrule
+%     \% Sector per Workforce & -0.001*** & -0.001*** & -0.000** & -0.000 & -0.000 & -0.000 & -0.000 & -0.000 & 0.000* & 0.000*** & -0.000*** \\
+%     ~ & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) \\
+%     Age_Mixed & 0.604** & ~ & ~ & ~ & ~ & ~ & ~ & 0.008*** & ~ & ~ & ~ \\
+%     ~ & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) \\
+%     Age_Mixed & 0.604** & ~ & ~ & ~ & ~ & ~ & ~ & 0.008*** & ~ & ~ & ~ \\
+%     ~ & (0.252) & ~ & ~ & ~ & ~ & ~ & ~ & (0.001) & ~ & ~ & ~ \\
+%     Age_Older & 0.571** & ~ & -0.030*** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+%     ~ & (0.251) & ~ & (0.002) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+%     Age_Older_\% per Sector & 0.018*** & ~ & ~ & -0.001*** & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+%     ~ & (0.001) & ~ & ~ & (0.000) & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+%     Age_Younger & 0.603** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & 0.023*** & ~ \\
+%     ~ & (0.252) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & (0.002) & ~ \\
+%     Age_Younger_\% per Sector & 0.017*** & ~ & ~ & ~ & ~ & ~ & 0.001*** & ~ & ~ & ~ & ~ \\
+%     ~ & (0.001) & ~ & ~ & ~ & ~ & ~ & (0.000) & ~ & ~ & ~ & ~ \\
+%     Gender_Female & 0.583** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & 0.014*** & ~ & ~ \\
+%     ~ & (0.254) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & (0.001) & ~ & ~ \\
+%     Gender_Female_\% per Sector & -0.045*** & ~ & ~ & ~ & ~ & 0.001*** & ~ & ~ & ~ & ~ & ~ \\
+%     ~ & (0.013) & ~ & ~ & ~ & ~ & (0.000) & ~ & ~ & ~ & ~ & ~ \\
+%     Gender_Male & 0.582** & -0.043*** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+%     ~ & (0.250) & (0.001) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+%     Gender_Male_\% per Sector & -0.046*** & ~ & ~ & ~ & -0.001*** & ~ & ~ & ~ & ~ & ~ & ~ \\
+%     ~ & (0.013) & ~ & ~ & ~ & (0.000) & ~ & ~ & ~ & ~ & ~ & ~ \\
+%     Gender_Mixed & 0.612** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & 0.031*** \\
+%     ~ & (0.251) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & (0.001) \\
+%     Job Description num_words & 0.008*** & 0.008*** & 0.008*** & 0.008*** & 0.008*** & 0.008*** & 0.008*** & 0.008*** & 0.008*** & 0.008*** & 0.008*** \\
+%     ~ & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) \\
+%     R-squared & 0.130 & 0.129 & 0.127 & 0.126 & 0.128 & 0.128 & 0.126 & 0.126 & 0.126 & 0.126 & 0.127 \\
+%     R-squared Adj. & 0.130 & 0.129 & 0.127 & 0.126 & 0.128 & 0.128 & 0.126 & 0.126 & 0.126 & 0.126 & 0.127 \\
+%     const & 1.777** & 0.190*** & 0.178*** & 0.207*** & 0.217*** & 0.133*** & 0.118*** & 0.166*** & 0.167*** & 0.167*** & 0.163*** \\
+%     ~ & (0.755) & (0.001) & (0.001) & (0.003) & (0.002) & (0.002) & (0.004) & (0.001) & (0.001) & (0.001) & (0.001) \\
+%     Model Name & OLS & OLS & OLS & OLS & OLS & OLS & OLS & OLS & OLS & OLS & OLS \\
+%     N & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 \\
+%     R-squared & 0.130 & 0.129 & 0.127 & 0.126 & 0.128 & 0.128 & 0.126 & 0.126 & 0.126 & 0.126 & 0.127 \\
+%     R-squared Adj. & 0.130 & 0.129 & 0.127 & 0.126 & 0.128 & 0.128 & 0.126 & 0.126 & 0.126 & 0.126 & 0.127 \\
+%     Log-Likelihood & -113541.415 & -113780.933 & -114097.178 & -114180.621 & -113939.825 & -113941.527 & -114172.257 & -114254.679 & -114225.958 & -114189.128 & -114023.508 \\
+%     Pseudo R2 & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+%     F & 4584.833 & 15099.757 & 14858.085 & 14794.401 & 14978.270 & 14976.970 & 14800.783 & 14737.909 & 14759.814 & 14787.911 & 14914.338 \\
+%     F (p-value) & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+%     df_model & 10 & 3 & 3 & 3 & 3 & 3 & 3 & 3 & 3 & 3 & 3 \\
+%     df_total & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 \\
+%     df_resid & 307143 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 \\
+%     AIC & 227104.830 & 227569.865 & 228202.356 & 228369.242 & 227887.650 & 227891.053 & 228352.514 & 228517.358 & 228459.917 & 228386.255 & 228055.017 \\
+%     BIC & 227221.817 & 227612.406 & 228244.896 & 228411.783 & 227930.191 & 227933.593 & 228395.054 & 228559.898 & 228502.457 & 228428.796 & 228097.557 \\
+%     ICC & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+%     RMSE & 0.350 & 0.350 & 0.351 & 0.351 & 0.351 & 0.351 & 0.351 & 0.351 & 0.351 & 0.351 & 0.351 \\
+%     RMSE (std) & 0.933 & 0.934 & 0.934 & 0.935 & 0.934 & 0.934 & 0.935 & 0.935 & 0.935 & 0.935 & 0.934 \\
+%     Omnibus & 42961.997 & 43355.448 & 43710.988 & 43868.775 & 43519.377 & 43521.701 & 43857.340 & 43924.906 & 43898.913 & 43878.640 & 43649.962 \\
+%     Omnibus (p-value) & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+%     Skew & 0.777 & 0.778 & 0.780 & 0.782 & 0.779 & 0.779 & 0.782 & 0.781 & 0.780 & 0.781 & 0.781 \\
+%     Kurtosis & 2.273 & 2.269 & 2.266 & 2.265 & 2.268 & 2.268 & 2.266 & 2.264 & 2.264 & 2.265 & 2.267 \\
+%     Jarque-Bera (JB) & 37674.247 & 37851.406 & 38063.861 & 38189.518 & 37917.900 & 37918.501 & 38186.364 & 38142.944 & 38088.355 & 38113.563 & 38083.823 \\
+%     Jarque-Bera (p-value) & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+%     Intercept & 1.777 & 0.190 & 0.178 & 0.207 & 0.217 & 0.133 & 0.118 & 0.166 & 0.167 & 0.167 & 0.163 \\
+%     Intercept (std) & 0.755 & 0.001 & 0.001 & 0.003 & 0.002 & 0.002 & 0.004 & 0.001 & 0.001 & 0.001 & 0.001 \\
+%     Intercept t & 2.354 & 161.036 & 164.937 & 72.970 & 105.675 & 75.166 & 30.730 & 129.543 & 152.975 & 158.364 & 152.153 \\
+%     Intercept t (p-value) & 0.019 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+%     Intercept (95\% CI) & 0.298 - 3.256 & 0.188 - 0.193 & 0.176 - 0.180 & 0.201 - 0.213 & 0.213 - 0.221 & 0.130 - 0.137 & 0.111 - 0.126 & 0.164 - 0.169 & 0.165 - 0.169 & 0.165 - 0.169 & 0.161 - 0.165 \\
+%     Unstandardized Coefficent B (b) & ~ & -0.043 & -0.030 & -0.001 & -0.001 & 0.001 & 0.001 & 0.008 & 0.014 & 0.023 & 0.031 \\
+%     Standard Error (SE) & ~ & 0.001 & 0.002 & 0.000 & 0.000 & 0.000 & 0.000 & 0.001 & 0.001 & 0.002 & 0.001 \\
+%     Standardized Coefficient b* (β) & ~ & -0.115 & -0.080 & -0.002 & -0.002 & 0.002 & 0.002 & 0.022 & 0.038 & 0.061 & 0.083 \\
+%     t & ~ & -31.393 & -18.752 & -13.588 & -25.824 & 25.758 & 14.190 & 6.038 & 9.691 & 12.946 & 22.343 \\
+%     t (p-value) & ~ & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+%     95\% CI & ~ & -0.041 - -0.041 & -0.027 - -0.027 & -0.001 - -0.001 & -0.001 - -0.001 & 0.001 - 0.001 & 0.001 - 0.001 & 0.011 - 0.011 & 0.017 - 0.017 & 0.026 - 0.026 & 0.034 - 0.034 \\
+%     \bottomrule
+
+%     \end{NiceTabular}
+% \end{table}
+
+% \begin{table}
+%     \caption{Competence multiple regression model (Full Model) and specification curve analysis (SCA) regression models and results}
+%     \label{tab:warmth_ols}
+%     \centering
+%     \begin{NiceTabular}{@{} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4}}
+%     \toprule
+%     \multicolumn{12}{l}{OLS specification curve: Probability Competence x Categorical and PPS Gender and Age}
+%     \midrule
+%     ~ & Competence Full Model & Competence Model 1 & Competence Model 2 & Competence Model 3 & Competence Model 4 & Competence Model 5 & Competence Model 6 & Competence Model 7 & Competence Model 8 & Competence Model 9 & Competence Model 10 \\
+%     \midrule
+%     \% Sector per Workforce & -0.000*** & 0.001*** & 0.001*** & 0.001*** & 0.001*** & 0.001*** & 0.001*** & 0.001*** & 0.001*** & 0.001*** & 0.001*** \\
+%     ~ & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) \\
+%     Age_Mixed & -5.811*** & ~ & ~ & ~ & -0.011*** & ~ & ~ & ~ & ~ & ~ & ~ \\
+%     ~ & (0.236) & ~ & ~ & ~ & (0.001) & ~ & ~ & ~ & ~ & ~ & ~ \\
+%     Age_Older & -5.807*** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & 0.033*** \\
+%     ~ & (0.236) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & (0.002) \\
+%     Age_Older_\% per Sector & 0.012*** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & 0.001*** & ~ & ~ \\
+%     ~ & (0.001) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & (0.000) & ~ & ~ \\
+%     Age_Younger & -5.837*** & -0.022*** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+%     ~ & (0.236) & (0.002) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+%     Age_Younger_\% per Sector & 0.012*** & ~ & ~ & ~ & ~ & -0.001*** & ~ & ~ & ~ & ~ & ~ \\
+%     ~ & (0.001) & ~ & ~ & ~ & ~ & (0.000) & ~ & ~ & ~ & ~ & ~ \\
+%     Gender_Female & -5.849*** & ~ & -0.020*** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+%     ~ & (0.238) & ~ & (0.001) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+%     Gender_Female_\% per Sector & 0.283*** & ~ & ~ & ~ & ~ & ~ & -0.001*** & ~ & ~ & ~ & ~ \\
+%     ~ & (0.012) & ~ & ~ & ~ & ~ & ~ & (0.000) & ~ & ~ & ~ & ~ \\
+%     Gender_Male & -5.809*** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & 0.029*** & ~ \\
+%     ~ & (0.235) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & (0.001) & ~ \\
+%     Gender_Male_\% per Sector & 0.282*** & ~ & ~ & ~ & ~ & ~ & ~ & 0.001*** & ~ & ~ & ~ \\
+%     ~ & (0.012) & ~ & ~ & ~ & ~ & ~ & ~ & (0.000) & ~ & ~ & ~ \\
+%     Gender_Mixed & -5.796*** & ~ & ~ & -0.011*** & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+%     ~ & (0.235) & ~ & ~ & (0.001) & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+%     Job Description num_words & 0.007*** & 0.007*** & 0.007*** & 0.007*** & 0.007*** & 0.007*** & 0.007*** & 0.007*** & 0.007*** & 0.007*** & 0.007*** \\
+%     ~ & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) \\
+%     R-squared & 0.118 & 0.113 & 0.113 & 0.113 & 0.113 & 0.113 & 0.115 & 0.115 & 0.114 & 0.114 & 0.114 \\
+%     R-squared Adj. & 0.118 & 0.113 & 0.113 & 0.113 & 0.113 & 0.113 & 0.115 & 0.115 & 0.114 & 0.114 & 0.114 \\
+%     const & -17.455*** & 0.345*** & 0.347*** & 0.344*** & 0.347*** & 0.391*** & 0.376*** & 0.297*** & 0.301*** & 0.327*** & 0.333*** \\
+%     ~ & (0.708) & (0.001) & (0.001) & (0.001) & (0.001) & (0.004) & (0.002) & (0.002) & (0.003) & (0.001) & (0.001) \\
+%     Model Name & OLS & OLS & OLS & OLS & OLS & OLS & OLS & OLS & OLS & OLS & OLS \\
+%     N & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 \\
+%     R-squared & 0.118 & 0.113 & 0.113 & 0.113 & 0.113 & 0.113 & 0.115 & 0.115 & 0.114 & 0.114 & 0.114 \\
+%     R-squared Adj. & 0.118 & 0.113 & 0.113 & 0.113 & 0.113 & 0.113 & 0.115 & 0.115 & 0.114 & 0.114 & 0.114 \\
+%     Log-Likelihood & -93821.055 & -94607.644 & -94586.186 & -94656.822 & -94659.717 & -94590.767 & -94364.808 & -94362.150 & -94568.239 & -94437.249 & -94456.509 \\
+%     Pseudo R2 & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+%     F & 4102.107 & 13081.101 & 13097.235 & 13044.134 & 13041.958 & 13093.791 & 13263.818 & 13265.820 & 13110.731 & 13209.281 & 13194.786 \\
+%     F (p-value) & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+%     df_model & 10 & 3 & 3 & 3 & 3 & 3 & 3 & 3 & 3 & 3 & 3 \\
+%     df_total & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 \\
+%     df_resid & 307143 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 \\
+%     AIC & 187664.110 & 189223.289 & 189180.373 & 189321.644 & 189327.434 & 189189.534 & 188737.617 & 188732.300 & 189144.479 & 188882.499 & 188921.018 \\
+%     BIC & 187781.096 & 189265.829 & 189222.913 & 189364.184 & 189369.975 & 189232.075 & 188780.157 & 188774.841 & 189187.019 & 188925.039 & 188963.559 \\
+%     ICC & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+%     RMSE & 0.328 & 0.329 & 0.329 & 0.329 & 0.329 & 0.329 & 0.329 & 0.329 & 0.329 & 0.329 & 0.329 \\
+%     RMSE (std) & 0.939 & 0.942 & 0.942 & 0.942 & 0.942 & 0.942 & 0.941 & 0.941 & 0.942 & 0.941 & 0.941 \\
+%     Omnibus & 2512258.084 & 2348000.101 & 2376028.532 & 2352776.395 & 2363354.940 & 2351882.730 & 2427181.382 & 2427719.196 & 2355537.396 & 2404409.166 & 2398077.826 \\
+%     Omnibus (p-value) & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+%     Skew & -0.057 & -0.057 & -0.058 & -0.058 & -0.059 & -0.058 & -0.057 & -0.057 & -0.058 & -0.056 & -0.058 \\
+%     Kurtosis & 1.581 & 1.568 & 1.571 & 1.569 & 1.570 & 1.569 & 1.575 & 1.575 & 1.569 & 1.573 & 1.573 \\
+%     Jarque-Bera (JB) & 25919.916 & 26399.200 & 26310.733 & 26389.498 & 26359.614 & 26391.195 & 26151.396 & 26149.789 & 26379.589 & 26217.350 & 26245.739 \\
+%     Jarque-Bera (p-value) & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+%     Intercept & -17.455 & 0.345 & 0.347 & 0.344 & 0.347 & 0.391 & 0.376 & 0.297 & 0.301 & 0.327 & 0.333 \\
+%     Intercept (std) & 0.708 & 0.001 & 0.001 & 0.001 & 0.001 & 0.004 & 0.002 & 0.002 & 0.003 & 0.001 & 0.001 \\
+%     Intercept t & -24.660 & 348.362 & 338.558 & 342.006 & 288.345 & 108.335 & 225.891 & 154.120 & 113.116 & 294.845 & 328.018 \\
+%     Intercept t (p-value) & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+%     Intercept (95\% CI) & -18.842 - -16.067 & 0.343 - 0.347 & 0.345 - 0.349 & 0.342 - 0.346 & 0.345 - 0.349 & 0.384 - 0.398 & 0.373 - 0.379 & 0.294 - 0.301 & 0.296 - 0.306 & 0.325 - 0.330 & 0.331 - 0.335 \\
+%     Unstandardized Coefficent B (b) & ~ & -0.022 & -0.020 & -0.011 & -0.011 & -0.001 & -0.001 & 0.001 & 0.001 & 0.029 & 0.033 \\
+%     Standard Error (SE) & ~ & 0.002 & 0.001 & 0.001 & 0.001 & 0.000 & 0.000 & 0.000 & 0.000 & 0.001 & 0.002 \\
+%     Standardized Coefficient b* (β) & ~ & -0.063 & -0.058 & -0.033 & -0.031 & -0.002 & -0.002 & 0.002 & 0.003 & 0.084 & 0.094 \\
+%     t & ~ & -13.256 & -14.788 & -8.794 & -8.458 & -14.474 & -25.730 & 25.834 & 15.956 & 22.735 & 21.870 \\
+%     t (p-value) & ~ & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+%     95\% CI & ~ & -0.019 - -0.019 & -0.018 - -0.018 & -0.009 - -0.009 & -0.008 - -0.008 & -0.001 - -0.001 & -0.001 - -0.001 & 0.001 - 0.001 & 0.001 - 0.001 & 0.032 - 0.032 & 0.036 - 0.036 \\
+
+%     \bottomrule
+
+%     \end{NiceTabular}
+% \end{table}
+
+% \begin{table}
+%     \caption{List of words related to warmth and competence obtained from inductive frame analysis}
+%     \label{table:word2vec}
+%     \begin{NiceTabular}{@{} C{0.4} C{0.4}}
+%     \toprule
+%     Warmth & Competence \\
+%     \midrule
+%     Supportive & Develop \\
+%     Collaborative & Solution \\
+%     Need \linebreak(as it relates to meeting other people’s needs/ aware of others’ needs) & Strategy \\
+%     Trustworthy & Challenge \\
+%     Community & Product \\
+%     Honest & Persistent \\
+%     Sympathetic & Assertive \\
+%     Friendly & Ambitious \\
+%     Caring & Industrious \\
+%     Patient & Able \\
+%     Fair & Capable \\
+%     Helpful & Strong-minded \\
+%     Polite & Determined \\
+%     Gentle & Clever \\
+%     Cooperative & Self-reliant \\
+%     Loyal & Consistent \\
+%     Moral & Competent \\
+%     Warm-hearted & Talented \\
+%     \bottomrule
+%     \end{NiceTabular}
+% \end{table}
+
+
+\begin{table}
+    \caption{International Standard Industrial Classifications (SBI) Sector, keywords, and keyword counts}
+    \label{table:cbs_keywords}
+    \centering
+        \begin{longtable}{@{}L{0.05}L{0.25}L{0.5}C{0.1}@{}}
+        \toprule
+        \multicolumn{4}{l}{Sectoral Gender and Age Composition and Segregation, Keywords, Counts, and Percentages} \\
+        \midrule
+        \multicolumn{4}{c}{SBI Sector Titles (SIC2008)} \\
+        \midrule
+        Code & Sector Name & Keywords & Keywords \textit{n} \\
+        \midrule
+        \endfirsthead
+        \multicolumn{4}{c}{{\tablename\ \thetable{} -- continued from previous page}} \\
+        \toprule
+        Code & Sector Name & Keywords & Keywords \textit{n} \\
+        \midrule
+        \endhead
+        \midrule
+        \multicolumn{4}{r}{{Continued on next page}} \\
+        \endfoot
+        \bottomrule
+        \addlinespace
+        \raggedright\tnote\footnotesize\itshape{
+        Note.
+        \linebreak
+        Threshold for gender = 47.55\% ± 20\%
+        \linebreak
+        Threshold for age = 42.07\% ± 10\%
+        \linebreak
+        \scriptsize{Source: Centraal Bureau voor de Statistiek (CBS)}
+        }
+        \endlastfoot
+
+        A & Agriculture and industry & ['forestry', 'fishing', 'agriculture'] & 3 \\
+        B & Industry (no construction), energy & ['mining', 'quarry', 'quarrying'] & 3 \\
+        C & Manufacturing & ['gas supply', 'manufacturing', 'industry', 'production', 'supply', 'production manager', 'managing director'] & 7 \\
+        D & Energy supply & ['energy', 'electricity', 'energy supply'] & 3 \\
+        E & Water supply and waste management & ['water', 'waste management', 'water stock', 'water supply'] & 4 \\
+        F & Construction & ['build', 'construction'] & 2 \\
+        G & Commercial services & ['trade', 'buying', 'sale', 'selling', 'marketing manager', 'retail', 'purchase', 'great', 'wholesale', 'manage driver', 'retail trade'] & 11 \\
+        H & Transportation and storage & ['transport', 'transportation', 'logistics', 'logistics manager', 'storage'] & 5 \\
+        I & Accommodation and food serving & ['accommodation', 'serving', 'food serving', 'food service', 'hotel', 'service', 'food'] & 7 \\
+        J & Information and communication & ['software', 'communication', 'network specialist', 'author', 'director', 'database', 'information', 'application developer', 'ict manager'] & 9 \\
+        K & Financial institutions & ['commercial', 'commercial service', 'financial institution'] & 3 \\
+        L & Renting, buying, selling real estate & ['rental', 'rent', 'sales real estate', 'renting', 'selling real estate'] & 5 \\
+        M & Business services & ['electrotechnical engineer', 'linguist', 'engineer', 'sociologist', 'electrical engineer'] & 5 \\
+        N & Renting and other business support & ['career development specialist', 'business support', 'specialised services manager', 'service activity', 'honorary service activity', 'specialised business service', 'business service', 'hire'] & 8 \\
+        O & Government and care & ['public administration', 'government'] & 2 \\
+        P & Education & ['primary school teacher', 'teacher', 'education', 'honorary teacher', 'pedagogue', 'educationalist'] & 6 \\
+        Q & Health and social work activities & ['doctor', 'social work', 'psychologist', 'specialised nurse', 'health', 'social worker', 'social activity', 'care', 'manager of healthcare institution', 'physiotherapist', 'social work activity'] & 11 \\
+        R & Culture, recreation, other services & ['catering', 'recreation', 'sport', 'culture'] & 4 \\
+        S & Other service activities & ['staff'] & 1 \\
+        ~ & Total (excluding A-U) & ~ & 99 \\
+
+        \end{longtable}
+    \end{table}
+
+% \begin{table}
+%     \caption{Sectoral Gender and Age Composition and Segregation}
+%     \label{table:cbs}
+%     \centering
+%     \tiny
+%     \begin{threeparttable}
+%     \begin{longtable}{@{}L{0.0001}C{0.01}C{0.05}C{0.07}C{0.06}C{0.02}C{0.05}C{0.07}C{0.04}L{0.08}C{0.03}C{0.05}C{0.07}C{0.06}C{0.02}C{0.05}C{0.07}C{0.04}L{0.08}C{0.03}C{0.05}}
+%         \toprule
+%         \multicolumn{21}{l}{Sectoral Gender and Age Composition and Segregation, Keywords, Counts, and Percentages } \\
+%         \midrule
+%         \multicolumn{21}{c}{Jobs Count per Sector (x 1000)} \\
+%         \midrule
+%         \multicolumn{1}{c}{SBI Sector Titles} & \multicolumn{9}{c}{Gender} & \multicolumn{9}{c}{Age} & \multicolumn{2}{c}{Total Workforce} \\
+%         \midrule
+%         \multicolumn{1}{c}{Industry class / branch (SIC2008)} & \multicolumn{4}{c}{Female} & \multicolumn{4}{c}{Male} & Sectoral Gender Segregation & \multicolumn{4}{c}{Older (>= 45 years)} & \multicolumn{4}{c}{Younger (< 45 years)} & Sectoral Age Segregation & \multicolumn{2}{c}{Total Workforce} \\
+%         \midrule
+%         Code & \textit{n} & \% per Sector & \% per Social Category & \% per Workforce & \textit{n} & \% per Sector & \% per Social Category & \% per Workforce & Dominant Category & \textit{n} & \% per Sector & \% per Social Category & \% per Workforce & \textit{n} & \% per Sector & \% per Social Category & \% per Workforce & Dominant Category & \textit{n} & \% Sector per Workforce \\
+%         \midrule
+    %     4029 & ~ & ~ & 4362 & ~ & ~ & ~ & 3500 & ~ & ~ & ~ & 4892 & ~ & ~ & ~ & ~ & 8391 & ~ \\
+    %     310 & 22.158685 & 2.579679 & 1.226751 & 1089 & 77.841315 & 8.218868 & 4.309458 & Male & 690 & 49.320944 & 6.490452 & 2.730510 & 708 & 50.607577 & 4.839371 & 2.801741 & Mixed Age & 1399 & 5.536209 \\
+    %     423 & 20.919881 & 3.520013 & 1.673922 & 1599 & 79.080119 & 12.067925 & 6.327661 & Male & 1066 & 52.720079 & 10.027279 & 4.218441 & 954 & 47.181009 & 6.520848 & 3.775228 & Older & 2022 & 8.001583 \\
+    %     174 & 22.715405 & 1.447949 & 0.688564 & 592 & 77.284595 & 4.467925 & 2.342699 & Male & 413 & 53.916449 & 3.884865 & 1.634349 & 354 & 46.214099 & 2.419686 & 1.400871 & Older & 766 & 3.031262 \\
+    %     8 & 27.586207 & 0.066572 & 0.031658 & 21 & 72.413793 & 0.158491 & 0.083102 & Male & 15 & 51.724138 & 0.141097 & 0.059359 & 13 & 44.827586 & 0.088859 & 0.051444 & Mixed Age & 29 & 0.114761 \\
+    %     7 & 19.444444 & 0.058251 & 0.027701 & 29 & 80.555556 & 0.218868 & 0.114761 & Male & 21 & 58.333333 & 0.197536 & 0.083102 & 16 & 44.444444 & 0.109364 & 0.063316 & Older & 36 & 0.142461 \\
+    %     42 & 12.500000 & 0.349505 & 0.166205 & 294 & 87.500000 & 2.218868 & 1.163435 & Male & 160 & 47.619048 & 1.505032 & 0.633162 & 178 & 52.976190 & 1.216678 & 0.704393 & Mixed Age & 336 & 1.329640 \\
+    %     3421 & 43.134535 & 28.468004 & 13.537792 & 4510 & 56.865465 & 34.037736 & 17.847250 & Mixed Gender & 2704 & 34.094061 & 25.435048 & 10.700435 & 5228 & 65.918547 & 35.734792 & 20.688564 & Mixed Age & 7931 & 31.385042 \\
+    %     95 & 24.611399 & 0.790547 & 0.375940 & 291 & 75.388601 & 2.196226 & 1.151563 & Male & 205 & 53.108808 & 1.928323 & 0.811239 & 181 & 46.891192 & 1.237184 & 0.716264 & Older & 386 & 1.527503 \\
+    %     199 & 50.252525 & 1.655987 & 0.787495 & 196 & 49.494949 & 1.479245 & 0.775623 & Mixed Gender & 75 & 18.939394 & 0.705484 & 0.296795 & 320 & 80.808081 & 2.187286 & 1.266324 & Younger & 396 & 1.567076 \\
+    %     80 & 27.586207 & 0.665724 & 0.316581 & 210 & 72.413793 & 1.584906 & 0.831025 & Male & 95 & 32.758621 & 0.893613 & 0.375940 & 195 & 67.241379 & 1.332878 & 0.771666 & Mixed Age & 290 & 1.147606 \\
+    %     108 & 39.416058 & 0.898727 & 0.427384 & 166 & 60.583942 & 1.252830 & 0.656905 & Mixed Gender & 146 & 53.284672 & 1.373342 & 0.577760 & 128 & 46.715328 & 0.874915 & 0.506529 & Older & 274 & 1.084290 \\
+    %     33 & 48.529412 & 0.274611 & 0.130590 & 35 & 51.470588 & 0.264151 & 0.138504 & Mixed Gender & 36 & 52.941176 & 0.338632 & 0.142461 & 33 & 48.529412 & 0.225564 & 0.130590 & Older & 68 & 0.269094 \\
+    %     857 & 42.133727 & 7.131564 & 3.391373 & 1177 & 57.866273 & 8.883019 & 4.657697 & Mixed Gender & 726 & 35.693215 & 6.829085 & 2.872972 & 1307 & 64.257620 & 8.933698 & 5.172141 & Mixed Age & 2034 & 8.049070 \\
+    %     416 & 42.754368 & 3.461763 & 1.646221 & 557 & 57.245632 & 4.203774 & 2.204195 & Mixed Gender & 311 & 31.963001 & 2.925407 & 1.230708 & 660 & 67.831449 & 4.511278 & 2.611793 & Younger & 973 & 3.850416 \\
+    %     3970 & 68.154506 & 33.036532 & 15.710328 & 1855 & 31.845494 & 14 & 7.340720 & Female & 2844 & 48.824034 & 26.751952 & 11.254452 & 2981 & 51.175966 & 20.375940 & 11.796597 & Mixed Age & 5825 & 23.051049 \\
+    %     353 & 65.129151 & 2.937505 & 1.396913 & 189 & 34.870849 & 1.426415 & 0.747922 & Female & 253 & 46.678967 & 2.379833 & 1.001187 & 288 & 53.136531 & 1.968558 & 1.139691 & Mixed Age & 542 & 2.144836 \\
+    %     1208 & 84.298674 & 10.052426 & 4.780372 & 224 & 15.631542 & 1.690566 & 0.886427 & Female & 661 & 46.127006 & 6.217665 & 2.615750 & 770 & 53.733426 & 5.263158 & 3.047091 & Mixed Age & 1433 & 5.670756 \\
+    %     226 & 56.783920 & 1.880669 & 0.894341 & 171 & 42.964824 & 1.290566 & 0.676692 & Mixed Gender & 155 & 38.944724 & 1.458000 & 0.613376 & 241 & 60.552764 & 1.647300 & 0.953700 & Mixed Age & 398 & 1.574990 \\
+    %     87 & 65.909091 & 0.723974 & 0.344282 & 45 & 34.090909 & 0.339623 & 0.178077 & Female & 55 & 41.666667 & 0.517355 & 0.217649 & 75 & 56.818182 & 0.512645 & 0.296795 & Mixed Age & 132 & 0.522359 \\
+    %     99 & 12017 & 47.554412 & 100 & 47.554412 & 13250 & 52.433716 & 100 & 52.433716 & ~ & 10631 & 42.069648 & 100 & 42.069648 & 14630 & 57.894737 & 100 & 57.894737 & ~ & 25270 & 100 \\
+    %     \bottomrule
+    % \end{longtable}
+    % \begin{tablenotes}[para, flushleft]
+    %     \textit{Note.
+    %     Threshold for gender = 47.55\% ± 20\%
+    %     Threshold for age = 42.07\% ± 10\%
+    %     \tiny{Source: Centraal Bureau voor de Statistiek (CBS)}}
+    % \end{tablenotes}
+    % \end{threeparttable}
+% \end{table}
+% \begin{table}
+%     \caption{Sectoral Gender Composition and Segregation}
+%     \label{table:cbs_gender}
+%     \centering
+%     \tiny
+%     \begin{threeparttable}
+%     \begin{longtable}{@{}L{0.03}L{0.1}L{0.15}C{0.04}C{0.03}C{0.05}C{0.07}C{0.06}C{0.02}C{0.05}C{0.07}C{0.04}L{0.08}}
+%         \toprule
+%         \multicolumn{13}{l}{Sectoral Gender Composition and Segregation, Keywords, Counts, and Percentages } \\
+%         \midrule
+%         \multicolumn{13}{c}{Jobs Count per Sector (x 1000)} \\
+%         \midrule
+%         \multicolumn{4}{c}{SBI Sector Titles} & \multicolumn{9}{c}{Gender} \\
+%         \midrule
+%         \multicolumn{4}{c}{Industry class / branch (SIC2008)} & \multicolumn{4}{c}{Female} & \multicolumn{4}{c}{Male} & Sectoral Gender Segregation \\
+%         \midrule
+%         Code & Sector Name & Keywords & Keywords \textit{n} & \textit{n} & \% per Sector & \% per Social Category & \% per Workforce & \textit{n} & \% per Sector & \% per Social Category & \% per Workforce & Dominant Category \\
+%         \midrule
+%         A-U & All economic activities & ~ & ~ & 4029 & ~ & ~ & ~ & 4362 & ~ & ~ & ~ & ~ \\
+%         A & Agriculture and industry & ['agriculture', 'forestry', 'fishing'] & 3 & 310 & 22.2 & 2.6 & 1.2 & 1089 & 77.8 & 8.2 & 4.3 & Male \\
+%         B & Industry \linebreak[3](no construction), energy & ['quarrying', 'mining', 'quarry'] & 3 & 423 & 20.9 & 3.5 & 1.7 & 1599 & 79.1 & 12.1 & 6.3 & Male \\
+%         C & Manufacturing & ['supply', 'production manager', 'manufacturing', 'gas supply', 'managing director', 'production', 'industry'] & 7 & 174 & 22.7 & 1.4 & 0.7 & 592 & 77.3 & 4.5 & 2.3 & Male \\
+%         D & Energy supply & ['energy supply', 'energy', 'electricity'] & 3 & 8 & 27.6 & 0.1 & 0.0 & 21 & 72.4 & 0.2 & 0.1 & Male \\
+%         E & Water supply \linebreak[3]and waste management & ['water supply', 'water stock', 'waste management', 'water'] & 4 & 7 & 19.4 & 0.1 & 0.0 & 29 & 80.6 & 0.2 & 0.1 & Male \\
+%         F & Construction & ['build', 'construction'] & 2 & 42 & 12.5 & 0.3 & 0.2 & 294 & 87.5 & 2.2 & 1.2 & Male \\
+%         G & Commercial services & ['great', 'marketing manager', 'wholesale', 'sale', 'retail', 'retail trade', 'purchase', 'manage driver', 'trade', 'buying', 'selling'] & 11 & 3421 & 43.1 & 28.5 & 13.5 & 4510 & 56.9 & 34.0 & 17.8 & Mixed Gender \\
+%         H & Transportation \linebreak[3]and storage & ['storage', 'logistics manager', 'transportation', 'logistics', 'transport'] & 5 & 95 & 24.6 & 0.8 & 0.4 & 291 & 75.4 & 2.2 & 1.2 & Male \\
+%         I & Accommodation \linebreak[3]and food serving & ['service', 'hotel', 'food service', 'food serving', 'accommodation', 'serving', 'food'] & 7 & 199 & 50.3 & 1.7 & 0.8 & 196 & 49.5 & 1.5 & 0.8 & Mixed Gender \\
+%         J & Information \linebreak[3]and communication & ['information', 'software', 'ict manager', 'database', 'author', 'director', 'network specialist', 'application developer', 'communication'] & 9 & 80 & 27.6 & 0.7 & 0.3 & 210 & 72.4 & 1.6 & 0.8 & Male \\
+%         K & Financial institutions & ['commercial', 'financial institution', 'commercial service'] & 3 & 108 & 39.4 & 0.9 & 0.4 & 166 & 60.6 & 1.3 & 0.7 & Mixed Gender \\
+%         L & Renting, buying, selling real estate & ['selling real estate', 'rental', 'rent', 'renting', 'sales real estate'] & 5 & 33 & 48.5 & 0.3 & 0.1 & 35 & 51.5 & 0.3 & 0.1 & Mixed Gender \\
+%         M & Business services & ['electrical engineer', 'electrotechnical engineer', 'sociologist', 'engineer', 'linguist'] & 5 & 857 & 42.1 & 7.1 & 3.4 & 1177 & 57.9 & 8.9 & 4.7 & Mixed Gender \\
+%         N & Renting and other\linebreak[3] business support & ['business support', 'honorary service activity', 'specialised services manager', 'hire', 'business service', 'service activity', 'career development specialist', 'specialised business service'] & 8 & 416 & 42.8 & 3.5 & 1.6 & 557 & 57.2 & 4.2 & 2.2 & Mixed Gender \\
+%         O & Government \linebreak[3]and care & ['public administration', 'government'] & 2 & 3970 & 68.2 & 33.0 & 15.7 & 1855 & 31.8 & 14.0 & 7.3 & Female \\
+%         P & Education & ['education', 'pedagogue', 'honorary teacher', 'educationalist', 'primary school teacher', 'teacher'] & 6 & 353 & 65.1 & 2.9 & 1.4 & 189 & 34.9 & 1.4 & 0.7 & Female \\
+%         Q & Health and \linebreak[3]social work activities & ['social work', 'manager of healthcare institution', 'social worker', 'care', 'social activity', 'physiotherapist', 'doctor', 'specialised nurse', 'health', 'social work activity', 'psychologist'] & 11 & 1208 & 84.3 & 10.1 & 4.8 & 224 & 15.6 & 1.7 & 0.9 & Female \\
+%         R & Culture, recreation, \linebreak[3]other services & ['culture', 'recreation', 'catering', 'sport'] & 4 & 226 & 56.8 & 1.9 & 0.9 & 171 & 43.0 & 1.3 & 0.7 & Mixed Gender \\
+%         S & Other service activities & ['staff'] & 1 & 87 & 65.9 & 0.7 & 0.3 & 45 & 34.1 & 0.3 & 0.2 & Female \\
+%         \midrule
+%         ~ & Total \linebreak[3](excluding A-U) & ~ & 99 & 12017 & 47.6 & 100.0 & 47.6 & 13250 & 52.4 & 100.0 & 52.4 & ~ & 10631 & 42.1 & 100.0 & 42.1 & 14630 & 57.9 & 100.0 & 57.9 & ~ \\
+%         \bottomrule
+%     \end{longtable}
+%     \begin{tablenotes}[para, flushleft]
+%         \textit{Note.
+%         Threshold for gender = 47.55\% ± 20\%
+%         Threshold for age = 42.07\% ± 10\%
+%         \tiny{Source: Centraal Bureau voor de Statistiek (CBS)}}
+%     \end{tablenotes}
+%     \end{threeparttable}
+% \end{table}
+
+
+% \begin{table}
+%     \caption{Sectoral Gender Composition and Segregation}
+%     \label{table:cbs_age}
+%     \centering
+%     \tiny
+%     \begin{threeparttable}
+%     \begin{longtable}{@{}L{0.001}C{0.03}C{0.05}C{0.07}C{0.06}C{0.02}C{0.05}C{0.07}C{0.04}L{0.08}C{0.03}C{0.05}}
+%         \toprule
+%         \multicolumn{12}{l}{Sectoral Gender and Age Composition and Segregation, Keywords, Counts, and Percentages } \\
+%         \midrule
+%         \multicolumn{12}{c}{Jobs Count per Sector (x 1000)} \\
+%         \midrule
+%         \multicolumn{1}{c}{SBI Sector Titles} & \multicolumn{9}{c}{Age} & \multicolumn{2}{c}{Total Workforce} \\
+%         \midrule
+%         \multicolumn{1}{c}{Industry class / branch (SIC2008)} & \multicolumn{4}{c}{Older (>= 45 years)} & \multicolumn{4}{c}{Younger (< 45 years)} & Sectoral Age Segregation & \multicolumn{2}{c}{Total Workforce} \\
+%         \midrule
+%         Code & \textit{n} & \% per Sector & \% per Social Category & \% per Workforce & \textit{n} & \% per Sector & \% per Social Category & \% per Workforce & Dominant Category & \textit{n} & \% Sector per Workforce \\
+%         \midrule
+%         % A-U & All economic activities & ~ & ~ & 4029 & ~ & ~ & ~ & 8391 & ~ \\
+%         A & 690 & 49.3 & 6.5 & 2.7 & 708 & 50.6 & 4.8 & 2.8 & Mixed Age & 1399 & 5.5 \\
+%         B & 1066 & 52.7 & 10.0 & 4.2 & 954 & 47.2 & 6.5 & 3.8 & Older & 2022 & 8.0 \\
+%         C & 413 & 53.9 & 3.9 & 1.6 & 354 & 46.2 & 2.4 & 1.4 & Older & 766 & 3.0 \\
+%         D & 15 & 51.7 & 0.1 & 0.1 & 13 & 44.8 & 0.1 & 0.1 & Mixed Age & 29 & 0.1 \\
+%         E & 21 & 58.3 & 0.2 & 0.1 & 16 & 44.4 & 0.1 & 0.1 & Older & 36 & 0.1 \\
+%         F & 160 & 47.6 & 1.5 & 0.6 & 178 & 53.0 & 1.2 & 0.7 & Mixed Age & 336 & 1.3 \\
+%         G & 2704 & 34.1 & 25.4 & 10.7 & 5228 & 65.9 & 35.7 & 20.7 & Mixed Age & 7931 & 31.4 \\
+%         H & 205 & 53.1 & 1.9 & 0.8 & 181 & 46.9 & 1.2 & 0.7 & Older & 386 & 1.5 \\
+%         I & 75 & 18.9 & 0.7 & 0.3 & 320 & 80.8 & 2.2 & 1.3 & Younger & 396 & 1.6 \\
+%         J & 95 & 32.8 & 0.9 & 0.4 & 195 & 67.2 & 1.3 & 0.8 & Mixed Age & 290 & 1.1 \\
+%         K & 146 & 53.3 & 1.4 & 0.6 & 128 & 46.7 & 0.9 & 0.5 & Older & 274 & 1.1 \\
+%         L & 36 & 52.9 & 0.3 & 0.1 & 33 & 48.5 & 0.2 & 0.1 & Older & 68 & 0.3 \\
+%         M & 726 & 35.7 & 6.8 & 2.9 & 1307 & 64.3 & 8.9 & 5.2 & Mixed Age & 2034 & 8.0 \\
+%         N & 311 & 32.0 & 2.9 & 1.2 & 660 & 67.8 & 4.5 & 2.6 & Younger & 973 & 3.9 \\
+%         O & 2844 & 48.8 & 26.8 & 11.3 & 2981 & 51.2 & 20.4 & 11.8 & Mixed Age & 5825 & 23.1 \\
+%         P & 253 & 46.7 & 2.4 & 1.0 & 288 & 53.1 & 2.0 & 1.1 & Mixed Age & 542 & 2.1 \\
+%         Q & 661 & 46.1 & 6.2 & 2.6 & 770 & 53.7 & 5.3 & 3.0 & Mixed Age & 1433 & 5.7 \\
+%         R & 155 & 38.9 & 1.5 & 0.6 & 241 & 60.6 & 1.6 & 1.0 & Mixed Age & 398 & 1.6 \\
+%         S & 55 & 41.7 & 0.5 & 0.2 & 75 & 56.8 & 0.5 & 0.3 & Mixed Age & 132 & 0.5 \\
+%         \midrule
+%         Tot. & 10631 & 42.1 & 100.0 & 42.1 & 14630 & 57.9 & 100.0 & 57.9 & ~ & 25270 & 100.0 \\
+%         \bottomrule
+%     \end{longtable}
+%         \begin{tablenotes}[para, flushleft]
+%             \textit{Note.
+%             Threshold for gender = 47.55\% ± 20\%
+%             Threshold for age = 42.07\% ± 10\%
+%             \tiny{Source: Centraal Bureau voor de Statistiek (CBS)}}
+%         \end{tablenotes}
+%         \end{threeparttable}
+%     \end{table}
+
+% \section{Appendix B}
+% \label{app:B}
+
+\end{document}
+
+
+% Appendices
+\appendix
+\section{Appendix A}
+\label{app:A}
+
+\begin{table}
+    \caption{Warmth multiple regression model (Full Model) and specification curve analysis (SCA) regression models and results}
+    \label{tab:warmth_ols}
+    \centering
+    \begin{NiceTabular}{@{} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4}}
+    \toprule
+    \multicolumn{11}{l}{OLS specification curve: Probability Warmth x Categorical and PPS Gender and Age}
+    \midrule
+    ~ & Warmth Full Model & Warmth Model 1 & Warmth Model 2 & Warmth Model 3 & Warmth Model 4 & Warmth Model 5 & Warmth Model 6 & Warmth Model 7 & Warmth Model 8 & Warmth Model 9 & Warmth Model 10 \\
+    \midrule
+    \% Sector per Workforce & -0.001*** & -0.001*** & -0.000** & -0.000 & -0.000 & -0.000 & -0.000 & -0.000 & 0.000* & 0.000*** & -0.000*** \\
+    ~ & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) \\
+    Age_Mixed & 0.604** & ~ & ~ & ~ & ~ & ~ & ~ & 0.008*** & ~ & ~ & ~ \\
+    ~ & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) \\
+    Age_Mixed & 0.604** & ~ & ~ & ~ & ~ & ~ & ~ & 0.008*** & ~ & ~ & ~ \\
+    ~ & (0.252) & ~ & ~ & ~ & ~ & ~ & ~ & (0.001) & ~ & ~ & ~ \\
+    Age_Older & 0.571** & ~ & -0.030*** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+    ~ & (0.251) & ~ & (0.002) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+    Age_Older_\% per Sector & 0.018*** & ~ & ~ & -0.001*** & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+    ~ & (0.001) & ~ & ~ & (0.000) & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+    Age_Younger & 0.603** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & 0.023*** & ~ \\
+    ~ & (0.252) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & (0.002) & ~ \\
+    Age_Younger_\% per Sector & 0.017*** & ~ & ~ & ~ & ~ & ~ & 0.001*** & ~ & ~ & ~ & ~ \\
+    ~ & (0.001) & ~ & ~ & ~ & ~ & ~ & (0.000) & ~ & ~ & ~ & ~ \\
+    Gender_Female & 0.583** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & 0.014*** & ~ & ~ \\
+    ~ & (0.254) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & (0.001) & ~ & ~ \\
+    Gender_Female_\% per Sector & -0.045*** & ~ & ~ & ~ & ~ & 0.001*** & ~ & ~ & ~ & ~ & ~ \\
+    ~ & (0.013) & ~ & ~ & ~ & ~ & (0.000) & ~ & ~ & ~ & ~ & ~ \\
+    Gender_Male & 0.582** & -0.043*** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+    ~ & (0.250) & (0.001) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+    Gender_Male_\% per Sector & -0.046*** & ~ & ~ & ~ & -0.001*** & ~ & ~ & ~ & ~ & ~ & ~ \\
+    ~ & (0.013) & ~ & ~ & ~ & (0.000) & ~ & ~ & ~ & ~ & ~ & ~ \\
+    Gender_Mixed & 0.612** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & 0.031*** \\
+    ~ & (0.251) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & (0.001) \\
+    Job Description num_words & 0.008*** & 0.008*** & 0.008*** & 0.008*** & 0.008*** & 0.008*** & 0.008*** & 0.008*** & 0.008*** & 0.008*** & 0.008*** \\
+    ~ & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) \\
+    R-squared & 0.130 & 0.129 & 0.127 & 0.126 & 0.128 & 0.128 & 0.126 & 0.126 & 0.126 & 0.126 & 0.127 \\
+    R-squared Adj. & 0.130 & 0.129 & 0.127 & 0.126 & 0.128 & 0.128 & 0.126 & 0.126 & 0.126 & 0.126 & 0.127 \\
+    const & 1.777** & 0.190*** & 0.178*** & 0.207*** & 0.217*** & 0.133*** & 0.118*** & 0.166*** & 0.167*** & 0.167*** & 0.163*** \\
+    ~ & (0.755) & (0.001) & (0.001) & (0.003) & (0.002) & (0.002) & (0.004) & (0.001) & (0.001) & (0.001) & (0.001) \\
+    Model Name & OLS & OLS & OLS & OLS & OLS & OLS & OLS & OLS & OLS & OLS & OLS \\
+    N & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 \\
+    R-squared & 0.130 & 0.129 & 0.127 & 0.126 & 0.128 & 0.128 & 0.126 & 0.126 & 0.126 & 0.126 & 0.127 \\
+    R-squared Adj. & 0.130 & 0.129 & 0.127 & 0.126 & 0.128 & 0.128 & 0.126 & 0.126 & 0.126 & 0.126 & 0.127 \\
+    Log-Likelihood & -113541.415 & -113780.933 & -114097.178 & -114180.621 & -113939.825 & -113941.527 & -114172.257 & -114254.679 & -114225.958 & -114189.128 & -114023.508 \\
+    Pseudo R2 & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+    F & 4584.833 & 15099.757 & 14858.085 & 14794.401 & 14978.270 & 14976.970 & 14800.783 & 14737.909 & 14759.814 & 14787.911 & 14914.338 \\
+    F (p-value) & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+    df_model & 10 & 3 & 3 & 3 & 3 & 3 & 3 & 3 & 3 & 3 & 3 \\
+    df_total & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 \\
+    df_resid & 307143 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 \\
+    AIC & 227104.830 & 227569.865 & 228202.356 & 228369.242 & 227887.650 & 227891.053 & 228352.514 & 228517.358 & 228459.917 & 228386.255 & 228055.017 \\
+    BIC & 227221.817 & 227612.406 & 228244.896 & 228411.783 & 227930.191 & 227933.593 & 228395.054 & 228559.898 & 228502.457 & 228428.796 & 228097.557 \\
+    ICC & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+    RMSE & 0.350 & 0.350 & 0.351 & 0.351 & 0.351 & 0.351 & 0.351 & 0.351 & 0.351 & 0.351 & 0.351 \\
+    RMSE (std) & 0.933 & 0.934 & 0.934 & 0.935 & 0.934 & 0.934 & 0.935 & 0.935 & 0.935 & 0.935 & 0.934 \\
+    Omnibus & 42961.997 & 43355.448 & 43710.988 & 43868.775 & 43519.377 & 43521.701 & 43857.340 & 43924.906 & 43898.913 & 43878.640 & 43649.962 \\
+    Omnibus (p-value) & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+    Skew & 0.777 & 0.778 & 0.780 & 0.782 & 0.779 & 0.779 & 0.782 & 0.781 & 0.780 & 0.781 & 0.781 \\
+    Kurtosis & 2.273 & 2.269 & 2.266 & 2.265 & 2.268 & 2.268 & 2.266 & 2.264 & 2.264 & 2.265 & 2.267 \\
+    Jarque-Bera (JB) & 37674.247 & 37851.406 & 38063.861 & 38189.518 & 37917.900 & 37918.501 & 38186.364 & 38142.944 & 38088.355 & 38113.563 & 38083.823 \\
+    Jarque-Bera (p-value) & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+    Intercept & 1.777 & 0.190 & 0.178 & 0.207 & 0.217 & 0.133 & 0.118 & 0.166 & 0.167 & 0.167 & 0.163 \\
+    Intercept (std) & 0.755 & 0.001 & 0.001 & 0.003 & 0.002 & 0.002 & 0.004 & 0.001 & 0.001 & 0.001 & 0.001 \\
+    Intercept t & 2.354 & 161.036 & 164.937 & 72.970 & 105.675 & 75.166 & 30.730 & 129.543 & 152.975 & 158.364 & 152.153 \\
+    Intercept t (p-value) & 0.019 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+    Intercept (95\% CI) & 0.298 - 3.256 & 0.188 - 0.193 & 0.176 - 0.180 & 0.201 - 0.213 & 0.213 - 0.221 & 0.130 - 0.137 & 0.111 - 0.126 & 0.164 - 0.169 & 0.165 - 0.169 & 0.165 - 0.169 & 0.161 - 0.165 \\
+    Unstandardized Coefficent B (b) & ~ & -0.043 & -0.030 & -0.001 & -0.001 & 0.001 & 0.001 & 0.008 & 0.014 & 0.023 & 0.031 \\
+    Standard Error (SE) & ~ & 0.001 & 0.002 & 0.000 & 0.000 & 0.000 & 0.000 & 0.001 & 0.001 & 0.002 & 0.001 \\
+    Standardized Coefficient b* (β) & ~ & -0.115 & -0.080 & -0.002 & -0.002 & 0.002 & 0.002 & 0.022 & 0.038 & 0.061 & 0.083 \\
+    t & ~ & -31.393 & -18.752 & -13.588 & -25.824 & 25.758 & 14.190 & 6.038 & 9.691 & 12.946 & 22.343 \\
+    t (p-value) & ~ & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+    95\% CI & ~ & -0.041 - -0.041 & -0.027 - -0.027 & -0.001 - -0.001 & -0.001 - -0.001 & 0.001 - 0.001 & 0.001 - 0.001 & 0.011 - 0.011 & 0.017 - 0.017 & 0.026 - 0.026 & 0.034 - 0.034 \\
+    \bottomrule
+
+    \end{NiceTabular}
+\end{table}
+
+\begin{table}
+    \caption{Competence multiple regression model (Full Model) and specification curve analysis (SCA) regression models and results}
+    \label{tab:warmth_ols}
+    \centering
+    \begin{NiceTabular}{@{} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4} L{0.4}}
+    \toprule
+    \multicolumn{12}{l}{OLS specification curve: Probability Competence x Categorical and PPS Gender and Age}
+    \midrule
+    ~ & Competence Full Model & Competence Model 1 & Competence Model 2 & Competence Model 3 & Competence Model 4 & Competence Model 5 & Competence Model 6 & Competence Model 7 & Competence Model 8 & Competence Model 9 & Competence Model 10 \\
+    \midrule
+    \% Sector per Workforce & -0.000*** & 0.001*** & 0.001*** & 0.001*** & 0.001*** & 0.001*** & 0.001*** & 0.001*** & 0.001*** & 0.001*** & 0.001*** \\
+    ~ & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) \\
+    Age_Mixed & -5.811*** & ~ & ~ & ~ & -0.011*** & ~ & ~ & ~ & ~ & ~ & ~ \\
+    ~ & (0.236) & ~ & ~ & ~ & (0.001) & ~ & ~ & ~ & ~ & ~ & ~ \\
+    Age_Older & -5.807*** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & 0.033*** \\
+    ~ & (0.236) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & (0.002) \\
+    Age_Older_\% per Sector & 0.012*** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & 0.001*** & ~ & ~ \\
+    ~ & (0.001) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & (0.000) & ~ & ~ \\
+    Age_Younger & -5.837*** & -0.022*** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+    ~ & (0.236) & (0.002) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+    Age_Younger_\% per Sector & 0.012*** & ~ & ~ & ~ & ~ & -0.001*** & ~ & ~ & ~ & ~ & ~ \\
+    ~ & (0.001) & ~ & ~ & ~ & ~ & (0.000) & ~ & ~ & ~ & ~ & ~ \\
+    Gender_Female & -5.849*** & ~ & -0.020*** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+    ~ & (0.238) & ~ & (0.001) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+    Gender_Female_\% per Sector & 0.283*** & ~ & ~ & ~ & ~ & ~ & -0.001*** & ~ & ~ & ~ & ~ \\
+    ~ & (0.012) & ~ & ~ & ~ & ~ & ~ & (0.000) & ~ & ~ & ~ & ~ \\
+    Gender_Male & -5.809*** & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & 0.029*** & ~ \\
+    ~ & (0.235) & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & (0.001) & ~ \\
+    Gender_Male_\% per Sector & 0.282*** & ~ & ~ & ~ & ~ & ~ & ~ & 0.001*** & ~ & ~ & ~ \\
+    ~ & (0.012) & ~ & ~ & ~ & ~ & ~ & ~ & (0.000) & ~ & ~ & ~ \\
+    Gender_Mixed & -5.796*** & ~ & ~ & -0.011*** & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+    ~ & (0.235) & ~ & ~ & (0.001) & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+    Job Description num_words & 0.007*** & 0.007*** & 0.007*** & 0.007*** & 0.007*** & 0.007*** & 0.007*** & 0.007*** & 0.007*** & 0.007*** & 0.007*** \\
+    ~ & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) & (0.000) \\
+    R-squared & 0.118 & 0.113 & 0.113 & 0.113 & 0.113 & 0.113 & 0.115 & 0.115 & 0.114 & 0.114 & 0.114 \\
+    R-squared Adj. & 0.118 & 0.113 & 0.113 & 0.113 & 0.113 & 0.113 & 0.115 & 0.115 & 0.114 & 0.114 & 0.114 \\
+    const & -17.455*** & 0.345*** & 0.347*** & 0.344*** & 0.347*** & 0.391*** & 0.376*** & 0.297*** & 0.301*** & 0.327*** & 0.333*** \\
+    ~ & (0.708) & (0.001) & (0.001) & (0.001) & (0.001) & (0.004) & (0.002) & (0.002) & (0.003) & (0.001) & (0.001) \\
+    Model Name & OLS & OLS & OLS & OLS & OLS & OLS & OLS & OLS & OLS & OLS & OLS \\
+    N & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 \\
+    R-squared & 0.118 & 0.113 & 0.113 & 0.113 & 0.113 & 0.113 & 0.115 & 0.115 & 0.114 & 0.114 & 0.114 \\
+    R-squared Adj. & 0.118 & 0.113 & 0.113 & 0.113 & 0.113 & 0.113 & 0.115 & 0.115 & 0.114 & 0.114 & 0.114 \\
+    Log-Likelihood & -93821.055 & -94607.644 & -94586.186 & -94656.822 & -94659.717 & -94590.767 & -94364.808 & -94362.150 & -94568.239 & -94437.249 & -94456.509 \\
+    Pseudo R2 & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ & ~ \\
+    F & 4102.107 & 13081.101 & 13097.235 & 13044.134 & 13041.958 & 13093.791 & 13263.818 & 13265.820 & 13110.731 & 13209.281 & 13194.786 \\
+    F (p-value) & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+    df_model & 10 & 3 & 3 & 3 & 3 & 3 & 3 & 3 & 3 & 3 & 3 \\
+    df_total & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 & 307154 \\
+    df_resid & 307143 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 & 307150 \\
+    AIC & 187664.110 & 189223.289 & 189180.373 & 189321.644 & 189327.434 & 189189.534 & 188737.617 & 188732.300 & 189144.479 & 188882.499 & 188921.018 \\
+    BIC & 187781.096 & 189265.829 & 189222.913 & 189364.184 & 189369.975 & 189232.075 & 188780.157 & 188774.841 & 189187.019 & 188925.039 & 188963.559 \\
+    ICC & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+    RMSE & 0.328 & 0.329 & 0.329 & 0.329 & 0.329 & 0.329 & 0.329 & 0.329 & 0.329 & 0.329 & 0.329 \\
+    RMSE (std) & 0.939 & 0.942 & 0.942 & 0.942 & 0.942 & 0.942 & 0.941 & 0.941 & 0.942 & 0.941 & 0.941 \\
+    Omnibus & 2512258.084 & 2348000.101 & 2376028.532 & 2352776.395 & 2363354.940 & 2351882.730 & 2427181.382 & 2427719.196 & 2355537.396 & 2404409.166 & 2398077.826 \\
+    Omnibus (p-value) & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+    Skew & -0.057 & -0.057 & -0.058 & -0.058 & -0.059 & -0.058 & -0.057 & -0.057 & -0.058 & -0.056 & -0.058 \\
+    Kurtosis & 1.581 & 1.568 & 1.571 & 1.569 & 1.570 & 1.569 & 1.575 & 1.575 & 1.569 & 1.573 & 1.573 \\
+    Jarque-Bera (JB) & 25919.916 & 26399.200 & 26310.733 & 26389.498 & 26359.614 & 26391.195 & 26151.396 & 26149.789 & 26379.589 & 26217.350 & 26245.739 \\
+    Jarque-Bera (p-value) & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+    Intercept & -17.455 & 0.345 & 0.347 & 0.344 & 0.347 & 0.391 & 0.376 & 0.297 & 0.301 & 0.327 & 0.333 \\
+    Intercept (std) & 0.708 & 0.001 & 0.001 & 0.001 & 0.001 & 0.004 & 0.002 & 0.002 & 0.003 & 0.001 & 0.001 \\
+    Intercept t & -24.660 & 348.362 & 338.558 & 342.006 & 288.345 & 108.335 & 225.891 & 154.120 & 113.116 & 294.845 & 328.018 \\
+    Intercept t (p-value) & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+    Intercept (95\% CI) & -18.842 - -16.067 & 0.343 - 0.347 & 0.345 - 0.349 & 0.342 - 0.346 & 0.345 - 0.349 & 0.384 - 0.398 & 0.373 - 0.379 & 0.294 - 0.301 & 0.296 - 0.306 & 0.325 - 0.330 & 0.331 - 0.335 \\
+    Unstandardized Coefficent B (b) & ~ & -0.022 & -0.020 & -0.011 & -0.011 & -0.001 & -0.001 & 0.001 & 0.001 & 0.029 & 0.033 \\
+    Standard Error (SE) & ~ & 0.002 & 0.001 & 0.001 & 0.001 & 0.000 & 0.000 & 0.000 & 0.000 & 0.001 & 0.002 \\
+    Standardized Coefficient b* (β) & ~ & -0.063 & -0.058 & -0.033 & -0.031 & -0.002 & -0.002 & 0.002 & 0.003 & 0.084 & 0.094 \\
+    t & ~ & -13.256 & -14.788 & -8.794 & -8.458 & -14.474 & -25.730 & 25.834 & 15.956 & 22.735 & 21.870 \\
+    t (p-value) & ~ & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 & 0.000 \\
+    95\% CI & ~ & -0.019 - -0.019 & -0.018 - -0.018 & -0.009 - -0.009 & -0.008 - -0.008 & -0.001 - -0.001 & -0.001 - -0.001 & 0.001 - 0.001 & 0.001 - 0.001 & 0.032 - 0.032 & 0.036 - 0.036 \\
+
+    \bottomrule
+
+    \end{NiceTabular}
+\end{table}
+
+\begin{table}
+    \caption{List of words related to warmth and competence obtained from inductive frame analysis}
+    \label{table:word2vec}
+    \centering
+    \begin{NiceTabular}{@{} C{0.4} C{0.4}}
+    \toprule
+    Warmth & Competence \\
+    \midrule
+
+    Supportive & Develop \\
+    Collaborative & Solution \\
+    Need \linebreak(as it relates to meeting other people’s needs/ aware of others’ needs) & Strategy \\
+    Trustworthy & Challenge \\
+    Community & Product \\
+    Honest & Persistent \\
+    Sympathetic & Assertive \\
+    Friendly & Ambitious \\
+    Caring & Industrious \\
+    Patient & Able \\
+    Fair & Capable \\
+    Helpful & Strong-minded \\
+    Polite & Determined \\
+    Gentle & Clever \\
+    Cooperative & Self-reliant \\
+    Loyal & Consistent \\
+    Moral & Competent \\
+    Warm-hearted & Talented \\
+    \bottomrule
+    \end{NiceTabular}
+\end{table}
+
+\begin{table}
+    \caption{International Standard Industrial Classifications (SBI) Sector, keywords, and keyword counts}
+    \label{table:cbs_keywords}
+    \centering
+    \begin{longtable}{@{}L{0.05}L{0.3}L{0.5}C{0.1}}
+        \toprule
+        \multicolumn{4}{l}{Sectoral Gender and Age Composition and Segregation, Keywords, Counts, and Percentages } \\
+        \midrule
+        \multicolumn{4}{c}{SBI Sector Titles (SIC2008)} \\
+        \midrule
+        Code & Sector Name & Keywords & Keywords \textit{n} \\
+        \midrule
+        A & Agriculture and industry & ['forestry', 'fishing', 'agriculture'] & 3 \\
+        B & Industry (no construction), energy & ['mining', 'quarry', 'quarrying'] & 3 \\
+        C & Manufacturing & ['gas supply', 'manufacturing', 'industry', 'production', 'supply', 'production manager', 'managing director'] & 7 \\
+        D & Energy supply & ['energy', 'electricity', 'energy supply'] & 3 \\
+        E & Water supply and waste management & ['water', 'waste management', 'water stock', 'water supply'] & 4 \\
+        F & Construction & ['build', 'construction'] & 2 \\
+        G & Commercial services & ['trade', 'buying', 'sale', 'selling', 'marketing manager', 'retail', 'purchase', 'great', 'wholesale', 'manage driver', 'retail trade'] & 11 \\
+        H & Transportation and storage & ['transport', 'transportation', 'logistics', 'logistics manager', 'storage'] & 5 \\
+        I & Accommodation and food serving & ['accommodation', 'serving', 'food serving', 'food service', 'hotel', 'service', 'food'] & 7 \\
+        J & Information and communication & ['software', 'communication', 'network specialist', 'author', 'director', 'database', 'information', 'application developer', 'ict manager'] & 9 \\
+        K & Financial institutions & ['commercial', 'commercial service', 'financial institution'] & 3 \\
+        L & Renting, buying, selling real estate & ['rental', 'rent', 'sales real estate', 'renting', 'selling real estate'] & 5 \\
+        M & Business services & ['electrotechnical engineer', 'linguist', 'engineer', 'sociologist', 'electrical engineer'] & 5 \\
+        N & Renting and other business support & ['career development specialist', 'business support', 'specialised services manager', 'service activity', 'honorary service activity', 'specialised business service', 'business service', 'hire'] & 8 \\
+        O & Government and care & ['public administration', 'government'] & 2 \\
+        P & Education & ['primary school teacher', 'teacher', 'education', 'honorary teacher', 'pedagogue', 'educationalist'] & 6 \\
+        Q & Health and social work activities & ['doctor', 'social work', 'psychologist', 'specialised nurse', 'health', 'social worker', 'social activity', 'care', 'manager of healthcare institution', 'physiotherapist', 'social work activity'] & 11 \\
+        R & Culture, recreation, other services & ['catering', 'recreation', 'sport', 'culture'] & 4 \\
+        S & Other service activities & ['staff'] & 1 \\
+        ~ & Total (excluding A-U) & ~ & 99 \\
+
+    \end{longtable}
+    \end{table}
+
+
+% \begin{table}
+%     \caption{Sectoral Gender and Age Composition and Segregation}
+%     \label{table:cbs}
+%     \centering
+%     \tiny
+%     \begin{threeparttable}
+%     \begin{longtable}{@{}L{0.0001}C{0.01}C{0.05}C{0.07}C{0.06}C{0.02}C{0.05}C{0.07}C{0.04}L{0.08}C{0.03}C{0.05}C{0.07}C{0.06}C{0.02}C{0.05}C{0.07}C{0.04}L{0.08}C{0.03}C{0.05}}
+%         \toprule
+%         \multicolumn{21}{l}{Sectoral Gender and Age Composition and Segregation, Keywords, Counts, and Percentages } \\
+%         \midrule
+%         \multicolumn{21}{c}{Jobs Count per Sector (x 1000)} \\
+%         \midrule
+%         \multicolumn{1}{c}{SBI Sector Titles} & \multicolumn{9}{c}{Gender} & \multicolumn{9}{c}{Age} & \multicolumn{2}{c}{Total Workforce} \\
+%         \midrule
+%         \multicolumn{1}{c}{Industry class / branch (SIC2008)} & \multicolumn{4}{c}{Female} & \multicolumn{4}{c}{Male} & Sectoral Gender Segregation & \multicolumn{4}{c}{Older (>= 45 years)} & \multicolumn{4}{c}{Younger (< 45 years)} & Sectoral Age Segregation & \multicolumn{2}{c}{Total Workforce} \\
+%         \midrule
+%         Code & \textit{n} & \% per Sector & \% per Social Category & \% per Workforce & \textit{n} & \% per Sector & \% per Social Category & \% per Workforce & Dominant Category & \textit{n} & \% per Sector & \% per Social Category & \% per Workforce & \textit{n} & \% per Sector & \% per Social Category & \% per Workforce & Dominant Category & \textit{n} & \% Sector per Workforce \\
+%         \midrule
+    %     4029 & ~ & ~ & 4362 & ~ & ~ & ~ & 3500 & ~ & ~ & ~ & 4892 & ~ & ~ & ~ & ~ & 8391 & ~ \\
+    %     310 & 22.158685 & 2.579679 & 1.226751 & 1089 & 77.841315 & 8.218868 & 4.309458 & Male & 690 & 49.320944 & 6.490452 & 2.730510 & 708 & 50.607577 & 4.839371 & 2.801741 & Mixed Age & 1399 & 5.536209 \\
+    %     423 & 20.919881 & 3.520013 & 1.673922 & 1599 & 79.080119 & 12.067925 & 6.327661 & Male & 1066 & 52.720079 & 10.027279 & 4.218441 & 954 & 47.181009 & 6.520848 & 3.775228 & Older & 2022 & 8.001583 \\
+    %     174 & 22.715405 & 1.447949 & 0.688564 & 592 & 77.284595 & 4.467925 & 2.342699 & Male & 413 & 53.916449 & 3.884865 & 1.634349 & 354 & 46.214099 & 2.419686 & 1.400871 & Older & 766 & 3.031262 \\
+    %     8 & 27.586207 & 0.066572 & 0.031658 & 21 & 72.413793 & 0.158491 & 0.083102 & Male & 15 & 51.724138 & 0.141097 & 0.059359 & 13 & 44.827586 & 0.088859 & 0.051444 & Mixed Age & 29 & 0.114761 \\
+    %     7 & 19.444444 & 0.058251 & 0.027701 & 29 & 80.555556 & 0.218868 & 0.114761 & Male & 21 & 58.333333 & 0.197536 & 0.083102 & 16 & 44.444444 & 0.109364 & 0.063316 & Older & 36 & 0.142461 \\
+    %     42 & 12.500000 & 0.349505 & 0.166205 & 294 & 87.500000 & 2.218868 & 1.163435 & Male & 160 & 47.619048 & 1.505032 & 0.633162 & 178 & 52.976190 & 1.216678 & 0.704393 & Mixed Age & 336 & 1.329640 \\
+    %     3421 & 43.134535 & 28.468004 & 13.537792 & 4510 & 56.865465 & 34.037736 & 17.847250 & Mixed Gender & 2704 & 34.094061 & 25.435048 & 10.700435 & 5228 & 65.918547 & 35.734792 & 20.688564 & Mixed Age & 7931 & 31.385042 \\
+    %     95 & 24.611399 & 0.790547 & 0.375940 & 291 & 75.388601 & 2.196226 & 1.151563 & Male & 205 & 53.108808 & 1.928323 & 0.811239 & 181 & 46.891192 & 1.237184 & 0.716264 & Older & 386 & 1.527503 \\
+    %     199 & 50.252525 & 1.655987 & 0.787495 & 196 & 49.494949 & 1.479245 & 0.775623 & Mixed Gender & 75 & 18.939394 & 0.705484 & 0.296795 & 320 & 80.808081 & 2.187286 & 1.266324 & Younger & 396 & 1.567076 \\
+    %     80 & 27.586207 & 0.665724 & 0.316581 & 210 & 72.413793 & 1.584906 & 0.831025 & Male & 95 & 32.758621 & 0.893613 & 0.375940 & 195 & 67.241379 & 1.332878 & 0.771666 & Mixed Age & 290 & 1.147606 \\
+    %     108 & 39.416058 & 0.898727 & 0.427384 & 166 & 60.583942 & 1.252830 & 0.656905 & Mixed Gender & 146 & 53.284672 & 1.373342 & 0.577760 & 128 & 46.715328 & 0.874915 & 0.506529 & Older & 274 & 1.084290 \\
+    %     33 & 48.529412 & 0.274611 & 0.130590 & 35 & 51.470588 & 0.264151 & 0.138504 & Mixed Gender & 36 & 52.941176 & 0.338632 & 0.142461 & 33 & 48.529412 & 0.225564 & 0.130590 & Older & 68 & 0.269094 \\
+    %     857 & 42.133727 & 7.131564 & 3.391373 & 1177 & 57.866273 & 8.883019 & 4.657697 & Mixed Gender & 726 & 35.693215 & 6.829085 & 2.872972 & 1307 & 64.257620 & 8.933698 & 5.172141 & Mixed Age & 2034 & 8.049070 \\
+    %     416 & 42.754368 & 3.461763 & 1.646221 & 557 & 57.245632 & 4.203774 & 2.204195 & Mixed Gender & 311 & 31.963001 & 2.925407 & 1.230708 & 660 & 67.831449 & 4.511278 & 2.611793 & Younger & 973 & 3.850416 \\
+    %     3970 & 68.154506 & 33.036532 & 15.710328 & 1855 & 31.845494 & 14 & 7.340720 & Female & 2844 & 48.824034 & 26.751952 & 11.254452 & 2981 & 51.175966 & 20.375940 & 11.796597 & Mixed Age & 5825 & 23.051049 \\
+    %     353 & 65.129151 & 2.937505 & 1.396913 & 189 & 34.870849 & 1.426415 & 0.747922 & Female & 253 & 46.678967 & 2.379833 & 1.001187 & 288 & 53.136531 & 1.968558 & 1.139691 & Mixed Age & 542 & 2.144836 \\
+    %     1208 & 84.298674 & 10.052426 & 4.780372 & 224 & 15.631542 & 1.690566 & 0.886427 & Female & 661 & 46.127006 & 6.217665 & 2.615750 & 770 & 53.733426 & 5.263158 & 3.047091 & Mixed Age & 1433 & 5.670756 \\
+    %     226 & 56.783920 & 1.880669 & 0.894341 & 171 & 42.964824 & 1.290566 & 0.676692 & Mixed Gender & 155 & 38.944724 & 1.458000 & 0.613376 & 241 & 60.552764 & 1.647300 & 0.953700 & Mixed Age & 398 & 1.574990 \\
+    %     87 & 65.909091 & 0.723974 & 0.344282 & 45 & 34.090909 & 0.339623 & 0.178077 & Female & 55 & 41.666667 & 0.517355 & 0.217649 & 75 & 56.818182 & 0.512645 & 0.296795 & Mixed Age & 132 & 0.522359 \\
+    %     99 & 12017 & 47.554412 & 100 & 47.554412 & 13250 & 52.433716 & 100 & 52.433716 & ~ & 10631 & 42.069648 & 100 & 42.069648 & 14630 & 57.894737 & 100 & 57.894737 & ~ & 25270 & 100 \\
+    %     \bottomrule
+    % \end{longtable}
+    % \begin{tablenotes}[para, flushleft]
+    %     \textit{Note.
+    %     Threshold for gender = 47.55\% ± 20\%
+    %     Threshold for age = 42.07\% ± 10\%
+    %     \tiny{Source: Centraal Bureau voor de Statistiek (CBS)}}
+    % \end{tablenotes}
+    % \end{threeparttable}
+% \end{table}
+% \begin{table}
+%     \caption{Sectoral Gender Composition and Segregation}
+%     \label{table:cbs_gender}
+%     \centering
+%     \tiny
+%     \begin{threeparttable}
+%     \begin{longtable}{@{}L{0.03}L{0.1}L{0.15}C{0.04}C{0.03}C{0.05}C{0.07}C{0.06}C{0.02}C{0.05}C{0.07}C{0.04}L{0.08}}
+%         \toprule
+%         \multicolumn{13}{l}{Sectoral Gender Composition and Segregation, Keywords, Counts, and Percentages } \\
+%         \midrule
+%         \multicolumn{13}{c}{Jobs Count per Sector (x 1000)} \\
+%         \midrule
+%         \multicolumn{4}{c}{SBI Sector Titles} & \multicolumn{9}{c}{Gender} \\
+%         \midrule
+%         \multicolumn{4}{c}{Industry class / branch (SIC2008)} & \multicolumn{4}{c}{Female} & \multicolumn{4}{c}{Male} & Sectoral Gender Segregation \\
+%         \midrule
+%         Code & Sector Name & Keywords & Keywords \textit{n} & \textit{n} & \% per Sector & \% per Social Category & \% per Workforce & \textit{n} & \% per Sector & \% per Social Category & \% per Workforce & Dominant Category \\
+%         \midrule
+%         A-U & All economic activities & ~ & ~ & 4029 & ~ & ~ & ~ & 4362 & ~ & ~ & ~ & ~ \\
+%         A & Agriculture and industry & ['agriculture', 'forestry', 'fishing'] & 3 & 310 & 22.2 & 2.6 & 1.2 & 1089 & 77.8 & 8.2 & 4.3 & Male \\
+%         B & Industry \linebreak[3](no construction), energy & ['quarrying', 'mining', 'quarry'] & 3 & 423 & 20.9 & 3.5 & 1.7 & 1599 & 79.1 & 12.1 & 6.3 & Male \\
+%         C & Manufacturing & ['supply', 'production manager', 'manufacturing', 'gas supply', 'managing director', 'production', 'industry'] & 7 & 174 & 22.7 & 1.4 & 0.7 & 592 & 77.3 & 4.5 & 2.3 & Male \\
+%         D & Energy supply & ['energy supply', 'energy', 'electricity'] & 3 & 8 & 27.6 & 0.1 & 0.0 & 21 & 72.4 & 0.2 & 0.1 & Male \\
+%         E & Water supply \linebreak[3]and waste management & ['water supply', 'water stock', 'waste management', 'water'] & 4 & 7 & 19.4 & 0.1 & 0.0 & 29 & 80.6 & 0.2 & 0.1 & Male \\
+%         F & Construction & ['build', 'construction'] & 2 & 42 & 12.5 & 0.3 & 0.2 & 294 & 87.5 & 2.2 & 1.2 & Male \\
+%         G & Commercial services & ['great', 'marketing manager', 'wholesale', 'sale', 'retail', 'retail trade', 'purchase', 'manage driver', 'trade', 'buying', 'selling'] & 11 & 3421 & 43.1 & 28.5 & 13.5 & 4510 & 56.9 & 34.0 & 17.8 & Mixed Gender \\
+%         H & Transportation \linebreak[3]and storage & ['storage', 'logistics manager', 'transportation', 'logistics', 'transport'] & 5 & 95 & 24.6 & 0.8 & 0.4 & 291 & 75.4 & 2.2 & 1.2 & Male \\
+%         I & Accommodation \linebreak[3]and food serving & ['service', 'hotel', 'food service', 'food serving', 'accommodation', 'serving', 'food'] & 7 & 199 & 50.3 & 1.7 & 0.8 & 196 & 49.5 & 1.5 & 0.8 & Mixed Gender \\
+%         J & Information \linebreak[3]and communication & ['information', 'software', 'ict manager', 'database', 'author', 'director', 'network specialist', 'application developer', 'communication'] & 9 & 80 & 27.6 & 0.7 & 0.3 & 210 & 72.4 & 1.6 & 0.8 & Male \\
+%         K & Financial institutions & ['commercial', 'financial institution', 'commercial service'] & 3 & 108 & 39.4 & 0.9 & 0.4 & 166 & 60.6 & 1.3 & 0.7 & Mixed Gender \\
+%         L & Renting, buying, selling real estate & ['selling real estate', 'rental', 'rent', 'renting', 'sales real estate'] & 5 & 33 & 48.5 & 0.3 & 0.1 & 35 & 51.5 & 0.3 & 0.1 & Mixed Gender \\
+%         M & Business services & ['electrical engineer', 'electrotechnical engineer', 'sociologist', 'engineer', 'linguist'] & 5 & 857 & 42.1 & 7.1 & 3.4 & 1177 & 57.9 & 8.9 & 4.7 & Mixed Gender \\
+%         N & Renting and other\linebreak[3] business support & ['business support', 'honorary service activity', 'specialised services manager', 'hire', 'business service', 'service activity', 'career development specialist', 'specialised business service'] & 8 & 416 & 42.8 & 3.5 & 1.6 & 557 & 57.2 & 4.2 & 2.2 & Mixed Gender \\
+%         O & Government \linebreak[3]and care & ['public administration', 'government'] & 2 & 3970 & 68.2 & 33.0 & 15.7 & 1855 & 31.8 & 14.0 & 7.3 & Female \\
+%         P & Education & ['education', 'pedagogue', 'honorary teacher', 'educationalist', 'primary school teacher', 'teacher'] & 6 & 353 & 65.1 & 2.9 & 1.4 & 189 & 34.9 & 1.4 & 0.7 & Female \\
+%         Q & Health and \linebreak[3]social work activities & ['social work', 'manager of healthcare institution', 'social worker', 'care', 'social activity', 'physiotherapist', 'doctor', 'specialised nurse', 'health', 'social work activity', 'psychologist'] & 11 & 1208 & 84.3 & 10.1 & 4.8 & 224 & 15.6 & 1.7 & 0.9 & Female \\
+%         R & Culture, recreation, \linebreak[3]other services & ['culture', 'recreation', 'catering', 'sport'] & 4 & 226 & 56.8 & 1.9 & 0.9 & 171 & 43.0 & 1.3 & 0.7 & Mixed Gender \\
+%         S & Other service activities & ['staff'] & 1 & 87 & 65.9 & 0.7 & 0.3 & 45 & 34.1 & 0.3 & 0.2 & Female \\
+%         \midrule
+%         ~ & Total \linebreak[3](excluding A-U) & ~ & 99 & 12017 & 47.6 & 100.0 & 47.6 & 13250 & 52.4 & 100.0 & 52.4 & ~ & 10631 & 42.1 & 100.0 & 42.1 & 14630 & 57.9 & 100.0 & 57.9 & ~ \\
+%         \bottomrule
+%     \end{longtable}
+%     \begin{tablenotes}[para, flushleft]
+%         \textit{Note.
+%         Threshold for gender = 47.55\% ± 20\%
+%         Threshold for age = 42.07\% ± 10\%
+%         \tiny{Source: Centraal Bureau voor de Statistiek (CBS)}}
+%     \end{tablenotes}
+%     \end{threeparttable}
+% \end{table}
+
+
+% \begin{table}
+%     \caption{Sectoral Gender Composition and Segregation}
+%     \label{table:cbs_age}
+%     \centering
+%     \tiny
+%     \begin{threeparttable}
+%     \begin{longtable}{@{}L{0.001}C{0.03}C{0.05}C{0.07}C{0.06}C{0.02}C{0.05}C{0.07}C{0.04}L{0.08}C{0.03}C{0.05}}
+%         \toprule
+%         \multicolumn{12}{l}{Sectoral Gender and Age Composition and Segregation, Keywords, Counts, and Percentages } \\
+%         \midrule
+%         \multicolumn{12}{c}{Jobs Count per Sector (x 1000)} \\
+%         \midrule
+%         \multicolumn{1}{c}{SBI Sector Titles} & \multicolumn{9}{c}{Age} & \multicolumn{2}{c}{Total Workforce} \\
+%         \midrule
+%         \multicolumn{1}{c}{Industry class / branch (SIC2008)} & \multicolumn{4}{c}{Older (>= 45 years)} & \multicolumn{4}{c}{Younger (< 45 years)} & Sectoral Age Segregation & \multicolumn{2}{c}{Total Workforce} \\
+%         \midrule
+%         Code & \textit{n} & \% per Sector & \% per Social Category & \% per Workforce & \textit{n} & \% per Sector & \% per Social Category & \% per Workforce & Dominant Category & \textit{n} & \% Sector per Workforce \\
+%         \midrule
+%         % A-U & All economic activities & ~ & ~ & 4029 & ~ & ~ & ~ & 8391 & ~ \\
+%         A & 690 & 49.3 & 6.5 & 2.7 & 708 & 50.6 & 4.8 & 2.8 & Mixed Age & 1399 & 5.5 \\
+%         B & 1066 & 52.7 & 10.0 & 4.2 & 954 & 47.2 & 6.5 & 3.8 & Older & 2022 & 8.0 \\
+%         C & 413 & 53.9 & 3.9 & 1.6 & 354 & 46.2 & 2.4 & 1.4 & Older & 766 & 3.0 \\
+%         D & 15 & 51.7 & 0.1 & 0.1 & 13 & 44.8 & 0.1 & 0.1 & Mixed Age & 29 & 0.1 \\
+%         E & 21 & 58.3 & 0.2 & 0.1 & 16 & 44.4 & 0.1 & 0.1 & Older & 36 & 0.1 \\
+%         F & 160 & 47.6 & 1.5 & 0.6 & 178 & 53.0 & 1.2 & 0.7 & Mixed Age & 336 & 1.3 \\
+%         G & 2704 & 34.1 & 25.4 & 10.7 & 5228 & 65.9 & 35.7 & 20.7 & Mixed Age & 7931 & 31.4 \\
+%         H & 205 & 53.1 & 1.9 & 0.8 & 181 & 46.9 & 1.2 & 0.7 & Older & 386 & 1.5 \\
+%         I & 75 & 18.9 & 0.7 & 0.3 & 320 & 80.8 & 2.2 & 1.3 & Younger & 396 & 1.6 \\
+%         J & 95 & 32.8 & 0.9 & 0.4 & 195 & 67.2 & 1.3 & 0.8 & Mixed Age & 290 & 1.1 \\
+%         K & 146 & 53.3 & 1.4 & 0.6 & 128 & 46.7 & 0.9 & 0.5 & Older & 274 & 1.1 \\
+%         L & 36 & 52.9 & 0.3 & 0.1 & 33 & 48.5 & 0.2 & 0.1 & Older & 68 & 0.3 \\
+%         M & 726 & 35.7 & 6.8 & 2.9 & 1307 & 64.3 & 8.9 & 5.2 & Mixed Age & 2034 & 8.0 \\
+%         N & 311 & 32.0 & 2.9 & 1.2 & 660 & 67.8 & 4.5 & 2.6 & Younger & 973 & 3.9 \\
+%         O & 2844 & 48.8 & 26.8 & 11.3 & 2981 & 51.2 & 20.4 & 11.8 & Mixed Age & 5825 & 23.1 \\
+%         P & 253 & 46.7 & 2.4 & 1.0 & 288 & 53.1 & 2.0 & 1.1 & Mixed Age & 542 & 2.1 \\
+%         Q & 661 & 46.1 & 6.2 & 2.6 & 770 & 53.7 & 5.3 & 3.0 & Mixed Age & 1433 & 5.7 \\
+%         R & 155 & 38.9 & 1.5 & 0.6 & 241 & 60.6 & 1.6 & 1.0 & Mixed Age & 398 & 1.6 \\
+%         S & 55 & 41.7 & 0.5 & 0.2 & 75 & 56.8 & 0.5 & 0.3 & Mixed Age & 132 & 0.5 \\
+%         \midrule
+%         Tot. & 10631 & 42.1 & 100.0 & 42.1 & 14630 & 57.9 & 100.0 & 57.9 & ~ & 25270 & 100.0 \\
+%         \bottomrule
+%     \end{longtable}
+%         \begin{tablenotes}[para, flushleft]
+%             \textit{Note.
+%             Threshold for gender = 47.55\% ± 20\%
+%             Threshold for age = 42.07\% ± 10\%
+%             \tiny{Source: Centraal Bureau voor de Statistiek (CBS)}}
+%         \end{tablenotes}
+%         \end{threeparttable}
+%     \end{table}

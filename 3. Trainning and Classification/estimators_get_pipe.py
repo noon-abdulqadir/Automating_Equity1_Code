@@ -76,7 +76,7 @@ metrics_dict = {
     'Recall': np.nan,
     'F1-score': np.nan,
     'Matthews Correlation Coefficient': np.nan,
-    'Brier score loss': np.nan,
+    'Brier Score': np.nan,
     'Fowlkes–Mallows Index': np.nan,
     'R2 Score': np.nan,
     'ROC': np.nan,
@@ -160,8 +160,8 @@ bow_params = {**count[1], **tfidf[1]}
 bow = make_pipe_list(bow_, bow_params)
 
 # # Vectorizers List and Dict append bow
-vectorizers_list.append(bow_.set_params(**{key: value[0] for key, value in bow_params.items()}))
-vectorizers_pipe[bow[0].__class__.__name__] = bow
+# vectorizers_list.append(bow_.set_params(**{key: value[0] for key, value in bow_params.items()}))
+# vectorizers_pipe[bow[0].__class__.__name__] = bow
 
 
 # %% [markdown]
@@ -370,7 +370,7 @@ svc_params = {
     'random_state': [random_state],
     'class_weight': [class_weight],
     'C': [0.01, 0.5, 1, 5, 10, 15],
-    'max_iter': [700, 800, 900, 1000, 1100, 1200, 1300],
+    'max_iter': [700000, 800000, 900000, 1000000, 1100000, 1200000, 1300000],
 }
 svc = make_pipe_list(svc_, svc_params)
 
@@ -443,10 +443,10 @@ mlpc = make_pipe_list(mlpc_, mlpc_params)
 
 # Classifiers List
 classifier_ignore_list = [
-    et, bnb, gnb,
+    svc, et, bnb, gnb,
 ]
 classifiers_list_all = [
-    dummy, knn, lr, dt, rf, xgb, mlpc, pa, ptron, sgd, gbc, et, bnb, gnb, svm, svc,
+    dummy, nb, knn, lr, dt, rf, svm, svc, xgb, mlpc, pa, ptron, sgd, gbc, et, bnb, gnb,
 ]
 classifiers_list = [
     classifier_and_params
@@ -454,7 +454,7 @@ classifiers_list = [
     if classifier_and_params not in classifier_ignore_list
 ]
 classifiers_list_linear = [
-    lr, sgd, pa, ptron, mlpc, gbc, svm, svc,
+    lr, nb, svm, svc, sgd, mlpc, pa, ptron, gbc,
 ]
 classifiers_list_nonlinear = [
     classifier_and_params
@@ -617,9 +617,9 @@ classifiers_pipe_ensemble = {
     for classifier_and_params in classifiers_list_ensemble
 }
 
-# Add Ensemble Classifiers to Classifiers List and Dict
-classifiers_list.extend(classifiers_list_ensemble)
-classifiers_pipe |= classifiers_pipe_ensemble
+# # Add Ensemble Classifiers to Classifiers List and Dict
+# classifiers_list.extend(classifiers_list_ensemble)
+# classifiers_pipe |= classifiers_pipe_ensemble
 
 # %% [markdown]
 # Transformers Pipeline

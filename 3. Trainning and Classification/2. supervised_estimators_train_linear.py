@@ -101,7 +101,7 @@ metrics_dict = {
     'Recall': np.nan,
     'F1-score': np.nan,
     'Matthews Correlation Coefficient': np.nan,
-    'Brier score loss': np.nan,
+    'Brier Score': np.nan,
     'Fowlkes–Mallows Index': np.nan,
     'R2 Score': np.nan,
     'ROC': np.nan,

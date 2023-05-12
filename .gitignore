@@ -60,8 +60,9 @@ htmlcov/
 nosetests.xml
 coverage.xml
 *.cover
-.hypothesis/
-.pytest_cache/
+.hypothesis
+.pytest_cache
+.trunk
 
 # Translations
 *.mo
@@ -71,6 +72,9 @@ coverage.xml
 .mr.developer.cfg
 .project
 .pydevproject
+.devcontainer
+.pre-commit-config.yaml
+wishlist.log
 
 # Rope
 .ropeproject
@@ -130,15 +134,15 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
-# # Environments
-# .env
-# .venv
-# .envrc
-# env/
-# venv/
-# ENV/
-# env.bak/
-# venv.bak/
+# Environments
+.env
+.venv
+.envrc
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
 # Circle
 .circleci/
@@ -152,6 +156,7 @@ celerybeat.pid
 
 # mypy
 .mypy_cache/
+..mypy_cache
 .dmypy.json
 dmypy.json
 
@@ -171,9 +176,14 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 .idea/
 
+# Quarto
+.quarto-cache/
+.luarc.json
+
 # R
 .Rhistory
 .RData
+.Rhistory
 
 # Stylesheet
 .css
@@ -191,18 +201,12 @@ cython_debug/
 1. Scraping/*/Found Data/
 1. Scraping/Coding Material/
 2. Cleaning and Preprocessing/Coding Material/
-scraped_data/*/Data/
-scraped_data/*/Found Data/
-scraped_data/Coding Material/
-/data_main
-data_main/
-data_main/*
+5. Typesetting/tables_and_figs
+5. Typesetting/tables_and_figs/*
 /data
 data/
 data/*
 setup_module/WebDriver/
-5. Typesetting/
 OLD *
-/.luarc.json
-rasbt machine-learning-notes main benchmark-pytorch-m1-gpu/
-/Users/nyxinsane/Documents/Work - UvA/Automating Equity/Study 1/Study1_Code/3. Trainning and Classification/nohup*
+/OLD
+/OLD/*
