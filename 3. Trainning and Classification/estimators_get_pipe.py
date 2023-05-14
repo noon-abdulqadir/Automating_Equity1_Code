@@ -443,7 +443,7 @@ mlpc = make_pipe_list(mlpc_, mlpc_params)
 
 # Classifiers List
 classifier_ignore_list = [
-    svm, svc, et, bnb, gnb, ptron,
+    svc, et, bnb, gnb, ptron,
 ]
 classifiers_list_all = [
     dummy, nb, knn, lr, dt, rf, svm, svc, xgb, mlpc, pa, ptron, sgd, gbc, et, bnb, gnb,
@@ -622,9 +622,9 @@ classifiers_pipe_ensemble = {
     for classifier_and_params in classifiers_list_ensemble
 }
 
-# # Add Ensemble Classifiers to Classifiers List and Dict
-# classifiers_list.extend(classifiers_list_ensemble)
-# classifiers_pipe |= classifiers_pipe_ensemble
+# Add Ensemble Classifiers to Classifiers List and Dict
+classifiers_list.extend(classifiers_list_ensemble)
+classifiers_pipe |= classifiers_pipe_ensemble
 
 # %% [markdown]
 # Transformers Pipeline
