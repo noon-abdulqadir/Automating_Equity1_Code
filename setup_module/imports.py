@@ -114,6 +114,7 @@ try:
     import IPython.core
     import joblib
     import langdetect
+    import lxml
     import matplotlib as mpl
     import matplotlib.gridspec as gridspec
     import matplotlib.image as img
@@ -438,13 +439,10 @@ except ImportError as error:
 # import bokeh
 # import cardinality
 # import libmaths as lm
-# import lxml
-# import pingouin as pg
 # import plotly
 # import plotly.express as px
 # import plotly.graph_objects as go
 # import progressbar
-# import researchpy as rp
 # import xorbits.pandas as xpd
 # import tensorflow as tf
 
@@ -500,7 +498,7 @@ plot_save_path = f'{data_dir}plots/'
 
 # Make sure path exist and make dir if not
 all_dir_list = [
-    scraped_data, data_dir, df_save_dir, llm_path, models_save_path,
+    data_dir, df_save_dir, llm_path, models_save_path, table_save_path, plot_save_path
 ]
 for proj_dir in all_dir_list:
     if not os.path.exists(proj_dir):

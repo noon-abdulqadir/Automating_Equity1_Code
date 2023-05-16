@@ -1,0 +1,9 @@
+[0] Config.pm:307> INFO - This is Biber 2.19
+[0] Config.pm:310> INFO - Logfile is 'Bias in Candidate Sourcing APA7.blg'
+[43] biber:340> INFO - === Mon May 15, 2023, 13:11:27
+[54] Biber.pm:419> INFO - Reading 'Bias in Candidate Sourcing APA7.bcf'
+[113] Biber.pm:979> INFO - Found 0 citekeys in bib section 0
+[125] bbl.pm:660> INFO - Writing 'Bias in Candidate Sourcing APA7.bbl' with encoding 'UTF-8'
+[125] bbl.pm:763> INFO - Output to Bias in Candidate Sourcing APA7.bbl
+[125] Biber.pm:131> WARN - The file 'Bias in Candidate Sourcing APA7.bcf' does not contain any citations!
+[125] Biber.pm:133> INFO - WARNINGS: 1
