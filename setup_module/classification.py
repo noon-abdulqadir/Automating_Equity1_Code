@@ -99,8 +99,8 @@ def open_and_clean_labeled_excel(
     # # Gender and Age Info
     get_df_info(df_jobs_labeled)
 
-    # Detect Language
-    df_jobs_labeled = detect_language(df_jobs_labeled)
+    # # Detect Language
+    # df_jobs_labeled = detect_language(df_jobs_labeled)
 
     # profile = ProfileReport(df_jobsn, title='Pandas Profiling Report', explorative=True)
     # print(profile.to_json())
@@ -688,15 +688,11 @@ def mean_pooling(model_output, attention_mask):
 
 
 # %%
-def get_sentiment(df_jobs_to_be_processed, text_col, algo='vader', sentiment_range=(-1, 1)):
+def get_sentiment(df_jobs_to_be_processed, text_col, sentiment_range=(-1, 1)):
 
-    # calculate sentiment
-    if algo == 'vader':
-        df_jobs_to_be_processed['sentiment'] = df_jobs_to_be_processed[text_col].progress_apply(
-            lambda x: SentimentIntensityAnalyzer().polarity_scores(x)['compound'] if isinstance(x, str) else np.nan)
-    elif algo == 'textblob':
-        df_jobs_to_be_processed['sentiment'] = df_jobs_to_be_processed[text_col].progress_apply(
-            lambda x: TextBlob(x).sentiment.polarity)
+    df_jobs_to_be_processed['sentiment'] = df_jobs_to_be_processed[text_col].progress_apply(
+        lambda x: SentimentIntensityAnalyzer().polarity_scores(x)['compound'] if isinstance(x, str) else np.nan)
+
     # rescaled
     if sentiment_range != (-1, 1):
         df_jobs_to_be_processed['sentiment'] = preprocessing.MinMaxScaler(

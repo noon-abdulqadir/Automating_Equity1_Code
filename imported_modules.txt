@@ -131,7 +131,6 @@ SelectFwe
 SelectKBest
 SelectPercentile
 SeleniumManagerException
-SentenceTransformer
 SentimentIntensityAnalyzer
 Sequence
 Service
@@ -222,7 +221,6 @@ itertools
 ivs
 joblib
 json
-langdetect
 lib
 lm
 logging
@@ -307,4 +305,3 @@ warnings
 webdriver
 wn
 xgb
-xlsxwriter

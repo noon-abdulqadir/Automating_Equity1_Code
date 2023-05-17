@@ -113,8 +113,6 @@ try:
     import IPython
     import IPython.core
     import joblib
-    import langdetect
-    import lxml
     import matplotlib as mpl
     import matplotlib.gridspec as gridspec
     import matplotlib.image as img
@@ -122,19 +120,11 @@ try:
     import nltk
     import nltk.data
     import numpy as np
-    import openpyxl
     import optuna
     import pandas as pd
     import pingouin as pg
-    import plot_metric
-    import pyarrow as pa
-    import pyarrow.parquet as pq
     import regex as re
     import requests
-    import researchpy as rp
-    import rpy2
-    import rpy2.ipython.html
-    import rpy2.robjects as robjects
     import scipy
     import seaborn as sns
     import selenium.webdriver as webdriver
@@ -143,7 +133,6 @@ try:
     import sklearn
     import sklearn as sk
     import spacy
-    import specification_curve as specy
     import statsmodels
     import statsmodels.api as sm
     import statsmodels.formula.api as smf
@@ -158,7 +147,6 @@ try:
     import transformers
     import urllib3
     import xgboost as xgb
-    import xlsxwriter
     from accelerate import Accelerator, notebook_launcher
     from bs4 import BeautifulSoup
     from dotenv.main import load_dotenv
@@ -182,7 +170,8 @@ try:
     from gensim.test.utils import common_texts, datapath, get_tmpfile
     from gensim.utils import save_as_line_sentence, simple_preprocess
     from googletrans import Translator
-    from http_request_randomizer.requests.proxy.requestProxy import RequestProxy
+
+    # from http_request_randomizer.requests.proxy.requestProxy import RequestProxy
     from imblearn.combine import SMOTEENN, SMOTETomek
     from imblearn.datasets import make_imbalance
     from imblearn.metrics import (
@@ -201,7 +190,6 @@ try:
     from IPython.display import HTML, Image, Markdown, display
     from ipywidgets import FloatSlider, interactive
     from joblib import parallel_backend
-    from langdetect import DetectorFactory, detect, detect_langs
     from matplotlib.animation import FuncAnimation
     from mpl_toolkits.mplot3d import Axes3D
     from nltk import (
@@ -224,9 +212,6 @@ try:
     from nltk.stem import LancasterStemmer, PorterStemmer, SnowballStemmer
     from nltk.tokenize import WordPunctTokenizer
     from pandas.api.types import is_numeric_dtype, is_object_dtype, is_string_dtype
-    from plot_metric.functions import BinaryClassification
-    from rpy2.robjects.packages import importr
-    from rpy2.robjects.vectors import StrVector
     from scipy import spatial, stats
     from scipy.special import softmax
     from scipy.stats import (
@@ -380,9 +365,6 @@ try:
         has_fit_parameter,
     )
     from spacy.matcher import Matcher
-    from spacytextblob.spacytextblob import SpacyTextBlob
-    from stargazer.stargazer import Stargazer
-    from statannotations.Annotator import Annotator
     from statsmodels.formula.api import ols
     from statsmodels.graphics.factorplots import interaction_plot
     from statsmodels.iolib.summary2 import summary_col
@@ -426,7 +408,6 @@ try:
         get_linear_schedule_with_warmup,
         pipeline,
     )
-    from transformers.trainer_pt_utils import get_parameter_names
     from webdriver_manager.chrome import ChromeDriverManager
     from xgboost import XGBClassifier
 
@@ -455,7 +436,6 @@ except ImportError as error:
 # from whatthelang import WhatTheLang
 # from xorbits.numpy import arange, argmax, cumsum
 # from yellowbrick.text import TSNEVisualizer
-# from sentence_transformers import SentenceTransformer, losses, util
 # from keras.layers import Activation, Dense
 # from keras.models import Sequential
 
@@ -656,7 +636,6 @@ training_args_dict = {
     'save_strategy': 'steps',
     'save_steps': 500,
     # 'metric_for_best_model': 'recall',
-    # 'torch_compile': bool(transformers.file_utils.is_torch_available()),
     'use_mps_device': bool(device_name == 'mps' and torch.backends.mps.is_available()),
     'optim': 'adamw_torch',
     'load_best_model_at_end': True,

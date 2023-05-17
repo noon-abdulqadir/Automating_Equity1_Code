@@ -3,7 +3,7 @@ title: 'imports'
 format:
   html:
     code-fold: true
-jupyter: study1_3.10
+jupyter: Automating_Equity1_3.10
 ---
 
 ```{python}

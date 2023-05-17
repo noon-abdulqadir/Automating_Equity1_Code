@@ -168,33 +168,33 @@ def create_metadata(args=get_args()):
 
 
 # %%
-# Function to merge metadata
-def save_metadata(df_jobs, df_file_name, save_path, args=get_args()):
+# # Function to merge metadata
+# def save_metadata(df_jobs, df_file_name, save_path, args=get_args()):
 
-    if (not df_jobs.empty) and (len(df_jobs != 0)):
-        if args['print_enabled'] ==True:
-            print('Attaching Metadata to existing DF.')
-        metadata_dict = create_metadata()
-        metadata_key = 'metadat.iot'
-        metadata_dict_json = json.dumps(metadata_dict)
-        df_jobs_pyarrow = pa.Table.from_pandas(df_jobs)
-        existing_metadata = df_jobs_pyarrow.schema.metadata
-        combined_metadata = {
-            metadata_key.encode(): metadata_dict_json.encode(),
-            **existing_metadata,
-        }
-        df_jobs_pyarrow = df_jobs_pyarrow.replace_schema_metadata(combined_metadata)
-        if args['print_enabled'] ==True:
-            print('Saving DF as .parquet file.')
-        pq.write_table(
-            df_jobs_pyarrow,
-            save_path + df_file_name.replace('.csv', '_pyarrow.parquet'),
-            compression='GZIP',
-        )
-    elif (df_jobs.empty) and (len(df_jobs == 0)):
-        df_jobs_pyarrow = pa.Table.from_pandas(df_jobs)
+#     if (not df_jobs.empty) and (len(df_jobs != 0)):
+#         if args['print_enabled'] ==True:
+#             print('Attaching Metadata to existing DF.')
+#         metadata_dict = create_metadata()
+#         metadata_key = 'metadat.iot'
+#         metadata_dict_json = json.dumps(metadata_dict)
+#         df_jobs_pyarrow = pa.Table.from_pandas(df_jobs)
+#         existing_metadata = df_jobs_pyarrow.schema.metadata
+#         combined_metadata = {
+#             metadata_key.encode(): metadata_dict_json.encode(),
+#             **existing_metadata,
+#         }
+#         df_jobs_pyarrow = df_jobs_pyarrow.replace_schema_metadata(combined_metadata)
+#         if args['print_enabled'] ==True:
+#             print('Saving DF as .parquet file.')
+#         pq.write_table(
+#             df_jobs_pyarrow,
+#             save_path + df_file_name.replace('.csv', '_pyarrow.parquet'),
+#             compression='GZIP',
+#         )
+#     elif (df_jobs.empty) and (len(df_jobs == 0)):
+#         df_jobs_pyarrow = pa.Table.from_pandas(df_jobs)
 
-    return df_jobs_pyarrow
+#     return df_jobs_pyarrow
 
 
 # %%
@@ -221,128 +221,128 @@ def fix_broken_linkedin_files(glob_path):
 
 
 # %%
-# Clean df and drop duplicates and -1 for job description
-def clean_df(
-    df_jobs: pd.DataFrame,
-    id_dict_new = False,
-    int_variable: str = 'Job ID',
-    str_variable: str = 'Job Description',
-    gender: str = 'Gender',
-    age: str = 'Age',
-    language: str = 'en',
-    nan_list = [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan'],
-    reset=True,
-    args=get_args(),
-) -> pd.DataFrame:
+# # Clean df and drop duplicates and -1 for job description
+# def clean_df(
+#     df_jobs: pd.DataFrame,
+#     id_dict_new = False,
+#     int_variable: str = 'Job ID',
+#     str_variable: str = 'Job Description',
+#     gender: str = 'Gender',
+#     age: str = 'Age',
+#     language: str = 'en',
+#     nan_list = [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan'],
+#     reset=True,
+#     args=get_args(),
+# ) -> pd.DataFrame:
 
-    df_jobs.columns = df_jobs.columns.to_series().apply(lambda x: x.strip())
-    df_jobs.dropna(axis='index', how='all', inplace=True)
-    df_jobs.dropna(axis='columns', how='all', inplace=True)
-    df_jobs.drop(
-        df_jobs.columns[
-            df_jobs.columns.str.contains(
-                'unnamed|index|level', regex=True, case=False, flags=re.I
-            )
-        ],
-        axis='columns',
-        inplace=True,
-        errors='ignore',
-    )
-    df_jobs[int_variable] = df_jobs[int_variable].apply(lambda x: str(x).lower().strip())
+#     df_jobs.columns = df_jobs.columns.to_series().apply(lambda x: x.strip())
+#     df_jobs.dropna(axis='index', how='all', inplace=True)
+#     df_jobs.dropna(axis='columns', how='all', inplace=True)
+#     df_jobs.drop(
+#         df_jobs.columns[
+#             df_jobs.columns.str.contains(
+#                 'unnamed|index|level', regex=True, case=False, flags=re.I
+#             )
+#         ],
+#         axis='columns',
+#         inplace=True,
+#         errors='ignore',
+#     )
+#     df_jobs[int_variable] = df_jobs[int_variable].apply(lambda x: str(x).lower().strip())
 
-    if reset is True:
-        df_jobs = set_gender_age_sects_lang(df_jobs, str_variable=str_variable, id_dict_new=id_dict_new)
+#     if reset is True:
+#         df_jobs = set_gender_age_sects_lang(df_jobs, str_variable=str_variable, id_dict_new=id_dict_new)
 
-    subset_list=[int_variable, str_variable, gender, age]
-    print('Cleaning DF')
-    df_jobs.drop_duplicates(
-        subset=[str_variable],
-        keep='first',
-        inplace=True,
-        ignore_index=True,
-    )
+#     subset_list=[int_variable, str_variable, gender, age]
+#     print('Cleaning DF')
+#     df_jobs.drop_duplicates(
+#         subset=[str_variable],
+#         keep='first',
+#         inplace=True,
+#         ignore_index=True,
+#     )
 
-#     df_jobs = df_jobs.loc[
-#         (
-#             df_jobs[str_variable]
-#             .swifter.progress_bar(args['print_enabled'])
-#             .progress_bar(args['print_enabled'])
-#             .apply(lambda x: isinstance(x, str))
-#         )
-#         & (df_jobs[str_variable] != -1)
-#         & (df_jobs[str_variable] != '-1')
-#         & (df_jobs[str_variable] != None)
-#         & (df_jobs[str_variable] != 'None')
-#         & (df_jobs[str_variable] != np.nan)
-#         & (df_jobs[str_variable] != 'nan')
-#     ]
+# #     df_jobs = df_jobs.loc[
+# #         (
+# #             df_jobs[str_variable]
+# #             .swifter.progress_bar(args['print_enabled'])
+# #             .progress_bar(args['print_enabled'])
+# #             .apply(lambda x: isinstance(x, str))
+# #         )
+# #         & (df_jobs[str_variable] != -1)
+# #         & (df_jobs[str_variable] != '-1')
+# #         & (df_jobs[str_variable] != None)
+# #         & (df_jobs[str_variable] != 'None')
+# #         & (df_jobs[str_variable] != np.nan)
+# #         & (df_jobs[str_variable] != 'nan')
+# #     ]
 
-    df_jobs.drop(
-        df_jobs[
-            (df_jobs[str_variable].isin(nan_list)) |
-            (df_jobs[str_variable].isnull()) |
-            (df_jobs[str_variable].isna())
-        ].index,
-        axis='index',
-        inplace=True,
-        errors='ignore'
+#     df_jobs.drop(
+#         df_jobs[
+#             (df_jobs[str_variable].isin(nan_list)) |
+#             (df_jobs[str_variable].isnull()) |
+#             (df_jobs[str_variable].isna())
+#         ].index,
+#         axis='index',
+#         inplace=True,
+#         errors='ignore'
 
-    )
-
-
-    print('Detecting Language.')
-    df_jobs = detect_language(df_jobs, str_variable)
-    if 'Language' in df_jobs.columns:
-        try:
-            df_jobs.drop(df_jobs.index[df_jobs['Language'] != str(language)], axis='index', inplace=True, errors='ignore')
-
-        except:
-            df_jobs = df_jobs.loc[(df_jobs['Language'] == str(language))]
-
-    if 'Search Keyword' in df_jobs.columns:
-        for w_keyword, r_keyword in keyword_trans_dict.items():
-            df_jobs.loc[(df_jobs['Search Keyword'] == str(w_keyword)), 'Search Keyword'] = r_keyword
-
-    df_jobs.reset_index(inplace=True, drop=True)
-
-    return df_jobs
+#     )
 
 
-# %%
-# Lang detect
-def detect_language(df_jobs: pd.DataFrame, str_variable = 'Job Description', args=get_args()) -> pd.DataFrame:
-    if args['print_enabled'] is True:
-        print('Starting language detection...')
+#     print('Detecting Language.')
+#     df_jobs = detect_language(df_jobs, str_variable)
+#     if 'Language' in df_jobs.columns:
+#         try:
+#             df_jobs.drop(df_jobs.index[df_jobs['Language'] != str(language)], axis='index', inplace=True, errors='ignore')
 
-    # df_jobs['Language'] = language
-    try:
-        df_jobs['Language'] = df_jobs[str_variable].swifter.progress_bar(args['print_enabled']).apply(detect_language_helper)
+#         except:
+#             df_jobs = df_jobs.loc[(df_jobs['Language'] == str(language))]
 
-    except Exception as e:
-        if args['print_enabled'] is True:
-            print('Language not detected.')
-    else:
-        if args['print_enabled'] is True:
-            print('Language detection complete.')
+#     if 'Search Keyword' in df_jobs.columns:
+#         for w_keyword, r_keyword in keyword_trans_dict.items():
+#             df_jobs.loc[(df_jobs['Search Keyword'] == str(w_keyword)), 'Search Keyword'] = r_keyword
 
-    return df_jobs
+#     df_jobs.reset_index(inplace=True, drop=True)
+
+#     return df_jobs
 
 
-# %%
-def detect_language_helper(x, language='en'):
+# # %%
+# # Lang detect
+# def detect_language(df_jobs: pd.DataFrame, str_variable = 'Job Description', args=get_args()) -> pd.DataFrame:
+#     if args['print_enabled'] is True:
+#         print('Starting language detection...')
 
-    x = ''.join([i for i in x if i not in list(string.punctuation)])
+#     # df_jobs['Language'] = language
+#     try:
+#         df_jobs['Language'] = df_jobs[str_variable].swifter.progress_bar(args['print_enabled']).apply(detect_language_helper)
 
-    if not x or x in [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan'] or x.isspace() or x.replace(' ', '').isdigit():
-        return 'NO LANGUAGE DETECTED'
-    # try:
-    #     lang = WhatTheLang().predict_lang(x)
-    #     return lang if lang not in ['CANT_PREDICT', 'nl', language] else detect(x)
-    # except ValueError:
-    try:
-        return detect(x)
-    except langdetect.LangDetectException:
-        return 'NO LANGUAGE DETECTED'
+#     except Exception as e:
+#         if args['print_enabled'] is True:
+#             print('Language not detected.')
+#     else:
+#         if args['print_enabled'] is True:
+#             print('Language detection complete.')
+
+#     return df_jobs
+
+
+# # %%
+# def detect_language_helper(x, language='en'):
+
+#     x = ''.join([i for i in x if i not in list(string.punctuation)])
+
+#     if not x or x in [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan'] or x.isspace() or x.replace(' ', '').isdigit():
+#         return 'NO LANGUAGE DETECTED'
+#     # try:
+#     #     lang = WhatTheLang().predict_lang(x)
+#     #     return lang if lang not in ['CANT_PREDICT', 'nl', language] else detect(x)
+#     # except ValueError:
+#     try:
+#         return detect(x)
+#     except langdetect.LangDetectException:
+#         return 'NO LANGUAGE DETECTED'
 
 
 # %%
@@ -909,11 +909,11 @@ def save_df(
         df_jobs.to_csv(save_path + df_file_name, mode='w', sep=',', header=True, index=True)
         df_jobs.to_csv(save_path + df_file_name.split(args['file_save_format_backup'])[0]+'txt', mode='w', sep=',', header=True, index=True)
 
-        if (not df_jobs.empty) and (len(df_jobs != 0)):
-            try:
-                df_jobs_pyarrow = save_metadata(df_jobs, df_file_name, save_path)
-            except Exception:
-                pass
+        # if (not df_jobs.empty) and (len(df_jobs != 0)):
+        #     try:
+        #         df_jobs_pyarrow = save_metadata(df_jobs, df_file_name, save_path)
+        #     except Exception:
+        #         pass
 
     elif df_jobs.empty:
         if print_enabled is True:
@@ -1846,11 +1846,10 @@ def write_sentences_to_excel(search_keyword, job_id, age, df_sentence, args=get_
         # Create column dict for excel file
         column_dict = [{'header': str(col)} for col in args['columns_list']]
 
-        # Create a Pandas Excel writer using XlsxWriter as the engine.
+        # Create a Pandas Excel writer
         writer = pd.ExcelWriter(
             path_to_txt
             + f'/Job ID - {df_sentence["Job ID"].iloc[0]}_Coder_Name - Codebook (Automating Equity).xlsx',
-            engine='xlsxwriter',
         )
 
         # Check datatype
@@ -1878,10 +1877,10 @@ def write_sentences_to_excel(search_keyword, job_id, age, df_sentence, args=get_
 # %%
 def write_sentences_to_excel_helper(i, writer, df_sentence, args=get_args()):
     try:
-        # Convert the dataframe to an XlsxWriter Excel object.
+        # Convert the dataframe to anExcel object.
         df_sentence.to_excel(writer, sheet_name=f'Sheet {i}')
 
-        # Get the xlsxwriter objects from the dataframe writer object.
+        # Get the objects from the dataframe writer object.
         workbook = writer.book
         worksheet = writer.sheets[f'Sheet {i}']
 
