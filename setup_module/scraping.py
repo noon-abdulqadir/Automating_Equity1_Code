@@ -387,26 +387,26 @@ def get_driver(
         print('No headless driver enabled.')
         options.headless = False
 
-    # Proxy
-    if proxy_enabled is True:
-        print('Proxy browsing enabled.')
-        ua = UserAgent()
-        userAgent = ua.random
-        req_proxy = RequestProxy()
-        proxies = req_proxy.get_proxy_list()
-        PROXY = proxies[5].get_address()
-        print(f'Proxy country: {proxies[5].country}')
-        caps['proxy'] = {
-            'httpProxy': PROXY,
-            'ftpProxy': PROXY,
-            'sslProxy': PROXY,
-            'proxyType': 'MANUAL',
-        }
-        options.add_argument(f'--proxy-server= {PROXY}')
-        options.add_argument(f'user-agent={userAgent}')
-    elif proxy_enabled is False:
-        print('No proxy browsing enabled.')
-        pass
+    # # Proxy
+    # if proxy_enabled is True:
+    #     print('Proxy browsing enabled.')
+    #     ua = UserAgent()
+    #     userAgent = ua.random
+    #     req_proxy = RequestProxy()
+    #     proxies = req_proxy.get_proxy_list()
+    #     PROXY = proxies[5].get_address()
+    #     print(f'Proxy country: {proxies[5].country}')
+    #     caps['proxy'] = {
+    #         'httpProxy': PROXY,
+    #         'ftpProxy': PROXY,
+    #         'sslProxy': PROXY,
+    #         'proxyType': 'MANUAL',
+    #     }
+    #     options.add_argument(f'--proxy-server= {PROXY}')
+    #     options.add_argument(f'user-agent={userAgent}')
+    # elif proxy_enabled is False:
+    #     print('No proxy browsing enabled.')
+    #     pass
 
     try:
         driver = webdriver.Chrome(

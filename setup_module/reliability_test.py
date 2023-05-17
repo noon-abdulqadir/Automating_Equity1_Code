@@ -221,27 +221,22 @@ def IR_all_final(
         df1a = pd.read_excel(
             f'{reliability_dir}Pair 1 - Intra/Job ID - p_ce05575325f3b0f1_Rhea - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
         df1b = pd.read_excel(
             f'{reliability_dir}Pair 2 - Intra/Job ID - p_ca008a8d67189539_Rhea - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
         df1c = pd.read_excel(
             f'{reliability_dir}Pair 3 - Intra/Job ID - p_9acfa03a05f2542f_Rhea- Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
         df1d = pd.read_excel(
             f'{reliability_dir}Pair 4 - Intra/Job ID - p_3d626cbfef055cb4_Rhea - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
         df1e = pd.read_excel(
             f'{reliability_dir}Pair 5 - Intra/Job ID - p_1b37ad5237066811_Rhea - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
 
         df1 = pd.concat([df1a, df1b, df1c, df1d, df1e])
@@ -249,27 +244,22 @@ def IR_all_final(
         df2a = pd.read_excel(
             f'{reliability_dir}Pair 1 - Intra/OLD Job ID - p_ce05575325f3b0f1_Rhea - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
         df2b = pd.read_excel(
             f'{reliability_dir}Pair 2 - Intra/OLD Job ID - p_ca008a8d67189539_Rhea - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
         df2c = pd.read_excel(
             f'{reliability_dir}Pair 3 - Intra/OLD Job ID - p_9acfa03a05f2542f_Rhea - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
         df2d = pd.read_excel(
             f'{reliability_dir}Pair 4 - Intra/OLD Job ID - p_3d626cbfef055cb4_Rhea - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
         df2e = pd.read_excel(
             f'{reliability_dir}Pair 5 - Intra/OLD Job ID - p_1b37ad5237066811_Rhea - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
 
         df2 = pd.concat([df2a, df2b, df2c, df2d, df2e])
@@ -280,27 +270,22 @@ def IR_all_final(
         df1a = pd.read_excel(
             f'{reliability_dir}Pair 8 - Intra/OLD Job ID - p_a087b464a6a092fa_Coder_Name - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
         df1b = pd.read_excel(
             f'{reliability_dir}Pair 11 - Intra/Job ID - 4052472440_Rhea - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
         df1c = pd.read_excel(
             f'{reliability_dir}Pair 12 - Intra/Job ID - p_7674c23f38f94dcf_Coder_Name - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
         df1d = pd.read_excel(
             f'{reliability_dir}Pair 13 - Intra/Job ID - p_42ea0a6f52e862d4_Coder_Name - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
         df1e = pd.read_excel(
             f'{reliability_dir}Pair 14 - Intra/Job ID - p_9f364da9030d1ce6_Coder_Name - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
 
         df1 = pd.concat([df1a, df1b, df1c, df1d, df1e])
@@ -308,27 +293,22 @@ def IR_all_final(
         df2a = pd.read_excel(
             f'{reliability_dir}Pair 8 Intra/PAIRED Job ID - p_a087b464a6a092fa_Coder_Name - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
         df2b = pd.read_excel(
             f'{reliability_dir}Pair 11 Intra/PAIRED Job ID - 4052472440_Rhea - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
         df2c = pd.read_excel(
             f'{reliability_dir}Pair 12 Intra/PAIRED Job ID - p_7674c23f38f94dcf_Coder_Name - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
         df2d = pd.read_excel(
             f'{reliability_dir}Pair 13 Intra/PAIRED Job ID - p_42ea0a6f52e862d4_Coder_Name - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
         df2e = pd.read_excel(
             f'{reliability_dir}Pair 14 Intra/PAIRED Job ID - p_9f364da9030d1ce6_Coder_Name - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
 
         df2 = pd.concat([df2a, df2b, df2c, df2d, df2e])
@@ -340,13 +320,11 @@ def IR_all_final(
         df1 = pd.read_excel(
             f'{reliability_dir}Pair 6 - Inter/PAIRED INTER - Job ID - p_15a42cd4b082799e_Rhea - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
 
         df2 = pd.read_excel(
             f'{reliability_dir}Pair 6 - Inter/OLD Job ID - p_15a42cd4b082799e_Coder_Name - Codebook (Automating Equity).xlsx',
             index_col=0,
-            engine='openpyxl',
         )
 
     df1['Coder ID'] = 1
