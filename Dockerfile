@@ -1,7 +1,7 @@
 # Start your image with a python 3.10-bullseye base image
 # syntax=docker/dockerfile:1
 # FROM python:3.10-bullseye
-FROM condaforge/mambaforge:latest
+FROM condaforge/mambaforge:4.9.2-5 as conda
 
 # The /Automating_Equity1_Code directory should act as the main application directory
 WORKDIR /Automating_Equity1_Code
