@@ -20,9 +20,9 @@ import pandas as pd
 import pkg_resources
 import statsmodels.api as sm
 
-EXAMPLE_FILE = pkg_resources.resource_filename(
-    'specification_curve', os.path.join('data', 'example_data.csv')
-)
+# EXAMPLE_FILE = pkg_resources.resource_filename(
+#     'specification_curve', os.path.join('data', 'example_data.csv')
+# )
 
 
 def _round_to_1(x: float) -> float:
@@ -555,50 +555,50 @@ class SpecificationCurve:
 
 
 
-# [docs]
-def load_example_data1() -> pd.DataFrame:
-    """Retrieves example data from a file included with the package.
+# # [docs]
+# def load_example_data1() -> pd.DataFrame:
+#     """Retrieves example data from a file included with the package.
 
-    Returns:
-        pd.DataFrame: Example data suitable for regression.
-    """
-    # Example data
-    df = pd.read_csv(EXAMPLE_FILE, index_col=0)
-    num_cols = [x for x in df.columns if x not in ['group1', 'group2']]
-    for col in num_cols:
-        df[col] = df[col].astype(np.double)
-    cat_cols = [x for x in df.columns if x not in num_cols]
-    for col in cat_cols:
-        df[col] = df[col].astype('category')
-    return df
-
-
+#     Returns:
+#         pd.DataFrame: Example data suitable for regression.
+#     """
+#     # Example data
+#     df = pd.read_csv(EXAMPLE_FILE, index_col=0)
+#     num_cols = [x for x in df.columns if x not in ['group1', 'group2']]
+#     for col in num_cols:
+#         df[col] = df[col].astype(np.double)
+#     cat_cols = [x for x in df.columns if x not in num_cols]
+#     for col in cat_cols:
+#         df[col] = df[col].astype('category')
+#     return df
 
 
-# [docs]
-def load_example_data2() -> pd.DataFrame:
-    """Generates fake data.
 
-    Returns:
-        pd.DataFrame: Example data suitable for regression.
-    """
-    # Set seed for random numbers
-    seed_for_prng = 78557
-    # prng=probabilistic random number generator
-    prng = np.random.default_rng(seed_for_prng)
-    n_samples = 500
-    x_1 = prng.random(size=n_samples)
-    x_2 = prng.random(size=n_samples)
-    x_3 = prng.random(size=n_samples)
-    x_4 = prng.integers(2, size=n_samples)
-    y = (
-        0.8 * x_1
-        + 0.1 * x_2
-        + 0.5 * x_3
-        + x_4 * 0.6
-        + +2 * prng.standard_normal(n_samples)
-    )
-    df = pd.DataFrame([x_1, x_2, x_3, x_4, y], ['x_1', 'x_2', 'x_3', 'x_4', 'y']).T
-    # Set x_4 as a categorical variable
-    df['x_4'] = df['x_4'].astype('category')
-    return df
+
+# # [docs]
+# def load_example_data2() -> pd.DataFrame:
+#     """Generates fake data.
+
+#     Returns:
+#         pd.DataFrame: Example data suitable for regression.
+#     """
+#     # Set seed for random numbers
+#     seed_for_prng = 78557
+#     # prng=probabilistic random number generator
+#     prng = np.random.default_rng(seed_for_prng)
+#     n_samples = 500
+#     x_1 = prng.random(size=n_samples)
+#     x_2 = prng.random(size=n_samples)
+#     x_3 = prng.random(size=n_samples)
+#     x_4 = prng.integers(2, size=n_samples)
+#     y = (
+#         0.8 * x_1
+#         + 0.1 * x_2
+#         + 0.5 * x_3
+#         + x_4 * 0.6
+#         + +2 * prng.standard_normal(n_samples)
+#     )
+#     df = pd.DataFrame([x_1, x_2, x_3, x_4, y], ['x_1', 'x_2', 'x_3', 'x_4', 'y']).T
+#     # Set x_4 as a categorical variable
+#     df['x_4'] = df['x_4'].astype('category')
+#     return df
