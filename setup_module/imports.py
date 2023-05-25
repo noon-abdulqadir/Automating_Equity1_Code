@@ -392,6 +392,7 @@ try:
         BertModel,
         BertTokenizer,
         BertTokenizerFast,
+        BitsAndBytesConfig,
         DistilBertForSequenceClassification,
         DistilBertTokenizerFast,
         EarlyStoppingCallback,
