@@ -11,6 +11,7 @@ autopep8==2.0.2
 backcall==0.2.0
 backports.functools-lru-cache==1.6.4
 beautifulsoup4==4.12.2
+bitsandbytes==0.39.0
 bleach==6.0.0
 blis==0.7.9
 brotlipy==0.7.0
