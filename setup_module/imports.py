@@ -113,6 +113,7 @@ try:
     import IPython
     import IPython.core
     import joblib
+    import lxml
     import matplotlib as mpl
     import matplotlib.gridspec as gridspec
     import matplotlib.image as img
@@ -120,6 +121,7 @@ try:
     import nltk
     import nltk.data
     import numpy as np
+    import openpyxl
     import optuna
     import pandas as pd
     import pingouin as pg
@@ -147,6 +149,7 @@ try:
     import transformers
     import urllib3
     import xgboost as xgb
+    import xlsxwriter
     from accelerate import Accelerator, notebook_launcher
     from bs4 import BeautifulSoup
     from dotenv.main import load_dotenv
@@ -288,6 +291,8 @@ try:
     from sklearn.impute import SimpleImputer
     from sklearn.kernel_ridge import KernelRidge
     from sklearn.linear_model import (
+        Lasso,
+        LassoCV,
         LogisticRegression,
         PassiveAggressiveClassifier,
         Perceptron,
