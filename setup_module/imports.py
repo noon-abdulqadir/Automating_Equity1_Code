@@ -382,6 +382,7 @@ try:
     from tqdm.contrib.itertools import product as tqdm_product
     from transformers import (
         AdamW,
+        AutoConfig,
         AutoModel,
         AutoModelForSequenceClassification,
         AutoModelForTokenClassification,
@@ -398,10 +399,19 @@ try:
         EarlyStoppingCallback,
         GPT2Config,
         GPT2ForSequenceClassification,
+        GPT2Model,
         GPT2TokenizerFast,
         GPTJConfig,
         GPTJForSequenceClassification,
         GPTJModel,
+        GPTNeoXConfig,
+        GPTNeoXForSequenceClassification,
+        GPTNeoXModel,
+        GPTNeoXTokenizerFast,
+        LlamaConfig,
+        LlamaForSequenceClassification,
+        LlamaModel,
+        LlamaTokenizerFast,
         OpenAIGPTConfig,
         OpenAIGPTForSequenceClassification,
         OpenAIGPTTokenizerFast,
@@ -413,6 +423,11 @@ try:
         TrainingArguments,
         get_linear_schedule_with_warmup,
         pipeline,
+    )
+    from transformers.integrations import (
+        TensorBoardCallback,
+        is_optuna_available,
+        is_ray_available,
     )
     from webdriver_manager.chrome import ChromeDriverManager
     from xgboost import XGBClassifier
@@ -629,20 +644,21 @@ cores = multiprocessing.cpu_count()
 accelerator = Accelerator()
 torch.autograd.set_detect_anomaly(True)
 os.environ.get('TOKENIZERS_PARALLELISM')
+hyperparameter_tuning = True
 best_trial_args = [
     'num_train_epochs', 'learning_rate', 'weight_decay', 'warmup_steps',
 ]
 training_args_dict = {
     'seed': random_state,
-    'resume_from_checkpoint': True,
+    'resume_from_checkpoint': False,
     'overwrite_output_dir': True,
     'logging_steps': 500,
     'evaluation_strategy': 'steps',
     'eval_steps': 500,
     'save_strategy': 'steps',
     'save_steps': 500,
-    # 'metric_for_best_model': 'recall',
     'use_mps_device': bool(device_name == 'mps' and torch.backends.mps.is_available()),
+    'metric_for_best_model': 'eval_recall',
     'optim': 'adamw_torch',
     'load_best_model_at_end': True,
     'per_device_train_batch_size': 16,
