@@ -644,11 +644,29 @@ transformers_pipe = {
         'model': GPT2ForSequenceClassification,
     },
     # 'GPTJForSequenceClassification': {
-    #     'model_name': 'ydshieh/tiny-random-gptj-for-sequence-classification',
+    #     'model_name': 'EleutherAI/gpt-j-6b',
     #     'config': GPTJConfig,
     #     'tokenizer': AutoTokenizer,
     #     'model': GPTJForSequenceClassification,
     # },
+    # 'GPTNeoXForSequenceClassification': {
+    #     'model_name': 'EleutherAI/gpt-neox-20b',
+    #     'config': GPTNeoXConfig,
+    #     'tokenizer': GPTNeoXTokenizerFast,
+    #     'model': GPTNeoXForSequenceClassification,
+    # },
+    # 'LlamaForSequenceClassification': {
+    #     'model_name': 'OpenAssistant/oasst-sft-6-llama-30b-xor',
+    #     'config': LlamaConfig,
+    #     'tokenizer': LlamaTokenizerFast,
+    #     'model': LlamaForSequenceClassification,
+    # },
+    # 'Guanaco': {
+    #     'model_name': 'JosephusCheung/Guanaco',
+    #     'config': AutoConfig,
+    #     'tokenizer': AutoTokenizer,
+    #     'model': AutoModelForSequenceClassification,
+    # }
 }
 
 # %%
