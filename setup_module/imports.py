@@ -150,6 +150,7 @@ try:
     import urllib3
     import xgboost as xgb
     import xlsxwriter
+    import yaml
     from accelerate import Accelerator, notebook_launcher
     from bs4 import BeautifulSoup
     from dotenv.main import load_dotenv
@@ -577,16 +578,15 @@ cv = RepeatedStratifiedKFold(
     n_splits=n_splits, n_repeats=n_repeats, random_state=random_state
 )
 scoring = 'recall'
-scores = ['recall', 'accuracy', 'f1', 'roc_auc',
-          'explained_variance', 'matthews_corrcoef']
+scores = ['recall', 'accuracy', 'f1', 'roc_auc', 'explained_variance', 'matthews_corrcoef']
 scorers = {
     'precision_score': make_scorer(precision_score, zero_division=0),
     'recall_score': make_scorer(recall_score, zero_division=0),
     'accuracy_score': make_scorer(accuracy_score, zero_division=0),
 }
 protocol = pickle.HIGHEST_PROTOCOL
-analysis_columns = ['Warmth', 'Competence']
 text_col = 'Job Description spacy_sentencized'
+analysis_columns = ['Warmth', 'Competence']
 classified_columns = ['Warmth_Probability', 'Competence_Probability']
 metrics_dict = {
     f'{scoring.title()} Best Score': np.nan,
@@ -645,9 +645,7 @@ accelerator = Accelerator()
 torch.autograd.set_detect_anomaly(True)
 os.environ.get('TOKENIZERS_PARALLELISM')
 hyperparameter_tuning = True
-best_trial_args = [
-    'num_train_epochs', 'learning_rate', 'weight_decay', 'warmup_steps',
-]
+best_trial_args = ['num_train_epochs', 'learning_rate', 'weight_decay', 'warmup_steps',]
 training_args_dict = {
     'seed': random_state,
     'resume_from_checkpoint': False,
