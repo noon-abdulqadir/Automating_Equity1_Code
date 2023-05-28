@@ -381,8 +381,9 @@ try:
     from textblob import TextBlob, Word
     from textblob.en.inflect import pluralize, singularize
     from tqdm.contrib.itertools import product as tqdm_product
-    from transformers import (
+    from transformers import (  # LocalAgent,
         AdamW,
+        Agent,
         AutoConfig,
         AutoModel,
         AutoModelForSequenceClassification,
@@ -409,6 +410,7 @@ try:
         GPTNeoXForSequenceClassification,
         GPTNeoXModel,
         GPTNeoXTokenizerFast,
+        HfAgent,
         LlamaConfig,
         LlamaForSequenceClassification,
         LlamaModel,
