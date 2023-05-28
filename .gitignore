@@ -92,6 +92,9 @@ db.sqlite3
 
 # Docker Compose
 docker-compose.yml
+docker-compose.yaml
+docker-compose.override.yml
+docker-compose.override.yaml
 
 # Flask stuff:
 instance/
