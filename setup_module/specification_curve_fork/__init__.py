@@ -316,6 +316,9 @@ class SpecificationCurve:
         )
         df_r['pvalues'] = [x.pvalues for x in reg_results]
         df_r['pvalues'] = df_r['pvalues'].apply(lambda x: dict(x))
+        df_r['coeff_pvals'] = df_r.apply(
+            lambda row: row['pvalues'][row['x_exog']], axis=1
+        )
         # Re-order by coefficient: makes plots look more continuous
         df_r = df_r.sort_values('Coefficient')
         cols_to_keep = [
@@ -325,6 +328,7 @@ class SpecificationCurve:
             'bse',
             'pvalues',
             'conf_int',
+            'coeff_pvals',
             'x_exog',
             'y_endog',
         ]
@@ -333,12 +337,13 @@ class SpecificationCurve:
         df_r.index.names = ['Specification No.']
         df_r['Specification'] = df_r['Specification'].apply(lambda x: sorted(x))
         df_r['SpecificationCounts'] = df_r['Specification'].apply(lambda x: Counter(x))
+
         return df_r
 
 
 # [docs]
     def plot(
-        self, save_path=None, pretty_plots: bool = True, preferred_spec: List[None] = [], show_plot: bool = True, plot_title=None, return_fig: bool = False
+        self, save_path=None, pretty_plots: bool = True, preferred_spec: List[None] = [], show_plot: bool = True, plot_title=None, return_fig: bool = False, text_to_add: Union[str, List[str]] = []
     ) -> None:
         """Makes plots of fitted specification curve.
 
@@ -349,6 +354,7 @@ class SpecificationCurve:
             show_plot (bool, optional): whether to show the plot. Defaults to True.
             plot_title (_type_, optional): title of the plot. Defaults to None.
             return_fig (bool, optional): whether to return the figure. Defaults to False.
+            text_to_add (Union[str, List[str]], optional): text to add to the plot. Defaults to [].
         """
         if pretty_plots:
             _pretty_plots()
@@ -433,9 +439,9 @@ class SpecificationCurve:
         )
         # Colour the significant estimate values differently
         self.df_r['color_coeff'] = 'black'
-        self.df_r['coeff_pvals'] = self.df_r.apply(
-            lambda row: row['pvalues'][row['x_exog']], axis=1
-        )
+        # self.df_r['coeff_pvals'] = self.df_r.apply(
+        #     lambda row: row['pvalues'][row['x_exog']], axis=1
+        # )
         self.df_r.loc[self.df_r['coeff_pvals'] < 0.05, 'color_coeff'] = 'blue'
         red_condition = (self.df_r['Coefficient'] < 0) & (
             self.df_r['coeff_pvals'] < 0.05
@@ -482,7 +488,24 @@ class SpecificationCurve:
                     arrowstyle='fancy', fc='0.4', ec='none', connectionstyle=cn_styl
                 ),
             )
-        axarr[0].set_ylabel('Coefficient')
+        if text_to_add is None or not text_to_add:
+            axarr[0].set_ylabel('Coefficient')
+        if text_to_add:
+            if isinstance(text_to_add, str):
+                text_to_add = [text_to_add]
+            axarr[0].set_ylabel('Coefficient', fontsize=10)
+            axarr[0].tick_params(axis='y', labelsize=10)
+            axarr[0].text(
+                -0.19,
+                0.99,
+                '\n'.join(text_to_add),
+                horizontalalignment='left',
+                verticalalignment='top',
+                transform=axarr[0].transAxes,
+                fontsize=9,
+                bbox=dict(facecolor='white', edgecolor='black', pad=3),
+            )
+
         if plot_title is None:
             axarr[0].set_title('Specification curve analysis')
         else:
