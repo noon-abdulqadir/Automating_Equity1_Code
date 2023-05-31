@@ -100,16 +100,14 @@ device_name = str(device.type)
 print(f'Using {device_name.upper()}')
 accelerator = Accelerator()
 torch.autograd.set_detect_anomaly(True)
+
 os.environ.get('TOKENIZERS_PARALLELISM')
 openai_token = os.environ['OPENAI_API_KEY']
 huggingface_token = os.environ['HUGGINGFACE_API_KEY']
-llm = OpenAI(openai_api_key=openai_token, temperature=0.9)
 # load_in_4bit=True, bnb_4bit_use_double_quant=True, bnb_4bit_compute_dtype=torch.bfloat16, bnb_4bit_quant_type='nf4'
 quantization_config_dict = {
     'load_in_8bit': True,
     'llm_int8_skip_modules': ['lm_head'],
-    'activation': torch.quantization.default_observer,
-    'weight': torch.quantization.default_weight_observer
 }
 hyperparameter_tuning = True
 
@@ -639,8 +637,6 @@ classifiers_pipe |= classifiers_pipe_ensemble
 
 # %% [markdown]
 # Transformers Pipeline
-transformers_model_names = ['bert-base-uncased', 'ydshieh/tiny-random-gptj-for-sequence-classification']
-
 transformers_pipe = {
     'BertForSequenceClassification': {
         'model_name': 'bert-base-uncased',
@@ -660,35 +656,36 @@ transformers_pipe = {
         'tokenizer': OpenAIGPTTokenizerFast,
         'model': OpenAIGPTForSequenceClassification,
     },
-    'GPTJForSequenceClassification': {
-        'model_name': 'EleutherAI/gpt-j-6b',
-        'config': GPTJConfig,
-        'tokenizer': AutoTokenizer,
-        'model': GPTJForSequenceClassification,
-    },
-    'GPTNeoXForSequenceClassification': {
-        'model_name': 'EleutherAI/gpt-neox-20b',
-        'config': GPTNeoXConfig,
-        'tokenizer': GPTNeoXTokenizerFast,
-        'model': GPTNeoXForSequenceClassification,
-    },
-    'LlamaForSequenceClassification': {
-        'model_name': 'OpenAssistant/oasst-sft-7-llama-30b-xor',
-        'config': LlamaConfig,
-        'tokenizer': LlamaTokenizerFast,
-        'model': LlamaForSequenceClassification,
-    },
-    'Guanaco': {
-        'model_name': 'JosephusCheung/Guanaco',
-        'config': AutoConfig,
-        'tokenizer': AutoTokenizer,
-        'model': AutoModelForSequenceClassification,
-    },
-    'PALM': {
-        'model_name': 'conceptofmind/palm-1b',
-        'config': AutoConfig,
-        'tokenizer': AutoTokenizer,
-        'model': AutoModelForSequenceClassification,
+    # 'GPTJForSequenceClassification': {
+    #     'model_name': 'EleutherAI/gpt-j-6b',
+    #     'config': GPTJConfig,
+    #     'tokenizer': AutoTokenizer,
+    #     'model': GPTJForSequenceClassification,
+    # },
+    # 'GPTNeoXForSequenceClassification': {
+    #     'model_name': 'EleutherAI/gpt-neox-20b',
+    #     'config': GPTNeoXConfig,
+    #     'tokenizer': GPTNeoXTokenizerFast,
+    #     'model': GPTNeoXForSequenceClassification,
+    # },
+    # 'LlamaForSequenceClassification': {
+    #     'model_name': 'OpenAssistant/oasst-sft-7-llama-30b-xor',
+    #     'config': LlamaConfig,
+    #     'tokenizer': LlamaTokenizerFast,
+    #     'model': LlamaForSequenceClassification,
+    # },
+    # 'Guanaco': {
+    #     'model_name': 'JosephusCheung/Guanaco',
+    #     'config': AutoConfig,
+    #     'tokenizer': AutoTokenizer,
+    #     'model': AutoModelForSequenceClassification,
+    # },
+    # 'PALM': {
+    #     'model_name': 'conceptofmind/palm-1b',
+    #     'config': AutoConfig,
+    #     'tokenizer': AutoTokenizer,
+    #     'model': AutoModelForSequenceClassification,
+    # },
 }
 
 # %%

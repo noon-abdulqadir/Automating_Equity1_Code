@@ -195,11 +195,6 @@ try:
     from IPython.display import HTML, Image, Markdown, display
     from ipywidgets import FloatSlider, interactive
     from joblib import parallel_backend
-    from langchain import HuggingFacePipeline, HuggingFaceTextGenInference
-    from langchain.agents import AgentType, initialize_agent
-    from langchain.chains import LLMChain
-    from langchain.llms import OpenAI
-    from langchain.prompts import PromptTemplate
     from matplotlib.animation import FuncAnimation
     from mpl_toolkits.mplot3d import Axes3D
     from nltk import (
@@ -387,9 +382,8 @@ try:
     from textblob import TextBlob, Word
     from textblob.en.inflect import pluralize, singularize
     from tqdm.contrib.itertools import product as tqdm_product
-    from transformers import (  # LocalAgent,
+    from transformers import (
         AdamW,
-        Agent,
         AutoConfig,
         AutoModel,
         AutoModelForSequenceClassification,
@@ -412,14 +406,9 @@ try:
         GPTJConfig,
         GPTJForSequenceClassification,
         GPTJModel,
-        GPTNeoXConfig,
-        GPTNeoXForSequenceClassification,
-        GPTNeoXModel,
-        GPTNeoXTokenizerFast,
-        HfAgent,
         LlamaConfig,
         LlamaForSequenceClassification,
-        LlamaModel,
+        LlamaTokenizer,
         LlamaTokenizerFast,
         OpenAIGPTConfig,
         OpenAIGPTForSequenceClassification,
@@ -655,7 +644,6 @@ os.environ.get('TOKENIZERS_PARALLELISM')
 os.environ.get('PYTORCH_MPS_HIGH_WATERMARK_RATIO')
 openai_token = os.environ['OPENAI_API_KEY']
 huggingface_token = os.environ['HUGGINGFACE_API_KEY']
-llm = OpenAI(openai_api_key=openai_token)
 hyperparameter_tuning = True
 best_trial_args = ['num_train_epochs', 'learning_rate', 'weight_decay', 'warmup_steps',]
 training_args_dict = {
