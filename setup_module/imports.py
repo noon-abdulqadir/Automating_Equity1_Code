@@ -107,6 +107,7 @@ try:
 
     import cbsodata
     import en_core_web_sm
+    import evaluate
     import gensim
     import gensim.downloader as gensim_api
     import imblearn
@@ -651,6 +652,7 @@ cores = multiprocessing.cpu_count()
 accelerator = Accelerator()
 torch.autograd.set_detect_anomaly(True)
 os.environ.get('TOKENIZERS_PARALLELISM')
+os.environ.get('PYTORCH_MPS_HIGH_WATERMARK_RATIO')
 openai_token = os.environ['OPENAI_API_KEY']
 huggingface_token = os.environ['HUGGINGFACE_API_KEY']
 llm = OpenAI(openai_api_key=openai_token)
@@ -666,7 +668,7 @@ training_args_dict = {
     'save_strategy': 'steps',
     'save_steps': 500,
     'use_mps_device': bool(device_name == 'mps' and torch.backends.mps.is_available()),
-    'metric_for_best_model': 'eval_recall',
+    'metric_for_best_model': 'Recall',
     'optim': 'adamw_torch',
     'load_best_model_at_end': True,
     'per_device_train_batch_size': 16,
