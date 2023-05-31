@@ -654,30 +654,41 @@ transformers_pipe = {
         'tokenizer': GPT2TokenizerFast,
         'model': GPT2ForSequenceClassification,
     },
-    # 'GPTJForSequenceClassification': {
-    #     'model_name': 'EleutherAI/gpt-j-6b',
-    #     'config': GPTJConfig,
-    #     'tokenizer': AutoTokenizer,
-    #     'model': GPTJForSequenceClassification,
-    # },
-    # 'GPTNeoXForSequenceClassification': {
-    #     'model_name': 'EleutherAI/gpt-neox-20b',
-    #     'config': GPTNeoXConfig,
-    #     'tokenizer': GPTNeoXTokenizerFast,
-    #     'model': GPTNeoXForSequenceClassification,
-    # },
-    # 'LlamaForSequenceClassification': {
-    #     'model_name': 'OpenAssistant/oasst-sft-6-llama-30b-xor',
-    #     'config': LlamaConfig,
-    #     'tokenizer': LlamaTokenizerFast,
-    #     'model': LlamaForSequenceClassification,
-    # },
-    # 'Guanaco': {
-    #     'model_name': 'JosephusCheung/Guanaco',
-    #     'config': AutoConfig,
-    #     'tokenizer': AutoTokenizer,
-    #     'model': AutoModelForSequenceClassification,
-    # }
+    'OpenAIGPTForSequenceClassification': {
+        'model_name': 'openai-gpt',
+        'config': OpenAIGPTConfig,
+        'tokenizer': OpenAIGPTTokenizerFast,
+        'model': OpenAIGPTForSequenceClassification,
+    },
+    'GPTJForSequenceClassification': {
+        'model_name': 'EleutherAI/gpt-j-6b',
+        'config': GPTJConfig,
+        'tokenizer': AutoTokenizer,
+        'model': GPTJForSequenceClassification,
+    },
+    'GPTNeoXForSequenceClassification': {
+        'model_name': 'EleutherAI/gpt-neox-20b',
+        'config': GPTNeoXConfig,
+        'tokenizer': GPTNeoXTokenizerFast,
+        'model': GPTNeoXForSequenceClassification,
+    },
+    'LlamaForSequenceClassification': {
+        'model_name': 'OpenAssistant/oasst-sft-7-llama-30b-xor',
+        'config': LlamaConfig,
+        'tokenizer': LlamaTokenizerFast,
+        'model': LlamaForSequenceClassification,
+    },
+    'Guanaco': {
+        'model_name': 'JosephusCheung/Guanaco',
+        'config': AutoConfig,
+        'tokenizer': AutoTokenizer,
+        'model': AutoModelForSequenceClassification,
+    },
+    'PALM': {
+        'model_name': 'conceptofmind/palm-1b',
+        'config': AutoConfig,
+        'tokenizer': AutoTokenizer,
+        'model': AutoModelForSequenceClassification,
 }
 
 # %%
