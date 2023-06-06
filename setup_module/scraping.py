@@ -766,7 +766,7 @@ def read_and_save_keyword_list(
             f'Mixed age keywords total {len(keywords_agevsect)}:\n{keywords_agevsect}\n'
         )
 
-    keywords_dict = {
+    keywords_dict_per_cat = {
         'keywords_womenvocc': keywords_womenvocc,
         'keywords_menvocc': keywords_menvocc,
         'keywords_genvsect': keywords_genvsect,
@@ -776,11 +776,11 @@ def read_and_save_keyword_list(
     }
     if save_enabled is True:
         with open(
-            f'{code_dir}/1. Scraping/CBS/Data/keywords_dict.json', 'w', encoding='utf8'
+            f'{code_dir}/1. Scraping/CBS/Data/keywords_dict_per_cat.json', 'w', encoding='utf8'
         ) as f:
-            json.dump(keywords_dict, f)
+            json.dump(keywords_dict_per_cat, f)
 
-        for key, value in keywords_dict.items():
+        for key, value in keywords_dict_per_cat.items():
             if translate_enabled is False:
                 save_path_file_name = f'Sectors List/{str(key)}.txt'
             elif translate_enabled is True:
@@ -800,7 +800,7 @@ def read_and_save_keyword_list(
         print('No keyword list save enabled.')
 
     return (
-        keywords_dict,
+        keywords_dict_per_cat,
         keywords_womenvocc,
         keywords_menvocc,
         keywords_genvsect,
@@ -825,7 +825,7 @@ def get_keywords_from_cbs(
     gender_ratio: int = 20,
 ):
 
-    keywords_dict, keywords_womenvocc, keywords_menvocc, keywords_genvsect, keywords_oldvocc, keywords_youngvocc, keywords_agevsect, df_sector_women, df_sector_men, df_sector_old, df_sector_young = read_and_save_keyword_list()
+    keywords_dict_per_cat, keywords_womenvocc, keywords_menvocc, keywords_genvsect, keywords_oldvocc, keywords_youngvocc, keywords_agevsect, df_sector_women, df_sector_men, df_sector_old, df_sector_young = read_and_save_keyword_list()
 
     df_sectors = get_sector_df_from_cbs()
     df_sectors.set_index(
@@ -958,7 +958,7 @@ def get_keyword_list(
         )
 
     # Women Sector
-    keywords_dict, keywords_womenvocc, keywords_menvocc, keywords_genvsect, keywords_oldvocc, keywords_youngvocc, keywords_agevsect, df_sector_women, df_sector_men, df_sector_old, df_sector_young = read_and_save_keyword_list()
+    keywords_dict_per_cat, keywords_womenvocc, keywords_menvocc, keywords_genvsect, keywords_oldvocc, keywords_youngvocc, keywords_agevsect, df_sector_women, df_sector_men, df_sector_old, df_sector_young = read_and_save_keyword_list()
 
     with open(keywords_file_path + 'keywords_womenvocc.txt', 'r') as f:
         keywords_womenvocc = f.read().splitlines()

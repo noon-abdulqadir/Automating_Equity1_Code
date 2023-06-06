@@ -1096,7 +1096,7 @@ keyword_trans_dict = {
     'buyinging': 'buying',
     'accommodatie': 'accommodation',
     'vissen': 'fishing',
-    'grooth': 'great',
+    'grooth': 'wholesaling',
     'opleiding': 'education',
     'ingenieur': 'engineer',
     'engineers': 'engineer',
@@ -1199,8 +1199,8 @@ keyword_trans_dict = {
     'other service activity': 'staff',
     'afvalbeheer': 'waste management'}
 
-# with open(f'{code_dir}/1. Scraping/CBS/Data/keyword_trans_dict.txt', 'w') as f:
-#     json.dump(keyword_trans_dict, f)
+with open(f'{code_dir}/1. Scraping/CBS/Data/keyword_trans_dict.txt', 'w') as f:
+    json.dump(keyword_trans_dict, f)
 
 # %%
 
