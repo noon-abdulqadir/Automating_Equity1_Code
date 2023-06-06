@@ -217,12 +217,12 @@ Automating_Equity1_Code.Rproj
 # Directories
 */*/Data/*
 */*/Found Data/*
-*/*/Coding Material/
+*/*/Coding Material/*
 1. Scraping/*/Data/*
 1. Scraping/*/Found Data/*
 !1. Scraping/CBS/Found Data/keywords_dict_manual.json
 1. Scraping/Coding Material/*
-2. Cleaning and Preprocessing/Coding Material/
+2. Cleaning and Preprocessing/Coding Material/*
 5. Typesetting/tables_and_figs
 5. Typesetting/tables_and_figs/*
 /data
