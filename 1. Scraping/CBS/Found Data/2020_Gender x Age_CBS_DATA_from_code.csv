@@ -1,0 +1,1219 @@
+,Sex of employee,Type of employment contract,Other characteristics employee,Industry class / branch (SIC2008),Periods,Employment/Jobs (x 1 000)
+12,Total,Total,Total,A-U All economic activities,2020,8391.0
+27,Total,Total,Total,A-F Agriculture and industry,2020,1287.0
+42,Total,Total,Total,"A Agriculture, forestry and fishing",2020,112.0
+57,Total,Total,Total,B-F Manifacturing and energy,2020,1175.0
+72,Total,Total,Total,"B-E Industry (no construction), energy",2020,839.0
+87,Total,Total,Total,B Mining and quarrying ,2020,8.0
+102,Total,Total,Total,C Manufacturing,2020,766.0
+117,Total,Total,Total,D Energy supply,2020,29.0
+132,Total,Total,Total,E Water supply and waste management,2020,36.0
+147,Total,Total,Total,F Construction,2020,336.0
+162,Total,Total,Total,G-N Commercial services,2020,4328.0
+177,Total,Total,Total,"G-I Trade, transport, hotels, catering",2020,2192.0
+192,Total,Total,Total,G Wholesale and retail trade,2020,1411.0
+207,Total,Total,Total,H Transportation and storage,2020,386.0
+222,Total,Total,Total,I Accommodation and food serving,2020,396.0
+237,Total,Total,Total,J Information and communication,2020,290.0
+252,Total,Total,Total,K Financial institutions,2020,274.0
+267,Total,Total,Total,"L Renting, buying, selling real estate",2020,68.0
+282,Total,Total,Total,M-N Business services,2020,1503.0
+297,Total,Total,Total,M Other specialised business services,2020,531.0
+312,Total,Total,Total,N Renting and other business support,2020,973.0
+327,Total,Total,Total,O-U Noncommercial services,2020,2776.0
+342,Total,Total,Total,O-Q Government and care,2020,2512.0
+357,Total,Total,Total,O Public administration and services,2020,537.0
+372,Total,Total,Total,P Education,2020,542.0
+387,Total,Total,Total,Q Health and social work activities,2020,1433.0
+402,Total,Total,Total,"R-U Culture, recreation, other services",2020,265.0
+417,Total,Total,Total,"R Culture, sports and recreation",2020,133.0
+432,Total,Total,Total,S Other service activities,2020,132.0
+447,Total,Total,Younger than 15 years,A-U All economic activities,2020,16.0
+462,Total,Total,Younger than 15 years,A-F Agriculture and industry,2020,4.0
+477,Total,Total,Younger than 15 years,"A Agriculture, forestry and fishing",2020,4.0
+492,Total,Total,Younger than 15 years,B-F Manifacturing and energy,2020,1.0
+507,Total,Total,Younger than 15 years,"B-E Industry (no construction), energy",2020,1.0
+522,Total,Total,Younger than 15 years,B Mining and quarrying ,2020,0.0
+537,Total,Total,Younger than 15 years,C Manufacturing,2020,1.0
+552,Total,Total,Younger than 15 years,D Energy supply,2020,0.0
+567,Total,Total,Younger than 15 years,E Water supply and waste management,2020,0.0
+582,Total,Total,Younger than 15 years,F Construction,2020,0.0
+597,Total,Total,Younger than 15 years,G-N Commercial services,2020,12.0
+612,Total,Total,Younger than 15 years,"G-I Trade, transport, hotels, catering",2020,10.0
+627,Total,Total,Younger than 15 years,G Wholesale and retail trade,2020,8.0
+642,Total,Total,Younger than 15 years,H Transportation and storage,2020,0.0
+657,Total,Total,Younger than 15 years,I Accommodation and food serving,2020,3.0
+672,Total,Total,Younger than 15 years,J Information and communication,2020,0.0
+687,Total,Total,Younger than 15 years,K Financial institutions,2020,0.0
+702,Total,Total,Younger than 15 years,"L Renting, buying, selling real estate",2020,0.0
+717,Total,Total,Younger than 15 years,M-N Business services,2020,1.0
+732,Total,Total,Younger than 15 years,M Other specialised business services,2020,0.0
+747,Total,Total,Younger than 15 years,N Renting and other business support,2020,1.0
+762,Total,Total,Younger than 15 years,O-U Noncommercial services,2020,0.0
+777,Total,Total,Younger than 15 years,O-Q Government and care,2020,0.0
+792,Total,Total,Younger than 15 years,O Public administration and services,2020,0.0
+807,Total,Total,Younger than 15 years,P Education,2020,0.0
+822,Total,Total,Younger than 15 years,Q Health and social work activities,2020,0.0
+837,Total,Total,Younger than 15 years,"R-U Culture, recreation, other services",2020,0.0
+852,Total,Total,Younger than 15 years,"R Culture, sports and recreation",2020,0.0
+867,Total,Total,Younger than 15 years,S Other service activities,2020,0.0
+882,Total,Total,15 to 19 years,A-U All economic activities,2020,631.0
+897,Total,Total,15 to 19 years,A-F Agriculture and industry,2020,53.0
+912,Total,Total,15 to 19 years,"A Agriculture, forestry and fishing",2020,19.0
+927,Total,Total,15 to 19 years,B-F Manifacturing and energy,2020,34.0
+942,Total,Total,15 to 19 years,"B-E Industry (no construction), energy",2020,22.0
+957,Total,Total,15 to 19 years,B Mining and quarrying ,2020,0.0
+972,Total,Total,15 to 19 years,C Manufacturing,2020,22.0
+987,Total,Total,15 to 19 years,D Energy supply,2020,0.0
+1002,Total,Total,15 to 19 years,E Water supply and waste management,2020,0.0
+1017,Total,Total,15 to 19 years,F Construction,2020,12.0
+1032,Total,Total,15 to 19 years,G-N Commercial services,2020,501.0
+1047,Total,Total,15 to 19 years,"G-I Trade, transport, hotels, catering",2020,419.0
+1062,Total,Total,15 to 19 years,G Wholesale and retail trade,2020,297.0
+1077,Total,Total,15 to 19 years,H Transportation and storage,2020,9.0
+1092,Total,Total,15 to 19 years,I Accommodation and food serving,2020,113.0
+1107,Total,Total,15 to 19 years,J Information and communication,2020,5.0
+1122,Total,Total,15 to 19 years,K Financial institutions,2020,2.0
+1137,Total,Total,15 to 19 years,"L Renting, buying, selling real estate",2020,1.0
+1152,Total,Total,15 to 19 years,M-N Business services,2020,73.0
+1167,Total,Total,15 to 19 years,M Other specialised business services,2020,10.0
+1182,Total,Total,15 to 19 years,N Renting and other business support,2020,63.0
+1197,Total,Total,15 to 19 years,O-U Noncommercial services,2020,78.0
+1212,Total,Total,15 to 19 years,O-Q Government and care,2020,60.0
+1227,Total,Total,15 to 19 years,O Public administration and services,2020,6.0
+1242,Total,Total,15 to 19 years,P Education,2020,9.0
+1257,Total,Total,15 to 19 years,Q Health and social work activities,2020,44.0
+1272,Total,Total,15 to 19 years,"R-U Culture, recreation, other services",2020,18.0
+1287,Total,Total,15 to 19 years,"R Culture, sports and recreation",2020,11.0
+1302,Total,Total,15 to 19 years,S Other service activities,2020,7.0
+1317,Total,Total,20 to 24 years,A-U All economic activities,2020,844.0
+1332,Total,Total,20 to 24 years,A-F Agriculture and industry,2020,85.0
+1347,Total,Total,20 to 24 years,"A Agriculture, forestry and fishing",2020,14.0
+1362,Total,Total,20 to 24 years,B-F Manifacturing and energy,2020,70.0
+1377,Total,Total,20 to 24 years,"B-E Industry (no construction), energy",2020,45.0
+1392,Total,Total,20 to 24 years,B Mining and quarrying ,2020,0.0
+1407,Total,Total,20 to 24 years,C Manufacturing,2020,43.0
+1422,Total,Total,20 to 24 years,D Energy supply,2020,1.0
+1437,Total,Total,20 to 24 years,E Water supply and waste management,2020,1.0
+1452,Total,Total,20 to 24 years,F Construction,2020,25.0
+1467,Total,Total,20 to 24 years,G-N Commercial services,2020,534.0
+1482,Total,Total,20 to 24 years,"G-I Trade, transport, hotels, catering",2020,295.0
+1497,Total,Total,20 to 24 years,G Wholesale and retail trade,2020,181.0
+1512,Total,Total,20 to 24 years,H Transportation and storage,2020,27.0
+1527,Total,Total,20 to 24 years,I Accommodation and food serving,2020,86.0
+1542,Total,Total,20 to 24 years,J Information and communication,2020,23.0
+1557,Total,Total,20 to 24 years,K Financial institutions,2020,9.0
+1572,Total,Total,20 to 24 years,"L Renting, buying, selling real estate",2020,4.0
+1587,Total,Total,20 to 24 years,M-N Business services,2020,204.0
+1602,Total,Total,20 to 24 years,M Other specialised business services,2020,45.0
+1617,Total,Total,20 to 24 years,N Renting and other business support,2020,159.0
+1632,Total,Total,20 to 24 years,O-U Noncommercial services,2020,225.0
+1647,Total,Total,20 to 24 years,O-Q Government and care,2020,190.0
+1662,Total,Total,20 to 24 years,O Public administration and services,2020,22.0
+1677,Total,Total,20 to 24 years,P Education,2020,36.0
+1692,Total,Total,20 to 24 years,Q Health and social work activities,2020,132.0
+1707,Total,Total,20 to 24 years,"R-U Culture, recreation, other services",2020,35.0
+1722,Total,Total,20 to 24 years,"R Culture, sports and recreation",2020,21.0
+1737,Total,Total,20 to 24 years,S Other service activities,2020,14.0
+1752,Total,Total,25 to 29 years,A-U All economic activities,2020,931.0
+1767,Total,Total,25 to 29 years,A-F Agriculture and industry,2020,112.0
+1782,Total,Total,25 to 29 years,"A Agriculture, forestry and fishing",2020,10.0
+1797,Total,Total,25 to 29 years,B-F Manifacturing and energy,2020,102.0
+1812,Total,Total,25 to 29 years,"B-E Industry (no construction), energy",2020,70.0
+1827,Total,Total,25 to 29 years,B Mining and quarrying ,2020,1.0
+1842,Total,Total,25 to 29 years,C Manufacturing,2020,64.0
+1857,Total,Total,25 to 29 years,D Energy supply,2020,2.0
+1872,Total,Total,25 to 29 years,E Water supply and waste management,2020,3.0
+1887,Total,Total,25 to 29 years,F Construction,2020,32.0
+1902,Total,Total,25 to 29 years,G-N Commercial services,2020,523.0
+1917,Total,Total,25 to 29 years,"G-I Trade, transport, hotels, catering",2020,217.0
+1932,Total,Total,25 to 29 years,G Wholesale and retail trade,2020,137.0
+1947,Total,Total,25 to 29 years,H Transportation and storage,2020,35.0
+1962,Total,Total,25 to 29 years,I Accommodation and food serving,2020,45.0
+1977,Total,Total,25 to 29 years,J Information and communication,2020,47.0
+1992,Total,Total,25 to 29 years,K Financial institutions,2020,22.0
+2007,Total,Total,25 to 29 years,"L Renting, buying, selling real estate",2020,6.0
+2022,Total,Total,25 to 29 years,M-N Business services,2020,230.0
+2037,Total,Total,25 to 29 years,M Other specialised business services,2020,82.0
+2052,Total,Total,25 to 29 years,N Renting and other business support,2020,149.0
+2067,Total,Total,25 to 29 years,O-U Noncommercial services,2020,296.0
+2082,Total,Total,25 to 29 years,O-Q Government and care,2020,264.0
+2097,Total,Total,25 to 29 years,O Public administration and services,2020,42.0
+2112,Total,Total,25 to 29 years,P Education,2020,57.0
+2127,Total,Total,25 to 29 years,Q Health and social work activities,2020,165.0
+2142,Total,Total,25 to 29 years,"R-U Culture, recreation, other services",2020,32.0
+2157,Total,Total,25 to 29 years,"R Culture, sports and recreation",2020,17.0
+2172,Total,Total,25 to 29 years,S Other service activities,2020,15.0
+2187,Total,Total,30 to 34 years,A-U All economic activities,2020,883.0
+2202,Total,Total,30 to 34 years,A-F Agriculture and industry,2020,125.0
+2217,Total,Total,30 to 34 years,"A Agriculture, forestry and fishing",2020,9.0
+2232,Total,Total,30 to 34 years,B-F Manifacturing and energy,2020,116.0
+2247,Total,Total,30 to 34 years,"B-E Industry (no construction), energy",2020,81.0
+2262,Total,Total,30 to 34 years,B Mining and quarrying ,2020,1.0
+2277,Total,Total,30 to 34 years,C Manufacturing,2020,73.0
+2292,Total,Total,30 to 34 years,D Energy supply,2020,3.0
+2307,Total,Total,30 to 34 years,E Water supply and waste management,2020,4.0
+2322,Total,Total,30 to 34 years,F Construction,2020,35.0
+2337,Total,Total,30 to 34 years,G-N Commercial services,2020,458.0
+2352,Total,Total,30 to 34 years,"G-I Trade, transport, hotels, catering",2020,190.0
+2367,Total,Total,30 to 34 years,G Wholesale and retail trade,2020,123.0
+2382,Total,Total,30 to 34 years,H Transportation and storage,2020,38.0
+2397,Total,Total,30 to 34 years,I Accommodation and food serving,2020,30.0
+2412,Total,Total,30 to 34 years,J Information and communication,2020,49.0
+2427,Total,Total,30 to 34 years,K Financial institutions,2020,29.0
+2442,Total,Total,30 to 34 years,"L Renting, buying, selling real estate",2020,7.0
+2457,Total,Total,30 to 34 years,M-N Business services,2020,183.0
+2472,Total,Total,30 to 34 years,M Other specialised business services,2020,71.0
+2487,Total,Total,30 to 34 years,N Renting and other business support,2020,112.0
+2502,Total,Total,30 to 34 years,O-U Noncommercial services,2020,300.0
+2517,Total,Total,30 to 34 years,O-Q Government and care,2020,273.0
+2532,Total,Total,30 to 34 years,O Public administration and services,2020,50.0
+2547,Total,Total,30 to 34 years,P Education,2020,63.0
+2562,Total,Total,30 to 34 years,Q Health and social work activities,2020,159.0
+2577,Total,Total,30 to 34 years,"R-U Culture, recreation, other services",2020,27.0
+2592,Total,Total,30 to 34 years,"R Culture, sports and recreation",2020,13.0
+2607,Total,Total,30 to 34 years,S Other service activities,2020,14.0
+2622,Total,Total,35 to 39 years,A-U All economic activities,2020,807.0
+2637,Total,Total,35 to 39 years,A-F Agriculture and industry,2020,126.0
+2652,Total,Total,35 to 39 years,"A Agriculture, forestry and fishing",2020,8.0
+2667,Total,Total,35 to 39 years,B-F Manifacturing and energy,2020,118.0
+2682,Total,Total,35 to 39 years,"B-E Industry (no construction), energy",2020,82.0
+2697,Total,Total,35 to 39 years,B Mining and quarrying ,2020,1.0
+2712,Total,Total,35 to 39 years,C Manufacturing,2020,74.0
+2727,Total,Total,35 to 39 years,D Energy supply,2020,4.0
+2742,Total,Total,35 to 39 years,E Water supply and waste management,2020,4.0
+2757,Total,Total,35 to 39 years,F Construction,2020,36.0
+2772,Total,Total,35 to 39 years,G-N Commercial services,2020,400.0
+2787,Total,Total,35 to 39 years,"G-I Trade, transport, hotels, catering",2020,170.0
+2802,Total,Total,35 to 39 years,G Wholesale and retail trade,2020,110.0
+2817,Total,Total,35 to 39 years,H Transportation and storage,2020,36.0
+2832,Total,Total,35 to 39 years,I Accommodation and food serving,2020,23.0
+2847,Total,Total,35 to 39 years,J Information and communication,2020,40.0
+2862,Total,Total,35 to 39 years,K Financial institutions,2020,32.0
+2877,Total,Total,35 to 39 years,"L Renting, buying, selling real estate",2020,7.0
+2892,Total,Total,35 to 39 years,M-N Business services,2020,152.0
+2907,Total,Total,35 to 39 years,M Other specialised business services,2020,60.0
+2922,Total,Total,35 to 39 years,N Renting and other business support,2020,92.0
+2937,Total,Total,35 to 39 years,O-U Noncommercial services,2020,280.0
+2952,Total,Total,35 to 39 years,O-Q Government and care,2020,256.0
+2967,Total,Total,35 to 39 years,O Public administration and services,2020,55.0
+2982,Total,Total,35 to 39 years,P Education,2020,63.0
+2997,Total,Total,35 to 39 years,Q Health and social work activities,2020,138.0
+3012,Total,Total,35 to 39 years,"R-U Culture, recreation, other services",2020,24.0
+3027,Total,Total,35 to 39 years,"R Culture, sports and recreation",2020,11.0
+3042,Total,Total,35 to 39 years,S Other service activities,2020,13.0
+3057,Total,Total,40 to 44 years,A-U All economic activities,2020,780.0
+3072,Total,Total,40 to 44 years,A-F Agriculture and industry,2020,131.0
+3087,Total,Total,40 to 44 years,"A Agriculture, forestry and fishing",2020,8.0
+3102,Total,Total,40 to 44 years,B-F Manifacturing and energy,2020,123.0
+3117,Total,Total,40 to 44 years,"B-E Industry (no construction), energy",2020,85.0
+3132,Total,Total,40 to 44 years,B Mining and quarrying ,2020,1.0
+3147,Total,Total,40 to 44 years,C Manufacturing,2020,77.0
+3162,Total,Total,40 to 44 years,D Energy supply,2020,3.0
+3177,Total,Total,40 to 44 years,E Water supply and waste management,2020,4.0
+3192,Total,Total,40 to 44 years,F Construction,2020,38.0
+3207,Total,Total,40 to 44 years,G-N Commercial services,2020,375.0
+3222,Total,Total,40 to 44 years,"G-I Trade, transport, hotels, catering",2020,162.0
+3237,Total,Total,40 to 44 years,G Wholesale and retail trade,2020,106.0
+3252,Total,Total,40 to 44 years,H Transportation and storage,2020,36.0
+3267,Total,Total,40 to 44 years,I Accommodation and food serving,2020,20.0
+3282,Total,Total,40 to 44 years,J Information and communication,2020,31.0
+3297,Total,Total,40 to 44 years,K Financial institutions,2020,34.0
+3312,Total,Total,40 to 44 years,"L Renting, buying, selling real estate",2020,8.0
+3327,Total,Total,40 to 44 years,M-N Business services,2020,140.0
+3342,Total,Total,40 to 44 years,M Other specialised business services,2020,56.0
+3357,Total,Total,40 to 44 years,N Renting and other business support,2020,84.0
+3372,Total,Total,40 to 44 years,O-U Noncommercial services,2020,274.0
+3387,Total,Total,40 to 44 years,O-Q Government and care,2020,251.0
+3402,Total,Total,40 to 44 years,O Public administration and services,2020,59.0
+3417,Total,Total,40 to 44 years,P Education,2020,60.0
+3432,Total,Total,40 to 44 years,Q Health and social work activities,2020,132.0
+3447,Total,Total,40 to 44 years,"R-U Culture, recreation, other services",2020,22.0
+3462,Total,Total,40 to 44 years,"R Culture, sports and recreation",2020,10.0
+3477,Total,Total,40 to 44 years,S Other service activities,2020,12.0
+3492,Total,Total,45 to 49 years,A-U All economic activities,2020,867.0
+3507,Total,Total,45 to 49 years,A-F Agriculture and industry,2020,157.0
+3522,Total,Total,45 to 49 years,"A Agriculture, forestry and fishing",2020,10.0
+3537,Total,Total,45 to 49 years,B-F Manifacturing and energy,2020,147.0
+3552,Total,Total,45 to 49 years,"B-E Industry (no construction), energy",2020,105.0
+3567,Total,Total,45 to 49 years,B Mining and quarrying ,2020,1.0
+3582,Total,Total,45 to 49 years,C Manufacturing,2020,96.0
+3597,Total,Total,45 to 49 years,D Energy supply,2020,3.0
+3612,Total,Total,45 to 49 years,E Water supply and waste management,2020,5.0
+3627,Total,Total,45 to 49 years,F Construction,2020,42.0
+3642,Total,Total,45 to 49 years,G-N Commercial services,2020,414.0
+3657,Total,Total,45 to 49 years,"G-I Trade, transport, hotels, catering",2020,187.0
+3672,Total,Total,45 to 49 years,G Wholesale and retail trade,2020,123.0
+3687,Total,Total,45 to 49 years,H Transportation and storage,2020,44.0
+3702,Total,Total,45 to 49 years,I Accommodation and food serving,2020,20.0
+3717,Total,Total,45 to 49 years,J Information and communication,2020,31.0
+3732,Total,Total,45 to 49 years,K Financial institutions,2020,41.0
+3747,Total,Total,45 to 49 years,"L Renting, buying, selling real estate",2020,9.0
+3762,Total,Total,45 to 49 years,M-N Business services,2020,146.0
+3777,Total,Total,45 to 49 years,M Other specialised business services,2020,58.0
+3792,Total,Total,45 to 49 years,N Renting and other business support,2020,87.0
+3807,Total,Total,45 to 49 years,O-U Noncommercial services,2020,296.0
+3822,Total,Total,45 to 49 years,O-Q Government and care,2020,271.0
+3837,Total,Total,45 to 49 years,O Public administration and services,2020,68.0
+3852,Total,Total,45 to 49 years,P Education,2020,57.0
+3867,Total,Total,45 to 49 years,Q Health and social work activities,2020,146.0
+3882,Total,Total,45 to 49 years,"R-U Culture, recreation, other services",2020,25.0
+3897,Total,Total,45 to 49 years,"R Culture, sports and recreation",2020,12.0
+3912,Total,Total,45 to 49 years,S Other service activities,2020,13.0
+3927,Total,Total,50 to 54 years,A-U All economic activities,2020,939.0
+3942,Total,Total,50 to 54 years,A-F Agriculture and industry,2020,180.0
+3957,Total,Total,50 to 54 years,"A Agriculture, forestry and fishing",2020,11.0
+3972,Total,Total,50 to 54 years,B-F Manifacturing and energy,2020,169.0
+3987,Total,Total,50 to 54 years,"B-E Industry (no construction), energy",2020,124.0
+4002,Total,Total,50 to 54 years,B Mining and quarrying ,2020,1.0
+4017,Total,Total,50 to 54 years,C Manufacturing,2020,114.0
+4032,Total,Total,50 to 54 years,D Energy supply,2020,4.0
+4047,Total,Total,50 to 54 years,E Water supply and waste management,2020,6.0
+4062,Total,Total,50 to 54 years,F Construction,2020,45.0
+4077,Total,Total,50 to 54 years,G-N Commercial services,2020,424.0
+4092,Total,Total,50 to 54 years,"G-I Trade, transport, hotels, catering",2020,201.0
+4107,Total,Total,50 to 54 years,G Wholesale and retail trade,2020,128.0
+4122,Total,Total,50 to 54 years,H Transportation and storage,2020,52.0
+4137,Total,Total,50 to 54 years,I Accommodation and food serving,2020,21.0
+4152,Total,Total,50 to 54 years,J Information and communication,2020,29.0
+4167,Total,Total,50 to 54 years,K Financial institutions,2020,42.0
+4182,Total,Total,50 to 54 years,"L Renting, buying, selling real estate",2020,9.0
+4197,Total,Total,50 to 54 years,M-N Business services,2020,143.0
+4212,Total,Total,50 to 54 years,M Other specialised business services,2020,58.0
+4227,Total,Total,50 to 54 years,N Renting and other business support,2020,85.0
+4242,Total,Total,50 to 54 years,O-U Noncommercial services,2020,336.0
+4257,Total,Total,50 to 54 years,O-Q Government and care,2020,308.0
+4272,Total,Total,50 to 54 years,O Public administration and services,2020,76.0
+4287,Total,Total,50 to 54 years,P Education,2020,59.0
+4302,Total,Total,50 to 54 years,Q Health and social work activities,2020,173.0
+4317,Total,Total,50 to 54 years,"R-U Culture, recreation, other services",2020,27.0
+4332,Total,Total,50 to 54 years,"R Culture, sports and recreation",2020,13.0
+4347,Total,Total,50 to 54 years,S Other service activities,2020,15.0
+4362,Total,Total,55 to 59 years,A-U All economic activities,2020,860.0
+4377,Total,Total,55 to 59 years,A-F Agriculture and industry,2020,163.0
+4392,Total,Total,55 to 59 years,"A Agriculture, forestry and fishing",2020,9.0
+4407,Total,Total,55 to 59 years,B-F Manifacturing and energy,2020,154.0
+4422,Total,Total,55 to 59 years,"B-E Industry (no construction), energy",2020,117.0
+4437,Total,Total,55 to 59 years,B Mining and quarrying ,2020,1.0
+4452,Total,Total,55 to 59 years,C Manufacturing,2020,107.0
+4467,Total,Total,55 to 59 years,D Energy supply,2020,4.0
+4482,Total,Total,55 to 59 years,E Water supply and waste management,2020,5.0
+4497,Total,Total,55 to 59 years,F Construction,2020,37.0
+4512,Total,Total,55 to 59 years,G-N Commercial services,2020,346.0
+4527,Total,Total,55 to 59 years,"G-I Trade, transport, hotels, catering",2020,169.0
+4542,Total,Total,55 to 59 years,G Wholesale and retail trade,2020,102.0
+4557,Total,Total,55 to 59 years,H Transportation and storage,2020,51.0
+4572,Total,Total,55 to 59 years,I Accommodation and food serving,2020,17.0
+4587,Total,Total,55 to 59 years,J Information and communication,2020,20.0
+4602,Total,Total,55 to 59 years,K Financial institutions,2020,31.0
+4617,Total,Total,55 to 59 years,"L Renting, buying, selling real estate",2020,8.0
+4632,Total,Total,55 to 59 years,M-N Business services,2020,117.0
+4647,Total,Total,55 to 59 years,M Other specialised business services,2020,46.0
+4662,Total,Total,55 to 59 years,N Renting and other business support,2020,71.0
+4677,Total,Total,55 to 59 years,O-U Noncommercial services,2020,351.0
+4692,Total,Total,55 to 59 years,O-Q Government and care,2020,325.0
+4707,Total,Total,55 to 59 years,O Public administration and services,2020,82.0
+4722,Total,Total,55 to 59 years,P Education,2020,63.0
+4737,Total,Total,55 to 59 years,Q Health and social work activities,2020,180.0
+4752,Total,Total,55 to 59 years,"R-U Culture, recreation, other services",2020,25.0
+4767,Total,Total,55 to 59 years,"R Culture, sports and recreation",2020,12.0
+4782,Total,Total,55 to 59 years,S Other service activities,2020,13.0
+4797,Total,Total,60 to 64 years,A-U All economic activities,2020,626.0
+4812,Total,Total,60 to 64 years,A-F Agriculture and industry,2020,116.0
+4827,Total,Total,60 to 64 years,"A Agriculture, forestry and fishing",2020,6.0
+4842,Total,Total,60 to 64 years,B-F Manifacturing and energy,2020,110.0
+4857,Total,Total,60 to 64 years,"B-E Industry (no construction), energy",2020,83.0
+4872,Total,Total,60 to 64 years,B Mining and quarrying ,2020,1.0
+4887,Total,Total,60 to 64 years,C Manufacturing,2020,76.0
+4902,Total,Total,60 to 64 years,D Energy supply,2020,3.0
+4917,Total,Total,60 to 64 years,E Water supply and waste management,2020,4.0
+4932,Total,Total,60 to 64 years,F Construction,2020,27.0
+4947,Total,Total,60 to 64 years,G-N Commercial services,2020,232.0
+4962,Total,Total,60 to 64 years,"G-I Trade, transport, hotels, catering",2020,117.0
+4977,Total,Total,60 to 64 years,G Wholesale and retail trade,2020,66.0
+4992,Total,Total,60 to 64 years,H Transportation and storage,2020,40.0
+5007,Total,Total,60 to 64 years,I Accommodation and food serving,2020,12.0
+5022,Total,Total,60 to 64 years,J Information and communication,2020,12.0
+5037,Total,Total,60 to 64 years,K Financial institutions,2020,20.0
+5052,Total,Total,60 to 64 years,"L Renting, buying, selling real estate",2020,6.0
+5067,Total,Total,60 to 64 years,M-N Business services,2020,77.0
+5082,Total,Total,60 to 64 years,M Other specialised business services,2020,30.0
+5097,Total,Total,60 to 64 years,N Renting and other business support,2020,46.0
+5112,Total,Total,60 to 64 years,O-U Noncommercial services,2020,277.0
+5127,Total,Total,60 to 64 years,O-Q Government and care,2020,258.0
+5142,Total,Total,60 to 64 years,O Public administration and services,2020,64.0
+5157,Total,Total,60 to 64 years,P Education,2020,60.0
+5172,Total,Total,60 to 64 years,Q Health and social work activities,2020,135.0
+5187,Total,Total,60 to 64 years,"R-U Culture, recreation, other services",2020,20.0
+5202,Total,Total,60 to 64 years,"R Culture, sports and recreation",2020,9.0
+5217,Total,Total,60 to 64 years,S Other service activities,2020,10.0
+5232,Total,Total,65 to 74 years,A-U All economic activities,2020,193.0
+5247,Total,Total,65 to 74 years,A-F Agriculture and industry,2020,32.0
+5262,Total,Total,65 to 74 years,"A Agriculture, forestry and fishing",2020,3.0
+5277,Total,Total,65 to 74 years,B-F Manifacturing and energy,2020,29.0
+5292,Total,Total,65 to 74 years,"B-E Industry (no construction), energy",2020,21.0
+5307,Total,Total,65 to 74 years,B Mining and quarrying ,2020,0.0
+5322,Total,Total,65 to 74 years,C Manufacturing,2020,19.0
+5337,Total,Total,65 to 74 years,D Energy supply,2020,1.0
+5352,Total,Total,65 to 74 years,E Water supply and waste management,2020,1.0
+5367,Total,Total,65 to 74 years,F Construction,2020,8.0
+5382,Total,Total,65 to 74 years,G-N Commercial services,2020,99.0
+5397,Total,Total,65 to 74 years,"G-I Trade, transport, hotels, catering",2020,50.0
+5412,Total,Total,65 to 74 years,G Wholesale and retail trade,2020,27.0
+5427,Total,Total,65 to 74 years,H Transportation and storage,2020,17.0
+5442,Total,Total,65 to 74 years,I Accommodation and food serving,2020,5.0
+5457,Total,Total,65 to 74 years,J Information and communication,2020,3.0
+5472,Total,Total,65 to 74 years,K Financial institutions,2020,10.0
+5487,Total,Total,65 to 74 years,"L Renting, buying, selling real estate",2020,3.0
+5502,Total,Total,65 to 74 years,M-N Business services,2020,34.0
+5517,Total,Total,65 to 74 years,M Other specialised business services,2020,13.0
+5532,Total,Total,65 to 74 years,N Renting and other business support,2020,21.0
+5547,Total,Total,65 to 74 years,O-U Noncommercial services,2020,62.0
+5562,Total,Total,65 to 74 years,O-Q Government and care,2020,54.0
+5577,Total,Total,65 to 74 years,O Public administration and services,2020,13.0
+5592,Total,Total,65 to 74 years,P Education,2020,14.0
+5607,Total,Total,65 to 74 years,Q Health and social work activities,2020,27.0
+5622,Total,Total,65 to 74 years,"R-U Culture, recreation, other services",2020,8.0
+5637,Total,Total,65 to 74 years,"R Culture, sports and recreation",2020,3.0
+5652,Total,Total,65 to 74 years,S Other service activities,2020,4.0
+5667,Total,Total,75 years or older,A-U All economic activities,2020,15.0
+5682,Total,Total,75 years or older,A-F Agriculture and industry,2020,2.0
+5697,Total,Total,75 years or older,"A Agriculture, forestry and fishing",2020,1.0
+5712,Total,Total,75 years or older,B-F Manifacturing and energy,2020,2.0
+5727,Total,Total,75 years or older,"B-E Industry (no construction), energy",2020,1.0
+5742,Total,Total,75 years or older,B Mining and quarrying ,2020,0.0
+5757,Total,Total,75 years or older,C Manufacturing,2020,1.0
+5772,Total,Total,75 years or older,D Energy supply,2020,0.0
+5787,Total,Total,75 years or older,E Water supply and waste management,2020,0.0
+5802,Total,Total,75 years or older,F Construction,2020,1.0
+5817,Total,Total,75 years or older,G-N Commercial services,2020,11.0
+5832,Total,Total,75 years or older,"G-I Trade, transport, hotels, catering",2020,5.0
+5847,Total,Total,75 years or older,G Wholesale and retail trade,2020,3.0
+5862,Total,Total,75 years or older,H Transportation and storage,2020,1.0
+5877,Total,Total,75 years or older,I Accommodation and food serving,2020,0.0
+5892,Total,Total,75 years or older,J Information and communication,2020,0.0
+5907,Total,Total,75 years or older,K Financial institutions,2020,2.0
+5922,Total,Total,75 years or older,"L Renting, buying, selling real estate",2020,1.0
+5937,Total,Total,75 years or older,M-N Business services,2020,3.0
+5952,Total,Total,75 years or older,M Other specialised business services,2020,1.0
+5967,Total,Total,75 years or older,N Renting and other business support,2020,1.0
+5982,Total,Total,75 years or older,O-U Noncommercial services,2020,2.0
+5997,Total,Total,75 years or older,O-Q Government and care,2020,1.0
+6012,Total,Total,75 years or older,O Public administration and services,2020,0.0
+6027,Total,Total,75 years or older,P Education,2020,0.0
+6042,Total,Total,75 years or older,Q Health and social work activities,2020,0.0
+6057,Total,Total,75 years or older,"R-U Culture, recreation, other services",2020,1.0
+6072,Total,Total,75 years or older,"R Culture, sports and recreation",2020,0.0
+6087,Total,Total,75 years or older,S Other service activities,2020,0.0
+24807,Sex: Male,Total,Total,A-U All economic activities,2020,4362.0
+24822,Sex: Male,Total,Total,A-F Agriculture and industry,2020,1016.0
+24837,Sex: Male,Total,Total,"A Agriculture, forestry and fishing",2020,73.0
+24852,Sex: Male,Total,Total,B-F Manifacturing and energy,2020,943.0
+24867,Sex: Male,Total,Total,"B-E Industry (no construction), energy",2020,649.0
+24882,Sex: Male,Total,Total,B Mining and quarrying ,2020,7.0
+24897,Sex: Male,Total,Total,C Manufacturing,2020,592.0
+24912,Sex: Male,Total,Total,D Energy supply,2020,21.0
+24927,Sex: Male,Total,Total,E Water supply and waste management,2020,29.0
+24942,Sex: Male,Total,Total,F Construction,2020,294.0
+24957,Sex: Male,Total,Total,G-N Commercial services,2020,2517.0
+24972,Sex: Male,Total,Total,"G-I Trade, transport, hotels, catering",2020,1240.0
+24987,Sex: Male,Total,Total,G Wholesale and retail trade,2020,753.0
+25002,Sex: Male,Total,Total,H Transportation and storage,2020,291.0
+25017,Sex: Male,Total,Total,I Accommodation and food serving,2020,196.0
+25032,Sex: Male,Total,Total,J Information and communication,2020,210.0
+25047,Sex: Male,Total,Total,K Financial institutions,2020,166.0
+25062,Sex: Male,Total,Total,"L Renting, buying, selling real estate",2020,35.0
+25077,Sex: Male,Total,Total,M-N Business services,2020,867.0
+25092,Sex: Male,Total,Total,M Other specialised business services,2020,310.0
+25107,Sex: Male,Total,Total,N Renting and other business support,2020,557.0
+25122,Sex: Male,Total,Total,O-U Noncommercial services,2020,828.0
+25137,Sex: Male,Total,Total,O-Q Government and care,2020,720.0
+25152,Sex: Male,Total,Total,O Public administration and services,2020,307.0
+25167,Sex: Male,Total,Total,P Education,2020,189.0
+25182,Sex: Male,Total,Total,Q Health and social work activities,2020,224.0
+25197,Sex: Male,Total,Total,"R-U Culture, recreation, other services",2020,108.0
+25212,Sex: Male,Total,Total,"R Culture, sports and recreation",2020,63.0
+25227,Sex: Male,Total,Total,S Other service activities,2020,45.0
+25242,Sex: Male,Total,Younger than 15 years,A-U All economic activities,2020,9.0
+25257,Sex: Male,Total,Younger than 15 years,A-F Agriculture and industry,2020,3.0
+25272,Sex: Male,Total,Younger than 15 years,"A Agriculture, forestry and fishing",2020,2.0
+25287,Sex: Male,Total,Younger than 15 years,B-F Manifacturing and energy,2020,0.0
+25302,Sex: Male,Total,Younger than 15 years,"B-E Industry (no construction), energy",2020,0.0
+25317,Sex: Male,Total,Younger than 15 years,B Mining and quarrying ,2020,0.0
+25332,Sex: Male,Total,Younger than 15 years,C Manufacturing,2020,0.0
+25347,Sex: Male,Total,Younger than 15 years,D Energy supply,2020,0.0
+25362,Sex: Male,Total,Younger than 15 years,E Water supply and waste management,2020,0.0
+25377,Sex: Male,Total,Younger than 15 years,F Construction,2020,0.0
+25392,Sex: Male,Total,Younger than 15 years,G-N Commercial services,2020,6.0
+25407,Sex: Male,Total,Younger than 15 years,"G-I Trade, transport, hotels, catering",2020,5.0
+25422,Sex: Male,Total,Younger than 15 years,G Wholesale and retail trade,2020,4.0
+25437,Sex: Male,Total,Younger than 15 years,H Transportation and storage,2020,0.0
+25452,Sex: Male,Total,Younger than 15 years,I Accommodation and food serving,2020,1.0
+25467,Sex: Male,Total,Younger than 15 years,J Information and communication,2020,0.0
+25482,Sex: Male,Total,Younger than 15 years,K Financial institutions,2020,0.0
+25497,Sex: Male,Total,Younger than 15 years,"L Renting, buying, selling real estate",2020,0.0
+25512,Sex: Male,Total,Younger than 15 years,M-N Business services,2020,1.0
+25527,Sex: Male,Total,Younger than 15 years,M Other specialised business services,2020,0.0
+25542,Sex: Male,Total,Younger than 15 years,N Renting and other business support,2020,1.0
+25557,Sex: Male,Total,Younger than 15 years,O-U Noncommercial services,2020,0.0
+25572,Sex: Male,Total,Younger than 15 years,O-Q Government and care,2020,0.0
+25587,Sex: Male,Total,Younger than 15 years,O Public administration and services,2020,0.0
+25602,Sex: Male,Total,Younger than 15 years,P Education,2020,0.0
+25617,Sex: Male,Total,Younger than 15 years,Q Health and social work activities,2020,0.0
+25632,Sex: Male,Total,Younger than 15 years,"R-U Culture, recreation, other services",2020,0.0
+25647,Sex: Male,Total,Younger than 15 years,"R Culture, sports and recreation",2020,0.0
+25662,Sex: Male,Total,Younger than 15 years,S Other service activities,2020,0.0
+25677,Sex: Male,Total,15 to 19 years,A-U All economic activities,2020,310.0
+25692,Sex: Male,Total,15 to 19 years,A-F Agriculture and industry,2020,37.0
+25707,Sex: Male,Total,15 to 19 years,"A Agriculture, forestry and fishing",2020,12.0
+25722,Sex: Male,Total,15 to 19 years,B-F Manifacturing and energy,2020,25.0
+25737,Sex: Male,Total,15 to 19 years,"B-E Industry (no construction), energy",2020,14.0
+25752,Sex: Male,Total,15 to 19 years,B Mining and quarrying ,2020,0.0
+25767,Sex: Male,Total,15 to 19 years,C Manufacturing,2020,14.0
+25782,Sex: Male,Total,15 to 19 years,D Energy supply,2020,0.0
+25797,Sex: Male,Total,15 to 19 years,E Water supply and waste management,2020,0.0
+25812,Sex: Male,Total,15 to 19 years,F Construction,2020,10.0
+25827,Sex: Male,Total,15 to 19 years,G-N Commercial services,2020,248.0
+25842,Sex: Male,Total,15 to 19 years,"G-I Trade, transport, hotels, catering",2020,201.0
+25857,Sex: Male,Total,15 to 19 years,G Wholesale and retail trade,2020,136.0
+25872,Sex: Male,Total,15 to 19 years,H Transportation and storage,2020,7.0
+25887,Sex: Male,Total,15 to 19 years,I Accommodation and food serving,2020,58.0
+25902,Sex: Male,Total,15 to 19 years,J Information and communication,2020,3.0
+25917,Sex: Male,Total,15 to 19 years,K Financial institutions,2020,1.0
+25932,Sex: Male,Total,15 to 19 years,"L Renting, buying, selling real estate",2020,1.0
+25947,Sex: Male,Total,15 to 19 years,M-N Business services,2020,43.0
+25962,Sex: Male,Total,15 to 19 years,M Other specialised business services,2020,6.0
+25977,Sex: Male,Total,15 to 19 years,N Renting and other business support,2020,37.0
+25992,Sex: Male,Total,15 to 19 years,O-U Noncommercial services,2020,25.0
+26007,Sex: Male,Total,15 to 19 years,O-Q Government and care,2020,17.0
+26022,Sex: Male,Total,15 to 19 years,O Public administration and services,2020,5.0
+26037,Sex: Male,Total,15 to 19 years,P Education,2020,6.0
+26052,Sex: Male,Total,15 to 19 years,Q Health and social work activities,2020,6.0
+26067,Sex: Male,Total,15 to 19 years,"R-U Culture, recreation, other services",2020,7.0
+26082,Sex: Male,Total,15 to 19 years,"R Culture, sports and recreation",2020,5.0
+26097,Sex: Male,Total,15 to 19 years,S Other service activities,2020,2.0
+26112,Sex: Male,Total,20 to 24 years,A-U All economic activities,2020,413.0
+26127,Sex: Male,Total,20 to 24 years,A-F Agriculture and industry,2020,66.0
+26142,Sex: Male,Total,20 to 24 years,"A Agriculture, forestry and fishing",2020,10.0
+26157,Sex: Male,Total,20 to 24 years,B-F Manifacturing and energy,2020,56.0
+26172,Sex: Male,Total,20 to 24 years,"B-E Industry (no construction), energy",2020,34.0
+26187,Sex: Male,Total,20 to 24 years,B Mining and quarrying ,2020,0.0
+26202,Sex: Male,Total,20 to 24 years,C Manufacturing,2020,32.0
+26217,Sex: Male,Total,20 to 24 years,D Energy supply,2020,1.0
+26232,Sex: Male,Total,20 to 24 years,E Water supply and waste management,2020,1.0
+26247,Sex: Male,Total,20 to 24 years,F Construction,2020,22.0
+26262,Sex: Male,Total,20 to 24 years,G-N Commercial services,2020,288.0
+26277,Sex: Male,Total,20 to 24 years,"G-I Trade, transport, hotels, catering",2020,152.0
+26292,Sex: Male,Total,20 to 24 years,G Wholesale and retail trade,2020,90.0
+26307,Sex: Male,Total,20 to 24 years,H Transportation and storage,2020,21.0
+26322,Sex: Male,Total,20 to 24 years,I Accommodation and food serving,2020,41.0
+26337,Sex: Male,Total,20 to 24 years,J Information and communication,2020,15.0
+26352,Sex: Male,Total,20 to 24 years,K Financial institutions,2020,4.0
+26367,Sex: Male,Total,20 to 24 years,"L Renting, buying, selling real estate",2020,2.0
+26382,Sex: Male,Total,20 to 24 years,M-N Business services,2020,114.0
+26397,Sex: Male,Total,20 to 24 years,M Other specialised business services,2020,23.0
+26412,Sex: Male,Total,20 to 24 years,N Renting and other business support,2020,91.0
+26427,Sex: Male,Total,20 to 24 years,O-U Noncommercial services,2020,59.0
+26442,Sex: Male,Total,20 to 24 years,O-Q Government and care,2020,45.0
+26457,Sex: Male,Total,20 to 24 years,O Public administration and services,2020,14.0
+26472,Sex: Male,Total,20 to 24 years,P Education,2020,13.0
+26487,Sex: Male,Total,20 to 24 years,Q Health and social work activities,2020,18.0
+26502,Sex: Male,Total,20 to 24 years,"R-U Culture, recreation, other services",2020,14.0
+26517,Sex: Male,Total,20 to 24 years,"R Culture, sports and recreation",2020,10.0
+26532,Sex: Male,Total,20 to 24 years,S Other service activities,2020,4.0
+26547,Sex: Male,Total,25 to 29 years,A-U All economic activities,2020,473.0
+26562,Sex: Male,Total,25 to 29 years,A-F Agriculture and industry,2020,89.0
+26577,Sex: Male,Total,25 to 29 years,"A Agriculture, forestry and fishing",2020,7.0
+26592,Sex: Male,Total,25 to 29 years,B-F Manifacturing and energy,2020,82.0
+26607,Sex: Male,Total,25 to 29 years,"B-E Industry (no construction), energy",2020,54.0
+26622,Sex: Male,Total,25 to 29 years,B Mining and quarrying ,2020,0.0
+26637,Sex: Male,Total,25 to 29 years,C Manufacturing,2020,49.0
+26652,Sex: Male,Total,25 to 29 years,D Energy supply,2020,2.0
+26667,Sex: Male,Total,25 to 29 years,E Water supply and waste management,2020,2.0
+26682,Sex: Male,Total,25 to 29 years,F Construction,2020,28.0
+26697,Sex: Male,Total,25 to 29 years,G-N Commercial services,2020,302.0
+26712,Sex: Male,Total,25 to 29 years,"G-I Trade, transport, hotels, catering",2020,123.0
+26727,Sex: Male,Total,25 to 29 years,G Wholesale and retail trade,2020,74.0
+26742,Sex: Male,Total,25 to 29 years,H Transportation and storage,2020,26.0
+26757,Sex: Male,Total,25 to 29 years,I Accommodation and food serving,2020,24.0
+26772,Sex: Male,Total,25 to 29 years,J Information and communication,2020,31.0
+26787,Sex: Male,Total,25 to 29 years,K Financial institutions,2020,12.0
+26802,Sex: Male,Total,25 to 29 years,"L Renting, buying, selling real estate",2020,3.0
+26817,Sex: Male,Total,25 to 29 years,M-N Business services,2020,133.0
+26832,Sex: Male,Total,25 to 29 years,M Other specialised business services,2020,44.0
+26847,Sex: Male,Total,25 to 29 years,N Renting and other business support,2020,89.0
+26862,Sex: Male,Total,25 to 29 years,O-U Noncommercial services,2020,82.0
+26877,Sex: Male,Total,25 to 29 years,O-Q Government and care,2020,69.0
+26892,Sex: Male,Total,25 to 29 years,O Public administration and services,2020,23.0
+26907,Sex: Male,Total,25 to 29 years,P Education,2020,19.0
+26922,Sex: Male,Total,25 to 29 years,Q Health and social work activities,2020,27.0
+26937,Sex: Male,Total,25 to 29 years,"R-U Culture, recreation, other services",2020,13.0
+26952,Sex: Male,Total,25 to 29 years,"R Culture, sports and recreation",2020,8.0
+26967,Sex: Male,Total,25 to 29 years,S Other service activities,2020,4.0
+26982,Sex: Male,Total,30 to 34 years,A-U All economic activities,2020,459.0
+26997,Sex: Male,Total,30 to 34 years,A-F Agriculture and industry,2020,100.0
+27012,Sex: Male,Total,30 to 34 years,"A Agriculture, forestry and fishing",2020,6.0
+27027,Sex: Male,Total,30 to 34 years,B-F Manifacturing and energy,2020,93.0
+27042,Sex: Male,Total,30 to 34 years,"B-E Industry (no construction), energy",2020,62.0
+27057,Sex: Male,Total,30 to 34 years,B Mining and quarrying ,2020,1.0
+27072,Sex: Male,Total,30 to 34 years,C Manufacturing,2020,56.0
+27087,Sex: Male,Total,30 to 34 years,D Energy supply,2020,2.0
+27102,Sex: Male,Total,30 to 34 years,E Water supply and waste management,2020,3.0
+27117,Sex: Male,Total,30 to 34 years,F Construction,2020,31.0
+27132,Sex: Male,Total,30 to 34 years,G-N Commercial services,2020,276.0
+27147,Sex: Male,Total,30 to 34 years,"G-I Trade, transport, hotels, catering",2020,113.0
+27162,Sex: Male,Total,30 to 34 years,G Wholesale and retail trade,2020,70.0
+27177,Sex: Male,Total,30 to 34 years,H Transportation and storage,2020,28.0
+27192,Sex: Male,Total,30 to 34 years,I Accommodation and food serving,2020,16.0
+27207,Sex: Male,Total,30 to 34 years,J Information and communication,2020,35.0
+27222,Sex: Male,Total,30 to 34 years,K Financial institutions,2020,16.0
+27237,Sex: Male,Total,30 to 34 years,"L Renting, buying, selling real estate",2020,3.0
+27252,Sex: Male,Total,30 to 34 years,M-N Business services,2020,108.0
+27267,Sex: Male,Total,30 to 34 years,M Other specialised business services,2020,40.0
+27282,Sex: Male,Total,30 to 34 years,N Renting and other business support,2020,68.0
+27297,Sex: Male,Total,30 to 34 years,O-U Noncommercial services,2020,84.0
+27312,Sex: Male,Total,30 to 34 years,O-Q Government and care,2020,73.0
+27327,Sex: Male,Total,30 to 34 years,O Public administration and services,2020,28.0
+27342,Sex: Male,Total,30 to 34 years,P Education,2020,19.0
+27357,Sex: Male,Total,30 to 34 years,Q Health and social work activities,2020,26.0
+27372,Sex: Male,Total,30 to 34 years,"R-U Culture, recreation, other services",2020,11.0
+27387,Sex: Male,Total,30 to 34 years,"R Culture, sports and recreation",2020,6.0
+27402,Sex: Male,Total,30 to 34 years,S Other service activities,2020,4.0
+27417,Sex: Male,Total,35 to 39 years,A-U All economic activities,2020,421.0
+27432,Sex: Male,Total,35 to 39 years,A-F Agriculture and industry,2020,99.0
+27447,Sex: Male,Total,35 to 39 years,"A Agriculture, forestry and fishing",2020,5.0
+27462,Sex: Male,Total,35 to 39 years,B-F Manifacturing and energy,2020,94.0
+27477,Sex: Male,Total,35 to 39 years,"B-E Industry (no construction), energy",2020,62.0
+27492,Sex: Male,Total,35 to 39 years,B Mining and quarrying ,2020,1.0
+27507,Sex: Male,Total,35 to 39 years,C Manufacturing,2020,56.0
+27522,Sex: Male,Total,35 to 39 years,D Energy supply,2020,3.0
+27537,Sex: Male,Total,35 to 39 years,E Water supply and waste management,2020,3.0
+27552,Sex: Male,Total,35 to 39 years,F Construction,2020,31.0
+27567,Sex: Male,Total,35 to 39 years,G-N Commercial services,2020,244.0
+27582,Sex: Male,Total,35 to 39 years,"G-I Trade, transport, hotels, catering",2020,102.0
+27597,Sex: Male,Total,35 to 39 years,G Wholesale and retail trade,2020,63.0
+27612,Sex: Male,Total,35 to 39 years,H Transportation and storage,2020,26.0
+27627,Sex: Male,Total,35 to 39 years,I Accommodation and food serving,2020,13.0
+27642,Sex: Male,Total,35 to 39 years,J Information and communication,2020,30.0
+27657,Sex: Male,Total,35 to 39 years,K Financial institutions,2020,19.0
+27672,Sex: Male,Total,35 to 39 years,"L Renting, buying, selling real estate",2020,3.0
+27687,Sex: Male,Total,35 to 39 years,M-N Business services,2020,89.0
+27702,Sex: Male,Total,35 to 39 years,M Other specialised business services,2020,35.0
+27717,Sex: Male,Total,35 to 39 years,N Renting and other business support,2020,54.0
+27732,Sex: Male,Total,35 to 39 years,O-U Noncommercial services,2020,79.0
+27747,Sex: Male,Total,35 to 39 years,O-Q Government and care,2020,69.0
+27762,Sex: Male,Total,35 to 39 years,O Public administration and services,2020,30.0
+27777,Sex: Male,Total,35 to 39 years,P Education,2020,18.0
+27792,Sex: Male,Total,35 to 39 years,Q Health and social work activities,2020,22.0
+27807,Sex: Male,Total,35 to 39 years,"R-U Culture, recreation, other services",2020,9.0
+27822,Sex: Male,Total,35 to 39 years,"R Culture, sports and recreation",2020,5.0
+27837,Sex: Male,Total,35 to 39 years,S Other service activities,2020,4.0
+27852,Sex: Male,Total,40 to 44 years,A-U All economic activities,2020,401.0
+27867,Sex: Male,Total,40 to 44 years,A-F Agriculture and industry,2020,101.0
+27882,Sex: Male,Total,40 to 44 years,"A Agriculture, forestry and fishing",2020,5.0
+27897,Sex: Male,Total,40 to 44 years,B-F Manifacturing and energy,2020,96.0
+27912,Sex: Male,Total,40 to 44 years,"B-E Industry (no construction), energy",2020,64.0
+27927,Sex: Male,Total,40 to 44 years,B Mining and quarrying ,2020,1.0
+27942,Sex: Male,Total,40 to 44 years,C Manufacturing,2020,58.0
+27957,Sex: Male,Total,40 to 44 years,D Energy supply,2020,2.0
+27972,Sex: Male,Total,40 to 44 years,E Water supply and waste management,2020,3.0
+27987,Sex: Male,Total,40 to 44 years,F Construction,2020,32.0
+28002,Sex: Male,Total,40 to 44 years,G-N Commercial services,2020,222.0
+28017,Sex: Male,Total,40 to 44 years,"G-I Trade, transport, hotels, catering",2020,96.0
+28032,Sex: Male,Total,40 to 44 years,G Wholesale and retail trade,2020,60.0
+28047,Sex: Male,Total,40 to 44 years,H Transportation and storage,2020,26.0
+28062,Sex: Male,Total,40 to 44 years,I Accommodation and food serving,2020,10.0
+28077,Sex: Male,Total,40 to 44 years,J Information and communication,2020,23.0
+28092,Sex: Male,Total,40 to 44 years,K Financial institutions,2020,20.0
+28107,Sex: Male,Total,40 to 44 years,"L Renting, buying, selling real estate",2020,4.0
+28122,Sex: Male,Total,40 to 44 years,M-N Business services,2020,79.0
+28137,Sex: Male,Total,40 to 44 years,M Other specialised business services,2020,33.0
+28152,Sex: Male,Total,40 to 44 years,N Renting and other business support,2020,46.0
+28167,Sex: Male,Total,40 to 44 years,O-U Noncommercial services,2020,77.0
+28182,Sex: Male,Total,40 to 44 years,O-Q Government and care,2020,69.0
+28197,Sex: Male,Total,40 to 44 years,O Public administration and services,2020,30.0
+28212,Sex: Male,Total,40 to 44 years,P Education,2020,18.0
+28227,Sex: Male,Total,40 to 44 years,Q Health and social work activities,2020,20.0
+28242,Sex: Male,Total,40 to 44 years,"R-U Culture, recreation, other services",2020,9.0
+28257,Sex: Male,Total,40 to 44 years,"R Culture, sports and recreation",2020,5.0
+28272,Sex: Male,Total,40 to 44 years,S Other service activities,2020,4.0
+28287,Sex: Male,Total,45 to 49 years,A-U All economic activities,2020,442.0
+28302,Sex: Male,Total,45 to 49 years,A-F Agriculture and industry,2020,120.0
+28317,Sex: Male,Total,45 to 49 years,"A Agriculture, forestry and fishing",2020,6.0
+28332,Sex: Male,Total,45 to 49 years,B-F Manifacturing and energy,2020,114.0
+28347,Sex: Male,Total,45 to 49 years,"B-E Industry (no construction), energy",2020,79.0
+28362,Sex: Male,Total,45 to 49 years,B Mining and quarrying ,2020,1.0
+28377,Sex: Male,Total,45 to 49 years,C Manufacturing,2020,72.0
+28392,Sex: Male,Total,45 to 49 years,D Energy supply,2020,2.0
+28407,Sex: Male,Total,45 to 49 years,E Water supply and waste management,2020,4.0
+28422,Sex: Male,Total,45 to 49 years,F Construction,2020,35.0
+28437,Sex: Male,Total,45 to 49 years,G-N Commercial services,2020,239.0
+28452,Sex: Male,Total,45 to 49 years,"G-I Trade, transport, hotels, catering",2020,108.0
+28467,Sex: Male,Total,45 to 49 years,G Wholesale and retail trade,2020,67.0
+28482,Sex: Male,Total,45 to 49 years,H Transportation and storage,2020,31.0
+28497,Sex: Male,Total,45 to 49 years,I Accommodation and food serving,2020,9.0
+28512,Sex: Male,Total,45 to 49 years,J Information and communication,2020,23.0
+28527,Sex: Male,Total,45 to 49 years,K Financial institutions,2020,24.0
+28542,Sex: Male,Total,45 to 49 years,"L Renting, buying, selling real estate",2020,4.0
+28557,Sex: Male,Total,45 to 49 years,M-N Business services,2020,79.0
+28572,Sex: Male,Total,45 to 49 years,M Other specialised business services,2020,34.0
+28587,Sex: Male,Total,45 to 49 years,N Renting and other business support,2020,45.0
+28602,Sex: Male,Total,45 to 49 years,O-U Noncommercial services,2020,83.0
+28617,Sex: Male,Total,45 to 49 years,O-Q Government and care,2020,74.0
+28632,Sex: Male,Total,45 to 49 years,O Public administration and services,2020,35.0
+28647,Sex: Male,Total,45 to 49 years,P Education,2020,18.0
+28662,Sex: Male,Total,45 to 49 years,Q Health and social work activities,2020,21.0
+28677,Sex: Male,Total,45 to 49 years,"R-U Culture, recreation, other services",2020,9.0
+28692,Sex: Male,Total,45 to 49 years,"R Culture, sports and recreation",2020,5.0
+28707,Sex: Male,Total,45 to 49 years,S Other service activities,2020,4.0
+28722,Sex: Male,Total,50 to 54 years,A-U All economic activities,2020,485.0
+28737,Sex: Male,Total,50 to 54 years,A-F Agriculture and industry,2020,141.0
+28752,Sex: Male,Total,50 to 54 years,"A Agriculture, forestry and fishing",2020,7.0
+28767,Sex: Male,Total,50 to 54 years,B-F Manifacturing and energy,2020,135.0
+28782,Sex: Male,Total,50 to 54 years,"B-E Industry (no construction), energy",2020,97.0
+28797,Sex: Male,Total,50 to 54 years,B Mining and quarrying ,2020,1.0
+28812,Sex: Male,Total,50 to 54 years,C Manufacturing,2020,88.0
+28827,Sex: Male,Total,50 to 54 years,D Energy supply,2020,3.0
+28842,Sex: Male,Total,50 to 54 years,E Water supply and waste management,2020,5.0
+28857,Sex: Male,Total,50 to 54 years,F Construction,2020,38.0
+28872,Sex: Male,Total,50 to 54 years,G-N Commercial services,2020,248.0
+28887,Sex: Male,Total,50 to 54 years,"G-I Trade, transport, hotels, catering",2020,117.0
+28902,Sex: Male,Total,50 to 54 years,G Wholesale and retail trade,2020,71.0
+28917,Sex: Male,Total,50 to 54 years,H Transportation and storage,2020,37.0
+28932,Sex: Male,Total,50 to 54 years,I Accommodation and food serving,2020,9.0
+28947,Sex: Male,Total,50 to 54 years,J Information and communication,2020,22.0
+28962,Sex: Male,Total,50 to 54 years,K Financial institutions,2020,25.0
+28977,Sex: Male,Total,50 to 54 years,"L Renting, buying, selling real estate",2020,4.0
+28992,Sex: Male,Total,50 to 54 years,M-N Business services,2020,79.0
+29007,Sex: Male,Total,50 to 54 years,M Other specialised business services,2020,35.0
+29022,Sex: Male,Total,50 to 54 years,N Renting and other business support,2020,44.0
+29037,Sex: Male,Total,50 to 54 years,O-U Noncommercial services,2020,95.0
+29052,Sex: Male,Total,50 to 54 years,O-Q Government and care,2020,85.0
+29067,Sex: Male,Total,50 to 54 years,O Public administration and services,2020,41.0
+29082,Sex: Male,Total,50 to 54 years,P Education,2020,20.0
+29097,Sex: Male,Total,50 to 54 years,Q Health and social work activities,2020,24.0
+29112,Sex: Male,Total,50 to 54 years,"R-U Culture, recreation, other services",2020,11.0
+29127,Sex: Male,Total,50 to 54 years,"R Culture, sports and recreation",2020,6.0
+29142,Sex: Male,Total,50 to 54 years,S Other service activities,2020,5.0
+29157,Sex: Male,Total,55 to 59 years,A-U All economic activities,2020,456.0
+29172,Sex: Male,Total,55 to 59 years,A-F Agriculture and industry,2020,134.0
+29187,Sex: Male,Total,55 to 59 years,"A Agriculture, forestry and fishing",2020,6.0
+29202,Sex: Male,Total,55 to 59 years,B-F Manifacturing and energy,2020,128.0
+29217,Sex: Male,Total,55 to 59 years,"B-E Industry (no construction), energy",2020,95.0
+29232,Sex: Male,Total,55 to 59 years,B Mining and quarrying ,2020,1.0
+29247,Sex: Male,Total,55 to 59 years,C Manufacturing,2020,86.0
+29262,Sex: Male,Total,55 to 59 years,D Energy supply,2020,3.0
+29277,Sex: Male,Total,55 to 59 years,E Water supply and waste management,2020,5.0
+29292,Sex: Male,Total,55 to 59 years,F Construction,2020,33.0
+29307,Sex: Male,Total,55 to 59 years,G-N Commercial services,2020,212.0
+29322,Sex: Male,Total,55 to 59 years,"G-I Trade, transport, hotels, catering",2020,104.0
+29337,Sex: Male,Total,55 to 59 years,G Wholesale and retail trade,2020,58.0
+29352,Sex: Male,Total,55 to 59 years,H Transportation and storage,2020,39.0
+29367,Sex: Male,Total,55 to 59 years,I Accommodation and food serving,2020,7.0
+29382,Sex: Male,Total,55 to 59 years,J Information and communication,2020,15.0
+29397,Sex: Male,Total,55 to 59 years,K Financial institutions,2020,20.0
+29412,Sex: Male,Total,55 to 59 years,"L Renting, buying, selling real estate",2020,4.0
+29427,Sex: Male,Total,55 to 59 years,M-N Business services,2020,68.0
+29442,Sex: Male,Total,55 to 59 years,M Other specialised business services,2020,30.0
+29457,Sex: Male,Total,55 to 59 years,N Renting and other business support,2020,38.0
+29472,Sex: Male,Total,55 to 59 years,O-U Noncommercial services,2020,111.0
+29487,Sex: Male,Total,55 to 59 years,O-Q Government and care,2020,100.0
+29502,Sex: Male,Total,55 to 59 years,O Public administration and services,2020,49.0
+29517,Sex: Male,Total,55 to 59 years,P Education,2020,23.0
+29532,Sex: Male,Total,55 to 59 years,Q Health and social work activities,2020,28.0
+29547,Sex: Male,Total,55 to 59 years,"R-U Culture, recreation, other services",2020,11.0
+29562,Sex: Male,Total,55 to 59 years,"R Culture, sports and recreation",2020,5.0
+29577,Sex: Male,Total,55 to 59 years,S Other service activities,2020,5.0
+29592,Sex: Male,Total,60 to 64 years,A-U All economic activities,2020,352.0
+29607,Sex: Male,Total,60 to 64 years,A-F Agriculture and industry,2020,98.0
+29622,Sex: Male,Total,60 to 64 years,"A Agriculture, forestry and fishing",2020,4.0
+29637,Sex: Male,Total,60 to 64 years,B-F Manifacturing and energy,2020,94.0
+29652,Sex: Male,Total,60 to 64 years,"B-E Industry (no construction), energy",2020,70.0
+29667,Sex: Male,Total,60 to 64 years,B Mining and quarrying ,2020,1.0
+29682,Sex: Male,Total,60 to 64 years,C Manufacturing,2020,63.0
+29697,Sex: Male,Total,60 to 64 years,D Energy supply,2020,3.0
+29712,Sex: Male,Total,60 to 64 years,E Water supply and waste management,2020,3.0
+29727,Sex: Male,Total,60 to 64 years,F Construction,2020,24.0
+29742,Sex: Male,Total,60 to 64 years,G-N Commercial services,2020,151.0
+29757,Sex: Male,Total,60 to 64 years,"G-I Trade, transport, hotels, catering",2020,76.0
+29772,Sex: Male,Total,60 to 64 years,G Wholesale and retail trade,2020,39.0
+29787,Sex: Male,Total,60 to 64 years,H Transportation and storage,2020,32.0
+29802,Sex: Male,Total,60 to 64 years,I Accommodation and food serving,2020,5.0
+29817,Sex: Male,Total,60 to 64 years,J Information and communication,2020,9.0
+29832,Sex: Male,Total,60 to 64 years,K Financial institutions,2020,14.0
+29847,Sex: Male,Total,60 to 64 years,"L Renting, buying, selling real estate",2020,4.0
+29862,Sex: Male,Total,60 to 64 years,M-N Business services,2020,48.0
+29877,Sex: Male,Total,60 to 64 years,M Other specialised business services,2020,21.0
+29892,Sex: Male,Total,60 to 64 years,N Renting and other business support,2020,27.0
+29907,Sex: Male,Total,60 to 64 years,O-U Noncommercial services,2020,103.0
+29922,Sex: Male,Total,60 to 64 years,O-Q Government and care,2020,94.0
+29937,Sex: Male,Total,60 to 64 years,O Public administration and services,2020,43.0
+29952,Sex: Male,Total,60 to 64 years,P Education,2020,26.0
+29967,Sex: Male,Total,60 to 64 years,Q Health and social work activities,2020,26.0
+29982,Sex: Male,Total,60 to 64 years,"R-U Culture, recreation, other services",2020,9.0
+29997,Sex: Male,Total,60 to 64 years,"R Culture, sports and recreation",2020,4.0
+30012,Sex: Male,Total,60 to 64 years,S Other service activities,2020,5.0
+30027,Sex: Male,Total,65 to 74 years,A-U All economic activities,2020,129.0
+30042,Sex: Male,Total,65 to 74 years,A-F Agriculture and industry,2020,27.0
+30057,Sex: Male,Total,65 to 74 years,"A Agriculture, forestry and fishing",2020,2.0
+30072,Sex: Male,Total,65 to 74 years,B-F Manifacturing and energy,2020,25.0
+30087,Sex: Male,Total,65 to 74 years,"B-E Industry (no construction), energy",2020,18.0
+30102,Sex: Male,Total,65 to 74 years,B Mining and quarrying ,2020,0.0
+30117,Sex: Male,Total,65 to 74 years,C Manufacturing,2020,16.0
+30132,Sex: Male,Total,65 to 74 years,D Energy supply,2020,1.0
+30147,Sex: Male,Total,65 to 74 years,E Water supply and waste management,2020,1.0
+30162,Sex: Male,Total,65 to 74 years,F Construction,2020,7.0
+30177,Sex: Male,Total,65 to 74 years,G-N Commercial services,2020,74.0
+30192,Sex: Male,Total,65 to 74 years,"G-I Trade, transport, hotels, catering",2020,37.0
+30207,Sex: Male,Total,65 to 74 years,G Wholesale and retail trade,2020,19.0
+30222,Sex: Male,Total,65 to 74 years,H Transportation and storage,2020,15.0
+30237,Sex: Male,Total,65 to 74 years,I Accommodation and food serving,2020,3.0
+30252,Sex: Male,Total,65 to 74 years,J Information and communication,2020,2.0
+30267,Sex: Male,Total,65 to 74 years,K Financial institutions,2020,8.0
+30282,Sex: Male,Total,65 to 74 years,"L Renting, buying, selling real estate",2020,2.0
+30297,Sex: Male,Total,65 to 74 years,M-N Business services,2020,25.0
+30312,Sex: Male,Total,65 to 74 years,M Other specialised business services,2020,10.0
+30327,Sex: Male,Total,65 to 74 years,N Renting and other business support,2020,15.0
+30342,Sex: Male,Total,65 to 74 years,O-U Noncommercial services,2020,29.0
+30357,Sex: Male,Total,65 to 74 years,O-Q Government and care,2020,24.0
+30372,Sex: Male,Total,65 to 74 years,O Public administration and services,2020,9.0
+30387,Sex: Male,Total,65 to 74 years,P Education,2020,8.0
+30402,Sex: Male,Total,65 to 74 years,Q Health and social work activities,2020,7.0
+30417,Sex: Male,Total,65 to 74 years,"R-U Culture, recreation, other services",2020,4.0
+30432,Sex: Male,Total,65 to 74 years,"R Culture, sports and recreation",2020,2.0
+30447,Sex: Male,Total,65 to 74 years,S Other service activities,2020,2.0
+30462,Sex: Male,Total,75 years or older,A-U All economic activities,2020,11.0
+30477,Sex: Male,Total,75 years or older,A-F Agriculture and industry,2020,2.0
+30492,Sex: Male,Total,75 years or older,"A Agriculture, forestry and fishing",2020,0.0
+30507,Sex: Male,Total,75 years or older,B-F Manifacturing and energy,2020,1.0
+30522,Sex: Male,Total,75 years or older,"B-E Industry (no construction), energy",2020,1.0
+30537,Sex: Male,Total,75 years or older,B Mining and quarrying ,2020,0.0
+30552,Sex: Male,Total,75 years or older,C Manufacturing,2020,1.0
+30567,Sex: Male,Total,75 years or older,D Energy supply,2020,0.0
+30582,Sex: Male,Total,75 years or older,E Water supply and waste management,2020,0.0
+30597,Sex: Male,Total,75 years or older,F Construction,2020,1.0
+30612,Sex: Male,Total,75 years or older,G-N Commercial services,2020,8.0
+30627,Sex: Male,Total,75 years or older,"G-I Trade, transport, hotels, catering",2020,4.0
+30642,Sex: Male,Total,75 years or older,G Wholesale and retail trade,2020,3.0
+30657,Sex: Male,Total,75 years or older,H Transportation and storage,2020,1.0
+30672,Sex: Male,Total,75 years or older,I Accommodation and food serving,2020,0.0
+30687,Sex: Male,Total,75 years or older,J Information and communication,2020,0.0
+30702,Sex: Male,Total,75 years or older,K Financial institutions,2020,2.0
+30717,Sex: Male,Total,75 years or older,"L Renting, buying, selling real estate",2020,0.0
+30732,Sex: Male,Total,75 years or older,M-N Business services,2020,2.0
+30747,Sex: Male,Total,75 years or older,M Other specialised business services,2020,1.0
+30762,Sex: Male,Total,75 years or older,N Renting and other business support,2020,1.0
+30777,Sex: Male,Total,75 years or older,O-U Noncommercial services,2020,1.0
+30792,Sex: Male,Total,75 years or older,O-Q Government and care,2020,1.0
+30807,Sex: Male,Total,75 years or older,O Public administration and services,2020,0.0
+30822,Sex: Male,Total,75 years or older,P Education,2020,0.0
+30837,Sex: Male,Total,75 years or older,Q Health and social work activities,2020,0.0
+30852,Sex: Male,Total,75 years or older,"R-U Culture, recreation, other services",2020,1.0
+30867,Sex: Male,Total,75 years or older,"R Culture, sports and recreation",2020,0.0
+30882,Sex: Male,Total,75 years or older,S Other service activities,2020,0.0
+49602,Sex: Female,Total,Total,A-U All economic activities,2020,4029.0
+49617,Sex: Female,Total,Total,A-F Agriculture and industry,2020,271.0
+49632,Sex: Female,Total,Total,"A Agriculture, forestry and fishing",2020,39.0
+49647,Sex: Female,Total,Total,B-F Manifacturing and energy,2020,232.0
+49662,Sex: Female,Total,Total,"B-E Industry (no construction), energy",2020,190.0
+49677,Sex: Female,Total,Total,B Mining and quarrying ,2020,1.0
+49692,Sex: Female,Total,Total,C Manufacturing,2020,174.0
+49707,Sex: Female,Total,Total,D Energy supply,2020,8.0
+49722,Sex: Female,Total,Total,E Water supply and waste management,2020,7.0
+49737,Sex: Female,Total,Total,F Construction,2020,42.0
+49752,Sex: Female,Total,Total,G-N Commercial services,2020,1810.0
+49767,Sex: Female,Total,Total,"G-I Trade, transport, hotels, catering",2020,953.0
+49782,Sex: Female,Total,Total,G Wholesale and retail trade,2020,658.0
+49797,Sex: Female,Total,Total,H Transportation and storage,2020,95.0
+49812,Sex: Female,Total,Total,I Accommodation and food serving,2020,199.0
+49827,Sex: Female,Total,Total,J Information and communication,2020,80.0
+49842,Sex: Female,Total,Total,K Financial institutions,2020,108.0
+49857,Sex: Female,Total,Total,"L Renting, buying, selling real estate",2020,33.0
+49872,Sex: Female,Total,Total,M-N Business services,2020,636.0
+49887,Sex: Female,Total,Total,M Other specialised business services,2020,221.0
+49902,Sex: Female,Total,Total,N Renting and other business support,2020,416.0
+49917,Sex: Female,Total,Total,O-U Noncommercial services,2020,1948.0
+49932,Sex: Female,Total,Total,O-Q Government and care,2020,1792.0
+49947,Sex: Female,Total,Total,O Public administration and services,2020,230.0
+49962,Sex: Female,Total,Total,P Education,2020,353.0
+49977,Sex: Female,Total,Total,Q Health and social work activities,2020,1208.0
+49992,Sex: Female,Total,Total,"R-U Culture, recreation, other services",2020,156.0
+50007,Sex: Female,Total,Total,"R Culture, sports and recreation",2020,70.0
+50022,Sex: Female,Total,Total,S Other service activities,2020,87.0
+50037,Sex: Female,Total,Younger than 15 years,A-U All economic activities,2020,8.0
+50052,Sex: Female,Total,Younger than 15 years,A-F Agriculture and industry,2020,2.0
+50067,Sex: Female,Total,Younger than 15 years,"A Agriculture, forestry and fishing",2020,1.0
+50082,Sex: Female,Total,Younger than 15 years,B-F Manifacturing and energy,2020,0.0
+50097,Sex: Female,Total,Younger than 15 years,"B-E Industry (no construction), energy",2020,0.0
+50112,Sex: Female,Total,Younger than 15 years,B Mining and quarrying ,2020,0.0
+50127,Sex: Female,Total,Younger than 15 years,C Manufacturing,2020,0.0
+50142,Sex: Female,Total,Younger than 15 years,D Energy supply,2020,0.0
+50157,Sex: Female,Total,Younger than 15 years,E Water supply and waste management,2020,0.0
+50172,Sex: Female,Total,Younger than 15 years,F Construction,2020,0.0
+50187,Sex: Female,Total,Younger than 15 years,G-N Commercial services,2020,6.0
+50202,Sex: Female,Total,Younger than 15 years,"G-I Trade, transport, hotels, catering",2020,5.0
+50217,Sex: Female,Total,Younger than 15 years,G Wholesale and retail trade,2020,4.0
+50232,Sex: Female,Total,Younger than 15 years,H Transportation and storage,2020,0.0
+50247,Sex: Female,Total,Younger than 15 years,I Accommodation and food serving,2020,1.0
+50262,Sex: Female,Total,Younger than 15 years,J Information and communication,2020,0.0
+50277,Sex: Female,Total,Younger than 15 years,K Financial institutions,2020,0.0
+50292,Sex: Female,Total,Younger than 15 years,"L Renting, buying, selling real estate",2020,0.0
+50307,Sex: Female,Total,Younger than 15 years,M-N Business services,2020,1.0
+50322,Sex: Female,Total,Younger than 15 years,M Other specialised business services,2020,0.0
+50337,Sex: Female,Total,Younger than 15 years,N Renting and other business support,2020,1.0
+50352,Sex: Female,Total,Younger than 15 years,O-U Noncommercial services,2020,0.0
+50367,Sex: Female,Total,Younger than 15 years,O-Q Government and care,2020,0.0
+50382,Sex: Female,Total,Younger than 15 years,O Public administration and services,2020,0.0
+50397,Sex: Female,Total,Younger than 15 years,P Education,2020,0.0
+50412,Sex: Female,Total,Younger than 15 years,Q Health and social work activities,2020,0.0
+50427,Sex: Female,Total,Younger than 15 years,"R-U Culture, recreation, other services",2020,0.0
+50442,Sex: Female,Total,Younger than 15 years,"R Culture, sports and recreation",2020,0.0
+50457,Sex: Female,Total,Younger than 15 years,S Other service activities,2020,0.0
+50472,Sex: Female,Total,15 to 19 years,A-U All economic activities,2020,321.0
+50487,Sex: Female,Total,15 to 19 years,A-F Agriculture and industry,2020,16.0
+50502,Sex: Female,Total,15 to 19 years,"A Agriculture, forestry and fishing",2020,7.0
+50517,Sex: Female,Total,15 to 19 years,B-F Manifacturing and energy,2020,9.0
+50532,Sex: Female,Total,15 to 19 years,"B-E Industry (no construction), energy",2020,8.0
+50547,Sex: Female,Total,15 to 19 years,B Mining and quarrying ,2020,0.0
+50562,Sex: Female,Total,15 to 19 years,C Manufacturing,2020,8.0
+50577,Sex: Female,Total,15 to 19 years,D Energy supply,2020,0.0
+50592,Sex: Female,Total,15 to 19 years,E Water supply and waste management,2020,0.0
+50607,Sex: Female,Total,15 to 19 years,F Construction,2020,1.0
+50622,Sex: Female,Total,15 to 19 years,G-N Commercial services,2020,253.0
+50637,Sex: Female,Total,15 to 19 years,"G-I Trade, transport, hotels, catering",2020,218.0
+50652,Sex: Female,Total,15 to 19 years,G Wholesale and retail trade,2020,161.0
+50667,Sex: Female,Total,15 to 19 years,H Transportation and storage,2020,2.0
+50682,Sex: Female,Total,15 to 19 years,I Accommodation and food serving,2020,56.0
+50697,Sex: Female,Total,15 to 19 years,J Information and communication,2020,2.0
+50712,Sex: Female,Total,15 to 19 years,K Financial institutions,2020,1.0
+50727,Sex: Female,Total,15 to 19 years,"L Renting, buying, selling real estate",2020,1.0
+50742,Sex: Female,Total,15 to 19 years,M-N Business services,2020,31.0
+50757,Sex: Female,Total,15 to 19 years,M Other specialised business services,2020,5.0
+50772,Sex: Female,Total,15 to 19 years,N Renting and other business support,2020,26.0
+50787,Sex: Female,Total,15 to 19 years,O-U Noncommercial services,2020,53.0
+50802,Sex: Female,Total,15 to 19 years,O-Q Government and care,2020,42.0
+50817,Sex: Female,Total,15 to 19 years,O Public administration and services,2020,2.0
+50832,Sex: Female,Total,15 to 19 years,P Education,2020,3.0
+50847,Sex: Female,Total,15 to 19 years,Q Health and social work activities,2020,38.0
+50862,Sex: Female,Total,15 to 19 years,"R-U Culture, recreation, other services",2020,11.0
+50877,Sex: Female,Total,15 to 19 years,"R Culture, sports and recreation",2020,6.0
+50892,Sex: Female,Total,15 to 19 years,S Other service activities,2020,5.0
+50907,Sex: Female,Total,20 to 24 years,A-U All economic activities,2020,431.0
+50922,Sex: Female,Total,20 to 24 years,A-F Agriculture and industry,2020,19.0
+50937,Sex: Female,Total,20 to 24 years,"A Agriculture, forestry and fishing",2020,5.0
+50952,Sex: Female,Total,20 to 24 years,B-F Manifacturing and energy,2020,14.0
+50967,Sex: Female,Total,20 to 24 years,"B-E Industry (no construction), energy",2020,11.0
+50982,Sex: Female,Total,20 to 24 years,B Mining and quarrying ,2020,0.0
+50997,Sex: Female,Total,20 to 24 years,C Manufacturing,2020,11.0
+51012,Sex: Female,Total,20 to 24 years,D Energy supply,2020,0.0
+51027,Sex: Female,Total,20 to 24 years,E Water supply and waste management,2020,0.0
+51042,Sex: Female,Total,20 to 24 years,F Construction,2020,3.0
+51057,Sex: Female,Total,20 to 24 years,G-N Commercial services,2020,246.0
+51072,Sex: Female,Total,20 to 24 years,"G-I Trade, transport, hotels, catering",2020,142.0
+51087,Sex: Female,Total,20 to 24 years,G Wholesale and retail trade,2020,91.0
+51102,Sex: Female,Total,20 to 24 years,H Transportation and storage,2020,6.0
+51117,Sex: Female,Total,20 to 24 years,I Accommodation and food serving,2020,45.0
+51132,Sex: Female,Total,20 to 24 years,J Information and communication,2020,8.0
+51147,Sex: Female,Total,20 to 24 years,K Financial institutions,2020,4.0
+51162,Sex: Female,Total,20 to 24 years,"L Renting, buying, selling real estate",2020,2.0
+51177,Sex: Female,Total,20 to 24 years,M-N Business services,2020,90.0
+51192,Sex: Female,Total,20 to 24 years,M Other specialised business services,2020,22.0
+51207,Sex: Female,Total,20 to 24 years,N Renting and other business support,2020,68.0
+51222,Sex: Female,Total,20 to 24 years,O-U Noncommercial services,2020,166.0
+51237,Sex: Female,Total,20 to 24 years,O-Q Government and care,2020,145.0
+51252,Sex: Female,Total,20 to 24 years,O Public administration and services,2020,8.0
+51267,Sex: Female,Total,20 to 24 years,P Education,2020,23.0
+51282,Sex: Female,Total,20 to 24 years,Q Health and social work activities,2020,114.0
+51297,Sex: Female,Total,20 to 24 years,"R-U Culture, recreation, other services",2020,21.0
+51312,Sex: Female,Total,20 to 24 years,"R Culture, sports and recreation",2020,11.0
+51327,Sex: Female,Total,20 to 24 years,S Other service activities,2020,10.0
+51342,Sex: Female,Total,25 to 29 years,A-U All economic activities,2020,458.0
+51357,Sex: Female,Total,25 to 29 years,A-F Agriculture and industry,2020,23.0
+51372,Sex: Female,Total,25 to 29 years,"A Agriculture, forestry and fishing",2020,3.0
+51387,Sex: Female,Total,25 to 29 years,B-F Manifacturing and energy,2020,20.0
+51402,Sex: Female,Total,25 to 29 years,"B-E Industry (no construction), energy",2020,16.0
+51417,Sex: Female,Total,25 to 29 years,B Mining and quarrying ,2020,0.0
+51432,Sex: Female,Total,25 to 29 years,C Manufacturing,2020,15.0
+51447,Sex: Female,Total,25 to 29 years,D Energy supply,2020,1.0
+51462,Sex: Female,Total,25 to 29 years,E Water supply and waste management,2020,1.0
+51477,Sex: Female,Total,25 to 29 years,F Construction,2020,4.0
+51492,Sex: Female,Total,25 to 29 years,G-N Commercial services,2020,220.0
+51507,Sex: Female,Total,25 to 29 years,"G-I Trade, transport, hotels, catering",2020,94.0
+51522,Sex: Female,Total,25 to 29 years,G Wholesale and retail trade,2020,63.0
+51537,Sex: Female,Total,25 to 29 years,H Transportation and storage,2020,10.0
+51552,Sex: Female,Total,25 to 29 years,I Accommodation and food serving,2020,21.0
+51567,Sex: Female,Total,25 to 29 years,J Information and communication,2020,15.0
+51582,Sex: Female,Total,25 to 29 years,K Financial institutions,2020,10.0
+51597,Sex: Female,Total,25 to 29 years,"L Renting, buying, selling real estate",2020,3.0
+51612,Sex: Female,Total,25 to 29 years,M-N Business services,2020,98.0
+51627,Sex: Female,Total,25 to 29 years,M Other specialised business services,2020,38.0
+51642,Sex: Female,Total,25 to 29 years,N Renting and other business support,2020,60.0
+51657,Sex: Female,Total,25 to 29 years,O-U Noncommercial services,2020,214.0
+51672,Sex: Female,Total,25 to 29 years,O-Q Government and care,2020,195.0
+51687,Sex: Female,Total,25 to 29 years,O Public administration and services,2020,19.0
+51702,Sex: Female,Total,25 to 29 years,P Education,2020,38.0
+51717,Sex: Female,Total,25 to 29 years,Q Health and social work activities,2020,139.0
+51732,Sex: Female,Total,25 to 29 years,"R-U Culture, recreation, other services",2020,19.0
+51747,Sex: Female,Total,25 to 29 years,"R Culture, sports and recreation",2020,8.0
+51762,Sex: Female,Total,25 to 29 years,S Other service activities,2020,11.0
+51777,Sex: Female,Total,30 to 34 years,A-U All economic activities,2020,424.0
+51792,Sex: Female,Total,30 to 34 years,A-F Agriculture and industry,2020,26.0
+51807,Sex: Female,Total,30 to 34 years,"A Agriculture, forestry and fishing",2020,3.0
+51822,Sex: Female,Total,30 to 34 years,B-F Manifacturing and energy,2020,23.0
+51837,Sex: Female,Total,30 to 34 years,"B-E Industry (no construction), energy",2020,19.0
+51852,Sex: Female,Total,30 to 34 years,B Mining and quarrying ,2020,0.0
+51867,Sex: Female,Total,30 to 34 years,C Manufacturing,2020,17.0
+51882,Sex: Female,Total,30 to 34 years,D Energy supply,2020,1.0
+51897,Sex: Female,Total,30 to 34 years,E Water supply and waste management,2020,1.0
+51912,Sex: Female,Total,30 to 34 years,F Construction,2020,4.0
+51927,Sex: Female,Total,30 to 34 years,G-N Commercial services,2020,182.0
+51942,Sex: Female,Total,30 to 34 years,"G-I Trade, transport, hotels, catering",2020,77.0
+51957,Sex: Female,Total,30 to 34 years,G Wholesale and retail trade,2020,54.0
+51972,Sex: Female,Total,30 to 34 years,H Transportation and storage,2020,10.0
+51987,Sex: Female,Total,30 to 34 years,I Accommodation and food serving,2020,14.0
+52002,Sex: Female,Total,30 to 34 years,J Information and communication,2020,14.0
+52017,Sex: Female,Total,30 to 34 years,K Financial institutions,2020,12.0
+52032,Sex: Female,Total,30 to 34 years,"L Renting, buying, selling real estate",2020,3.0
+52047,Sex: Female,Total,30 to 34 years,M-N Business services,2020,75.0
+52062,Sex: Female,Total,30 to 34 years,M Other specialised business services,2020,30.0
+52077,Sex: Female,Total,30 to 34 years,N Renting and other business support,2020,44.0
+52092,Sex: Female,Total,30 to 34 years,O-U Noncommercial services,2020,216.0
+52107,Sex: Female,Total,30 to 34 years,O-Q Government and care,2020,200.0
+52122,Sex: Female,Total,30 to 34 years,O Public administration and services,2020,23.0
+52137,Sex: Female,Total,30 to 34 years,P Education,2020,43.0
+52152,Sex: Female,Total,30 to 34 years,Q Health and social work activities,2020,133.0
+52167,Sex: Female,Total,30 to 34 years,"R-U Culture, recreation, other services",2020,17.0
+52182,Sex: Female,Total,30 to 34 years,"R Culture, sports and recreation",2020,7.0
+52197,Sex: Female,Total,30 to 34 years,S Other service activities,2020,10.0
+52212,Sex: Female,Total,35 to 39 years,A-U All economic activities,2020,386.0
+52227,Sex: Female,Total,35 to 39 years,A-F Agriculture and industry,2020,27.0
+52242,Sex: Female,Total,35 to 39 years,"A Agriculture, forestry and fishing",2020,3.0
+52257,Sex: Female,Total,35 to 39 years,B-F Manifacturing and energy,2020,25.0
+52272,Sex: Female,Total,35 to 39 years,"B-E Industry (no construction), energy",2020,20.0
+52287,Sex: Female,Total,35 to 39 years,B Mining and quarrying ,2020,0.0
+52302,Sex: Female,Total,35 to 39 years,C Manufacturing,2020,18.0
+52317,Sex: Female,Total,35 to 39 years,D Energy supply,2020,1.0
+52332,Sex: Female,Total,35 to 39 years,E Water supply and waste management,2020,1.0
+52347,Sex: Female,Total,35 to 39 years,F Construction,2020,5.0
+52362,Sex: Female,Total,35 to 39 years,G-N Commercial services,2020,157.0
+52377,Sex: Female,Total,35 to 39 years,"G-I Trade, transport, hotels, catering",2020,67.0
+52392,Sex: Female,Total,35 to 39 years,G Wholesale and retail trade,2020,47.0
+52407,Sex: Female,Total,35 to 39 years,H Transportation and storage,2020,10.0
+52422,Sex: Female,Total,35 to 39 years,I Accommodation and food serving,2020,11.0
+52437,Sex: Female,Total,35 to 39 years,J Information and communication,2020,10.0
+52452,Sex: Female,Total,35 to 39 years,K Financial institutions,2020,13.0
+52467,Sex: Female,Total,35 to 39 years,"L Renting, buying, selling real estate",2020,4.0
+52482,Sex: Female,Total,35 to 39 years,M-N Business services,2020,63.0
+52497,Sex: Female,Total,35 to 39 years,M Other specialised business services,2020,25.0
+52512,Sex: Female,Total,35 to 39 years,N Renting and other business support,2020,38.0
+52527,Sex: Female,Total,35 to 39 years,O-U Noncommercial services,2020,201.0
+52542,Sex: Female,Total,35 to 39 years,O-Q Government and care,2020,186.0
+52557,Sex: Female,Total,35 to 39 years,O Public administration and services,2020,25.0
+52572,Sex: Female,Total,35 to 39 years,P Education,2020,45.0
+52587,Sex: Female,Total,35 to 39 years,Q Health and social work activities,2020,116.0
+52602,Sex: Female,Total,35 to 39 years,"R-U Culture, recreation, other services",2020,15.0
+52617,Sex: Female,Total,35 to 39 years,"R Culture, sports and recreation",2020,6.0
+52632,Sex: Female,Total,35 to 39 years,S Other service activities,2020,9.0
+52647,Sex: Female,Total,40 to 44 years,A-U All economic activities,2020,379.0
+52662,Sex: Female,Total,40 to 44 years,A-F Agriculture and industry,2020,30.0
+52677,Sex: Female,Total,40 to 44 years,"A Agriculture, forestry and fishing",2020,3.0
+52692,Sex: Female,Total,40 to 44 years,B-F Manifacturing and energy,2020,27.0
+52707,Sex: Female,Total,40 to 44 years,"B-E Industry (no construction), energy",2020,21.0
+52722,Sex: Female,Total,40 to 44 years,B Mining and quarrying ,2020,0.0
+52737,Sex: Female,Total,40 to 44 years,C Manufacturing,2020,19.0
+52752,Sex: Female,Total,40 to 44 years,D Energy supply,2020,1.0
+52767,Sex: Female,Total,40 to 44 years,E Water supply and waste management,2020,1.0
+52782,Sex: Female,Total,40 to 44 years,F Construction,2020,5.0
+52797,Sex: Female,Total,40 to 44 years,G-N Commercial services,2020,153.0
+52812,Sex: Female,Total,40 to 44 years,"G-I Trade, transport, hotels, catering",2020,66.0
+52827,Sex: Female,Total,40 to 44 years,G Wholesale and retail trade,2020,46.0
+52842,Sex: Female,Total,40 to 44 years,H Transportation and storage,2020,10.0
+52857,Sex: Female,Total,40 to 44 years,I Accommodation and food serving,2020,10.0
+52872,Sex: Female,Total,40 to 44 years,J Information and communication,2020,8.0
+52887,Sex: Female,Total,40 to 44 years,K Financial institutions,2020,14.0
+52902,Sex: Female,Total,40 to 44 years,"L Renting, buying, selling real estate",2020,4.0
+52917,Sex: Female,Total,40 to 44 years,M-N Business services,2020,61.0
+52932,Sex: Female,Total,40 to 44 years,M Other specialised business services,2020,23.0
+52947,Sex: Female,Total,40 to 44 years,N Renting and other business support,2020,37.0
+52962,Sex: Female,Total,40 to 44 years,O-U Noncommercial services,2020,196.0
+52977,Sex: Female,Total,40 to 44 years,O-Q Government and care,2020,183.0
+52992,Sex: Female,Total,40 to 44 years,O Public administration and services,2020,29.0
+53007,Sex: Female,Total,40 to 44 years,P Education,2020,42.0
+53022,Sex: Female,Total,40 to 44 years,Q Health and social work activities,2020,112.0
+53037,Sex: Female,Total,40 to 44 years,"R-U Culture, recreation, other services",2020,14.0
+53052,Sex: Female,Total,40 to 44 years,"R Culture, sports and recreation",2020,6.0
+53067,Sex: Female,Total,40 to 44 years,S Other service activities,2020,8.0
+53082,Sex: Female,Total,45 to 49 years,A-U All economic activities,2020,425.0
+53097,Sex: Female,Total,45 to 49 years,A-F Agriculture and industry,2020,37.0
+53112,Sex: Female,Total,45 to 49 years,"A Agriculture, forestry and fishing",2020,4.0
+53127,Sex: Female,Total,45 to 49 years,B-F Manifacturing and energy,2020,33.0
+53142,Sex: Female,Total,45 to 49 years,"B-E Industry (no construction), energy",2020,26.0
+53157,Sex: Female,Total,45 to 49 years,B Mining and quarrying ,2020,0.0
+53172,Sex: Female,Total,45 to 49 years,C Manufacturing,2020,24.0
+53187,Sex: Female,Total,45 to 49 years,D Energy supply,2020,1.0
+53202,Sex: Female,Total,45 to 49 years,E Water supply and waste management,2020,1.0
+53217,Sex: Female,Total,45 to 49 years,F Construction,2020,6.0
+53232,Sex: Female,Total,45 to 49 years,G-N Commercial services,2020,175.0
+53247,Sex: Female,Total,45 to 49 years,"G-I Trade, transport, hotels, catering",2020,79.0
+53262,Sex: Female,Total,45 to 49 years,G Wholesale and retail trade,2020,56.0
+53277,Sex: Female,Total,45 to 49 years,H Transportation and storage,2020,13.0
+53292,Sex: Female,Total,45 to 49 years,I Accommodation and food serving,2020,11.0
+53307,Sex: Female,Total,45 to 49 years,J Information and communication,2020,8.0
+53322,Sex: Female,Total,45 to 49 years,K Financial institutions,2020,17.0
+53337,Sex: Female,Total,45 to 49 years,"L Renting, buying, selling real estate",2020,5.0
+53352,Sex: Female,Total,45 to 49 years,M-N Business services,2020,67.0
+53367,Sex: Female,Total,45 to 49 years,M Other specialised business services,2020,25.0
+53382,Sex: Female,Total,45 to 49 years,N Renting and other business support,2020,42.0
+53397,Sex: Female,Total,45 to 49 years,O-U Noncommercial services,2020,213.0
+53412,Sex: Female,Total,45 to 49 years,O-Q Government and care,2020,198.0
+53427,Sex: Female,Total,45 to 49 years,O Public administration and services,2020,32.0
+53442,Sex: Female,Total,45 to 49 years,P Education,2020,40.0
+53457,Sex: Female,Total,45 to 49 years,Q Health and social work activities,2020,125.0
+53472,Sex: Female,Total,45 to 49 years,"R-U Culture, recreation, other services",2020,15.0
+53487,Sex: Female,Total,45 to 49 years,"R Culture, sports and recreation",2020,6.0
+53502,Sex: Female,Total,45 to 49 years,S Other service activities,2020,9.0
+53517,Sex: Female,Total,50 to 54 years,A-U All economic activities,2020,454.0
+53532,Sex: Female,Total,50 to 54 years,A-F Agriculture and industry,2020,38.0
+53547,Sex: Female,Total,50 to 54 years,"A Agriculture, forestry and fishing",2020,4.0
+53562,Sex: Female,Total,50 to 54 years,B-F Manifacturing and energy,2020,34.0
+53577,Sex: Female,Total,50 to 54 years,"B-E Industry (no construction), energy",2020,28.0
+53592,Sex: Female,Total,50 to 54 years,B Mining and quarrying ,2020,0.0
+53607,Sex: Female,Total,50 to 54 years,C Manufacturing,2020,26.0
+53622,Sex: Female,Total,50 to 54 years,D Energy supply,2020,1.0
+53637,Sex: Female,Total,50 to 54 years,E Water supply and waste management,2020,1.0
+53652,Sex: Female,Total,50 to 54 years,F Construction,2020,6.0
+53667,Sex: Female,Total,50 to 54 years,G-N Commercial services,2020,176.0
+53682,Sex: Female,Total,50 to 54 years,"G-I Trade, transport, hotels, catering",2020,83.0
+53697,Sex: Female,Total,50 to 54 years,G Wholesale and retail trade,2020,57.0
+53712,Sex: Female,Total,50 to 54 years,H Transportation and storage,2020,14.0
+53727,Sex: Female,Total,50 to 54 years,I Accommodation and food serving,2020,12.0
+53742,Sex: Female,Total,50 to 54 years,J Information and communication,2020,7.0
+53757,Sex: Female,Total,50 to 54 years,K Financial institutions,2020,17.0
+53772,Sex: Female,Total,50 to 54 years,"L Renting, buying, selling real estate",2020,5.0
+53787,Sex: Female,Total,50 to 54 years,M-N Business services,2020,64.0
+53802,Sex: Female,Total,50 to 54 years,M Other specialised business services,2020,23.0
+53817,Sex: Female,Total,50 to 54 years,N Renting and other business support,2020,41.0
+53832,Sex: Female,Total,50 to 54 years,O-U Noncommercial services,2020,240.0
+53847,Sex: Female,Total,50 to 54 years,O-Q Government and care,2020,223.0
+53862,Sex: Female,Total,50 to 54 years,O Public administration and services,2020,35.0
+53877,Sex: Female,Total,50 to 54 years,P Education,2020,39.0
+53892,Sex: Female,Total,50 to 54 years,Q Health and social work activities,2020,149.0
+53907,Sex: Female,Total,50 to 54 years,"R-U Culture, recreation, other services",2020,17.0
+53922,Sex: Female,Total,50 to 54 years,"R Culture, sports and recreation",2020,7.0
+53937,Sex: Female,Total,50 to 54 years,S Other service activities,2020,10.0
+53952,Sex: Female,Total,55 to 59 years,A-U All economic activities,2020,404.0
+53967,Sex: Female,Total,55 to 59 years,A-F Agriculture and industry,2020,29.0
+53982,Sex: Female,Total,55 to 59 years,"A Agriculture, forestry and fishing",2020,3.0
+53997,Sex: Female,Total,55 to 59 years,B-F Manifacturing and energy,2020,26.0
+54012,Sex: Female,Total,55 to 59 years,"B-E Industry (no construction), energy",2020,22.0
+54027,Sex: Female,Total,55 to 59 years,B Mining and quarrying ,2020,0.0
+54042,Sex: Female,Total,55 to 59 years,C Manufacturing,2020,20.0
+54057,Sex: Female,Total,55 to 59 years,D Energy supply,2020,1.0
+54072,Sex: Female,Total,55 to 59 years,E Water supply and waste management,2020,1.0
+54087,Sex: Female,Total,55 to 59 years,F Construction,2020,4.0
+54102,Sex: Female,Total,55 to 59 years,G-N Commercial services,2020,134.0
+54117,Sex: Female,Total,55 to 59 years,"G-I Trade, transport, hotels, catering",2020,66.0
+54132,Sex: Female,Total,55 to 59 years,G Wholesale and retail trade,2020,44.0
+54147,Sex: Female,Total,55 to 59 years,H Transportation and storage,2020,12.0
+54162,Sex: Female,Total,55 to 59 years,I Accommodation and food serving,2020,10.0
+54177,Sex: Female,Total,55 to 59 years,J Information and communication,2020,5.0
+54192,Sex: Female,Total,55 to 59 years,K Financial institutions,2020,11.0
+54207,Sex: Female,Total,55 to 59 years,"L Renting, buying, selling real estate",2020,3.0
+54222,Sex: Female,Total,55 to 59 years,M-N Business services,2020,49.0
+54237,Sex: Female,Total,55 to 59 years,M Other specialised business services,2020,16.0
+54252,Sex: Female,Total,55 to 59 years,N Renting and other business support,2020,33.0
+54267,Sex: Female,Total,55 to 59 years,O-U Noncommercial services,2020,240.0
+54282,Sex: Female,Total,55 to 59 years,O-Q Government and care,2020,225.0
+54297,Sex: Female,Total,55 to 59 years,O Public administration and services,2020,33.0
+54312,Sex: Female,Total,55 to 59 years,P Education,2020,40.0
+54327,Sex: Female,Total,55 to 59 years,Q Health and social work activities,2020,152.0
+54342,Sex: Female,Total,55 to 59 years,"R-U Culture, recreation, other services",2020,15.0
+54357,Sex: Female,Total,55 to 59 years,"R Culture, sports and recreation",2020,6.0
+54372,Sex: Female,Total,55 to 59 years,S Other service activities,2020,8.0
+54387,Sex: Female,Total,60 to 64 years,A-U All economic activities,2020,273.0
+54402,Sex: Female,Total,60 to 64 years,A-F Agriculture and industry,2020,18.0
+54417,Sex: Female,Total,60 to 64 years,"A Agriculture, forestry and fishing",2020,2.0
+54432,Sex: Female,Total,60 to 64 years,B-F Manifacturing and energy,2020,16.0
+54447,Sex: Female,Total,60 to 64 years,"B-E Industry (no construction), energy",2020,14.0
+54462,Sex: Female,Total,60 to 64 years,B Mining and quarrying ,2020,0.0
+54477,Sex: Female,Total,60 to 64 years,C Manufacturing,2020,13.0
+54492,Sex: Female,Total,60 to 64 years,D Energy supply,2020,0.0
+54507,Sex: Female,Total,60 to 64 years,E Water supply and waste management,2020,0.0
+54522,Sex: Female,Total,60 to 64 years,F Construction,2020,2.0
+54537,Sex: Female,Total,60 to 64 years,G-N Commercial services,2020,81.0
+54552,Sex: Female,Total,60 to 64 years,"G-I Trade, transport, hotels, catering",2020,41.0
+54567,Sex: Female,Total,60 to 64 years,G Wholesale and retail trade,2020,27.0
+54582,Sex: Female,Total,60 to 64 years,H Transportation and storage,2020,8.0
+54597,Sex: Female,Total,60 to 64 years,I Accommodation and food serving,2020,7.0
+54612,Sex: Female,Total,60 to 64 years,J Information and communication,2020,3.0
+54627,Sex: Female,Total,60 to 64 years,K Financial institutions,2020,6.0
+54642,Sex: Female,Total,60 to 64 years,"L Renting, buying, selling real estate",2020,2.0
+54657,Sex: Female,Total,60 to 64 years,M-N Business services,2020,29.0
+54672,Sex: Female,Total,60 to 64 years,M Other specialised business services,2020,9.0
+54687,Sex: Female,Total,60 to 64 years,N Renting and other business support,2020,19.0
+54702,Sex: Female,Total,60 to 64 years,O-U Noncommercial services,2020,174.0
+54717,Sex: Female,Total,60 to 64 years,O-Q Government and care,2020,164.0
+54732,Sex: Female,Total,60 to 64 years,O Public administration and services,2020,21.0
+54747,Sex: Female,Total,60 to 64 years,P Education,2020,34.0
+54762,Sex: Female,Total,60 to 64 years,Q Health and social work activities,2020,109.0
+54777,Sex: Female,Total,60 to 64 years,"R-U Culture, recreation, other services",2020,11.0
+54792,Sex: Female,Total,60 to 64 years,"R Culture, sports and recreation",2020,5.0
+54807,Sex: Female,Total,60 to 64 years,S Other service activities,2020,6.0
+54822,Sex: Female,Total,65 to 74 years,A-U All economic activities,2020,64.0
+54837,Sex: Female,Total,65 to 74 years,A-F Agriculture and industry,2020,5.0
+54852,Sex: Female,Total,65 to 74 years,"A Agriculture, forestry and fishing",2020,1.0
+54867,Sex: Female,Total,65 to 74 years,B-F Manifacturing and energy,2020,4.0
+54882,Sex: Female,Total,65 to 74 years,"B-E Industry (no construction), energy",2020,3.0
+54897,Sex: Female,Total,65 to 74 years,B Mining and quarrying ,2020,0.0
+54912,Sex: Female,Total,65 to 74 years,C Manufacturing,2020,3.0
+54927,Sex: Female,Total,65 to 74 years,D Energy supply,2020,0.0
+54942,Sex: Female,Total,65 to 74 years,E Water supply and waste management,2020,0.0
+54957,Sex: Female,Total,65 to 74 years,F Construction,2020,1.0
+54972,Sex: Female,Total,65 to 74 years,G-N Commercial services,2020,25.0
+54987,Sex: Female,Total,65 to 74 years,"G-I Trade, transport, hotels, catering",2020,12.0
+55002,Sex: Female,Total,65 to 74 years,G Wholesale and retail trade,2020,8.0
+55017,Sex: Female,Total,65 to 74 years,H Transportation and storage,2020,2.0
+55032,Sex: Female,Total,65 to 74 years,I Accommodation and food serving,2020,2.0
+55047,Sex: Female,Total,65 to 74 years,J Information and communication,2020,1.0
+55062,Sex: Female,Total,65 to 74 years,K Financial institutions,2020,2.0
+55077,Sex: Female,Total,65 to 74 years,"L Renting, buying, selling real estate",2020,1.0
+55092,Sex: Female,Total,65 to 74 years,M-N Business services,2020,9.0
+55107,Sex: Female,Total,65 to 74 years,M Other specialised business services,2020,3.0
+55122,Sex: Female,Total,65 to 74 years,N Renting and other business support,2020,6.0
+55137,Sex: Female,Total,65 to 74 years,O-U Noncommercial services,2020,33.0
+55152,Sex: Female,Total,65 to 74 years,O-Q Government and care,2020,30.0
+55167,Sex: Female,Total,65 to 74 years,O Public administration and services,2020,4.0
+55182,Sex: Female,Total,65 to 74 years,P Education,2020,7.0
+55197,Sex: Female,Total,65 to 74 years,Q Health and social work activities,2020,20.0
+55212,Sex: Female,Total,65 to 74 years,"R-U Culture, recreation, other services",2020,3.0
+55227,Sex: Female,Total,65 to 74 years,"R Culture, sports and recreation",2020,1.0
+55242,Sex: Female,Total,65 to 74 years,S Other service activities,2020,2.0
+55257,Sex: Female,Total,75 years or older,A-U All economic activities,2020,3.0
+55272,Sex: Female,Total,75 years or older,A-F Agriculture and industry,2020,0.0
+55287,Sex: Female,Total,75 years or older,"A Agriculture, forestry and fishing",2020,0.0
+55302,Sex: Female,Total,75 years or older,B-F Manifacturing and energy,2020,0.0
+55317,Sex: Female,Total,75 years or older,"B-E Industry (no construction), energy",2020,0.0
+55332,Sex: Female,Total,75 years or older,B Mining and quarrying ,2020,0.0
+55347,Sex: Female,Total,75 years or older,C Manufacturing,2020,0.0
+55362,Sex: Female,Total,75 years or older,D Energy supply,2020,0.0
+55377,Sex: Female,Total,75 years or older,E Water supply and waste management,2020,0.0
+55392,Sex: Female,Total,75 years or older,F Construction,2020,0.0
+55407,Sex: Female,Total,75 years or older,G-N Commercial services,2020,2.0
+55422,Sex: Female,Total,75 years or older,"G-I Trade, transport, hotels, catering",2020,1.0
+55437,Sex: Female,Total,75 years or older,G Wholesale and retail trade,2020,1.0
+55452,Sex: Female,Total,75 years or older,H Transportation and storage,2020,0.0
+55467,Sex: Female,Total,75 years or older,I Accommodation and food serving,2020,0.0
+55482,Sex: Female,Total,75 years or older,J Information and communication,2020,0.0
+55497,Sex: Female,Total,75 years or older,K Financial institutions,2020,1.0
+55512,Sex: Female,Total,75 years or older,"L Renting, buying, selling real estate",2020,0.0
+55527,Sex: Female,Total,75 years or older,M-N Business services,2020,1.0
+55542,Sex: Female,Total,75 years or older,M Other specialised business services,2020,0.0
+55557,Sex: Female,Total,75 years or older,N Renting and other business support,2020,0.0
+55572,Sex: Female,Total,75 years or older,O-U Noncommercial services,2020,1.0
+55587,Sex: Female,Total,75 years or older,O-Q Government and care,2020,0.0
+55602,Sex: Female,Total,75 years or older,O Public administration and services,2020,0.0
+55617,Sex: Female,Total,75 years or older,P Education,2020,0.0
+55632,Sex: Female,Total,75 years or older,Q Health and social work activities,2020,0.0
+55647,Sex: Female,Total,75 years or older,"R-U Culture, recreation, other services",2020,0.0
+55662,Sex: Female,Total,75 years or older,"R Culture, sports and recreation",2020,0.0
+55677,Sex: Female,Total,75 years or older,S Other service activities,2020,0.0
