@@ -158,7 +158,6 @@ env.bak/
 venv.bak/
 
 # Docker
-Dockerfile
 .dockerignore
 docker-compose.yml
 
@@ -223,6 +222,7 @@ Automating_Equity1_Code.Rproj
 !1. Scraping/CBS/Found Data/keywords_dict_manual.json
 !1. Scraping/CBS/Found Data/*_Gender x Age_CBS_DATA.pkl
 !1. Scraping/CBS/Found Data/*_Gender x Age_CBS_DATA_from_code.pkl
+!1. Scraping/CBS/Found Data/SBI_ALL_NACE_REV2.csv
 1. Scraping/Coding Material/*
 2. Cleaning and Preprocessing/Coding Material/*
 5. Typesetting/tables_and_figs
