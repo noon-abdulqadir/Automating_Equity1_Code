@@ -1,0 +1,425 @@
+---
+title: Functions
+jupyter: python3
+---
+
+```{python}
+import os # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+import sys # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+
+mod = sys.modules[__name__]
+
+code_dir = None
+code_dir_name = 'Code'
+unwanted_subdir_name = 'Analysis'
+
+if code_dir_name not in str(Path.cwd()).split('/')[-1]:
+    for _ in range(5):
+
+        parent_path = str(Path.cwd().parents[_]).split('/')[-1]
+
+        if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
+
+            code_dir = str(Path.cwd().parents[_])
+
+            if code_dir is not None:
+                break
+else:
+    code_dir = Path.cwd()
+sys.path.append(code_dir)
+
+# %load_ext autoreload
+# %autoreload 2
+```
+
+```{python}
+from setup_module.imports import *  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from setup_module import researchpy_fork as rp # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from setup_module import specification_curve_fork as specy # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+```
+
+
+
+# READ DATA
+
+```{python}
+with open(f'{data_dir}df_manual_len.txt', 'r') as f:
+    df_manual_len = int(f.read())
+
+df_manual = pd.read_pickle(f'{df_save_dir}df_manual_for_training.pkl')
+assert len(df_manual) == df_manual_len, f'DATAFRAME MISSING DATA! DF SHOULD BE OF LENGTH {df_manual_len} BUT IS OF LENGTH {len(df_manual)}'
+print(f'Dataframe loaded with shape: {df_manual.shape}')
+df_manual = categorize_df_gender_age(df_manual)
+```
+
+```{python}
+with open(f'{data_dir}df_jobs_for_analysis_len.txt', 'r') as f:
+    df_jobs_len = int(f.read())
+
+# df_jobs = pd.read_pickle(f'{df_save_dir}df_jobs_for_analysis.pkl')
+df_jobs = pd.read_pickle(f'{df_save_dir}df_jobs_for_analysis.pkl')
+assert len(df_jobs) == df_jobs_len, f'DATAFRAME MISSING DATA! DF SHOULD BE OF LENGTH {df_jobs_len} BUT IS OF LENGTH {len(df_jobs)}'
+print(f'Dataframe loaded with shape: {df_jobs.shape}')
+df_jobs = categorize_df_gender_age(df_jobs)
+```
+
+# Analysis plan:
+
+1. ## [Descriptives, visualizations, and tables](./1.%20descriptives_visualization_and_tables.ipynb)
+2. ## [Frequencies and Normality tests](./2.%20frequencies_and_normality_test.ipynb)
+   1. ### Frequencies, histograms, and QQ plots
+      * Normal test
+      * Kurtosis test
+      * Shapiro
+      * Anderson
+      * Bartlett
+   2. ### Correlation between independent variables (IVs) and control variables and Multicolinarity test
+      * Pearson's R
+      * VIF
+     - ***ivs_dummy*** (binary nominal) = Social category designation (Female, Male, Mixed Gender)
+     - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+     - ***% Sector per Workforce*** (continous ratio) = Sector percentage per worksforce (0-100)
+     - ***num_words*** (continous ratio) = Number of words in job description
+     - ***English Requirement in Job Ad*** (binary nominal) = English requirement in job description (0 vs. 1)
+     - ***Dutch Requirement in Job Ad*** (binary nominal) = Dutch requirement in job description (0 vs. 1)
+     - ***Platform*** (binary dummy) = LinkedIn (0 vs. 1), Indeed (0 vs. 1), Glassdoor (0 vs. 1)
+
+3. ## [ANOVA and Chi-square (Pearson's R)](./3.%20chisqt_and_anova.ipynb)
+
+   1. ### Chi-square
+      * **df_manual:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs*** (binary nominal) = Social category designation (Female, Male, Mixed Gender)
+      * **df_jobs:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs*** (binary nominal) = Social category designation (Female, Male, Mixed Gender)
+
+   2. ### One-way ANOVA, interactions, and post-hoc test
+      * **df_manual:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs*** (binary nominal) = Social category designation (Female, Male, Mixed Gender)
+          - If Levene's test is *not significant*, use classic ANOVA and Tukey's post hoc test
+          - If Levene's test is *significant*, use Welch's and Kruskal-Wallis ANOVA and Games Howell's post hoc test
+      * **df_jobs:**
+         - ***dvs_prob*** (continous ratio) = 'Warmth' and 'Competence' probabilities (0-1)
+         - ***ivs*** (binary nominal) = Social category designation (Female, Male, Mixed Gender)
+           - If Levene's test is *not significant*, use classic ANOVA and Tukey's post hoc test
+           - If Levene's test is *significant*, use Welch's and Kruskal-Wallis ANOVA and Games Howell's post hoc test
+
+4. ## [Regression Analysis](./3.%20regression_analysis.ipynb)
+   1. ### Logistic Regression  with all interaction (smf):
+      * **df_manual:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+      * **df_jobs:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+   2. ### OLS Regression with all interaction:
+      * **df_jobs:**
+        - ***dvs_prob*** (continous ratio) = 'Warmth' and 'Competence' probabilities (0-1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+   3. ### Multilevel OLS Regression with all interaction:
+      * **df_jobs:**
+        - ***dvs_prob*** (continous ratio) = 'Warmth' and 'Competence' probabilities (0-1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+
+5. ## [Specification Curve Analysis](./4.%20specification_curve_analysis.ipynb)
+
+   1. ### Logistic Specification Curve Analysis:
+      * **df_manual:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+      * **df_jobs:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+   2. ### OLS Specification Curve Analysis:
+      * **df_jobs:**
+        - ***dvs_prob*** (continous ratio) = 'Warmth' and 'Competence' probabilities (0-1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+
+## Set dataframes
+
+#### Dataframes dict
+
+```{python}
+dataframes = {
+    # 'df_manual': df_manual,
+    'df_jobs': df_jobs,
+}
+```
+
+# Chi-square
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    for dv, iv in tqdm_product(dvs, ivs_dummy):
+
+        # Full chi-square
+        expected, observed, full_chisqt = pg.chi2_independence(data=df, x=iv, y=dv)
+        print('\n')
+        print('+'*120)
+        print(f'Dependent Variable: {dv}\nIndependent Variable: {iv}')
+        print('\n')
+        print('~' * 20)
+        print('FULL CHI-SQUARE TEST:')
+        print('-'*20)
+        print(f'Observed Count:\n{observed}\n')
+        print('-'*20)
+        print(f'Expected Count:\n{expected}\n')
+        print('-'*20)
+        print(f'Chi-square:\n{full_chisqt.round(2)}\n')
+        print('~' * 20)
+        chi_to_save = pd.concat([pd.concat([observed, pd.DataFrame(expected)], axis='index'), full_chisqt], axis='index')
+        chi_to_save.to_csv(f'{table_save_path}chi-square {df_name} - {dv} x {iv}.csv')
+        chi_to_save.style.to_latex(f'{table_save_path}chi-square {df_name} - {dv} x {iv}.tex', hrules=True)
+
+        # Chi-square
+        chisqt = pd.crosstab(df[iv], df[dv])
+        pearson_r, p_value, dof, expected = scipy.stats.chi2_contingency(chisqt)
+        reject_H0 = p_value > alpha
+        reject_H = p_value < alpha
+
+        # if not reject_H0 and reject_H:
+        #     print('\n')
+        #     print('+'*120)
+        #     print(f'Dependent Variable: {dv}\nIndependent Variable: {iv}\nNOT SIGNIFICANT at p-value: {p_value:.3f}!')
+        #     print('\n')
+        #     print('~' * 20)
+        #     print(f"Pearsons's R: {pearson_r}.\np-value: {p_value:.3f}.\nDegree of freedom: {dof}.\nH0 Rejected: {reject_H0}\nH Rejected: {reject_H}")
+        #     print('\n')
+        # elif reject_H0 and not reject_H:
+        print('\n')
+        print('+'*120)
+        print(f'Dependent Variable: {dv}\nIndependent Variable: {iv}')
+        print('\n')
+        print('~' * 20)
+        print(f"Pearsons's R: {pearson_r}.\np-value: {p_value:.3f}.\nDegree of freedom: {dof}.\nH0 Rejected: {reject_H0}\nH Rejected: {reject_H}")
+        print('-'*20)
+        print(f'Observed Count:\n{chisqt}\n')
+        print('-'*20)
+        print(f'Expected Count:\n{expected}\n')
+        print('~' * 20)
+
+        # # Plot acceptance region distribution
+        # x = np.linspace(0, 10, 100)
+        # fig,ax = plt.subplots(1,1, figsize=(15,10))
+        # #plotting vertical line for critical value
+        # plt.axvline(x=scipy.stats.chi2.isf(0.05,dof), ymin=0, ymax= 0.3,label='X-Critical',color='black')
+        # #plotting vertical line for calculated value.
+        # plt.axvline(x=stat, ymin=0, ymax= 0.3,label='X-calculated',color='blue')
+        # #plotting distribution graph for our calculated degrees of freedom
+        # ax.plot(x, scipy.stats.chi2.pdf(x, dof), label=f'df = {str(dof)}', color='red')
+        # ax.set_xlabel('Value',fontsize=12, fontweight='bold')
+        # ax.set_ylabel('Probability Distribution',fontsize=12,fontweight='bold')
+        # ax.set_title(f'Chi-Square Distribution for {dv} x {iv}',fontsize=16,fontweight='bold')
+        # plt.xlim(0, 10)
+        # plt.ylim(0, 0.6)
+        # plt.legend()
+        # plt.show()
+```
+
+# ANOVA
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    # MANOVA
+    print('MANOVA')
+    print('\n')
+    print('~' * 20)
+    print(f'{ivs} x {dvs if df_name == "df_manual" else dvs_prob}')
+    dvs_for_formula = ' + '.join(dvs if df_name == 'df_manual' else dvs_prob)
+    ivs_for_formula = ' + '.join(f'C({iv})' for iv in ivs)
+    controls_for_formula = ' + '.join('_'.join(control.split()) for control in controls[:2])
+    # manova = sm.multivariate.MANOVA(endog=np.asarray(df[dvs].values, dtype=int), exog=sm.add_constant(np.asarray(df[ivs_num[:]], dtype=int))).mv_test().summary()
+    manova = sm.multivariate.MANOVA.from_formula(formula=f'{dvs_for_formula} ~ {ivs_for_formula}', data=df).mv_test()
+    print(f'{ivs} x {dvs if df_name == "df_manual" else dvs_prob} MANOVA:\n{manova.summary()}')
+    df_to_save = pd.concat(pd.read_html(manova.summary().as_html()), axis='index', ignore_index=True)
+    df_to_save.to_csv(f'{table_save_path}manova {df_name} - {ivs} x {dvs if df_name == "df_manual" else dvs_prob}.csv')
+    df_to_save.style.to_latex(f'{table_save_path}manova {df_name} - {ivs} x {dvs if df_name == "df_manual" else dvs_prob}.tex', hrules=True)
+    print('~' * 20)
+
+    # MANCOVA
+    print('MANCOVA')
+    print('\n')
+    print('~' * 20)
+    print(f'{ivs} x {dvs}')
+    endog=np.asarray(df[dvs].values, dtype=int)
+    exog=np.asarray(df[ivs_num[:] + controls[:2]], dtype=int)
+    constant = sm.add_constant(exog)
+    mancova = sm.multivariate.MANOVA(endog=endog, exog=exog).mv_test()
+    print(f'{ivs} x {dvs} MANOVA:\n{mancova.summary()}')
+    df_to_save = pd.concat(pd.read_html(mancova.summary().as_html()), axis='index', ignore_index=True)
+    df_to_save.to_csv(f'{table_save_path}mancova {df_name} - {ivs} x {dvs}.csv')
+    df_to_save.style.to_latex(f'{table_save_path}mancova {df_name} - {ivs} x {dvs}.tex', hrules=True)
+    print('~' * 20)
+
+    if df_name == 'df_manual':
+        dvs_ = dvs
+    elif df_name == 'df_jobs':
+        dvs_ = dvs_all
+
+    for dv, iv in tqdm_product(dvs_, ivs):
+        print('+'*120)
+        print(f'Dependent Variable: {dv}\nIndependent Variable: {iv}')
+        print('+'*120)
+
+        # LEVENE'S TESTS
+        print("LEVENE'S TEST")
+        print('\n')
+        print('~' * 20)
+        print(f'{iv} x {dv}')
+        levene = pg.homoscedasticity(data=df, dv=dv, group=iv, method='levene').round(2) #dv
+        equal_var_levene = eval(levene.equal_var.to_string(index=False))
+        print(f"{iv} x {dv} Levene's test:\n{levene}")
+        levene.to_csv(f"{table_save_path}levene's {df_name} - {iv} x {dv}.csv")
+        levene.style.to_latex(f"{table_save_path}levene's {df_name} - {iv} x {dv}.tex")
+        print('~' * 20)
+        print('\n')
+
+        # SCIPY ANOVAS
+        print('ANOVA SIGNIFICANCE')
+        print('\n')
+        print('~' * 20)
+        print(f'{iv} x {dv}')
+        f_statistic, p_value = f_oneway(
+            df[dv][df[iv] == ivs_dict[iv][0]],
+            df[dv][df[iv] == ivs_dict[iv][1]],
+            df[dv][df[iv] == ivs_dict[iv][2]]
+        )
+        reject_H0 = p_value > alpha
+        reject_H = p_value < alpha
+
+        # if not reject_H0 and reject_H:
+        #     print('\n')
+        #     print('+'*120)
+        #     print(f'Dependent Variable: {dv}\nIndependent Variable: {iv}\nNOT SIGNIFICANT at p-value: {p_value:.3f}!')
+        #     print('\n')
+        #     print('~' * 20)
+        #     print(f'One-way ANOVA F-statistic: {f_statistic}\np-value: {p_value}.\nH0 Rejected: {reject_H0}\nH Rejected: {reject_H}')
+        #     print('\n')
+        # elif reject_H0 and not reject_H:
+        print('\n')
+        print('+'*120)
+        print(f'Dependent Variable: {dv}\nIndependent Variable: {iv}')
+        print('\n')
+        print('~' * 20)
+        print(f'One-way ANOVA F-statistic: {f_statistic}\np-value: {p_value}.\nH0 Rejected: {reject_H0}\nH Rejected: {reject_H}')
+        print('\n')
+
+        # INTERACTION MODEL
+        print(f'INTEACTION ANOVA {dv}')
+        print('\n')
+        print('~' * 20)
+        print(f'{iv} x {dv}')
+        formula = f'{dv} ~ C({ivs[0]})*C({ivs[1]})'
+        model = smf.ols(data = df, formula = formula).fit()
+        anova_interaction = sm.stats.anova_lm(model, typ=2).round(2)
+        print(f'{iv} x {dv} ANOVA INTERACTION:\n{anova_interaction}')
+        print('~' * 20)
+        print('\n')
+
+        if equal_var_levene == True:
+            # ONE-WAY ANOVA
+            print('ONE-WAY ANOVA')
+            print('\n')
+            print('~' * 20)
+            print(f'{iv} x {dv}')
+            anova1 = pg.anova(data=df, dv=dv, between=iv, detailed=True, effsize='np2').round(2)
+            print(f'{iv} x {dv} ONE-WAY ANOVA:\n{anova1}')
+            anova1.to_csv(f'{table_save_path}one-way anova {df_name} - {iv} x {dv}.csv')
+            anova1.style.to_latex(f'{table_save_path}one-way anova {df_name} - {iv} x {dv}.tex', hrules=True)
+            print('~' * 20)
+            print('\n')
+
+            # ONE-WAY ANCOVA
+            print('ANCOVA')
+            print('\n')
+            print('~' * 20)
+            print(f'{iv} x {dv}')
+            ancova = pg.ancova(data=df, dv=dv, between=iv, covar=controls[:2], effsize='np2').round(2)
+            print(f'{iv} x {dv} ANCOVA:\n{ancova}')
+            ancova.to_csv(f'{table_save_path}ancova {df_name} - {iv} x {dv}.csv')
+            ancova.style.to_latex(f'{table_save_path}ancova {df_name} - {iv} x {dv}.tex', hrules=True)
+            print('~' * 20)
+            print('\n')
+
+            # TWO-WAY ANOVA
+            print('TWO-WAY ANOVA')
+            print('\n')
+            print('~' * 20)
+            print(f'{iv} x {dv}')
+            anova2 = pg.anova(data=df, dv=dv, between=ivs, detailed=True, effsize='np2').round(2)
+            print(f'{iv} x {dv} TWO-WAY ANOVA:\n{anova2}')
+            anova2.to_csv(f'{table_save_path}two-way anova {df_name} - {ivs[0]} and {ivs[1]} x {dv}.csv')
+            anova2.style.to_latex(f'{table_save_path}two-way anova {df_name} - {ivs[0]} and {ivs[1]} x {dv}.tex', hrules=True)
+            print('~' * 20)
+            print('\n')
+
+            # TUKEY POST HOC
+            print("POST HOC TUKEY'S ANOVA")
+            print('\n')
+            print('~' * 20)
+            print(f'{iv} x {dv}')
+            anova_pairwise_tukey = pg.pairwise_tukey(
+                data=df, dv=dv, between=iv, effsize='eta-square'
+            ).round(2)
+            pg.print_table(anova_pairwise_tukey)
+            anova_pairwise_tukey.to_csv(f'{table_save_path}post hoc tukey {df_name} - {iv} x {dv}.csv')
+            anova_pairwise_tukey.style.to_latex(f'{table_save_path}post hoc tukey {df_name} - {iv} x {dv}.tex', hrules=True)
+            print('~' * 20)
+            print('\n')
+
+        elif equal_var_levene == False:
+            # WELCH ANOVA
+            print('WELCH ANOVA')
+            print('\n')
+            print('~' * 20)
+            print(f'{iv} x {dv}')
+            anova_welch = pg.welch_anova(data=df, dv=dv, between=iv).round(2)
+            pg.print_table(anova_welch)
+            anova_welch.to_csv(f'{table_save_path}welch anova {df_name} - {iv} x {dv}.csv')
+            anova_welch.style.to_latex(f'{table_save_path}welch anova {df_name} - {iv} x {dv}.tex', hrules=True)
+            print('~' * 20)
+            print('\n')
+
+            # KRUSKAL-WALLIS ANOVA
+            print('KRUSKAL-WALLIS ANOVA')
+            print('\n')
+            print('~' * 20)
+            print(f'{iv} x {dv}')
+            anova_kruskal = pg.kruskal(data=df, dv=dv, between=iv).round(2)
+            pg.print_table(anova_kruskal)
+            anova_kruskal.to_csv(f'{table_save_path}kruskal-wallis anova {df_name} - {iv} x {dv}.csv')
+            anova_kruskal.style.to_latex(f'{table_save_path}kruskal-wallis anova {df_name} - {iv} x {dv}.tex', hrules=True)
+            print('~' * 20)
+            print('\n')
+
+            # GAMES HOWELL POST HOC
+            print('POST HOC GAMES HOWELL ANOVA')
+            print('\n')
+            print('~' * 20)
+            print(f'{iv} x {dv}')
+            anova_games_posthoc = pg.pairwise_gameshowell(
+                data=df, dv=dv, between=iv, effsize='eta-square'
+            ).round(2)
+            pg.print_table(anova_games_posthoc)
+            anova_games_posthoc.to_csv(f'{table_save_path}post hoc gameshowell {df_name} - {iv} x {dv}.csv')
+            anova_games_posthoc.style.to_latex(f'{table_save_path}post hoc gameshowell {df_name} - {iv} x {dv}.tex', hrules=True)
+            print('~' * 20)
+            print('\n')
+            print('+'*120)
+            print('\n')
+```
+
+

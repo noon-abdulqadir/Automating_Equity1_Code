@@ -1,0 +1,1089 @@
+---
+title: READ DATA
+jupyter: python3
+---
+
+```{python}
+import os # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+import sys # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+
+mod = sys.modules[__name__]
+
+code_dir = None
+code_dir_name = 'Code'
+unwanted_subdir_name = 'Analysis'
+
+if code_dir_name not in str(Path.cwd()).split('/')[-1]:
+    for _ in range(5):
+
+        parent_path = str(Path.cwd().parents[_]).split('/')[-1]
+
+        if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
+
+            code_dir = str(Path.cwd().parents[_])
+
+            if code_dir is not None:
+                break
+else:
+    code_dir = Path.cwd()
+sys.path.append(code_dir)
+
+# %load_ext autoreload
+# %autoreload 2
+```
+
+```{python}
+from setup_module.imports import *  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from setup_module import researchpy_fork as rp # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from setup_module import specification_curve_fork as specy # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+```
+
+
+
+```{python}
+with open(f'{data_dir}df_manual_len.txt', 'r') as f:
+    df_manual_len = int(f.read())
+
+df_manual = pd.read_pickle(f'{df_save_dir}df_manual_for_training.pkl')
+assert len(df_manual) == df_manual_len, f'DATAFRAME MISSING DATA! DF SHOULD BE OF LENGTH {df_manual_len} BUT IS OF LENGTH {len(df_manual)}'
+print(f'Dataframe loaded with shape: {df_manual.shape}')
+df_manual = categorize_df_gender_age(df_manual)
+```
+
+```{python}
+with open(f'{data_dir}df_jobs_for_analysis_len.txt', 'r') as f:
+    df_jobs_len = int(f.read())
+
+df_jobs = pd.read_pickle(f'{df_save_dir}df_jobs_for_analysis.pkl')
+assert len(df_jobs) == df_jobs_len, f'DATAFRAME MISSING DATA! DF SHOULD BE OF LENGTH {df_jobs_len} BUT IS OF LENGTH {len(df_jobs)}'
+print(f'Dataframe loaded with shape: {df_jobs.shape}')
+df_jobs = categorize_df_gender_age(df_jobs)
+```
+
+# Analysis plan:
+
+1. ## [Descriptives, visualizations, and tables](./1.%20descriptives_visualization_and_tables.ipynb)
+2. ## [Frequencies and Normality tests](./2.%20frequencies_and_normality_test.ipynb)
+   1. ### Frequencies, histograms, and QQ plots
+      * Normal test
+      * Kurtosis test
+      * Shapiro
+      * Anderson
+      * Bartlett
+   2. ### Correlation between independent variables (IVs) and control variables and Multicolinarity test
+      * Pearson's R
+      * VIF
+     - ***ivs_dummy*** (binary nominal) = Social category designation (Female, Male, Mixed Gender)
+     - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+     - ***% Sector per Workforce*** (continous ratio) = Sector percentage per worksforce (0-100)
+     - ***num_words*** (continous ratio) = Number of words in job description
+     - ***English Requirement in Job Ad*** (binary nominal) = English requirement in job description (0 vs. 1)
+     - ***Dutch Requirement in Job Ad*** (binary nominal) = Dutch requirement in job description (0 vs. 1)
+     - ***Platform*** (binary dummy) = LinkedIn (0 vs. 1), Indeed (0 vs. 1), Glassdoor (0 vs. 1)
+
+3. ## [ANOVA and Chi-square (Pearson's R)](./3.%20chisqt_and_anova.ipynb)
+
+   1. ### Chi-square
+      * **df_manual:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs*** (binary nominal) = Social category designation (Female, Male, Mixed Gender)
+      * **df_jobs:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs*** (binary nominal) = Social category designation (Female, Male, Mixed Gender)
+
+   2. ### One-way ANOVA, interactions, and post-hoc test
+      * **df_manual:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs*** (binary nominal) = Social category designation (Female, Male, Mixed Gender)
+          - If Levene's test is *not significant*, use classic ANOVA and Tukey's post hoc test
+          - If Levene's test is *significant*, use Welch's and Kruskal-Wallis ANOVA and Games Howell's post hoc test
+      * **df_jobs:**
+         - ***dvs_prob*** (continous ratio) = 'Warmth' and 'Competence' probabilities (0-1)
+         - ***ivs*** (binary nominal) = Social category designation (Female, Male, Mixed Gender)
+           - If Levene's test is *not significant*, use classic ANOVA and Tukey's post hoc test
+           - If Levene's test is *significant*, use Welch's and Kruskal-Wallis ANOVA and Games Howell's post hoc test
+
+4. ## [Regression Analysis](./3.%20regression_analysis.ipynb)
+   1. ### Logistic Regression  with all interaction (smf):
+      * **df_manual:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+      * **df_jobs:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+   2. ### OLS Regression with all interaction:
+      * **df_jobs:**
+        - ***dvs_prob*** (continous ratio) = 'Warmth' and 'Competence' probabilities (0-1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+   3. ### Multilevel OLS Regression with all interaction:
+      * **df_jobs:**
+        - ***dvs_prob*** (continous ratio) = 'Warmth' and 'Competence' probabilities (0-1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+
+5. ## [Specification Curve Analysis](./4.%20specification_curve_analysis.ipynb)
+
+   1. ### Logistic Specification Curve Analysis:
+      * **df_manual:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+      * **df_jobs:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+   2. ### OLS Specification Curve Analysis:
+      * **df_jobs:**
+        - ***dvs_prob*** (continous ratio) = 'Warmth' and 'Competence' probabilities (0-1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+
+## Set dataframes
+
+#### Set variables
+
+```{python}
+# Dataframes dict
+dataframes = {
+    # 'df_manual': df_manual,
+    'df_jobs': df_jobs,
+}
+
+# Models dict
+sm_models = {
+    # 'Logistic': sm.Logit,
+    'OLS': sm.OLS,
+}
+
+# DVs dict
+dvs_for_analysis = {
+    # 'binary': ['Categorical Warmth and Competence', dvs],
+    'probability': ['Probability Warmth and Competence', dvs_prob],
+    # 'binary and probability': ['Categorical and Probability Warmth and Competence', dvs_all],
+}
+
+# IVs dict
+ivs_dummy_for_analysis = [iv for iv in ivs_dummy if 'Mixed' not in iv]
+ivs_dummy_and_perc_for_analysis = [iv for iv in ivs_dummy_and_perc if 'Mixed' not in iv]
+ivs_for_analysis = {
+    # 'categories': ['Categorical Gender and Age', ivs_dummy_for_analysis],
+    # 'percentages': ['PPS Gender and Age', ivs_perc],
+    'categories and percentages': ['Categorical and PPS Gender and Age', ivs_dummy_and_perc_for_analysis],
+}
+```
+
+#### Formula dfs and varaibles
+
+```{python}
+# Dataframes with '%' and spaces removed and replaced with '_'
+dataframes_ = {
+    # 'df_manual_': df_manual.copy().rename(columns={x: x.replace('%', 'percentage').replace(' ', '_') for x in df_manual.columns}),
+    'df_jobs_': df_jobs.copy().rename(columns={x: x.replace('%', 'percentage').replace(' ', '_') for x in df_jobs.columns}),
+}
+
+# Variable names for statsmodels regression formulas with '%' and spaces removed and replaced with '_'
+ivs_perc_ = list(map(lambda x: x.replace('%', 'percentage').replace(' ', '_'), ivs_perc))
+print('-'*20)
+print(f'IVs perc to use:\n{ivs_perc_}')
+print('\n')
+ivs_dummy_and_perc_for_analysis_ = list(map(lambda x: x.replace('%', 'percentage').replace(' ', '_'), ivs_dummy_and_perc_for_analysis))
+print('-'*20)
+print(f'IVs dummy and perc to use:\n{ivs_dummy_and_perc_for_analysis_}')
+print('\n')
+controls_ = list(map(lambda x: x.replace('%', 'percentage').replace(' ', '_'), controls))
+print('-'*20)
+print(f'All controls:\n{controls_}')
+print('\n')
+controls_for_formula = ' + '.join(controls_[:2])
+print('-'*20)
+print(f'Controls to use:\n{controls_for_formula}')
+print('\n')
+
+ivs_for_analysis_ = {
+    # 'categories': ['Categorical Gender and Age', ivs_dummy_for_analysis],
+    # 'percentages': ['PPS Gender and Age', ivs_perc_],
+    'categories and percentages': ['Categorical and PPS Gender and Age', ivs_dummy_and_perc_for_analysis_],
+}
+```
+
+### Functions
+
+```{python}
+def save_df_full_summary_excel(
+    df_full_summary,
+    title,
+    text_to_add_list,
+    file_save_path,
+    sheet_name=None,
+    startrow=None,
+    startcol=None,
+):
+    if sheet_name is None:
+        sheet_name = 'All'
+    if startrow is None:
+        startrow = 1
+    if startcol is None:
+        startcol = 1
+
+    # Define last rows and cols locs
+    header_range = 1
+    endrow = startrow + header_range + df_full_summary.shape[0]
+    endcol = startcol + df_full_summary.shape[1]
+
+    # Remove NAs
+    df_full_summary = df_full_summary.fillna('')
+
+    # Write
+    writer = pd.ExcelWriter(f'{file_save_path}.xlsx')
+    df_full_summary.to_excel(writer, sheet_name=sheet_name, merge_cells=True, startrow=startrow, startcol=startcol)
+    workbook  = writer.book
+    worksheet = writer.sheets[sheet_name]
+    worksheet.set_column(startrow, 1, None, None, {'hidden': True}) # hide the index column
+
+    # Title
+    worksheet.merge_range(1, startcol, 1, endcol, title, workbook.add_format({'italic': True, 'font_name': 'Times New Roman', 'font_size': 12, 'font_color': 'black', 'align': 'left', 'top': True, 'bottom': True, 'left': False, 'right': False}))
+
+    # Main body
+    body_max_row_idx, body_max_col_idx = df_full_summary.shape
+
+    for c, r in tqdm_product(range(body_max_col_idx), range(body_max_row_idx)):
+        row_to_write = startrow + header_range + r
+        col_to_write = startcol + 1 + c # 1 is for index
+        body_formats = {'num_format': '0.00', 'font_name': 'Times New Roman', 'font_size': 12, 'font_color': 'black', 'align': 'center', 'text_wrap': True, 'left': False, 'right': False}
+
+        if r == 0:
+            body_formats |= {'top': True, 'bottom': True, 'left': False, 'right': False}
+            worksheet.set_column(col_to_write, col_to_write, 10)
+
+        if r == body_max_row_idx-1:
+            body_formats |= {'bottom': True}
+
+        if c == 0:
+            body_formats |= {'align': 'left'}
+            worksheet.set_column(col_to_write, col_to_write, 15)
+
+        worksheet.write(row_to_write, col_to_write, df_full_summary.iloc[r, c], workbook.add_format(body_formats))
+
+    # Add Note
+    note_format = {'italic': True, 'font_name': 'Times New Roman', 'font_size': 10, 'font_color': 'black', 'align': 'left', 'left': False, 'right': False}
+    worksheet.merge_range(endrow, startcol, endrow, endcol, 'Note.', workbook.add_format(note_format))
+    # Add text
+    for i, text in enumerate(text_to_add_list):
+        worksheet.merge_range(endrow + 1 + i , startcol, endrow + 1 + i, endcol, text, workbook.add_format(note_format))
+
+    writer.close()
+```
+
+```{python}
+def make_full_report(
+    results, dv, analysis_type, model_name, dvs_name, ivs_name,
+    regression_info_dict=None, regressor_order=None, text_to_add_list=None, title=None, model_names=None
+):
+    '''
+    Make a full report for a regression analysis.
+    results: statsmodels regression results object or list of results objects
+    dv: str, dependent variable name
+    '''
+
+    if regression_info_dict is None:
+        # Regression info dict
+        regression_info_dict = {
+            'Model Name': lambda x: f'{x.model.__class__.__name__}',
+            'N': lambda x: f'{int(x.nobs):d}',
+            'R-squared': lambda x: f'{x.rsquared:.5f}',
+            'R-squared Adj.': lambda x: f'{x.rsquared_adj:.5f}',
+            'Log-Likelihood': lambda x: f'{x.llf:.5f}',
+            'Pseudo R2': lambda x: f'{x.prsquared:.5f}',
+            'F': lambda x: f'{x.fvalue:.5f}',
+            'F (p-value)': lambda x: f'{x.f_pvalue:.5f}',
+            'df_model': lambda x: f'{x.df_model:.0f}',
+            'df_total': lambda x: f'{x.df_resid + x.df_model + 1:.0f}',
+            'df_resid': lambda x: f'{x.df_resid:.0f}',
+            'AIC': lambda x: f'{x.aic:.5f}',
+            'BIC': lambda x: f'{x.bic:.5f}',
+            'ICC': lambda x: f'{x.rsquared / (x.rsquared + (x.nobs - 1) * x.mse_resid):.5f}',
+            'RMSE': lambda x: f'{x.mse_resid ** 0.5:.5f}',
+            'RMSE (std)': lambda x: f'{x.mse_resid ** 0.5 / x.model.endog.std():.5f}',
+            'Omnibus': lambda x: f'{sms.omni_normtest(x.resid).statistic:.5f}',
+            'Omnibus (p-value)': lambda x: f'{sms.omni_normtest(x.resid).pvalue:.5f}',
+            'Skew': lambda x: f'{sms.jarque_bera(x.resid)[-2]:.5f}',
+            'Kurtosis': lambda x: f'{sms.jarque_bera(x.resid)[-1]:.5f}',
+            'Jarque-Bera (JB)': lambda x: f'{sms.jarque_bera(x.resid)[0]:.5f}',
+            'Jarque-Bera (p-value)': lambda x: f'{sms.jarque_bera(x.resid)[1]:.5f}',
+            'Intercept': lambda x: f'{x.params["const"]:.5f}',
+            'Intercept (std)': lambda x: f'{x.bse["const"]:.5f}',
+            'Intercept t': lambda x: f'{x.tvalues["const"]:.5f}',
+            'Intercept t (p-value)': lambda x: f'{x.pvalues["const"]:.5f}',
+            'Intercept (95% CI)': lambda x: f'{x.conf_int().loc["const"][0]:.5f} - {x.conf_int().loc["const"][1]:.5f}',
+            'Unstandardized Coefficent B (b)': lambda x: f'{x.params[0]:.5f}',
+            'Standard Error (SE)': lambda x: f'{x.bse[0]:.5f}',
+            'Standardized Coefficient b* (β)': lambda x: f'{x.params[0] / x.model.endog.std():.5f}',
+            't': lambda x: f'{x.tvalues[0]:.5f}',
+            't (p-value)': lambda x: f'{x.pvalues[0]:.5f}',
+            '95% CI': lambda x: f'{x.conf_int().iloc[0, 1]:.5f} - {x.conf_int().iloc[0, 1]:.5f}',
+            # 'Summary': lambda x: f'{x.summary()}',
+            # 'F (p-value - FDR)': lambda x: f'{x.f_pvalue_fdr:.5f}',
+            # 'F (p-value - Bonferroni)': lambda x: f'{x.f_pvalue_bonf:.5f}',
+            # 't (p-value - FDR)': lambda x: f'{x.pvalues_fdr[1]:.5f}',
+            # 't (p-value - Bonferroni)': lambda x: f'{x.pvalues_bonf[1]:.5f}',
+        }
+    if model_names is None:
+        if isinstance(results, list):
+            model_names = [
+                f'{results[0].model.endog_names.split("_")[0] if "_" in results[0].model.endog_names else results[0].model.endog_names} Model {i+1}'
+                for i in range(len(results[0].model.endog_names))
+            ]
+            model_names[0] = model_names[0].replace('Model 1', 'Full Model')
+        else:
+            model_names = [
+                f'{results.model.endog_names.split("_")[0] if "_" in results.model.endog_names else results.model.endog_names}'
+            ]
+
+    order_type = 'unordered' if regressor_order is None else 'ordered'
+    if text_to_add_list is None:
+        text_to_add_list = []
+        if regressor_order is not None:
+            text_to_add_list.append('Models are ordered by independent variable type.')
+        else:
+            text_to_add_list.append('Models are ordered by coefficient size, largest to smallest.')
+
+    if title is None:
+        title = f'{model_name} {analysis_type}: {dvs_name} x {ivs_name}'
+
+    # Statsmodels summary_col
+    full_summary = summary_col(
+        results,
+        stars=True,
+        info_dict=regression_info_dict,
+        regressor_order=regressor_order,
+        float_format='%0.3f',
+        model_names=model_names,
+    )
+    if isinstance(results, list) and len(results) > 4:
+        full_summary.tables[0][full_summary.tables[0].filter(regex='Full Model').columns[0]].loc['Unstandardized Coefficent B (b)': '95% CI'] = ''
+
+    # Add title and notes
+    full_summary.add_title(title)
+    text_to_add_list.extend(full_summary.extra_txt)
+    for text in text_to_add_list:
+        full_summary.add_text(text)
+
+    # Save
+    save_name = f'{table_save_path}{model_name} {df_name} - ALL {dv} {order_type} {analysis_type} on {ivs_type}'
+    df_full_summary = pd.read_html(full_summary.as_html())[0]
+    df_full_summary.to_csv(f'{save_name}.csv')
+    df_full_summary.style.to_latex(f'{save_name}.tex', hrules=True)
+    save_df_full_summary_excel(df_full_summary, title, text_to_add_list, save_name)
+
+    return full_summary
+```
+
+```{python}
+def get_standardized_coefficients(results):
+
+    # # Get standardized regression coefficients
+    # std = np.asarray(constant.std(0))
+
+    # if 'const' in results.params and 'const' in constant:
+    #     std[0] = 1
+    # tt = results.t_test(np.diag(std))
+    # tt.c_names = results.model.exog_names
+
+    # t-test
+    std = results.model.exog.std(0)
+    if 'const' in results.params:
+        std[0] = 1
+    tt = results.t_test(np.diag(std))
+    if results.model.__class__.__name__ == 'MixedLM' or 'Group Var' in results.model.exog_names:
+        offset = slice(None, -1)
+        tt.c_names = results.model.exog_names[offset]
+    else:
+        offset = slice(None, None)
+        tt.c_names = results.model.exog_names
+
+    # Make df with standardized and unstandardized coefficients
+    df_std_coef = pd.DataFrame(
+        {
+            'coef': results.params[offset].apply(lambda x: f'{x:.5f}'),
+            'std err': results.bse[offset].apply(lambda x: f'{x:.5f}'),
+            'std coef': (results.params[offset] / results.model.exog[offset].std(axis=0)).apply(lambda x: f'{x:.5f}'),
+            't': results.tvalues[offset].apply(lambda x: f'{x:.5f}'),
+            'P>|t|': results.pvalues[offset].apply(lambda x: f'{x:.5f}'),
+            '[0.025': results.conf_int()[0][offset].apply(lambda x: f'{x:.5f}'),
+            '0.975]': results.conf_int()[1][offset].apply(lambda x: f'{x:.5f}'),
+        }
+    )
+    # if 'Group Var' in df_std_coef.index:
+    #     df_std_coef = df_std_coef.drop('Group Var', axis='index')
+    # # Add standardized coefficients and other data from t-test
+    # df_std_coef['std coef'] = tt.effect
+    # df_std_coef['std err'] = tt.sd
+    # df_std_coef['t'] = tt.statistic
+    # df_std_coef['P>|t|'] = tt.pvalue
+    # df_std_coef['[0.025'] = tt.conf_int()[:, 0]
+    # df_std_coef['0.975]'] = tt.conf_int()[:, 1]
+    # df_std_coef['var'] = [names[i] for i in range(len(results.model.exog_names))]
+    # df_std_coef = df_std_coef.sort_values('std coef', ascending=False)
+    df_std_coef = df_std_coef.reset_index().rename(columns={'index': 'var'})
+    df_std_coef = df_std_coef.rename(
+        columns={
+            'var': 'Variable',
+            'coef': 'Unstandardized Coefficent B (b)',
+            'std err': 'Standard Error',
+            'std coef':'Standardized Coefficient b* (β)',
+            't': 't-value',
+            'P>|t|': 'p-value',
+            '[0.025': '95% CI Lower',
+            '0.975]': '95% CI Upper'
+        }
+    )
+    # Reorder columns
+    df_std_coef = df_std_coef[[
+        'Variable',
+        'Unstandardized Coefficent B (b)',
+        'Standard Error',
+        'Standardized Coefficient b* (β)',
+        't-value',
+        'p-value',
+        '95% CI Lower',
+        '95% CI Upper'
+    ]]
+
+    return tt, df_std_coef
+```
+
+```{python}
+def get_multilevel_reg_data(results, endog, groups, exog_restricted=None):
+    '''
+    perform likelihood ratio test of random-effects (LRT)
+    + Degrees of Freedom (df)
+    + Pseudo R-squared (pseudo_r2)
+    + Intraclass Correlation Coefficient (ICC)
+    + Bayesian Information Criterion (BIC)
+    + Akaike Information Criterion (AIC)
+    '''
+
+    if exog_restricted is None:
+        exog_names = results.params.index[:-1].tolist()
+        exog_restricted = np.zeros((len(endog), 1))
+        exog_restricted[1:, :] = 1
+
+    # Null model
+    null_model = sm.MixedLM(endog=endog, exog=exog_restricted, groups=groups)
+    null_results = null_model.fit(reml=False)
+
+    # LRT
+    lrt = np.abs(null_results.llf - results.llf) * 2
+
+    # Degrees of Freedom (df)
+    dsf = results.df_modelwc - null_results.df_modelwc
+
+    # P-value
+    p_value = 1 - scipy.stats.chi2.sf(lrt, dsf)
+
+    # Pseudo R-squared (pseudo_r2)
+    pseudo_r2 = 1 - (
+        np.exp(-2 * (results.llf - null_results.llf) / len(endog)) ** (2 / (len(endog) - len(exog_names) - 1))
+    )
+
+    # ICC
+    icc = results.cov_re.iloc[0, 0] / (results.cov_re.iloc[0, 0] + results.scale) # Variance at level 2 (due to belonging to a certain job ad)/ Total variance
+
+    # ICC null
+    icc_null = null_results.cov_re.iloc[0, 0] / (null_results.cov_re.iloc[0, 0] + null_results.scale) # Level 2 variance/ Total variance
+
+    # AIC
+    aic = -2 * results.llf + 2 * np.log(results.nobs)
+
+    # AIC null
+    aic_null = -2 * null_results.llf + 2 * np.log(null_results.nobs)
+
+    # BIC
+    bic = -2 * results.llf + np.log(results.nobs) * (results.df_modelwc)
+
+    # BIC null
+    bic_null = -2 * null_results.llf + np.log(null_results.nobs) * (null_results.df_modelwc)
+
+    return (
+        lrt, dsf, p_value, pseudo_r2, icc, aic, bic,
+        null_model, null_results, icc_null, aic_null, bic_null
+    )
+```
+
+# Regressions
+
+## Logistic Regression
+
+```{python}
+%%time
+model_name = 'Logistic'
+analysis_type = 'regression'
+
+for (df_name, df), (ivs_type, [ivs_name, ivs_]) in tqdm_product(dataframes.items(), ivs_for_analysis.items()):
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {ivs_name} {"="*50}')
+    for dv in tqdm.tqdm(dvs):
+        print('+'*120)
+        print('\n')
+        print(f'DEPENDENT VARIABLE: {dv}\nINDEPENDENT VARIABLE: {ivs_}\nCONTROLS: {controls[:2]}')
+        print('\n')
+        print('+'*120)
+
+        endog_names = dv
+        exog_names = [iv for iv in ivs_ if 'Mixed' not in ivs_] + controls[:2]
+
+        endog = df[endog_names]
+        exog = df[exog_names]
+        constant = sm.add_constant(exog)
+
+        model = sm.Logit(endog=endog, exog=constant, data=df)
+        # formula = f'{dv} ~ {ivs_dummy[0]}*{ivs_dummy[3]} + {ivs_dummy[0]}*{ivs_dummy[4]} + {ivs_dummy[0]}*{ivs_dummy[5]} + {ivs_dummy[1]}*{ivs_dummy[3]} + {ivs_dummy[1]}*{ivs_dummy[4]} + {ivs_dummy[1]}*{ivs_dummy[5]} + {ivs_dummy[2]}*{ivs_dummy[3]} + {ivs_dummy[2]}*{ivs_dummy[4]} + {ivs_dummy[2]}*{ivs_dummy[5]} + {controls_for_formula}'
+        # formula = f'{dv} ~ {ivs_dummy[0]} + {ivs_dummy[1]} + {ivs_dummy[2]} + {ivs_dummy[3]} + {ivs_dummy[4]} + {ivs_dummy[5]} + {controls_for_formula}'
+        # formula = f'{dv} ~ {ivs_dummy[0]} + {ivs_dummy[1]} + {ivs_dummy[2]} + {ivs_dummy[3]} + {ivs_dummy[4]} + {ivs_dummy[5]}'
+        # formula = f'{dv} ~ {ivs_dummy[0]} + {ivs_dummy[2]} + {ivs_dummy[3]} + {ivs_dummy[5]}'
+        # formula = f'{dv} ~ {ivs_dummy[0]}*{ivs_dummy[3]} + {ivs_dummy[2]}*{ivs_dummy[5]} + {controls_for_formula}'
+        # formula = f'{dv} ~ {ivs_dummy[0]}*{ivs_dummy[3]} + {ivs_dummy[2]}*{ivs_dummy[5]}'
+        # formula = f'{dv} ~ {ivs_dummy[0]} + {ivs_dummy[2]} + {ivs_dummy[3]} + {ivs_dummy[5]} + {ivs_dummy[0]}:{ivs_dummy[3]} + {ivs_dummy[2]}:{ivs_dummy[5]} + {controls_for_formula}'
+
+        # formula = f'{dv} ~ {ivs_dummy[0]} + {ivs_dummy[2]} + {ivs_dummy[3]} + {ivs_dummy[5]} + {controls_for_formula}'
+
+        # print('-'*20)
+        # print(f'Using formula: {formula}')
+        # print('-'*20)
+
+        # # with contextlib.suppress(np.linalg.LinAlgError):
+        # model = smf.logit(formula=formula, data=df)
+        results = model.fit()
+        full_summary = make_full_report(
+            results, dv, dvs_name=dv, ivs_name=ivs_name, model_name=model_name, analysis_type=analysis_type
+        )
+        tt, df_std_coef = get_standardized_coefficients(results)
+        print('\n')
+        print('-'*20)
+        print(f'{dv}\n')
+        print('-'*20)
+        print('\n')
+        print(f'SUMMARY RESULTS:')
+        print(results.summary())
+        print(full_summary)
+        print('\n')
+        print('-'*20)
+        print(f'STANDARDIZED BETA REGRESSION COEFFICIENTS:\n{df_std_coef}')
+        print('\n')
+        print('-'*20)
+
+        # # Display Results
+        # print('~'*20)
+        # print('+'*20)
+        # print(f'{dv} x {ivs_}\n')
+        # print('+'*20)
+        # print('\n')
+        # print(f'SUMMARY RESULTS:\n{results.summary()}\n')
+        # print('~'*20)
+        # # print(f'SUMMARY RESULTS2:\n{results.summary2()}')
+        # # print('-'*20)
+        # # print(f'y = {results.params.const:.2f} + {results.params.x:.2f} * x')
+        # # print('-'*20)
+        # # print(f'COEFFICIENT:\n{results.params}')
+        # # print('-'*20)
+        # # print(f'CONFIDENCE INTERVALS:\n{results.conf_int()}')
+        # # print(f'P-VALUES:\n{results.pvalues}')
+        # # print('-'*20)
+        # # print(f'ODDS RATIOS:\n{np.exp(results.params)}')
+        # # print(f'AIC:\n{results.aic:.2f}')
+        # # print('-'*20)
+        # # print(f'BIC:\n{results.bic:.2f}')
+        # # print('-'*20)
+        # # print(f'Coehn\'s F2:\n{results.prsquared:.5f}')
+        # # print('-'*20)
+
+        # save results
+        save_name = f'{table_save_path}{model_name} {analysis_type} on {ivs_type} {df_name} - {dv} x {ivs_name}'
+        results.save(f'{save_name}.pkl')
+        df_to_save = pd.DataFrame(csv.reader(results.summary().as_csv().split('\n'), delimiter=','))
+        df_to_save.to_csv(f'{save_name}.csv')
+        df_to_save.style.to_latex(f'{save_name}.tex', hrules=True)
+        # df_std_coef.to_csv(f'{save_name} - standardized coefficients.csv')
+        # df_std_coef.style.to_latex(f'{save_name} - standardized coefficients.tex', hrules=True)
+```
+
+## OLS Regression
+
+```{python}
+model_name = 'OLS'
+analysis_type = 'regression'
+
+for (df_name, df), (ivs_type, [ivs_name, ivs_]) in tqdm_product(dataframes.items(), ivs_for_analysis.items()):
+
+    if df_name == 'df_jobs':
+        dvs_ = dvs_prob
+
+    elif df_name == 'df_manual':
+        dvs_ = dvs
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+    for dv in tqdm.tqdm(dvs_):
+        print('+'*120)
+        print('\n')
+        print(f'DEPENDENT VARIABLE: {dvs_}\nINDEPENDENT VARIABLE: {ivs_}\nCONTROLS: {controls[:2]}')
+        print('\n')
+        print('+'*120)
+
+        endog_names = dv
+        exog_names = ivs_[:] + controls[:2]
+
+        endog = df[endog_names]
+        exog = df[exog_names]
+        constant = sm.add_constant(exog)
+
+        model = sm.OLS(endog=endog, exog=constant, data=df)
+        # formula = f'{dv} ~ {ivs_perc_[0]} + {ivs_perc_[1]} + {ivs_perc_[2]} + {ivs_perc_[3]} + {ivs_perc_[0]}:{ivs_perc_[2]} + {ivs_perc_[0]}:{ivs_perc_[3]} + {ivs_perc_[1]}:{ivs_perc_[2]} + {ivs_perc_[1]}:{ivs_perc_[3]} + {controls_for_formula}'
+        # formula = f'{dv} ~ {ivs_perc_[0]}*{ivs_perc_[2]} + {ivs_perc_[0]}*{ivs_perc_[3]} + {ivs_perc_[1]}*{ivs_perc_[2]} + {ivs_perc_[1]}*{ivs_perc_[3]} + {controls_for_formula}'
+        # formula = f'{dv} ~ {ivs_perc_[0]}*{ivs_perc_[2]} + {ivs_perc_[0]}*{ivs_perc_[3]} + {ivs_perc_[1]}*{ivs_perc_[2]} + {ivs_perc_[1]}*{ivs_perc_[3]}'
+        # formula = f'{dv} ~ {ivs_perc_[0]} + {ivs_perc_[1]} + {ivs_perc_[2]} + {ivs_perc_[3]} + {controls_for_formula}'
+
+        # print('-'*20)
+        # print(f'Using formula: {formula}')
+        # print('-'*20)
+
+        # model = smf.ols(formula=formula, data=df)
+        # results = model.fit_regularized(alpha=0.0, L1_wt=0.0, start_params=None, profile_scale=False, refit=False)
+        results = model.fit()
+        full_summary = make_full_report(
+            results, dv, dvs_name=dv, ivs_name=ivs_name, model_name=model_name, analysis_type=analysis_type
+        )
+        tt, df_std_coef = get_standardized_coefficients(results)
+        print('\n')
+        print('-'*20)
+        print(f'{dv}\n')
+        print('-'*20)
+        print('\n')
+        print('SUMMARY RESULTS:')
+        print(results.summary())
+        print(full_summary)
+        print('\n')
+        print('-'*20)
+        print(f'STANDARDIZED BETA REGRESSION COEFFICIENTS:\n{df_std_coef}')
+        print('\n')
+        print('-'*20)
+
+        # # Display Results
+        # print('~'*20)
+        # print('+'*20)
+        # print(f'{dv} x {ivs_[:] + controls[:2]}\n')
+        # print('+'*20)
+        # print('\n')
+        # print(f'SUMMARY RESULTS:\n{results.summary()}\n')
+        # print('~'*20)
+        # print(f'STANDARDIZED COEFFICIENTS:\n{df_std_coef}')
+        # print('~'*20)
+        # # print(f'SUMMARY RESULTS2:\n{results.summary2()}')
+        # # print('-'*20)
+        # # print(f'y = {results.params.const:.2f} + {results.params.x:.2f} * x')
+        # # print('-'*20)
+        # # print(f'COEFFICIENT:\n{results.params}')
+        # # print('-'*20)
+        # # print(f'CONFIDENCE INTERVALS:\n{results.conf_int()}')
+        # # print(f'P-VALUES:\n{results.pvalues}')
+        # # print('-'*20)
+        # # print(f'ODDS RATIOS:\n{np.exp(results.params)}')
+        # print(f'AIC:\n{results.aic:.2f}')
+        # print('-'*20)
+        # print(f'BIC:\n{results.bic:.2f}')
+        # print('-'*20)
+        # # print(f'Coehn\'s F2:\n{results.rsquared_adj:.5f}')
+        # # print('-'*20)
+        # # table = sm.stats.anova_lm(results, typ=2)
+        # # print(f'ANOVA:\n{table}')
+        # # print('-'*20)
+
+        # save results
+        save_name = f'{table_save_path}{model_name} {analysis_type} on {ivs_type} {df_name} - {dv} x {ivs_name}'
+        results.save(f'{save_name}.pkl')
+        df_summary_results = pd.DataFrame(csv.reader(results.summary().as_csv().split('\n'), delimiter=','))
+        df_summary_results.to_csv(f'{save_name}.csv')
+        df_summary_results.style.to_latex(f'{save_name}.tex', hrules=True)
+        df_std_coef.to_csv(f'{save_name} - standardized coefficients.csv')
+        df_std_coef.style.to_latex(f'{save_name} - standardized coefficients.tex', hrules=True)
+
+        # # Boxplot
+        # boxplot = df.boxplot([dv], by = [ivs_perc_[2], ivs_perc_[0]],
+        #                     figsize = (16, 9),
+        #                     showmeans = True,
+        #                     notch = True)
+
+        # boxplot.set_xlabel('Categories')
+        # boxplot.set_ylabel(dv)
+        # # Creating a path to save the plot.
+        # plt.show()
+        # plt.pause(.001)
+        # # for image_save_format in ['eps', 'png', 'svg']:
+        # #     save_path = f'{plot_save_path}Probability Boxplot - {df_name} - {dv} x Social Category Percentages.{image_save_format}'
+        # #     boxplot.figure.savefig(
+        # #         save_path, format=image_save_format,
+        # #     )
+        # plt.close()
+```
+
+## Multivariate OLS Regression
+
+```{python}
+model_name = 'Multivariate OLS'
+analysis_type = 'regression'
+
+for (df_name, df), (ivs_type, [ivs_name, ivs_]) in tqdm_product(dataframes_.items(), ivs_for_analysis_.items()):
+
+    if df_name == 'df_jobs_':
+        dvs_ = dvs_all
+
+    elif df_name == 'df_manual_':
+        dvs_ = dvs
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+    print('+'*120)
+    print('\n')
+    print(f'DEPENDENT VARIABLE: {dvs_}\nINDEPENDENT VARIABLE: {ivs_}\nCONTROLS: {controls[:2]}')
+    print('\n')
+    print('+'*120)
+
+    # endog_names = dvs_
+    # exog_names = ivs_perc[:] + controls[:2]
+
+    # endog = df[endog_names]
+    # exog = df[exog_names]
+    # constant = sm.add_constant(exog)
+
+    # model = statsmodels.multivariate.multivariate_ols._MultivariateOLS(endog=endog, exog=constant, data=df)
+    # formula = f'{dv} ~ {ivs_perc_[0]} + {ivs_perc_[1]} + {ivs_perc_[2]} + {ivs_perc_[3]} + {ivs_perc_[0]}:{ivs_perc_[2]} + {ivs_perc_[0]}:{ivs_perc_[3]} + {ivs_perc_[1]}:{ivs_perc_[2]} + {ivs_perc_[1]}:{ivs_perc_[3]} + {controls_for_formula}'
+    # formula = f'{dv} ~ {ivs_perc_[0]}*{ivs_perc_[2]} + {ivs_perc_[0]}*{ivs_perc_[3]} + {ivs_perc_[1]}*{ivs_perc_[2]} + {ivs_perc_[1]}*{ivs_perc_[3]} + {controls_for_formula}'
+    # formula = f'{dv} ~ {ivs_perc_[0]}*{ivs_perc_[2]} + {ivs_perc_[0]}*{ivs_perc_[3]} + {ivs_perc_[1]}*{ivs_perc_[2]} + {ivs_perc_[1]}*{ivs_perc_[3]}'
+    formula = f'{" + ".join(dvs_)} ~ {" + ".join(ivs_)} + {controls_for_formula}'
+
+    model = statsmodels.multivariate.multivariate_ols._MultivariateOLS.from_formula(formula=formula, data=df)
+
+    # print('-'*20)
+    # print(f'Using formula: {formula}')
+    # print('-'*20)
+
+    with contextlib.suppress(ValueError):
+        # model = smf.ols(formula=formula, data=df)
+        results = model.fit()
+        full_summary = results.mv_test().summary()
+        # full_summary = make_full_report(
+        #     results, dv, dvs_name=dv, ivs_name=ivs_name, model_name=model_name, analysis_type=analysis_type
+        # )
+        # tt, df_std_coef = get_standardized_coefficients(results)
+        print('\n')
+        print('-'*20)
+        print(f'{dv}\n')
+        print('-'*20)
+        print('\n')
+        print('SUMMARY RESULTS:')
+        # print(results.summary())
+        print(full_summary)
+        # print('\n')
+        # print('-'*20)
+        # print(f'STANDARDIZED BETA REGRESSION COEFFICIENTS:\n{df_std_coef}')
+        # print('\n')
+        # print('-'*20)
+        # print(f'SUMMARY RESULTS2:\n{results.summary2()}')
+        # print('-'*20)
+        # print(f'y = {results.params.const:.2f} + {results.params.x:.2f} * x')
+        # print('-'*20)
+        # print(f'COEFFICIENT:\n{results.params}')
+        # print('-'*20)
+        # print(f'CONFIDENCE INTERVALS:\n{results.conf_int()}')
+        # print(f'P-VALUES:\n{results.pvalues}')
+        # print('-'*20)
+        # print(f'ODDS RATIOS:\n{np.exp(results.params)}')
+        # print(f'AIC:\n{results.aic:.2f}')
+        # print('-'*20)
+        # print(f'BIC:\n{results.bic:.2f}')
+        # print('-'*20)
+        # print(f'Coehn\'s F2:\n{results.rsquared_adj:.5f}')
+        # print('-'*20)
+        # table = sm.stats.anova_lm(results, typ=2)
+        # print(f'ANOVA:\n{table}')
+        # print('-'*20)
+
+        # save results
+        save_name = f'{table_save_path}{model_name} {analysis_type} on {ivs_type} {df_name} - {dvs_} x {ivs_name}'
+        df_to_save = pd.concat(pd.read_html(results.mv_test().summary().as_html()), axis='index', ignore_index=True)
+        df_to_save.to_csv(f'{save_name}.csv')
+        df_to_save.style.to_latex(f'{save_name}.tex', hrules=True)
+        # df_std_coef.to_csv(f'{save_name} - standardized coefficients.csv')
+        # df_std_coef.style.to_latex(f'{save_name} - standardized coefficients.tex', hrules=True)
+
+        # # Boxplot
+        # boxplot = df.boxplot([dv], by = [ivs_perc_[2], ivs_perc_[0]],
+        #                     figsize = (16, 9),
+        #                     showmeans = True,
+        #                     notch = True)
+
+        # boxplot.set_xlabel('Categories')
+        # boxplot.set_ylabel(dv)
+        # # Creating a path to save the plot.
+        # plt.show()
+        # plt.pause(.001)
+        # # for image_save_format in ['eps', 'png', 'svg']:
+        # #     save_path = f'{plot_save_path}Probability Boxplot - {df_name} - {dv} x Social Category Percentages.{image_save_format}'
+        # #     boxplot.figure.savefig(
+        # #         save_path, format=image_save_format,
+        # #     )
+        # plt.close()
+```
+
+## Multi-level OLS Regression
+
+```{python}
+model_name = 'Multilevel OLS'
+analysis_type = 'regression'
+random_intercept_names = 'Job ID'
+
+for (df_name, df), (ivs_type, [ivs_name, ivs_]) in tqdm_product(dataframes.items(), ivs_for_analysis.items()):
+
+    if df_name == 'df_manual':
+        dvs_ = dvs
+    elif df_name == 'df_jobs':
+        dvs_ = dvs_prob
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+    for dv in tqdm.tqdm(dvs_):
+        print('+'*120)
+        print('\n')
+        print(f'DEPENDENT VARIABLE: {dv}\nINDEPENDENT VARIABLE: {ivs_}\nCONTROLS: {controls[:2]}')
+        print('\n')
+        print('+'*120)
+
+        endog_names = dv
+        exog_names = ivs_[:] + controls[:2]
+        endog = df[endog_names]
+        exog = df[exog_names]
+        constant = sm.add_constant(exog)
+        groups = df[random_intercept_names]
+
+        # Main model
+        model = sm.MixedLM(endog=endog, exog=constant, groups=groups)
+        results = model.fit()
+
+        # Get fit statistics
+        (
+            lrt, dsf, p_value, pseudo_r2, icc, aic, bic, null_model, null_results, icc_null, aic_null, bic_null
+        ) = get_multilevel_reg_data(
+            results, endog, groups
+        )
+
+        # Get standardized beta regression coefficients
+        full_summary = make_full_report(
+            results, dv,
+            dvs_name=dv, ivs_name=ivs_name,
+            model_name=model_name, analysis_type=analysis_type, title=f'Multilevel: {dv} x {ivs_name}'
+        )
+        tt, df_std_coef = get_standardized_coefficients(results)
+        print('\n')
+        print('-'*20)
+        print(f'{dv}\n')
+        print('-'*20)
+        print('\n')
+        print('-'*20)
+        print(f'SUMMARY RESULTS:\n{full_summary}')
+        print('\n')
+        print('-'*20)
+        print(f'FIT STATISTICS:\nLRT: {lrt:.5f}\nDSF: {dsf:.5f}\nP-VALUE: {p_value:.5f}\nPSEUDO R2: {pseudo_r2:.5f}\nICC: {icc:.5f}\nAIC: {aic:.5f}\nBIC: {bic:.5f}\n')
+        print('-'*20)
+        print(f'STANDARDIZED BETA REGRESSION COEFFICIENTS:\n{df_std_coef}')
+        print('\n')
+        print('-'*20)
+
+        # formula = f'{dv} ~ ' + ' + '.join(exog_names)
+        # model0 = smf.mixedlm(formula, data=df, groups=groups, exog_re=exog_names)
+        # results0 = model0.fit()
+        # cov_params = results0.cov_params()
+        # exog_vc = sm_mlm.cov_struct.CovarianceStruct().from_params(cov_params.values, cov_type='custom')
+
+        # model = sm.MixedLM(endog=endog, exog=constant, exog_re=exog_names, exog_vc=exog_vc, groups=groups)
+        # results = model.fit()
+
+        # endog = df[dv]
+        # exog0 = df[['Intercept', f'{list(iter(ivs_for_analysis))[0]}']]
+        # exog1 = df[['Intercept', f'{list(iter(ivs_for_analysis))[1]}']]
+        # iv_1 = list(iter(ivs_for_analysis))[0]
+        # iv_1_treatment = ivs_for_analysis[iv_1][0]
+        # iv_2 = list(iter(ivs_for_analysis))[1]
+        # iv_2_treatment = ivs_for_analysis[iv_2][0]
+
+        # formula = f'{dv} ~ {ivs_perc_[0]} + {ivs_perc_[1]} + {ivs_perc_[2]} + {ivs_perc_[3]} + {controls_for_formula}'
+        # formula = f'{dv} ~ {ivs_perc_[0]} + {ivs_perc_[1]} + {ivs_perc_[2]} + {ivs_perc_[3]} + {ivs_perc_[0]}:{ivs_perc_[2]} + {ivs_perc_[0]}:{ivs_perc_[3]} + {ivs_perc_[1]}:{ivs_perc_[2]} + {ivs_perc_[1]}:{ivs_perc_[3]} + {controls_for_formula}'
+        # formula = f'{dv} ~ {ivs_perc_[0]}*{ivs_perc_[2]} + {ivs_perc_[0]}*{ivs_perc_[3]} + {ivs_perc_[1]}*{ivs_perc_[2]} + {ivs_perc_[1]}*{ivs_perc_[3]} + {controls_for_formula}'
+        # formula = f'{dv} ~ {ivs_perc_[0]}*{ivs_perc_[2]} + {ivs_perc_[0]}*{ivs_perc_[3]} + {ivs_perc_[1]}*{ivs_perc_[2]} + {ivs_perc_[1]}*{ivs_perc_[3]}'
+        # formula = f'{dv} ~ {ivs_perc_[0]} + {ivs_perc_[1]} + {ivs_perc_[2]} + {ivs_perc_[3]}'
+
+        # print('-'*20)
+        # print(f'Using formula: {formula}')
+        # print('-'*20)
+
+        # vc_formula = {f'{controls_[1]}': f'0 + {controls_[1]}'}
+        # re_formula = f'1 + {controls_[1]}'
+
+        # model = smf.mixedlm(formula=formula, data=df, groups='Job_ID',) #vc_formula=vc_formula, re_formula=re_formula)
+        # results = model.fit(method='lbfgs')
+        # gradient = model.score(results.params_object)
+
+        # # Display Results
+        # print('~'*20)
+        # print('+'*20)
+        # print(f'{dv} x {ivs_}\n')
+        # print('+'*20)
+        # # print(f'Gradient:\n{gradient}')
+        # # print('\n')
+        # print(f'SUMMARY RESULTS:\n{results.summary()}\n')
+        # print('~'*20)
+        # print(f'STANDARDIZED COEFFICIENTS:\n{df_std_coef}')
+        # print('~'*20)
+        # print(f'NULL MODEL SUMMARY:\n{null_results.summary()}')
+        # print('\n')
+        # print('+'*20)
+        # # print(f'SUMMARY RESULTS2:\n{results.summary2()}')
+        # # print('-'*20)
+        # # print(f'y = {results.params.const:.2f} + {results.params.x:.2f} * x')
+        # # print('-'*20)
+        # # print(f'COEFFICIENT:\n{results.params}')
+        # # print('-'*20)
+        # # print(f'CONFIDENCE INTERVALS:\n{results.conf_int()}')
+        # # print(f'P-VALUES:\n{results.pvalues}')
+        # # print('-'*20)
+        # # print(f'ODDS RATIOS:\n{np.exp(results.params)}')
+        # print('+'*20)
+        # print('-'*20)
+        # print(f'Akaike Information Criterion (AIC):\n{aic}')
+        # print('-'*20)
+        # print(f'AIC NULL:\n{aic_null}')
+        # print('-'*20)
+        # print(f'Bayesian Information Criterion (BIC):\n{bic}')
+        # print('-'*20)
+        # print(f'BIC NULL:\n{bic_null}')
+        # print('-'*20)
+        # print(f'Intraclass Correlation Coefficient (ICC):\n{icc}')
+        # print('-'*20)
+        # print(f'ICC NULL:\n{icc_null}')
+        # print('-'*20)
+        # print(f'Pseudo R2:\n{pseudo_r2}')
+        # print('-'*20)
+        # print(f'Likelihood Ratio Test of random-effects (LRT):\n{lrt}')
+        # print('-'*20)
+        # print(f'Degrees of Freedom:\n{dsf}')
+        # print('-'*20)
+        # print(f'P-VALUE:\n{p_value}')
+        # print('-'*20)
+        # print('+'*20)
+        # # print(f'Coehn\'s F2:\n{results.rsquared_adj:.5f}')
+        # # print('-'*20)
+        # # table = sm.stats.anova_lm(results, typ=2)
+        # # print(f'ANOVA:\n{table}')
+        # # print('-'*20)
+
+        # save results
+        save_name = f'{table_save_path}{model_name} {analysis_type} on {ivs_type} {df_name} - {dv} x {ivs_name}'
+        df_to_save = pd.concat(pd.read_html(results.summary().as_html()), axis='index', ignore_index=True)
+        df_to_save.to_csv(f'{save_name}.csv')
+        df_to_save.style.to_latex(f'{save_name}.tex', hrules=True)
+        df_std_coef.to_csv(f'{save_name} - standardized coefficients.csv')
+        df_std_coef.style.to_latex(f'{save_name} - standardized coefficients.tex', hrules=True)
+
+        # # Normality Tests (https://www.pythonfordatascience.org/mixed-effects-regression-python/)
+        # ## Residual and Kernal Density Estimate (KDE) Plot for Homoskedasticity
+        # fig = plt.figure(figsize = (16, 9))
+
+        # ax = sns.distplot(results.resid, hist = True, kde_kws = {"shade" : True, "lw": 1}, fit = scipy.stats.norm, kde=True, palette='colorblind')
+
+        # ax.set_title(f"Kernal Density Estimate (KDE) Plot of Model Residuals (Blue) and Normal Distribution (Black)\n{save_name}")
+        # ax.set_xlabel("Residuals")
+        # fig.show('notebook')
+        # plt.pause(.001)
+
+        # # Q-Q Plot
+        # fig = plt.figure(figsize = (16, 9))
+        # ax = fig.add_subplot(111)
+
+        # qq = sm.qqplot(results.resid, dist = scipy.stats.norm, line = 's', ax = ax, color='blue', markerfacecolor='blue')
+        # ax.set_title(f"Q-Q Plot\n{save_name}",fontsize=15)
+        # ax.xaxis.get_label().set_fontsize(12)
+        # ax.yaxis.get_label().set_fontsize(12)
+        # ax.get_lines()[0].set_color('black')
+        # ax.get_lines()[0].set_linewidth('2')
+        # ax.get_lines()[1].set_color('black')
+        # ax.get_lines()[1].set_linewidth('2')
+        # fig.show('notebook')
+        # plt.pause(.001)
+
+        # # Test of Normality
+        # norm = scipy.stats.normaltest(results.resid)
+
+        # print('='*80)
+        # print(f'{dv} Test of Normality:')
+        # print('-'*80)
+        # for key, val in dict(zip(normality_tests_labels, norm)).items():
+        #     print(key,': ', val) # Significant
+        # print('\n')
+
+        # # Skewness-Kurtosis Test of Normality
+        # norm_sk = scipy.stats.kurtosistest(results.resid)
+
+        # print('='*80)
+        # print(f'{dv} Skewness-Kurtosis Test of Normality:')
+        # print('-'*80)
+        # for key, val in dict(zip(normality_tests_labels, norm_sk)).items():
+        #     print(key,': ', val) # Significant
+        # print('\n')
+
+        # # Shapir-Wilk Test of Normality
+        # norm_res = scipy.stats.shapiro(results.resid)
+
+        # print('='*80)
+        # print(f'{dv} Shapir-Wilk Test of Normality:')
+        # print('-'*80)
+        # for key, val in dict(zip(normality_tests_labels, norm_res)).items():
+        #     print(key,': ', val) # Significant
+        # print('\n')
+
+        # # Anderson-Darling Test of Normality
+        # norm_and = scipy.stats.anderson(results.resid)
+
+        # print('='*80)
+        # print(f'{dv} Anderson-Darling Test of Normality:')
+        # print('-'*80)
+        # for key, val in dict(zip(normality_tests_labels, norm_and)).items():
+        #     print(key,': ', val) # Significant
+        # print('\n')
+
+        # # Residuals versus Fitted values (RVF) Plot for Homoskedasticity
+        # fig = plt.figure(figsize = (16, 9))
+
+        # ax = sns.scatterplot(y = results.resid, x = results.fittedvalues, palette='colorblind')
+
+        # ax.set_title(f"Residuals versus Fitted values (RVF) Plot\n{save_name}")
+        # ax.set_xlabel("Fitted Values")
+        # ax.set_ylabel("Residuals")
+        # fig.show('notebook')
+        # plt.pause(.001)
+
+        # # White’s Lagrange Multiplier Test for Heteroscedasticity
+        # het_white_res = het_white(results.resid, results.model.exog)
+
+        # het_white_labels = ["LM Statistic", "LM-Test p-value", "F-Statistic", "F-Test p-value"]
+
+        # print('='*80)
+        # print('White’s Lagrange Multiplier Test for Heteroscedasticity')
+        # print('-'*80)
+        # for key, val in dict(zip(het_white_labels, het_white_res)).items():
+        #     print(key, val)
+        # print('\n')
+        # print('\n')
+        # print('+'*120)
+        # print('\n')
+```
+
+

@@ -157,7 +157,13 @@ try:
     from dotenv.main import load_dotenv
     from gensim import corpora, models
     from gensim.corpora import Dictionary
-    from gensim.models import CoherenceModel, FastText, KeyedVectors, TfidfModel, Word2Vec
+    from gensim.models import (
+        CoherenceModel,
+        FastText,
+        KeyedVectors,
+        TfidfModel,
+        Word2Vec,
+    )
     from gensim.models.doc2vec import Doc2Vec, TaggedDocument
     from gensim.models.phrases import ENGLISH_CONNECTOR_WORDS, Phraser, Phrases
     from gensim.parsing.preprocessing import preprocess_string, remove_stopwords
@@ -245,7 +251,12 @@ try:
     from sklearn.calibration import CalibratedClassifierCV, CalibrationDisplay
     from sklearn.cluster import KMeans
     from sklearn.compose import ColumnTransformer
-    from sklearn.datasets import load_files, load_iris, make_classification, make_regression
+    from sklearn.datasets import (
+        load_files,
+        load_iris,
+        make_classification,
+        make_regression,
+    )
     from sklearn.decomposition import PCA, TruncatedSVD
     from sklearn.dummy import DummyClassifier
     from sklearn.ensemble import (
@@ -355,7 +366,11 @@ try:
     from sklearn.utils.class_weight import compute_class_weight
     from sklearn.utils.estimator_checks import check_estimator
     from sklearn.utils.metaestimators import available_if
-    from sklearn.utils.validation import check_is_fitted, column_or_1d, has_fit_parameter
+    from sklearn.utils.validation import (
+        check_is_fitted,
+        column_or_1d,
+        has_fit_parameter,
+    )
     from spacy.matcher import Matcher
     from statsmodels.formula.api import ols
     from statsmodels.graphics.factorplots import interaction_plot
@@ -391,6 +406,9 @@ try:
         GPTJConfig,
         GPTJForSequenceClassification,
         GPTJModel,
+        GPTNeoXConfig,
+        GPTNeoXForSequenceClassification,
+        GPTNeoXTokenizerFast,
         LlamaConfig,
         LlamaForSequenceClassification,
         LlamaTokenizer,
@@ -627,6 +645,8 @@ accelerator = Accelerator()
 torch.autograd.set_detect_anomaly(True)
 os.environ.get('TOKENIZERS_PARALLELISM')
 os.environ.get('PYTORCH_MPS_HIGH_WATERMARK_RATIO')
+os.environ.get('TRANSFORMERS_CACHE')
+transformers_cache_dir = os.getenv('TRANSFORMERS_CACHE')
 openai_token = os.environ['OPENAI_API_KEY']
 huggingface_token = os.environ['HUGGINGFACE_API_KEY']
 hyperparameter_tuning = True
