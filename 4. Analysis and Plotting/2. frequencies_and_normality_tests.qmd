@@ -1,0 +1,1064 @@
+---
+title: Functions
+jupyter: python3
+---
+
+```{python}
+import os # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+import sys # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+
+mod = sys.modules[__name__]
+
+code_dir = None
+code_dir_name = 'Code'
+unwanted_subdir_name = 'Analysis'
+
+if code_dir_name not in str(Path.cwd()).split('/')[-1]:
+    for _ in range(5):
+
+        parent_path = str(Path.cwd().parents[_]).split('/')[-1]
+
+        if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
+
+            code_dir = str(Path.cwd().parents[_])
+
+            if code_dir is not None:
+                break
+else:
+    code_dir = Path.cwd()
+sys.path.append(code_dir)
+
+# %load_ext autoreload
+# %autoreload 2
+```
+
+```{python}
+from setup_module.imports import *  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from setup_module import researchpy_fork as rp # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from setup_module import specification_curve_fork as specy # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+```
+
+
+
+# READ DATA
+
+```{python}
+with open(f'{data_dir}df_manual_len.txt', 'r') as f:
+    df_manual_len = int(f.read())
+
+df_manual = pd.read_pickle(f'{df_save_dir}df_manual_for_training.pkl')
+assert len(df_manual) == df_manual_len, f'DATAFRAME MISSING DATA! DF SHOULD BE OF LENGTH {df_manual_len} BUT IS OF LENGTH {len(df_manual)}'
+print(f'Dataframe loaded with shape: {df_manual.shape}')
+df_manual = categorize_df_gender_age(df_manual)
+```
+
+```{python}
+with open(f'{data_dir}df_jobs_for_analysis_len.txt', 'r') as f:
+    df_jobs_len = int(f.read())
+
+# df_jobs = pd.read_pickle(f'{df_save_dir}df_jobs_for_analysis.pkl')
+df_jobs = pd.read_pickle(f'{df_save_dir}df_jobs_for_analysis.pkl')
+assert len(df_jobs) == df_jobs_len, f'DATAFRAME MISSING DATA! DF SHOULD BE OF LENGTH {df_jobs_len} BUT IS OF LENGTH {len(df_jobs)}'
+print(f'Dataframe loaded with shape: {df_jobs.shape}')
+df_jobs = categorize_df_gender_age(df_jobs)
+```
+
+# Analysis plan:
+
+1. ## [Descriptives, visualizations, and tables](./1.%20descriptives_visualization_and_tables.ipynb)
+2. ## [Frequencies and Normality tests](./2.%20frequencies_and_normality_test.ipynb)
+   1. ### Frequencies, histograms, and QQ plots
+      * Normal test
+      * Kurtosis test
+      * Shapiro
+      * Anderson
+      * Bartlett
+   2. ### Correlation between independent variables (IVs) and control variables and Multicolinarity test
+      * Pearson's R
+      * VIF
+     - ***ivs_dummy*** (binary nominal) = Social category designation (Female, Male, Mixed Gender)
+     - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+     - ***% Sector per Workforce*** (continous ratio) = Sector percentage per worksforce (0-100)
+     - ***num_words*** (continous ratio) = Number of words in job description
+     - ***English Requirement in Job Ad*** (binary nominal) = English requirement in job description (0 vs. 1)
+     - ***Dutch Requirement in Job Ad*** (binary nominal) = Dutch requirement in job description (0 vs. 1)
+     - ***Platform*** (binary dummy) = LinkedIn (0 vs. 1), Indeed (0 vs. 1), Glassdoor (0 vs. 1)
+
+3. ## [ANOVA and Chi-square (Pearson's R)](./3.%20chisqt_and_anova.ipynb)
+
+   1. ### Chi-square
+      * **df_manual:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs*** (binary nominal) = Social category designation (Female, Male, Mixed Gender)
+      * **df_jobs:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs*** (binary nominal) = Social category designation (Female, Male, Mixed Gender)
+
+   2. ### One-way ANOVA, interactions, and post-hoc test
+      * **df_manual:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs*** (binary nominal) = Social category designation (Female, Male, Mixed Gender)
+          - If Levene's test is *not significant*, use classic ANOVA and Tukey's post hoc test
+          - If Levene's test is *significant*, use Welch's and Kruskal-Wallis ANOVA and Games Howell's post hoc test
+      * **df_jobs:**
+         - ***dvs_prob*** (continous ratio) = 'Warmth' and 'Competence' probabilities (0-1)
+         - ***ivs*** (binary nominal) = Social category designation (Female, Male, Mixed Gender)
+           - If Levene's test is *not significant*, use classic ANOVA and Tukey's post hoc test
+           - If Levene's test is *significant*, use Welch's and Kruskal-Wallis ANOVA and Games Howell's post hoc test
+
+4. ## [Regression Analysis](./3.%20regression_analysis.ipynb)
+   1. ### Logistic Regression  with all interaction (smf):
+      * **df_manual:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+      * **df_jobs:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+   2. ### OLS Regression with all interaction:
+      * **df_jobs:**
+        - ***dvs_prob*** (continous ratio) = 'Warmth' and 'Competence' probabilities (0-1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+   3. ### Multilevel OLS Regression with all interaction:
+      * **df_jobs:**
+        - ***dvs_prob*** (continous ratio) = 'Warmth' and 'Competence' probabilities (0-1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+
+5. ## [Specification Curve Analysis](./4.%20specification_curve_analysis.ipynb)
+
+   1. ### Logistic Specification Curve Analysis:
+      * **df_manual:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+      * **df_jobs:**
+        - ***dvs*** (binary nominal) = 'Warmth' and 'Competence' (0 vs. 1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+   2. ### OLS Specification Curve Analysis:
+      * **df_jobs:**
+        - ***dvs_prob*** (continous ratio) = 'Warmth' and 'Competence' probabilities (0-1)
+        - ***ivs_perc*** (continous ratio) = Social category percentage per sector (0-100)
+
+## Set dataframes
+
+#### Dataframes dict
+
+```{python}
+dataframes = {
+    # 'df_manual': df_manual,
+    'df_jobs': df_jobs,
+}
+```
+
+# Frequencies
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    data_names = dvs[:]+ivs_dummy_and_perc[:]
+
+    if df_name == 'df_manual':
+        dvs_ = dvs[:]
+    elif df_name == 'df_jobs':
+        data_names.extend(dvs_prob[:])
+        dvs_ = dvs_all[:]
+
+    print('~'*20)
+    # print(rp.codebook(df[data_names]))
+
+    # Gender and Age
+    print('-'*20)
+    print(f'Categorical Summary {ivs}')
+    freq_iv=rp.summary_cat(df[ivs]).round(3)
+    print(freq_iv)
+    freq_iv.to_csv(f'{table_save_path}frequencies {df_name} - Gender and Age.csv')
+    freq_iv.style.to_latex(f'{table_save_path}frequencies {df_name} - Gender and Age.tex', hrules=True)
+    print('-'*20)
+    print('\n')
+
+    # Gender and Age Percentages
+    print('-'*20)
+    print(f'Continuous Summary {ivs_perc}')
+    freq_iv_perc=rp.summarize(df[ivs_perc], ci_level = 0.95, decimals = 3)
+    print(freq_iv_perc)
+    freq_iv_perc.to_csv(f'{table_save_path}frequencies {df_name} - Gender and Age Percentages.csv')
+    freq_iv_perc.style.to_latex(f'{table_save_path}frequencies {df_name} - Gender and Age Percentages.tex', hrules=True)
+    print('-'*20)
+    print('\n')
+
+    # Gender and Age Dummies
+    print('-'*20)
+    print(f'Continuous Summary {ivs_dummy}')
+    freq_iv_dummy=rp.summarize(df[ivs_dummy], ci_level = 0.95, decimals = 3)
+    print(freq_iv_dummy)
+    freq_iv_dummy.to_csv(f'{table_save_path}frequencies {df_name} - Gender and Age Dummies.csv')
+    freq_iv_dummy.style.to_latex(f'{table_save_path}frequencies {df_name} - Gender and Age Dummies.tex', hrules=True)
+    print('-'*20)
+    print('\n')
+
+    # Gender and Age Counts
+    print('-'*20)
+    print(f'Continuous Summary {ivs_count}')
+    freq_iv_count=rp.summarize(df[ivs_count], ci_level = 0.95, decimals = 3)
+    print(freq_iv_count)
+    freq_iv_count.to_csv(f'{table_save_path}frequencies {df_name} - Gender and Age Counts.csv')
+    freq_iv_count.style.to_latex(f'{table_save_path}frequencies {df_name} - Gender and Age Counts.text')
+    print('-'*20)
+    print('\n')
+
+    # Warmth and Competence
+    print('-'*20)
+    print(f'Categorical Summary {dvs}')
+    freq_dv=rp.summary_cat(df[dvs]).round(3)
+    print(freq_dv)
+    freq_dv.to_csv(f'{table_save_path}frequencies {df_name} - Warmth and Competence.csv')
+    freq_dv.style.to_latex(f'{table_save_path}frequencies {df_name} - Warmth and Competence.tex', hrules=True)
+    print('-'*20)
+    print('\n')
+
+    if df_name == 'df_jobs':
+        # Warmth and Competence Probabilities
+        print('-'*20)
+        print(f'Continuous Summary {dvs_prob}')
+        freq_dv_prob=rp.summarize(df[dvs_prob], ci_level = 0.95, decimals = 3)
+        print(freq_dv_prob)
+        freq_dv_prob.to_csv(f'{table_save_path}frequencies {df_name} - Warmth and Competence Probabilities.csv')
+        freq_dv_prob.style.to_latex(f'{table_save_path}frequencies {df_name} - Warmth and Competence Probabilities.tex', hrules=True)
+        print('-'*20)
+        print('\n')
+
+    print('-'*20)
+    print('Grouped Frequencies/ Summary ANOVAs Categorical Gender and Age')
+    summary_aova = rp.summary_cont(df.groupby(ivs)[dvs_prob], conf=0.95, decimals=3)
+    print(summary_aova)
+    summary_aova.to_csv(f'{table_save_path}summary anova {df_name} - {ivs} x {dvs}.csv')
+    summary_aova.style.to_latex(f'{table_save_path}summary anova {df_name} - {ivs} x {dvs}.tex', hrules=True)
+    print('-'*20)
+    print('\n')
+
+    for iv, dv in tqdm_product(ivs, dvs):
+        print('-'*20)
+        print(f'Grouped Frequencies/ Summary ANOVAs {dv} with {iv} Dummies')
+        summary_aova_probs_dummy = rp.summary_cont(df_jobs[dv].groupby(df_jobs[iv]), conf=0.95, decimals=3)
+        print(summary_aova_probs_dummy)
+        summary_aova_probs_dummy.to_csv(f'{table_save_path}summary anova probabilities dummy {df_name} - {iv} x {dv}.csv')
+        summary_aova_probs_dummy.style.to_latex(f'{table_save_path}summary anova probabilities dummy {df_name} - {iv} x {dv}.tex', hrules=True)
+        print('-'*20)
+        print('\n')
+
+    if df_name == 'df_jobs':
+        print('-'*20)
+        print('Grouped Frequencies/ Summary ANOVAs')
+        summary_aova_probs = rp.summary_cont(df.groupby(ivs)[dvs_all], conf=0.95, decimals=3)
+        print(summary_aova_probs)
+        summary_aova_probs.to_csv(f'{table_save_path}summary anova probabilities {df_name} - {ivs} x {dvs_all}.csv')
+        summary_aova_probs.style.to_latex(f'{table_save_path}summary anova probabilities {df_name} - {ivs} x {dvs_all}.tex', hrules=True)
+        print('-'*20)
+        print('\n')
+
+        for iv, dv in tqdm_product(ivs, dvs_all):
+            print('-'*20)
+            print(f'Grouped Frequencies/ Summary ANOVAs {dv} with {iv} Dummies')
+            summary_aova_probs_dummy = rp.summary_cont(df_jobs[dv].groupby(df_jobs[iv]), conf=0.95, decimals=3)
+            print(summary_aova_probs_dummy)
+            summary_aova_probs_dummy.to_csv(f'{table_save_path}summary anova probabilities dummy {df_name} - {iv} x {dv}.csv')
+            summary_aova_probs_dummy.style.to_latex(f'{table_save_path}summary anova probabilities dummy {df_name} - {iv} x {dv}.tex', hrules=True)
+            print('-'*20)
+            print('\n')
+
+    # # Histogram
+    # df[ivs_perc].hist()
+    # plt.show()
+    # plt.clf()
+    # plt.cla()
+    # plt.close()
+    # print('-'*20)
+    # print('\n')
+
+    # df[ivs_count].hist()
+    # plt.show()
+    # plt.clf()
+    # plt.cla()
+    # plt.close()
+    # print('-'*20)
+    # print('\n')
+
+    # df[ivs_dummy].hist()
+    # plt.show()
+    # plt.clf()
+    # plt.cla()
+    # plt.close()
+    # print('-'*20)
+    # print('\n')
+
+    # if df_name == 'df_jobs':
+    #     # Histogram
+    #     df[dvs_prob].hist()
+    #     plt.show()
+    #     plt.clf()
+    #     plt.cla()
+    #     plt.close()
+    #     print('-'*20)
+    #     print('\n')
+
+    # # QQ plot
+    # qq_plot = pg.qqplot(df[ivs_perc], dist='norm')
+    # plt.show()
+    # plt.clf()
+    # plt.cla()
+    # plt.close()
+    # print('-'*20)
+    # print('\n')
+
+    # qq_plot = pg.qqplot(df[ivs_count], dist='norm')
+    # plt.show()
+    # plt.clf()
+    # plt.cla()
+    # plt.close()
+    # print('-'*20)
+    # print('\n')
+
+    # qq_plot = pg.qqplot(df[ivs_dummy], dist='norm')
+    # plt.show()
+    # plt.clf()
+    # plt.cla()
+    # plt.close()
+    # print('-'*20)
+    # print('\n')
+
+    # if df_name == 'df_jobs':
+    #     # QQ plot dvs_prob
+    #     qq_plot = pg.qqplot(df[dvs_prob], dist='norm')
+    #     plt.show()
+    #     plt.clf()
+    #     plt.cla()
+    #     plt.close()
+    #     print('-'*20)
+    #     print('\n')
+```
+
+# Normality Tests
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    if df_name == 'df_manual':
+        dvs_ = dvs
+    elif df_name == 'df_jobs':
+        dvs_ = dvs_all
+
+    # Test of Normality for skew and kurtosis
+    # if p < alpha, the null hypothesis is rejected,\nis not from a normal distribution
+    norm = scipy.stats.normaltest(df[dvs_])
+    print('\n')
+    print('='*80)
+    print(f'{dvs_} Test of Normality:')
+    print('-'*80)
+    for key, val in dict(zip(normality_tests_labels, norm)).items():
+        print(key,': ', val) # not significant
+    print('\n')
+
+    # Shapir-Wilk Test of Normality
+    # if p < alpha, the null hypothesis is rejected,\nis not from a normal distribution
+    norm_res = scipy.stats.shapiro(df[dvs_])
+    print('\n')
+    print('='*80)
+    print(f'{dvs_} Shapir-Wilk Test of Normality:')
+    print('-'*80)
+    for key, val in dict(zip(normality_tests_labels, norm_res)).items():
+        print(key,': ', val) # significant
+    print('\n')
+
+    for dv, iv in tqdm_product(dvs_, ivs_dummy_and_perc):
+        print('\n')
+        print('+'*120)
+        print(f'Dependent Variable: {dv}\nIndependent Variable: {iv}')
+        print('\n')
+        print('~' * 20)
+
+        # Anderson-Darling Test of Normality
+        # if p < alpha, the null hypothesis is rejected, x is not from a normal distribution
+        norm_and = scipy.stats.anderson(df[dv])
+        print('\n')
+        print('='*80)
+        print('Anderson-Darling Test of Normality:')
+        print('\n')
+        print('~' * 20)
+        print(f'{iv} x {dv}')
+        for key, val in dict(zip(normality_tests_labels, norm_and)).items():
+            print(key,': ', val) # not significant
+        print('\n')
+        if norm_and.fit_result.success:
+            print('Anderson-Darling Test of Normality: The test was successful.')
+        else:
+            print('Anderson-Darling Test of Normality: The test was not successful.')
+        print('~' * 20)
+        print('\n')
+
+        # NORMALITY TESTS
+        print('\n')
+        print('='*80)
+        print('NORMALITY TEST')
+        print('\n')
+        print('~' * 20)
+        print(f'{iv} x {dv}')
+        norm = pg.normality(data=df, dv=dv, group=iv).round(3)
+        if normal := all(norm.normal == True):
+            print(f"{iv} x {dv} Normality test: All groups are normally distributed.")
+        else:
+            print(f"{iv} x {dv} Normality test: Not all groups are normally distributed.")
+        print(f"{iv} x {dv} Normality test:\n{norm}")
+        norm.to_csv(f'{table_save_path}normality {df_name} - {iv} x {dv}.csv')
+        norm.style.to_latex(f'{table_save_path}normality {df_name} - {iv} x {dv}.tex', hrules=True)
+        print('~' * 20)
+        print('\n')
+
+        # # ANOVA SPHERICITY TEST
+        # print('\n')
+        # print('='*80)
+        # print('SPHERICITY TEST')
+        # print('\n')
+        # print('~' * 20)
+        # print(f'{iv} x {dv}')
+        # spher_all = pg.sphericity(data=df, dv=dv, within=iv, method='mauchly')
+        # spher, test_stat, chisq, dof, pval = spher_all
+        # print('-' * 20)
+        # print(f"{iv} x {dv} Sphericity test:\n{spher} at p-value: {round(pval, 3)}, chi-square: {round(chisq, 3)}, degrees of freedom: {round(dof)}, Test statistic: {round(test_stat)}") # if p-value < 0.05, then the data are not spherically distributed = Multivariate analysis
+        # # spher.to_csv(f'{table_save_path}sphericity {df_name} - {iv} x {dv}.csv')
+        # # spher.style.to_latex(f'{table_save_path}sphericity {df_name} - {iv} x {dv}.tex', hrules=True)
+        # print('~' * 20)
+        # print('\n')
+
+        # BARTLETTS TESTS
+        print('\n')
+        print('='*80)
+        print("BARTLETT'S TEST")
+        print('\n')
+        print('~' * 20)
+        print(f'{iv} x {dv}')
+        bartlett = pg.homoscedasticity(data=df, dv=dv, group=iv, method='bartlett').round(3) #dv
+        if equal_var_bartlett := eval(bartlett.equal_var.to_string(index=False)):
+            print(f"{iv} x {dv} Bartlett's test: All groups have equal variances.")
+        else:
+            print(f"{iv} x {dv} Bartlett's test: Not all groups have equal variances.")
+        print(f"{iv} x {dv} Bartlett's test:\n{bartlett}")
+        bartlett.to_csv(f"{table_save_path}bartlett's {df_name} - {iv} x {dv}.csv")
+        bartlett.style.to_latex(f"{table_save_path}bartlett's {df_name} - {iv} x {dv}.tex")
+        print('~' * 20)
+        print('\n')
+
+```
+
+## Correlation between IVs and Control Variables (Multicollinearity)
+
+### Categorical Gender Sectors
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    # Full chi-square
+    expected, observed, full_chisqt = pg.chi2_independence(data=df, x=ivs_dummy[0], y=ivs_dummy[2])
+    print('\n')
+    print('+'*120)
+    print(f'IV 1: {ivs_dummy[0]}\nIV 2: {ivs_dummy[2]}')
+    print('\n')
+    print('~' * 20)
+    print('FULL CHI-SQUARE TEST:')
+    print('-'*20)
+    print(f'Observed Count:\n{observed}\n')
+    print('-'*20)
+    print(f'Expected Count:\n{expected}\n')
+    print('-'*20)
+    print(f'Chi-square:\n{full_chisqt.round(3)}\n')
+    print('~' * 20)
+    chi_to_save = pd.concat([pd.concat([observed, pd.DataFrame(expected)], axis='index'), full_chisqt], axis='index')
+    chi_to_save.to_csv(f'{table_save_path}chi-square {df_name} - {ivs_dummy[0]} x {ivs_dummy[2]}.csv')
+    chi_to_save.style.to_latex(f'{table_save_path}chi-square {df_name} - {ivs_dummy[0]} x {ivs_dummy[2]}.tex', hrules=True)
+
+    # Chi-square
+    chisqt = pd.crosstab(df[ivs_dummy[0]], df[ivs_dummy[2]])
+    pearson_r, p_value, dof, expected = scipy.stats.chi2_contingency(chisqt)
+    reject_H0 = p_value > alpha
+    reject_H = p_value < alpha
+
+    # if not reject_H0 and reject_H:
+    #     print('\n')
+    #     print('+'*120)
+    #     print(f'IV 1: {ivs_dummy[0]}\nIV 2: {ivs_dummy[2]}\nNOT SIGNIFICANT at p-value: {p_value:.3f}!')
+    #     print('\n')
+    #     print('~' * 20)
+    #     print(f"Pearsons's R: {pearson_r}.\np-value: {p_value:.3f}.\nDegree of freedom: {dof}.\nH0 Rejected: {reject_H0}\nH Rejected: {reject_H}")
+    #     print('\n')
+    # elif reject_H0 and not reject_H:
+    print('\n')
+    print('+'*120)
+    print(f'IV 1: {ivs_dummy[0]}\nIV 2: {ivs_dummy[2]}')
+    print('\n')
+    print('~' * 20)
+    print(f"Pearsons's R: {pearson_r}.\np-value: {p_value:.3f}.\nDegree of freedom: {dof}.\nH0 Rejected: {reject_H0}\nH Rejected: {reject_H}")
+    print('-'*20)
+    print(f'Observed Count:\n{chisqt}\n')
+    print('-'*20)
+    print(f'Expected Count:\n{expected}\n')
+    print('~' * 20)
+```
+
+### Categorical Age Sectors
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    # Full chi-square
+    expected, observed, full_chisqt = pg.chi2_independence(data=df, x=ivs_dummy[3], y=ivs_dummy[5])
+    print('\n')
+    print('+'*120)
+    print(f'IV 1: {ivs_dummy[3]}\nIV 2: {ivs_dummy[5]}')
+    print('\n')
+    print('~' * 20)
+    print('FULL CHI-SQUARE TEST:')
+    print('-'*20)
+    print(f'Observed Count:\n{observed}\n')
+    print('-'*20)
+    print(f'Expected Count:\n{expected}\n')
+    print('-'*20)
+    print(f'Chi-square:\n{full_chisqt.round(3)}\n')
+    print('~' * 20)
+    chi_to_save = pd.concat([pd.concat([observed, pd.DataFrame(expected)], axis='index'), full_chisqt], axis='index')
+    chi_to_save.to_csv(f'{table_save_path}chi-square {df_name} - {ivs_dummy[3]} x {ivs_dummy[5]}.csv')
+    chi_to_save.style.to_latex(f'{table_save_path}chi-square {df_name} - {ivs_dummy[3]} x {ivs_dummy[5]}.tex', hrules=True)
+
+    # Chi-square
+    chisqt = pd.crosstab(df[ivs_dummy[3]], df[ivs_dummy[5]])
+    pearson_r, p_value, dof, expected = scipy.stats.chi2_contingency(chisqt)
+    reject_H0 = p_value > alpha
+    reject_H = p_value < alpha
+
+    # if not reject_H0 and reject_H:
+    #     print('\n')
+    #     print('+'*120)
+    #     print(f'IV 1: {ivs_dummy[3]}\nIV 2: {ivs_dummy[5]}\nNOT SIGNIFICANT at p-value: {p_value:.3f}!')
+    #     print('\n')
+    #     print('~' * 20)
+    #     print(f"Pearsons's R: {pearson_r}.\np-value: {p_value:.3f}.\nDegree of freedom: {dof}.\nH0 Rejected: {reject_H0}\nH Rejected: {reject_H}")
+    #     print('\n')
+    # elif reject_H0 and not reject_H:
+    print('\n')
+    print('+'*120)
+    print(f'IV 1: {ivs_dummy[3]}\nIV 2: {ivs_dummy[5]}')
+    print('\n')
+    print('~' * 20)
+    print(f"Pearsons's R: {pearson_r}.\np-value: {p_value:.3f}.\nDegree of freedom: {dof}.\nH0 Rejected: {reject_H0}\nH Rejected: {reject_H}")
+    print('-'*20)
+    print(f'Observed Count:\n{chisqt}\n')
+    print('-'*20)
+    print(f'Expected Count:\n{expected}\n')
+    print('~' * 20)
+```
+
+### Categorical Gender and Age Sectors
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    for iv_gender_dummy, iv_age_dummy in tqdm_product(ivs_gender_dummy, ivs_age_dummy):
+        # Full chi-square
+        expected, observed, full_chisqt = pg.chi2_independence(data=df, x=iv_gender_dummy, y=iv_age_dummy)
+        print('\n')
+        print('+'*120)
+        print(f'IV 1: {iv_gender_dummy}\nIV 2: {iv_age_dummy}')
+        print('\n')
+        print('~' * 20)
+        print('FULL CHI-SQUARE TEST:')
+        print('-'*20)
+        print(f'Observed Count:\n{observed}\n')
+        print('-'*20)
+        print(f'Expected Count:\n{expected}\n')
+        print('-'*20)
+        print(f'Chi-square:\n{full_chisqt.round(3)}\n')
+        print('~' * 20)
+        chi_to_save = pd.concat([pd.concat([observed, pd.DataFrame(expected)], axis='index'), full_chisqt], axis='index')
+        chi_to_save.to_csv(f'{table_save_path}chi-square {df_name} - {iv_gender_dummy} x {iv_age_dummy}.csv')
+        chi_to_save.style.to_latex(f'{table_save_path}chi-square {df_name} - {iv_gender_dummy} x {iv_age_dummy}.tex', hrules=True)
+
+        # Chi-square
+        chisqt = pd.crosstab(df[iv_gender_dummy], df[iv_age_dummy])
+        pearson_r, p_value, dof, expected = scipy.stats.chi2_contingency(chisqt)
+        reject_H0 = p_value > alpha
+        reject_H = p_value < alpha
+
+        # if not reject_H0 and reject_H:
+        #     print('\n')
+        #     print('+'*120)
+        #     print(f'IV 1: {iv_gender_dummy}\nIV 2: {iv_age_dummy}\nNOT SIGNIFICANT at p-value: {p_value:.3f}!')
+        #     print('\n')
+        #     print('~' * 20)
+        #     print(f"Pearsons's R: {pearson_r}.\np-value: {p_value:.3f}.\nDegree of freedom: {dof}.\nH0 Rejected: {reject_H0}\nH Rejected: {reject_H}")
+        #     print('\n')
+        # elif reject_H0 and not reject_H:
+        print('\n')
+        print('+'*120)
+        print(f'IV 1: {iv_gender_dummy}\nIV 2: {iv_age_dummy}')
+        print('\n')
+        print('~' * 20)
+        print(f"Pearsons's R: {pearson_r}.\np-value: {p_value:.3f}.\nDegree of freedom: {dof}.\nH0 Rejected: {reject_H0}\nH Rejected: {reject_H}")
+        print('-'*20)
+        print(f'Observed Count:\n{chisqt}\n')
+        print('-'*20)
+        print(f'Expected Count:\n{expected}\n')
+        print('~' * 20)
+```
+
+### Binary Warmth and Competence
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    # Full chi-square
+    expected, observed, full_chisqt = pg.chi2_independence(data=df, x=dvs[0], y=dvs[1])
+    print('\n')
+    print('+'*120)
+    print(f'DV 1: {dvs[0]}\nDV 2: {dvs[1]}')
+    print('\n')
+    print('~' * 20)
+    print('FULL CHI-SQUARE TEST:')
+    print('-'*20)
+    print(f'Observed Count:\n{observed}\n')
+    print('-'*20)
+    print(f'Expected Count:\n{expected}\n')
+    print('-'*20)
+    print(f'Chi-square:\n{full_chisqt.round(3)}\n')
+    print('~' * 20)
+    chi_to_save = pd.concat([pd.concat([observed, pd.DataFrame(expected)], axis='index'), full_chisqt], axis='index')
+    chi_to_save.to_csv(f'{table_save_path}chi-square {df_name} - {dvs[0]} x {dvs[1]}.csv')
+    chi_to_save.style.to_latex(f'{table_save_path}chi-square {df_name} - {dvs[0]} x {dvs[1]}.tex', hrules=True)
+
+    # Chi-square
+    chisqt = pd.crosstab(df[dvs[0]], df[dvs[1]])
+    pearson_r, p_value, dof, expected = scipy.stats.chi2_contingency(chisqt)
+    reject_H0 = p_value > alpha
+    reject_H = p_value < alpha
+
+    # if not reject_H0 and reject_H:
+    #     print('\n')
+    #     print('+'*120)
+    #     print(f'IV 1: {dvs[0]}\nIV 2: {dvs[1]}\nNOT SIGNIFICANT at p-value: {p_value:.3f}!')
+    #     print('\n')
+    #     print('~' * 20)
+    #     print(f"Pearsons's R: {pearson_r}.\np-value: {p_value:.3f}.\nDegree of freedom: {dof}.\nH0 Rejected: {reject_H0}\nH Rejected: {reject_H}")
+    #     print('\n')
+    # elif reject_H0 and not reject_H:
+    print('\n')
+    print('+'*120)
+    print(f'DV 1: {dvs[0]}\nDV 2: {dvs[1]}')
+    print('\n')
+    print('~' * 20)
+    print(f"Pearsons's R: {pearson_r}.\np-value: {p_value:.3f}.\nDegree of freedom: {dof}.\nH0 Rejected: {reject_H0}\nH Rejected: {reject_H}")
+    print('-'*20)
+    print(f'Observed Count:\n{chisqt}\n')
+    print('-'*20)
+    print(f'Expected Count:\n{expected}\n')
+    print('~' * 20)
+```
+
+### Categorical Language Requirement
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    # Full chi-square
+    expected, observed, full_chisqt = pg.chi2_independence(data=df, x=controls[2], y=controls[3])
+    print('\n')
+    print('+'*120)
+    print(f'Control 1: {controls[2]}\nControl 2: {controls[3]}')
+    print('\n')
+    print('~' * 20)
+    print('FULL CHI-SQUARE TEST:')
+    print('-'*20)
+    print(f'Observed Count:\n{observed}\n')
+    print('-'*20)
+    print(f'Expected Count:\n{expected}\n')
+    print('-'*20)
+    print(f'Chi-square:\n{full_chisqt.round(3)}\n')
+    print('~' * 20)
+    chi_to_save = pd.concat([pd.concat([observed, pd.DataFrame(expected)], axis='index'), full_chisqt], axis='index')
+    chi_to_save.to_csv(f'{table_save_path}chi-square {df_name} - {controls[2]} x {controls[3]}.csv')
+    chi_to_save.style.to_latex(f'{table_save_path}chi-square {df_name} - {controls[2]} x {controls[3]}.tex', hrules=True)
+
+    # Chi-square
+    chisqt = pd.crosstab(df[controls[2]], df[controls[3]])
+    pearson_r, p_value, dof, expected = scipy.stats.chi2_contingency(chisqt)
+    reject_H0 = p_value > alpha
+    reject_H = p_value < alpha
+
+    # if not reject_H0 and reject_H:
+    #     print('\n')
+    #     print('+'*120)
+    #     print(f'Control 1: {controls[2]}\nControl 2: {controls[3]}\nNOT SIGNIFICANT at p-value: {p_value:.3f}!')
+    #     print('\n')
+    #     print('~' * 20)
+    #     print(f"Pearsons's R: {pearson_r}.\np-value: {p_value:.3f}.\nDegree of freedom: {dof}.\nH0 Rejected: {reject_H0}\nH Rejected: {reject_H}")
+    #     print('\n')
+    # elif reject_H0 and not reject_H:
+    print('\n')
+    print('+'*120)
+    print(f'Control 1: {controls[2]}\nControl 2: {controls[3]}')
+    print('\n')
+    print('~' * 20)
+    print(f"Pearsons's R: {pearson_r}.\np-value: {p_value:.3f}.\nDegree of freedom: {dof}.\nH0 Rejected: {reject_H0}\nH Rejected: {reject_H}")
+    print('-'*20)
+    print(f'Observed Count:\n{chisqt}\n')
+    print('-'*20)
+    print(f'Expected Count:\n{expected}\n')
+    print('~' * 20)
+```
+
+# VIF
+
+```{python}
+# compute the vif for all given features
+def compute_vif(df, considered_features):
+
+    X = df[considered_features]
+    # the calculation of variance inflation requires a constant
+    X.insert(0, 'intercept', 1)
+
+    # create dataframe to store vif values
+    vif = pd.DataFrame()
+    vif['Variable'] = X.columns
+    vif['VIF'] = [variance_inflation_factor(X.values, i) for i in range(X.shape[1])]
+    vif = vif.loc[vif['Variable']!='intercept']
+
+    return vif
+```
+
+### VIF for Percentage IVs
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    for iv_gender_perc, iv_age_perc in tqdm_product(ivs_gender_perc, ivs_age_perc):
+        considered_features = [iv_gender_perc, iv_age_perc] + controls[:2]
+        vif = compute_vif(df, considered_features)
+        print(vif.sort_values('VIF', ascending=False))
+```
+
+### VIF for Categorical Dummy IVs
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    considered_features = ivs_dummy[:]
+    vif = compute_vif(df, considered_features)
+    print(vif.sort_values('VIF', ascending=False))
+```
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    considered_features = ivs_dummy[:]
+    considered_features.remove('Age_Mixed')
+    considered_features.remove('Gender_Mixed')
+    vif = compute_vif(df, considered_features)
+    print(vif.sort_values('VIF', ascending=False))
+```
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    considered_features = ['Gender_Num', 'Age_Num']
+    vif = compute_vif(df, considered_features)
+    print(vif.sort_values('VIF', ascending=False))
+```
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    for iv_gender_dummy, iv_age_dummy in tqdm_product(ivs_gender_dummy, ivs_age_dummy):
+        print('-'*20)
+        print(f'VIF for {iv_gender_dummy} x {iv_age_dummy}')
+        considered_features = [iv_gender_dummy, iv_age_dummy] + controls[:2]
+        vif = compute_vif(df, considered_features)
+        print(vif.sort_values('VIF', ascending=False))
+```
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    considered_features = ivs_dummy[:] + controls[:2]
+    vif = compute_vif(df, considered_features)
+    print(vif.sort_values('VIF', ascending=False))
+    vif.to_csv(f'{table_save_path}vif {df_name} - {ivs_dummy} x Controls.csv')
+    vif.style.to_latex(f'{table_save_path}vif {df_name} - {ivs_dummy} x Controls.tex', hrules=True)
+```
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    considered_features = ivs_dummy[:] + controls[:2]
+    considered_features.remove('Age_Mixed')
+    considered_features.remove('Gender_Mixed')
+    vif = compute_vif(df, considered_features)
+    print(vif.sort_values('VIF', ascending=False))
+    vif.to_csv(f'{table_save_path}vif {df_name} - MIXED REMOVED {ivs_dummy} x Controls.csv')
+    vif.style.to_latex(f'{table_save_path}vif {df_name} - MIXED REMOVED {ivs_dummy} x Controls.tex', hrules=True)
+```
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    print('-'*20)
+    print('VIF for Gender_Num x Age_Num')
+    considered_features = ['Gender_Num', 'Age_Num'] + controls[:2]
+    vif = compute_vif(df, considered_features)
+    print(vif.sort_values('VIF', ascending=False))
+```
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    considered_features = ivs_perc[:] + controls[:2]
+    vif = compute_vif(df, considered_features)
+    print(vif.sort_values('VIF', ascending=False))
+    vif.to_csv(f'{table_save_path}vif {df_name} - {ivs_perc} x Controls.csv')
+    vif.style.to_latex(f'{table_save_path}vif {df_name} - {ivs_perc} x Controls.tex', hrules=True)
+```
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    considered_features = ivs_dummy_and_perc[:] + controls[:2]
+    vif = compute_vif(df, considered_features)
+    print(vif.sort_values('VIF', ascending=False))
+    vif.to_csv(f'{table_save_path}vif {df_name} - {ivs_dummy_and_perc} x Controls.csv')
+    vif.style.to_latex(f'{table_save_path}vif {df_name} - {ivs_dummy_and_perc} x Controls.tex', hrules=True)
+```
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    considered_features = ivs_dummy_and_perc[:] + controls[:2]
+    considered_features.remove('Age_Mixed')
+    considered_features.remove('Gender_Mixed')
+    vif = compute_vif(df, considered_features)
+    print(vif.sort_values('VIF', ascending=False))
+    vif.to_csv(f'{table_save_path}vif {df_name} - MIXED REMOVED {ivs_dummy_and_perc} x Controls.csv')
+    vif.style.to_latex(f'{table_save_path}vif {df_name} - MIXED REMOVED {ivs_dummy_and_perc} x Controls.tex', hrules=True)
+```
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    considered_features = ivs_num_and_perc[:] + controls[:2]
+    vif = compute_vif(df, considered_features)
+    print(vif.sort_values('VIF', ascending=False))
+    vif.to_csv(f'{table_save_path}vif {df_name} - {ivs_dummy_and_perc} x Controls.csv')
+    vif.style.to_latex(f'{table_save_path}vif {df_name} - {ivs_dummy_and_perc} x Controls.tex', hrules=True)
+```
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    if df_name == 'df_manual':
+        considered_features_list = [dvs]
+    elif df_name == 'df_jobs':
+        considered_features_list = [dvs, dvs_prob]
+
+    for considered_features in considered_features_list:
+        vif = compute_vif(df, considered_features)
+        print(vif.sort_values('VIF', ascending=False))
+```
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    considered_features = controls[:2]
+    vif = compute_vif(df, considered_features)
+    print(vif.sort_values('VIF', ascending=False))
+    vif.to_csv(f'{table_save_path}vif {df_name} - Controls.csv')
+    vif.style.to_latex(f'{table_save_path}vif {df_name} - Controls.tex', hrules=True)
+```
+
+# Double LASSO Regression
+
+### Double LASSO Regression for Controls x DVs
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    endog_names = dv
+    exog_names = controls[:2]
+
+    endog = df[endog_names]
+    exog = df[exog_names]
+    constant = sm.add_constant(exog)
+
+    lasso = Lasso(alpha=0.1)
+    lasso.fit(constant, endog)
+    print('Estimate coefficients for Lasso')
+    for i, name in enumerate(exog_names):
+        print(f'{name}: {lasso.coef_[i]}')
+```
+
+### Double LASSO Regression for Controls x IVs Percentage
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    for iv in ivs_perc:
+        print(f'{"-"*20} {iv} {"-"*20}')
+        endog_names = iv
+        exog_names = controls[:2]
+
+        endog = df[endog_names]
+        exog = df[exog_names]
+        constant = sm.add_constant(exog)
+
+        lasso = Lasso(alpha=0.1)
+        lasso.fit(constant, endog)
+        print('Estimate coefficients for Lasso')
+        for i, name in enumerate(exog_names):
+            print(f'{name}: {lasso.coef_[i]}')
+```
+
+### Double LASSO Regression for Controls x IVs Dummy
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    for iv in ivs_dummy:
+        print(f'{"-"*20} {iv} {"-"*20}')
+        endog_names = iv
+        exog_names = controls[:2]
+
+        endog = df[endog_names]
+        exog = df[exog_names]
+        constant = sm.add_constant(exog)
+
+        lasso = Lasso(alpha=0.1)
+        lasso.fit(constant, endog)
+        print('Estimate coefficients for Lasso')
+        for i, name in enumerate(exog_names):
+            print(f'{name}: {lasso.coef_[i]}')
+```
+
+### Double LASSO Regression for Controls x IVs Dummy and Percentage
+
+```{python}
+for df_name, df in dataframes.items():
+
+    print('\n')
+    print('+'*120)
+    print(f'{"="*50} RESULTS FOR {df_name} {"="*50}')
+
+    for iv in ivs_dummy_and_perc:
+        print(f'{"-"*20} {iv} {"-"*20}')
+        endog_names = iv
+        exog_names = controls[:2]
+
+        endog = df[endog_names]
+        exog = df[exog_names]
+        constant = sm.add_constant(exog)
+
+        lasso = Lasso(alpha=0.1)
+        lasso.fit(constant, endog)
+        print('Estimate coefficients for Lasso')
+        for i, name in enumerate(exog_names):
+            print(f'{name}: {lasso.coef_[i]}')
+```
+
+

@@ -100,8 +100,10 @@ device_name = str(device.type)
 print(f'Using {device_name.upper()}')
 accelerator = Accelerator()
 torch.autograd.set_detect_anomaly(True)
-
 os.environ.get('TOKENIZERS_PARALLELISM')
+os.environ.get('PYTORCH_MPS_HIGH_WATERMARK_RATIO')
+os.environ.get('TRANSFORMERS_CACHE')
+transformers_cache_dir = os.getenv('TRANSFORMERS_CACHE')
 openai_token = os.environ['OPENAI_API_KEY']
 huggingface_token = os.environ['HUGGINGFACE_API_KEY']
 # load_in_4bit=True, bnb_4bit_use_double_quant=True, bnb_4bit_compute_dtype=torch.bfloat16, bnb_4bit_quant_type='nf4'
@@ -656,6 +658,12 @@ transformers_pipe = {
         'tokenizer': OpenAIGPTTokenizerFast,
         'model': OpenAIGPTForSequenceClassification,
     },
+    # 'Falcon': {
+    #     'model_name': 'tiiuae/falcon-40b',
+    #     'config': AutoConfig,
+    #     'tokenizer': AutoTokenizer,
+    #     'model': AutoModelForSequenceClassification,
+    # },
     # 'GPTJForSequenceClassification': {
     #     'model_name': 'EleutherAI/gpt-j-6b',
     #     'config': GPTJConfig,
