@@ -658,12 +658,6 @@ transformers_pipe = {
         'tokenizer': OpenAIGPTTokenizerFast,
         'model': OpenAIGPTForSequenceClassification,
     },
-    # 'Falcon': {
-    #     'model_name': 'tiiuae/falcon-40b',
-    #     'config': AutoConfig,
-    #     'tokenizer': AutoTokenizer,
-    #     'model': AutoModelForSequenceClassification,
-    # },
     # 'GPTJForSequenceClassification': {
     #     'model_name': 'EleutherAI/gpt-j-6b',
     #     'config': GPTJConfig,
@@ -682,14 +676,14 @@ transformers_pipe = {
     #     'tokenizer': LlamaTokenizerFast,
     #     'model': LlamaForSequenceClassification,
     # },
-    # 'Guanaco': {
-    #     'model_name': 'JosephusCheung/Guanaco',
+    # 'PALM': {
+    #     'model_name': 'conceptofmind/palm-1b',
     #     'config': AutoConfig,
     #     'tokenizer': AutoTokenizer,
     #     'model': AutoModelForSequenceClassification,
     # },
-    # 'PALM': {
-    #     'model_name': 'conceptofmind/palm-1b',
+    # 'Falcon': {
+    #     'model_name': 'tiiuae/falcon-40b',
     #     'config': AutoConfig,
     #     'tokenizer': AutoTokenizer,
     #     'model': AutoModelForSequenceClassification,
