@@ -32,6 +32,13 @@ sys.path.append(code_dir)
 
 
 # %%
+from setup_module.imports import *
+from setup_module.scraping import *
+
+warnings.filterwarnings('ignore', category=DeprecationWarning)
+
+
+# %%
 # preprocessing
 # Function to get new data, clean it, and make excel dfs
 
@@ -668,7 +675,7 @@ def mean_pooling(model_output, attention_mask):
 
 
 # %%
-# def huggingface_similarity(sentences, model = BertModel.from_pretrained('bert-base-uncased', trust_remote_code=True, cache_dir=transformers_cache_dir), args=get_args()):
+# def huggingface_similarity(sentences, model = BertModel.from_pretrained('bert-base-uncased', trust_remote_code=True), args=get_args()):
 
 #     embeddings = model.encode(sentences, show_progress_bar=True)
 #     cos_sim = util.cos_sim(embeddings, embeddings)
@@ -835,7 +842,7 @@ def simple_preprocess_df(
                 # BERT
                 BERTMODEL = 'bert-base-uncased'
                 bert_tokenizer = BertTokenizer.from_pretrained(
-                    BERTMODEL, strip_accents=True, trust_remote_code=True, cache_dir=transformers_cache_dir)
+                    BERTMODEL, strip_accents=True, trust_remote_code=True)
                 df_jobs_to_be_processed['1grams_bert'] = df_jobs_to_be_processed['Job Description_cleaned'].progress_apply(
                     lambda sentence: bert_tokenizer.tokenize(str(sentence)).to(device))
 
@@ -981,7 +988,7 @@ def simple_preprocess_df(
 
                 # # HuggingFace
                 # print('Getting huggingface embeddings.')
-                # bert_model=TFBertModel.from_pretrained('bert-base-uncased', trust_remote_code=True, cache_dir=transformers_cache_dir)
+                # bert_model=TFBertModel.from_pretrained('bert-base-uncased', trust_remote_code=True)
                 # df_jobs_to_be_processed[f'{ngram_number}grams_{embedding_library}_huggingface_embeddings'] = df_jobs_to_be_processed[f'{ngram_number}grams_{embedding_library}'].progress_apply(lambda sentences: bert_model(sentences))
                 # print('Done getting huggingface embeddings.')
 

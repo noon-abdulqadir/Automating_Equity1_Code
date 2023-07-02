@@ -1,7 +1,6 @@
 from typing import Callable
 
 from scipy import stats
-
 from statannotations.stats.StatResult import StatResult
 
 

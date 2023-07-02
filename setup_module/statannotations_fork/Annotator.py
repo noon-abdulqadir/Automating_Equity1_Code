@@ -7,20 +7,29 @@ import numpy as np
 import seaborn as sns
 from matplotlib import lines
 from matplotlib.font_manager import FontProperties
-
-from statannotations.Annotation import Annotation
-from statannotations.PValueFormat import PValueFormat, \
-    CONFIGURABLE_PARAMETERS as PVALUE_CONFIGURABLE_PARAMETERS
 from statannotations._Plotter import _Plotter, _SeabornPlotter
-from statannotations.stats.ComparisonsCorrection import \
-    get_validated_comparisons_correction
+from statannotations.Annotation import Annotation
+from statannotations.PValueFormat import (
+    CONFIGURABLE_PARAMETERS as PVALUE_CONFIGURABLE_PARAMETERS,
+)
+from statannotations.PValueFormat import PValueFormat
+from statannotations.stats.ComparisonsCorrection import (
+    get_validated_comparisons_correction,
+)
 from statannotations.stats.StatResult import StatResult
 from statannotations.stats.StatTest import StatTest
-from statannotations.stats.test import apply_test, IMPLEMENTED_TESTS
-from statannotations.stats.utils import check_alpha, check_pvalues, \
-    check_num_comparisons, get_num_comparisons
-from statannotations.utils import check_is_in, InvalidParametersError, \
-    empty_dict_if_none
+from statannotations.stats.test import IMPLEMENTED_TESTS, apply_test
+from statannotations.stats.utils import (
+    check_alpha,
+    check_num_comparisons,
+    check_pvalues,
+    get_num_comparisons,
+)
+from statannotations.utils import (
+    InvalidParametersError,
+    check_is_in,
+    empty_dict_if_none,
+)
 
 CONFIGURABLE_PARAMETERS = [
     'alpha',

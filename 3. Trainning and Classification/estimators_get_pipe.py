@@ -103,7 +103,6 @@ torch.autograd.set_detect_anomaly(True)
 os.environ.get('TOKENIZERS_PARALLELISM')
 os.environ.get('PYTORCH_MPS_HIGH_WATERMARK_RATIO')
 os.environ.get('TRANSFORMERS_CACHE')
-transformers_cache_dir = os.getenv('TRANSFORMERS_CACHE')
 openai_token = os.environ['OPENAI_API_KEY']
 huggingface_token = os.environ['HUGGINGFACE_API_KEY']
 # load_in_4bit=True, bnb_4bit_use_double_quant=True, bnb_4bit_compute_dtype=torch.bfloat16, bnb_4bit_quant_type='nf4'
@@ -671,7 +670,7 @@ transformers_pipe = {
     #     'model': GPTNeoXForSequenceClassification,
     # },
     # 'LlamaForSequenceClassification': {
-    #     'model_name': 'OpenAssistant/oasst-sft-7-llama-30b-xor',
+    #     'model_name': 'openlm-research/open_llama_13b',
     #     'config': LlamaConfig,
     #     'tokenizer': LlamaTokenizerFast,
     #     'model': LlamaForSequenceClassification,
@@ -681,6 +680,12 @@ transformers_pipe = {
     #     'config': AutoConfig,
     #     'tokenizer': AutoTokenizer,
     #     'model': AutoModelForSequenceClassification,
+    # },
+    # 'MegatronBertForSequenceClassification': {
+    #     'model_name': 'nvidia/megatron-bert-uncased-345m',
+    #     'config': BertConfig,
+    #     'tokenizer': BertTokenizerFast,
+    #     'model': MegatronBertForSequenceClassification,
     # },
     # 'Falcon': {
     #     'model_name': 'tiiuae/falcon-40b',

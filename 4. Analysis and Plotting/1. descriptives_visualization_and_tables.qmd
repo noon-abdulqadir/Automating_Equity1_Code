@@ -41,7 +41,7 @@ sys.path.append(code_dir)
 ```{python}
 from setup_module.imports import * # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 from setup_module import researchpy_fork as rp # type:ignore # isort:skip # fmt:skip # noqa # nopep8
-from setup_module.statannotations_fork.Annotator import Annotator # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from setup_module.statannotations.Annotator import Annotator # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 ```
 
 ```{python}

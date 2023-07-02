@@ -1,9 +1,10 @@
+from statannotations.format_annotations import pval_annotation_text, simple_text
 from statannotations.stats.StatResult import StatResult
-
-from statannotations.format_annotations import pval_annotation_text, \
-    simple_text
-from statannotations.utils import DEFAULT, check_valid_text_format, \
-    InvalidParametersError
+from statannotations.utils import (
+    DEFAULT,
+    InvalidParametersError,
+    check_valid_text_format,
+)
 
 CONFIGURABLE_PARAMETERS = [
     'correction_format',

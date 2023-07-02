@@ -29,6 +29,7 @@ if code_dir_name not in str(Path.cwd()).split('/')[-1]:
                 break
 else:
     code_dir = Path.cwd()
+sys.path.append(code_dir)
 
 # %load_ext autoreload
 # %autoreload 2
@@ -152,7 +153,7 @@ try:
     import xgboost as xgb
     import xlsxwriter
     import yaml
-    from accelerate import Accelerator, notebook_launcher
+    from accelerate import Accelerator
     from bs4 import BeautifulSoup
     from dotenv.main import load_dotenv
     from gensim import corpora, models
@@ -175,8 +176,6 @@ try:
     from gensim.test.utils import common_texts, datapath, get_tmpfile
     from gensim.utils import save_as_line_sentence, simple_preprocess
     from googletrans import Translator
-
-    # from http_request_randomizer.requests.proxy.requestProxy import RequestProxy
     from imblearn.combine import SMOTEENN, SMOTETomek
     from imblearn.datasets import make_imbalance
     from imblearn.metrics import (
@@ -413,6 +412,7 @@ try:
         LlamaForSequenceClassification,
         LlamaTokenizer,
         LlamaTokenizerFast,
+        MegatronBertForSequenceClassification,
         OpenAIGPTConfig,
         OpenAIGPTForSequenceClassification,
         OpenAIGPTTokenizerFast,
@@ -646,7 +646,6 @@ torch.autograd.set_detect_anomaly(True)
 os.environ.get('TOKENIZERS_PARALLELISM')
 os.environ.get('PYTORCH_MPS_HIGH_WATERMARK_RATIO')
 os.environ.get('TRANSFORMERS_CACHE')
-transformers_cache_dir = os.getenv('TRANSFORMERS_CACHE')
 openai_token = os.environ['OPENAI_API_KEY']
 huggingface_token = os.environ['HUGGINGFACE_API_KEY']
 hyperparameter_tuning = True

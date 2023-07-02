@@ -1,8 +1,9 @@
-from statannotations.stats.StatResult import StatResult
+from operator import itemgetter
 from typing import List
+
 import numpy as np
 import pandas as pd
-from operator import itemgetter
+from statannotations.stats.StatResult import StatResult
 
 
 def pval_annotation_text(result: List[StatResult],

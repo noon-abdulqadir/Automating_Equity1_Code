@@ -7,10 +7,15 @@ import seaborn as sns
 from matplotlib import lines
 from matplotlib.collections import PathCollection
 from matplotlib.patches import Rectangle
-
 from statannotations._GroupsPositions import _GroupsPositions
-from statannotations.utils import check_not_none, check_order_in_data, \
-    check_pairs_in_data, render_collection, check_is_in, remove_null
+from statannotations.utils import (
+    check_is_in,
+    check_not_none,
+    check_order_in_data,
+    check_pairs_in_data,
+    remove_null,
+    render_collection,
+)
 
 IMPLEMENTED_PLOTTERS = {
     'seaborn': ['barplot', 'boxplot', 'stripplot', 'swarmplot', 'violinplot']
