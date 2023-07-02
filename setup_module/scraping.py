@@ -650,495 +650,495 @@ def get_trans_keyword_list(parent_dir=validate_path(f'{code_dir}/1. Scraping/CBS
 
 
 # %%
-# Function to read and save keyword lists
-def read_and_save_keyword_list(
-    print_enabled: bool = False,
-    save_enabled: bool = True,
-    translate_enabled: bool = False,
-    sectors_file_path: str = validate_path(
-        f'{code_dir}/1. Scraping/CBS/Found Data/'),
-    use_top10_data: bool = False,
-    age_limit: int = 45,
-    age_ratio: int = 10,
-    gender_ratio: int = 20,
-):
+# # Function to read and save keyword lists
+# def read_and_save_keyword_list(
+#     print_enabled: bool = False,
+#     save_enabled: bool = True,
+#     translate_enabled: bool = False,
+#     sectors_file_path: str = validate_path(
+#         f'{code_dir}/1. Scraping/CBS/Found Data/'),
+#     use_top10_data: bool = False,
+#     age_limit: int = 45,
+#     age_ratio: int = 10,
+#     gender_ratio: int = 20,
+# ):
 
-    if print_enabled is True:
-        print(
-            f'NOTE: The function "read_and_save_keyword_list" contains the following optional (default) arguments:\n{get_default_args(read_and_save_keyword_list)}'
-        )
-    # Augment Keywords List
-    # Gender
-    if use_top10_data is True:
-        # Highest % of women per occupation
-        keyword_file_path_womenvocc = validate_path(
-            f'{sectors_file_path}Top 10 highest % of women in occupations (2018).csv'
-        )
-        df_womenvocc = pd.read_csv(keyword_file_path_womenvocc)
-        #
-        _keywords_womenvocc = df_womenvocc['Beroep'].loc[1:].to_list()
+#     if print_enabled is True:
+#         print(
+#             f'NOTE: The function "read_and_save_keyword_list" contains the following optional (default) arguments:\n{get_default_args(read_and_save_keyword_list)}'
+#         )
+#     # Augment Keywords List
+#     # Gender
+#     if use_top10_data is True:
+#         # Highest % of women per occupation
+#         keyword_file_path_womenvocc = validate_path(
+#             f'{sectors_file_path}Top 10 highest % of women in occupations (2018).csv'
+#         )
+#         df_womenvocc = pd.read_csv(keyword_file_path_womenvocc)
+#         #
+#         _keywords_womenvocc = df_womenvocc['Beroep'].loc[1:].to_list()
 
-        # Highest % of men per occupation
-        keyword_file_path_menvocc = validate_path(
-            f'{sectors_file_path}Top 10 highest % of men in occupations (2018).csv'
-        )
-        df_menvocc = pd.read_csv(keyword_file_path_menvocc)
-        keywords_menvocc = df_menvocc['Beroep'].loc[1:].to_list()
-    elif use_top10_data is False:
-        keywords_womenvocc = []
-        keywords_menvocc = []
+#         # Highest % of men per occupation
+#         keyword_file_path_menvocc = validate_path(
+#             f'{sectors_file_path}Top 10 highest % of men in occupations (2018).csv'
+#         )
+#         df_menvocc = pd.read_csv(keyword_file_path_menvocc)
+#         keywords_menvocc = df_menvocc['Beroep'].loc[1:].to_list()
+#     elif use_top10_data is False:
+#         keywords_womenvocc = []
+#         keywords_menvocc = []
 
-    # Read into df
-    df_sectors = get_sector_df_from_cbs()
-    df_sectors.set_index(
-        ('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Sector Name'), inplace=True)
+#     # Read into df
+#     df_sectors = get_sector_df_from_cbs()
+#     df_sectors.set_index(
+#         ('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Sector Name'), inplace=True)
 
-    # Gender Sectors DFs
-    df_sector_gen_mixed = df_sectors.loc[df_sectors[(
-        'Gender', 'Sectoral Gender Segregation', 'Dominant Category')] == 'Mixed Gender']
-    df_sector_women = df_sectors.loc[df_sectors[(
-        'Gender', 'Sectoral Gender Segregation', 'Dominant Category')] == 'Female']
-    df_sector_men = df_sectors.loc[df_sectors[(
-        'Gender', 'Sectoral Gender Segregation', 'Dominant Category')] == 'Male']
+#     # Gender Sectors DFs
+#     df_sector_gen_mixed = df_sectors.loc[df_sectors[(
+#         'Gender', 'Sectoral Gender Segregation', 'Dominant Category')] == 'Mixed Gender']
+#     df_sector_women = df_sectors.loc[df_sectors[(
+#         'Gender', 'Sectoral Gender Segregation', 'Dominant Category')] == 'Female']
+#     df_sector_men = df_sectors.loc[df_sectors[(
+#         'Gender', 'Sectoral Gender Segregation', 'Dominant Category')] == 'Male']
 
-    # Make Mixed Gender keywords list
-    keywords_genvsect = df_sector_gen_mixed.index.to_list()
-    keywords_genvsect = clean_and_translate_keyword_list(
-        keywords_genvsect, translate_enabled)
+#     # Make Mixed Gender keywords list
+#     keywords_genvsect = df_sector_gen_mixed.index.to_list()
+#     keywords_genvsect = clean_and_translate_keyword_list(
+#         keywords_genvsect, translate_enabled)
 
-    # Add female and male sectors to lists
-    # Female Sectors + DF women v occ
-    for keywords_list in df_sector_women[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')].to_list():
-        keywords_womenvocc.extend(keywords_list)
-        keywords_womenvocc.extend(df_sector_men.index.to_list())
-    keywords_womenvocc = clean_and_translate_keyword_list(
-        keywords_womenvocc, translate_enabled)
+#     # Add female and male sectors to lists
+#     # Female Sectors + DF women v occ
+#     for keywords_list in df_sector_women[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')].to_list():
+#         keywords_womenvocc.extend(keywords_list)
+#         keywords_womenvocc.extend(df_sector_men.index.to_list())
+#     keywords_womenvocc = clean_and_translate_keyword_list(
+#         keywords_womenvocc, translate_enabled)
 
-    # Male Sectors + DF men v occ
-    for keywords_list in df_sector_men[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')].to_list():
-        keywords_menvocc.extend(keywords_list)
-        keywords_menvocc.extend(df_sector_men.index.to_list())
-    keywords_menvocc = clean_and_translate_keyword_list(
-        keywords_menvocc, translate_enabled)
+#     # Male Sectors + DF men v occ
+#     for keywords_list in df_sector_men[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')].to_list():
+#         keywords_menvocc.extend(keywords_list)
+#         keywords_menvocc.extend(df_sector_men.index.to_list())
+#     keywords_menvocc = clean_and_translate_keyword_list(
+#         keywords_menvocc, translate_enabled)
 
-    ################################################### AGE ###################################################
-    # Age Sectors DFs
-    df_sector_age_mixed = df_sectors.loc[df_sectors[(
-        'Age', 'Sectoral Age Segregation', 'Dominant Category')] == 'Mixed Age']
-    df_sector_old = df_sectors.loc[df_sectors[(
-        'Age', 'Sectoral Age Segregation', 'Dominant Category')] == 'Older']
-    df_sector_young = df_sectors.loc[df_sectors[(
-        'Age', 'Sectoral Age Segregation', 'Dominant Category')] == 'Younger']
+#     ################################################### AGE ###################################################
+#     # Age Sectors DFs
+#     df_sector_age_mixed = df_sectors.loc[df_sectors[(
+#         'Age', 'Sectoral Age Segregation', 'Dominant Category')] == 'Mixed Age']
+#     df_sector_old = df_sectors.loc[df_sectors[(
+#         'Age', 'Sectoral Age Segregation', 'Dominant Category')] == 'Older']
+#     df_sector_young = df_sectors.loc[df_sectors[(
+#         'Age', 'Sectoral Age Segregation', 'Dominant Category')] == 'Younger']
 
-    # Make Mixed Age keywords list
-    keywords_agevsect = df_sector_age_mixed.index.to_list()
-    keywords_agevsect = clean_and_translate_keyword_list(
-        keywords_agevsect, translate_enabled)
+#     # Make Mixed Age keywords list
+#     keywords_agevsect = df_sector_age_mixed.index.to_list()
+#     keywords_agevsect = clean_and_translate_keyword_list(
+#         keywords_agevsect, translate_enabled)
 
-    # Add older and younger sectors to lists
-    # Older Sectors
-    keywords_oldvocc = df_sector_old.index.to_list()
-    keywords_oldvocc = clean_and_translate_keyword_list(
-        keywords_oldvocc, translate_enabled)
+#     # Add older and younger sectors to lists
+#     # Older Sectors
+#     keywords_oldvocc = df_sector_old.index.to_list()
+#     keywords_oldvocc = clean_and_translate_keyword_list(
+#         keywords_oldvocc, translate_enabled)
 
-    # Younger Sectors
-    keywords_youngvocc = df_sector_young.index.to_list()
-    keywords_youngvocc = clean_and_translate_keyword_list(
-        keywords_youngvocc, translate_enabled)
+#     # Younger Sectors
+#     keywords_youngvocc = df_sector_young.index.to_list()
+#     keywords_youngvocc = clean_and_translate_keyword_list(
+#         keywords_youngvocc, translate_enabled)
 
-    ################################################### SAVE ###################################################
+#     ################################################### SAVE ###################################################
 
-    # Print and save lists
-    if print_enabled is True:
-        print(
-            f'Female keywords total {len(keywords_womenvocc)}:\n{keywords_womenvocc}\n')
-        print(
-            f'Male keywords total {len(keywords_menvocc)}:\n{keywords_menvocc}\n')
-        print(
-            f'Mixed gender keywords total {len(keywords_genvsect)}:\n{keywords_genvsect}\n'
-        )
-        print(
-            f'Older worker keywords total {len(keywords_oldvocc)}:\n{keywords_oldvocc}\n')
-        print(
-            f'Younger keywords total {len(keywords_youngvocc)}:\n{keywords_youngvocc}\n'
-        )
-        print(
-            f'Mixed age keywords total {len(keywords_agevsect)}:\n{keywords_agevsect}\n'
-        )
+#     # Print and save lists
+#     if print_enabled is True:
+#         print(
+#             f'Female keywords total {len(keywords_womenvocc)}:\n{keywords_womenvocc}\n')
+#         print(
+#             f'Male keywords total {len(keywords_menvocc)}:\n{keywords_menvocc}\n')
+#         print(
+#             f'Mixed gender keywords total {len(keywords_genvsect)}:\n{keywords_genvsect}\n'
+#         )
+#         print(
+#             f'Older worker keywords total {len(keywords_oldvocc)}:\n{keywords_oldvocc}\n')
+#         print(
+#             f'Younger keywords total {len(keywords_youngvocc)}:\n{keywords_youngvocc}\n'
+#         )
+#         print(
+#             f'Mixed age keywords total {len(keywords_agevsect)}:\n{keywords_agevsect}\n'
+#         )
 
-    keywords_dict_per_cat = {
-        'keywords_womenvocc': keywords_womenvocc,
-        'keywords_menvocc': keywords_menvocc,
-        'keywords_genvsect': keywords_genvsect,
-        'keywords_oldvocc': keywords_oldvocc,
-        'keywords_youngvocc': keywords_youngvocc,
-        'keywords_agevsect': keywords_agevsect,
-    }
-    if save_enabled is True:
-        with open(
-            f'{code_dir}/1. Scraping/CBS/Data/keywords_dict_per_cat.json', 'w', encoding='utf8'
-        ) as f:
-            json.dump(keywords_dict_per_cat, f)
+#     keywords_dict_per_cat = {
+#         'keywords_womenvocc': keywords_womenvocc,
+#         'keywords_menvocc': keywords_menvocc,
+#         'keywords_genvsect': keywords_genvsect,
+#         'keywords_oldvocc': keywords_oldvocc,
+#         'keywords_youngvocc': keywords_youngvocc,
+#         'keywords_agevsect': keywords_agevsect,
+#     }
+#     if save_enabled is True:
+#         with open(
+#             f'{code_dir}/1. Scraping/CBS/Data/keywords_dict_per_cat.json', 'w', encoding='utf8'
+#         ) as f:
+#             json.dump(keywords_dict_per_cat, f)
 
-        for key, value in keywords_dict_per_cat.items():
-            if translate_enabled is False:
-                save_path_file_name = f'Sectors List/{str(key)}.txt'
-            elif translate_enabled is True:
-                save_path_file_name = (
-                    f'Sectors List/{str(key)}_with_nl.txt'
-                )
+#         for key, value in keywords_dict_per_cat.items():
+#             if translate_enabled is False:
+#                 save_path_file_name = f'Sectors List/{str(key)}.txt'
+#             elif translate_enabled is True:
+#                 save_path_file_name = (
+#                     f'Sectors List/{str(key)}_with_nl.txt'
+#                 )
 
-            if print_enabled is True:
-                print(
-                    f'Saving {key} of length: {len(value)} to file location {sectors_file_path}.'
-                )
-            with open(sectors_file_path + save_path_file_name, 'w') as f:
-                for i in value:
-                    f.write(f'{i.lower()}\n')
+#             if print_enabled is True:
+#                 print(
+#                     f'Saving {key} of length: {len(value)} to file location {sectors_file_path}.'
+#                 )
+#             with open(sectors_file_path + save_path_file_name, 'w') as f:
+#                 for i in value:
+#                     f.write(f'{i.lower()}\n')
 
-    elif save_enabled is False:
-        print('No keyword list save enabled.')
+#     elif save_enabled is False:
+#         print('No keyword list save enabled.')
 
-    return (
-        keywords_dict_per_cat,
-        keywords_womenvocc,
-        keywords_menvocc,
-        keywords_genvsect,
-        keywords_oldvocc,
-        keywords_youngvocc,
-        keywords_agevsect,
-        df_sector_women,
-        df_sector_men,
-        df_sector_old,
-        df_sector_young,
-    )
+#     return (
+#         keywords_dict_per_cat,
+#         keywords_womenvocc,
+#         keywords_menvocc,
+#         keywords_genvsect,
+#         keywords_oldvocc,
+#         keywords_youngvocc,
+#         keywords_agevsect,
+#         df_sector_women,
+#         df_sector_men,
+#         df_sector_old,
+#         df_sector_young,
+#     )
+
+
+# # %%
+# def get_keywords_from_cbs(
+#     save_enabled: bool = True,
+#     keywords_file_path: str = f'{code_dir}/1. Scraping/CBS/Found Data/Sectors List/',
+#     cols=['Industry class / branch (SIC2008)', 'Sex of employee',
+#           'Other characteristics employee', 'Employment/Jobs (x 1 000)'],
+#     age_limit: int = 45,
+#     age_ratio: int = 10,
+#     gender_ratio: int = 20,
+# ):
+
+#     keywords_dict_per_cat, keywords_womenvocc, keywords_menvocc, keywords_genvsect, keywords_oldvocc, keywords_youngvocc, keywords_agevsect, df_sector_women, df_sector_men, df_sector_old, df_sector_young = read_and_save_keyword_list()
+
+#     df_sectors = get_sector_df_from_cbs()
+#     df_sectors.set_index(
+#         ('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Sector Name'), inplace=True)
+
+#     # Make dfs, lists and dicts for each group
+#     sectors_list = clean_and_translate_keyword_list(df_sectors.loc['Agriculture and industry': 'Other service activities', (
+#         'SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')].index.to_list())
+
+#     female_sectors = df_sectors.loc[df_sectors[(
+#         'Gender', 'Sectoral Gender Segregation', 'Dominant Category')] == 'Female']
+
+#     female_list = clean_and_translate_keyword_list(
+#         female_sectors.index.to_list())
+#     female_dict = female_sectors.to_dict('index')
+
+#     male_sectors = df_sectors.loc[df_sectors[(
+#         'Gender', 'Sectoral Gender Segregation', 'Dominant Category')] == 'Male']
+#     male_list = clean_and_translate_keyword_list(male_sectors.index.to_list())
+#     male_dict = male_sectors.to_dict()
+
+#     all_gender_sectors = pd.concat([female_sectors, male_sectors])
+#     all_gender_list = clean_and_translate_keyword_list(
+#         all_gender_sectors.index.to_list())
+#     all_gender_dict = all_gender_sectors.to_dict()
+
+#     old_sectors = df_sectors.loc[df_sectors[(
+#         'Age', 'Sectoral Age Segregation', 'Dominant Category')] == 'Older']
+#     old_list = clean_and_translate_keyword_list(old_sectors.index.to_list())
+#     old_dict = old_sectors.to_dict()
+
+#     young_sectors = df_sectors.loc[df_sectors[(
+#         'Age', 'Sectoral Age Segregation', 'Dominant Category')] == 'Younger']
+#     young_list = clean_and_translate_keyword_list(
+#         young_sectors.index.to_list())
+#     young_dict = young_sectors.to_dict()
+
+#     all_age_sectors = pd.concat([old_sectors, young_sectors])
+#     all_age_list = clean_and_translate_keyword_list(
+#         all_age_sectors.index.to_list())
+#     all_age_dict = all_age_sectors.to_dict()
+
+#     # Save lists
+#     if save_enabled is True:
+#         with open(f'{keywords_file_path}keywords_sectors_FROM_SECTOR.txt', 'w') as f:
+#             for i in sectors_list:
+#                 f.write(f'{i.lower()}\n')
+
+#         with open(
+#             f'{keywords_file_path}keywords_womenvocc_ratio-{str(gender_ratio)}_FROM_SECTOR.txt',
+#             'w',
+#         ) as f:
+#             for i in female_list:
+#                 f.write(f'{i.lower()}\n')
+
+#         with open(
+#             f'{keywords_file_path}keywords_menvocc_ratio-{str(gender_ratio)}_FROM_SECTOR.txt',
+#             'w',
+#         ) as f:
+#             for i in male_list:
+#                 f.write(f'{i.lower()}\n')
+
+#         with open(
+#             f'{keywords_file_path}keywords_genvsect_ratio-{str(gender_ratio)}_FROM_SECTOR.txt',
+#             'w',
+#         ) as f:
+#             for i in all_gender_list:
+#                 f.write(f'{i.lower()}\n')
+
+#         with open(
+#             f'{keywords_file_path}keywords_oldvocc_{str(age_limit)}_ratio-{str(age_ratio)}_FROM_SECTOR.txt',
+#             'w',
+#         ) as f:
+#             for i in old_list:
+#                 f.write(f'{i.lower()}\n')
+
+#         with open(
+#             f'{keywords_file_path}keywords_youngvocc_{str(age_limit)}_ratio-{str(age_ratio)}_FROM_SECTOR.txt',
+#             'w',
+#         ) as f:
+#             for i in young_list:
+#                 f.write(f'{i.lower()}\n')
+
+#         with open(
+#             f'{keywords_file_path}keywords_agevsect_{str(age_limit)}_ratio-{str(age_ratio)}_FROM_SECTOR.txt',
+#             'w',
+#         ) as f:
+#             for i in all_age_list:
+#                 f.write(f'{i.lower()}\n')
+
+#     return (
+#         df_sectors,
+#         female_sectors,
+#         male_sectors,
+#         all_gender_sectors,
+#         old_sectors,
+#         young_sectors,
+#         all_age_sectors,
+#     )
 
 
 # %%
-def get_keywords_from_cbs(
-    save_enabled: bool = True,
-    keywords_file_path: str = f'{code_dir}/1. Scraping/CBS/Found Data/Sectors List/',
-    cols=['Industry class / branch (SIC2008)', 'Sex of employee',
-          'Other characteristics employee', 'Employment/Jobs (x 1 000)'],
-    age_limit: int = 45,
-    age_ratio: int = 10,
-    gender_ratio: int = 20,
-):
+# # Find file location
+# def get_keyword_list(
+#     print_enabled: bool = False,
+#     get_from_cbs: bool = True,
+#     age_limit=45,
+#     age_ratio=10,
+#     gender_ratio=20,
+# ):
 
-    keywords_dict_per_cat, keywords_womenvocc, keywords_menvocc, keywords_genvsect, keywords_oldvocc, keywords_youngvocc, keywords_agevsect, df_sector_women, df_sector_men, df_sector_old, df_sector_young = read_and_save_keyword_list()
+#     keywords_file_path = validate_path(
+#         f'{code_dir}/data/content analysis + ids + sectors/Sectors + Age and Gender Composition of Industires and Jobs/Analysis and Dataset Used/'
+#     )
 
-    df_sectors = get_sector_df_from_cbs()
-    df_sectors.set_index(
-        ('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Sector Name'), inplace=True)
+#     if get_from_cbs is True:
+#         (
+#             df_sectors,
+#             female_sectors,
+#             male_sectors,
+#             all_gender_sectors,
+#             old_sectors,
+#             young_sectors,
+#             all_age_sectors,
+#         ) = get_keywords_from_cbs(
+#             save_enabled=True,
+#             age_limit=age_limit,
+#             age_ratio=age_ratio,
+#             gender_ratio=gender_ratio,
+#         )
 
-    # Make dfs, lists and dicts for each group
-    sectors_list = clean_and_translate_keyword_list(df_sectors.loc['Agriculture and industry': 'Other service activities', (
-        'SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')].index.to_list())
+#     # Women Sector
+#     keywords_dict_per_cat, keywords_womenvocc, keywords_menvocc, keywords_genvsect, keywords_oldvocc, keywords_youngvocc, keywords_agevsect, df_sector_women, df_sector_men, df_sector_old, df_sector_young = read_and_save_keyword_list()
 
-    female_sectors = df_sectors.loc[df_sectors[(
-        'Gender', 'Sectoral Gender Segregation', 'Dominant Category')] == 'Female']
+#     with open(keywords_file_path + 'keywords_womenvocc.txt', 'r') as f:
+#         keywords_womenvocc = f.read().splitlines()
+#     with open(
+#         keywords_file_path
+#         + f'keywords_womenvocc_ratio-{str(gender_ratio)}_FROM_SECTOR.txt',
+#         'r',
+#     ) as f:
+#         keywords_womenvocc_sectors = f.read().splitlines()
+#         keywords_womenvocc.extend(keywords_womenvocc_sectors)
+#     if 'busines' in keywords_womenvocc:
+#         keywords_womenvocc.remove('busines')
+#     if 'busine' in keywords_womenvocc:
+#         keywords_womenvocc.remove('busine')
+#     keywords_womenvocc = list(filter(None, list(set(keywords_womenvocc))))
+#     keywords_womenvocc = clean_and_translate_keyword_list(keywords_womenvocc)
 
-    female_list = clean_and_translate_keyword_list(
-        female_sectors.index.to_list())
-    female_dict = female_sectors.to_dict('index')
+#     # Men Sector
+#     with open(keywords_file_path + 'keywords_menvocc.txt', 'r') as f:
+#         keywords_menvocc = f.read().splitlines()
+#     with open(
+#         keywords_file_path
+#         + f'keywords_menvocc_ratio-{str(gender_ratio)}_FROM_SECTOR.txt',
+#         'r',
+#     ) as f:
+#         keywords_menvocc_sectors = f.read().splitlines()
+#         keywords_menvocc.extend(keywords_menvocc_sectors)
+#     if 'busines' in keywords_menvocc:
+#         keywords_menvocc.remove('busines')
+#     if 'busine' in keywords_menvocc:
+#         keywords_menvocc.remove('busine')
+#     keywords_menvocc = list(filter(None, list(set(keywords_menvocc))))
+#     keywords_menvocc = clean_and_translate_keyword_list(keywords_menvocc)
 
-    male_sectors = df_sectors.loc[df_sectors[(
-        'Gender', 'Sectoral Gender Segregation', 'Dominant Category')] == 'Male']
-    male_list = clean_and_translate_keyword_list(male_sectors.index.to_list())
-    male_dict = male_sectors.to_dict()
+#     # Gender Segregated Sector
+#     keywords_genvsect = keywords_womenvocc + keywords_menvocc
+#     if 'busines' in keywords_genvsect:
+#         keywords_genvsect.remove('busines')
+#     if 'busine' in keywords_genvsect:
+#         keywords_genvsect.remove('busine')
+#     keywords_genvsect = list(filter(None, list(set(keywords_genvsect))))
+#     keywords_genvsect = clean_and_translate_keyword_list(keywords_genvsect)
 
-    all_gender_sectors = pd.concat([female_sectors, male_sectors])
-    all_gender_list = clean_and_translate_keyword_list(
-        all_gender_sectors.index.to_list())
-    all_gender_dict = all_gender_sectors.to_dict()
+#     # Old worker Sector
+#     with open(keywords_file_path + 'keywords_oldvocc.txt', 'r') as f:
+#         keywords_oldvocc = f.read().splitlines()
+#     with open(
+#         keywords_file_path
+#         + f'keywords_oldvocc_{str(age_limit)}_ratio-{str(age_ratio)}_FROM_SECTOR.txt',
+#         'r',
+#     ) as f:
+#         keywords_oldvocc_sectors = f.read().splitlines()
+#         keywords_oldvocc.extend(keywords_oldvocc_sectors)
+#     if 'busines' in keywords_oldvocc:
+#         keywords_oldvocc.remove('busines')
+#     if 'busine' in keywords_oldvocc:
+#         keywords_oldvocc.remove('busine')
+#     keywords_oldvocc = list(filter(None, list(set(keywords_oldvocc))))
+#     keywords_oldvocc = clean_and_translate_keyword_list(keywords_oldvocc)
 
-    old_sectors = df_sectors.loc[df_sectors[(
-        'Age', 'Sectoral Age Segregation', 'Dominant Category')] == 'Older']
-    old_list = clean_and_translate_keyword_list(old_sectors.index.to_list())
-    old_dict = old_sectors.to_dict()
+#     # Young worker Sector
+#     with open(keywords_file_path + 'keywords_youngvocc.txt', 'r') as f:
+#         keywords_youngvocc = f.read().splitlines()
+#     with open(
+#         keywords_file_path
+#         + f'keywords_youngvocc_{str(age_limit)}_ratio-{str(age_ratio)}_FROM_SECTOR.txt',
+#         'r',
+#     ) as f:
+#         keywords_youngvocc_sectors = f.read().splitlines()
+#         keywords_youngvocc.extend(keywords_youngvocc_sectors)
+#     if 'busines' in keywords_youngvocc:
+#         keywords_youngvocc.remove('busines')
+#     if 'busine' in keywords_youngvocc:
+#         keywords_youngvocc.remove('busine')
+#     keywords_youngvocc = list(filter(None, list(set(keywords_youngvocc))))
+#     keywords_youngvocc = clean_and_translate_keyword_list(keywords_youngvocc)
 
-    young_sectors = df_sectors.loc[df_sectors[(
-        'Age', 'Sectoral Age Segregation', 'Dominant Category')] == 'Younger']
-    young_list = clean_and_translate_keyword_list(
-        young_sectors.index.to_list())
-    young_dict = young_sectors.to_dict()
+#     # Age Segregated Sector
+#     keywords_agevsect = keywords_oldvocc + keywords_youngvocc
+#     if 'busines' in keywords_agevsect:
+#         keywords_agevsect.remove('busines')
+#     if 'busine' in keywords_agevsect:
+#         keywords_agevsect.remove('busine')
+#     keywords_agevsect = list(filter(None, list(set(keywords_agevsect))))
+#     keywords_agevsect = clean_and_translate_keyword_list(keywords_agevsect)
 
-    all_age_sectors = pd.concat([old_sectors, young_sectors])
-    all_age_list = clean_and_translate_keyword_list(
-        all_age_sectors.index.to_list())
-    all_age_dict = all_age_sectors.to_dict()
+#     # All Sector
+#     sbi_english_keyword_list, sbi_english_keyword_dict, sbi_sectors_dict, sbi_sectors_dict_full, sbi_sectors_dom_gen, sbi_sectors_dom_age, sbi_sectors_keywords_gen_dom, sbi_sectors_keywords_age_dom, sbi_sectors_keywords_full_dom, trans_keyword_list = get_sbi_sectors_list()
+#     # keywords_sector = list(set([y for x in df_sectors.loc['Agriculture and industry': 'Other service activities', ('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')].values.tolist() if isinstance(x, list) for y in x]))
+#     keywords_sector = trans_keyword_list
+#     with open(keywords_file_path + 'keywords_sectors_FROM_SECTOR.txt', 'r') as f:
+#         keywords_sector_sectors = f.read().splitlines()
+#     keywords_sector.extend(keywords_sector_sectors)
 
-    # Save lists
-    if save_enabled is True:
-        with open(f'{keywords_file_path}keywords_sectors_FROM_SECTOR.txt', 'w') as f:
-            for i in sectors_list:
-                f.write(f'{i.lower()}\n')
+#     if 'busines' in keywords_sector:
+#         keywords_sector.remove('busines')
+#     if 'busine' in keywords_sector:
+#         keywords_sector.remove('busine')
+#     keywords_sector = list(filter(None, list(set(keywords_sector))))
+#     keywords_sector = clean_and_translate_keyword_list(keywords_sector)
 
-        with open(
-            f'{keywords_file_path}keywords_womenvocc_ratio-{str(gender_ratio)}_FROM_SECTOR.txt',
-            'w',
-        ) as f:
-            for i in female_list:
-                f.write(f'{i.lower()}\n')
+#     with open(keywords_file_path + 'keywords_sector.txt', 'w') as f:
+#         for word in keywords_sector:
+#             f.write(word + '\n')
 
-        with open(
-            f'{keywords_file_path}keywords_menvocc_ratio-{str(gender_ratio)}_FROM_SECTOR.txt',
-            'w',
-        ) as f:
-            for i in male_list:
-                f.write(f'{i.lower()}\n')
+#     keywords_list = (
+#         keywords_sector
+#         + keywords_womenvocc
+#         + keywords_menvocc
+#         + keywords_oldvocc
+#         + keywords_youngvocc
+#     )
+#     if 'busines' in keywords_list:
+#         keywords_list.remove('busines')
+#     if 'busine' in keywords_list:
+#         keywords_list.remove('busine')
+#     # Remove duplicates
+#     keywords_list = list(filter(None, list(set(keywords_list))))
+#     keywords_list = clean_and_translate_keyword_list(keywords_list)
 
-        with open(
-            f'{keywords_file_path}keywords_genvsect_ratio-{str(gender_ratio)}_FROM_SECTOR.txt',
-            'w',
-        ) as f:
-            for i in all_gender_list:
-                f.write(f'{i.lower()}\n')
+#     # Add mixed gender
+#     # mixed_gender = [x for x in keywords_list if not x in keywords_womenvocc]
+#     # mixed_gender = [x for x in mixed_gender if not x in keywords_menvocc]
+#     # keywords_genvsect.extend(mixed_gender)
+#     mixed_gender = [
+#         k
+#         for k in keywords_list
+#         if (k not in keywords_womenvocc) and (k not in keywords_menvocc)
+#     ]
+#     if 'busines' in mixed_gender:
+#         mixed_gender.remove('busines')
+#     if 'busine' in mixed_gender:
+#         mixed_gender.remove('busine')
+#     mixed_gender = list(filter(None, list(set(mixed_gender))))
+#     mixed_gender = clean_and_translate_keyword_list(mixed_gender)
+#     mixed_age = [
+#         k
+#         for k in keywords_list
+#         if (k not in keywords_oldvocc) and (k not in keywords_youngvocc)
+#     ]
+#     if 'busines' in mixed_age:
+#         mixed_age.remove('busines')
+#     if 'busine' in mixed_age:
+#         mixed_age.remove('busine')
+#     mixed_age = list(filter(None, list(set(mixed_age))))
+#     mixed_age = clean_and_translate_keyword_list(mixed_age)
 
-        with open(
-            f'{keywords_file_path}keywords_oldvocc_{str(age_limit)}_ratio-{str(age_ratio)}_FROM_SECTOR.txt',
-            'w',
-        ) as f:
-            for i in old_list:
-                f.write(f'{i.lower()}\n')
+#     if print_enabled is True:
+#         # Print and save lists
+#         print(f'All sector total {len(keywords_sector)}:\n{keywords_sector}\n')
+#         print(
+#             f'Female keywords total {len(keywords_womenvocc)}:\n{keywords_womenvocc}\n'
+#         )
+#         print(
+#             f'Male keywords total {len(keywords_menvocc)}:\n{keywords_menvocc}\n')
+#         print(
+#             f'Gender Segregated total {len(keywords_genvsect)}:\n{keywords_genvsect}\n'
+#         )
+#         print(f'Mixed Gender total {len(mixed_gender)}:\n{mixed_gender}\n')
+#         print(
+#             f'Older worker keywords total {len(keywords_oldvocc)}:\n{keywords_oldvocc}\n'
+#         )
+#         print(
+#             f'Younger keywords total {len(keywords_youngvocc)}:\n{keywords_youngvocc}\n'
+#         )
+#         print(
+#             f'Age Segregated total {len(keywords_agevsect)}:\n{keywords_agevsect}\n')
+#         print(f'Mixed Age total {len(mixed_age)}:\n{mixed_age}\n')
+#         print(f'All Keywords total {len(keywords_list)}:\n{keywords_list}')
 
-        with open(
-            f'{keywords_file_path}keywords_youngvocc_{str(age_limit)}_ratio-{str(age_ratio)}_FROM_SECTOR.txt',
-            'w',
-        ) as f:
-            for i in young_list:
-                f.write(f'{i.lower()}\n')
-
-        with open(
-            f'{keywords_file_path}keywords_agevsect_{str(age_limit)}_ratio-{str(age_ratio)}_FROM_SECTOR.txt',
-            'w',
-        ) as f:
-            for i in all_age_list:
-                f.write(f'{i.lower()}\n')
-
-    return (
-        df_sectors,
-        female_sectors,
-        male_sectors,
-        all_gender_sectors,
-        old_sectors,
-        young_sectors,
-        all_age_sectors,
-    )
-
-
-# %%
-# Find file location
-def get_keyword_list(
-    print_enabled: bool = False,
-    get_from_cbs: bool = True,
-    age_limit=45,
-    age_ratio=10,
-    gender_ratio=20,
-):
-
-    keywords_file_path = validate_path(
-        f'{code_dir}/data/content analysis + ids + sectors/Sectors + Age and Gender Composition of Industires and Jobs/Analysis and Dataset Used/'
-    )
-
-    if get_from_cbs is True:
-        (
-            df_sectors,
-            female_sectors,
-            male_sectors,
-            all_gender_sectors,
-            old_sectors,
-            young_sectors,
-            all_age_sectors,
-        ) = get_keywords_from_cbs(
-            save_enabled=True,
-            age_limit=age_limit,
-            age_ratio=age_ratio,
-            gender_ratio=gender_ratio,
-        )
-
-    # Women Sector
-    keywords_dict_per_cat, keywords_womenvocc, keywords_menvocc, keywords_genvsect, keywords_oldvocc, keywords_youngvocc, keywords_agevsect, df_sector_women, df_sector_men, df_sector_old, df_sector_young = read_and_save_keyword_list()
-
-    with open(keywords_file_path + 'keywords_womenvocc.txt', 'r') as f:
-        keywords_womenvocc = f.read().splitlines()
-    with open(
-        keywords_file_path
-        + f'keywords_womenvocc_ratio-{str(gender_ratio)}_FROM_SECTOR.txt',
-        'r',
-    ) as f:
-        keywords_womenvocc_sectors = f.read().splitlines()
-        keywords_womenvocc.extend(keywords_womenvocc_sectors)
-    if 'busines' in keywords_womenvocc:
-        keywords_womenvocc.remove('busines')
-    if 'busine' in keywords_womenvocc:
-        keywords_womenvocc.remove('busine')
-    keywords_womenvocc = list(filter(None, list(set(keywords_womenvocc))))
-    keywords_womenvocc = clean_and_translate_keyword_list(keywords_womenvocc)
-
-    # Men Sector
-    with open(keywords_file_path + 'keywords_menvocc.txt', 'r') as f:
-        keywords_menvocc = f.read().splitlines()
-    with open(
-        keywords_file_path
-        + f'keywords_menvocc_ratio-{str(gender_ratio)}_FROM_SECTOR.txt',
-        'r',
-    ) as f:
-        keywords_menvocc_sectors = f.read().splitlines()
-        keywords_menvocc.extend(keywords_menvocc_sectors)
-    if 'busines' in keywords_menvocc:
-        keywords_menvocc.remove('busines')
-    if 'busine' in keywords_menvocc:
-        keywords_menvocc.remove('busine')
-    keywords_menvocc = list(filter(None, list(set(keywords_menvocc))))
-    keywords_menvocc = clean_and_translate_keyword_list(keywords_menvocc)
-
-    # Gender Segregated Sector
-    keywords_genvsect = keywords_womenvocc + keywords_menvocc
-    if 'busines' in keywords_genvsect:
-        keywords_genvsect.remove('busines')
-    if 'busine' in keywords_genvsect:
-        keywords_genvsect.remove('busine')
-    keywords_genvsect = list(filter(None, list(set(keywords_genvsect))))
-    keywords_genvsect = clean_and_translate_keyword_list(keywords_genvsect)
-
-    # Old worker Sector
-    with open(keywords_file_path + 'keywords_oldvocc.txt', 'r') as f:
-        keywords_oldvocc = f.read().splitlines()
-    with open(
-        keywords_file_path
-        + f'keywords_oldvocc_{str(age_limit)}_ratio-{str(age_ratio)}_FROM_SECTOR.txt',
-        'r',
-    ) as f:
-        keywords_oldvocc_sectors = f.read().splitlines()
-        keywords_oldvocc.extend(keywords_oldvocc_sectors)
-    if 'busines' in keywords_oldvocc:
-        keywords_oldvocc.remove('busines')
-    if 'busine' in keywords_oldvocc:
-        keywords_oldvocc.remove('busine')
-    keywords_oldvocc = list(filter(None, list(set(keywords_oldvocc))))
-    keywords_oldvocc = clean_and_translate_keyword_list(keywords_oldvocc)
-
-    # Young worker Sector
-    with open(keywords_file_path + 'keywords_youngvocc.txt', 'r') as f:
-        keywords_youngvocc = f.read().splitlines()
-    with open(
-        keywords_file_path
-        + f'keywords_youngvocc_{str(age_limit)}_ratio-{str(age_ratio)}_FROM_SECTOR.txt',
-        'r',
-    ) as f:
-        keywords_youngvocc_sectors = f.read().splitlines()
-        keywords_youngvocc.extend(keywords_youngvocc_sectors)
-    if 'busines' in keywords_youngvocc:
-        keywords_youngvocc.remove('busines')
-    if 'busine' in keywords_youngvocc:
-        keywords_youngvocc.remove('busine')
-    keywords_youngvocc = list(filter(None, list(set(keywords_youngvocc))))
-    keywords_youngvocc = clean_and_translate_keyword_list(keywords_youngvocc)
-
-    # Age Segregated Sector
-    keywords_agevsect = keywords_oldvocc + keywords_youngvocc
-    if 'busines' in keywords_agevsect:
-        keywords_agevsect.remove('busines')
-    if 'busine' in keywords_agevsect:
-        keywords_agevsect.remove('busine')
-    keywords_agevsect = list(filter(None, list(set(keywords_agevsect))))
-    keywords_agevsect = clean_and_translate_keyword_list(keywords_agevsect)
-
-    # All Sector
-    sbi_english_keyword_list, sbi_english_keyword_dict, sbi_sectors_dict, sbi_sectors_dict_full, sbi_sectors_dom_gen, sbi_sectors_dom_age, sbi_sectors_keywords_gen_dom, sbi_sectors_keywords_age_dom, sbi_sectors_keywords_full_dom, trans_keyword_list = get_sbi_sectors_list()
-    # keywords_sector = list(set([y for x in df_sectors.loc['Agriculture and industry': 'Other service activities', ('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')].values.tolist() if isinstance(x, list) for y in x]))
-    keywords_sector = trans_keyword_list
-    with open(keywords_file_path + 'keywords_sectors_FROM_SECTOR.txt', 'r') as f:
-        keywords_sector_sectors = f.read().splitlines()
-    keywords_sector.extend(keywords_sector_sectors)
-
-    if 'busines' in keywords_sector:
-        keywords_sector.remove('busines')
-    if 'busine' in keywords_sector:
-        keywords_sector.remove('busine')
-    keywords_sector = list(filter(None, list(set(keywords_sector))))
-    keywords_sector = clean_and_translate_keyword_list(keywords_sector)
-
-    with open(keywords_file_path + 'keywords_sector.txt', 'w') as f:
-        for word in keywords_sector:
-            f.write(word + '\n')
-
-    keywords_list = (
-        keywords_sector
-        + keywords_womenvocc
-        + keywords_menvocc
-        + keywords_oldvocc
-        + keywords_youngvocc
-    )
-    if 'busines' in keywords_list:
-        keywords_list.remove('busines')
-    if 'busine' in keywords_list:
-        keywords_list.remove('busine')
-    # Remove duplicates
-    keywords_list = list(filter(None, list(set(keywords_list))))
-    keywords_list = clean_and_translate_keyword_list(keywords_list)
-
-    # Add mixed gender
-    # mixed_gender = [x for x in keywords_list if not x in keywords_womenvocc]
-    # mixed_gender = [x for x in mixed_gender if not x in keywords_menvocc]
-    # keywords_genvsect.extend(mixed_gender)
-    mixed_gender = [
-        k
-        for k in keywords_list
-        if (k not in keywords_womenvocc) and (k not in keywords_menvocc)
-    ]
-    if 'busines' in mixed_gender:
-        mixed_gender.remove('busines')
-    if 'busine' in mixed_gender:
-        mixed_gender.remove('busine')
-    mixed_gender = list(filter(None, list(set(mixed_gender))))
-    mixed_gender = clean_and_translate_keyword_list(mixed_gender)
-    mixed_age = [
-        k
-        for k in keywords_list
-        if (k not in keywords_oldvocc) and (k not in keywords_youngvocc)
-    ]
-    if 'busines' in mixed_age:
-        mixed_age.remove('busines')
-    if 'busine' in mixed_age:
-        mixed_age.remove('busine')
-    mixed_age = list(filter(None, list(set(mixed_age))))
-    mixed_age = clean_and_translate_keyword_list(mixed_age)
-
-    if print_enabled is True:
-        # Print and save lists
-        print(f'All sector total {len(keywords_sector)}:\n{keywords_sector}\n')
-        print(
-            f'Female keywords total {len(keywords_womenvocc)}:\n{keywords_womenvocc}\n'
-        )
-        print(
-            f'Male keywords total {len(keywords_menvocc)}:\n{keywords_menvocc}\n')
-        print(
-            f'Gender Segregated total {len(keywords_genvsect)}:\n{keywords_genvsect}\n'
-        )
-        print(f'Mixed Gender total {len(mixed_gender)}:\n{mixed_gender}\n')
-        print(
-            f'Older worker keywords total {len(keywords_oldvocc)}:\n{keywords_oldvocc}\n'
-        )
-        print(
-            f'Younger keywords total {len(keywords_youngvocc)}:\n{keywords_youngvocc}\n'
-        )
-        print(
-            f'Age Segregated total {len(keywords_agevsect)}:\n{keywords_agevsect}\n')
-        print(f'Mixed Age total {len(mixed_age)}:\n{mixed_age}\n')
-        print(f'All Keywords total {len(keywords_list)}:\n{keywords_list}')
-
-    return (
-        keywords_list,
-        keywords_sector,
-        keywords_womenvocc,
-        keywords_menvocc,
-        keywords_genvsect,
-        keywords_oldvocc,
-        keywords_youngvocc,
-        keywords_agevsect,
-    )
+#     return (
+#         keywords_list,
+#         keywords_sector,
+#         keywords_womenvocc,
+#         keywords_menvocc,
+#         keywords_genvsect,
+#         keywords_oldvocc,
+#         keywords_youngvocc,
+#         keywords_agevsect,
+#     )
 
 # %%
 # Function to access args
@@ -1203,36 +1203,36 @@ def get_args(
 ):
     parent_dir = validate_path(
         f'{data_save_path}content analysis + ids + sectors/')
-    content_analysis_dir = validate_path(f'{scraped_data}/Coding Material/')
+    content_analysis_dir = validate_path(f'{code_dir}2. Cleaning and Preprocessing/Coding Material/')
     df_dir = validate_path(f'{data_save_path}final dfs/')
     models_save_path = validate_path(f'{data_save_path}classification models/')
     table_save_path = validate_path(f'{data_save_path}output tables/')
     plot_save_path = validate_path(f'{data_save_path}plots/')
     embeddings_save_path = validate_path(f'{data_save_path}embeddings models/')
 
-    (
-        keywords_list,
-        keywords_sector,
-        keywords_womenvocc,
-        keywords_menvocc,
-        keywords_genvsect,
-        keywords_oldvocc,
-        keywords_youngvocc,
-        keywords_agevsect,
-    ) = get_keyword_list()
+    # (
+    #     keywords_list,
+    #     keywords_sector,
+    #     keywords_womenvocc,
+    #     keywords_menvocc,
+    #     keywords_genvsect,
+    #     keywords_oldvocc,
+    #     keywords_youngvocc,
+    #     keywords_agevsect,
+    # ) = get_keyword_list()
 
-    (
-        sbi_english_keyword_list,
-        sbi_english_keyword_dict,
-        sbi_sectors_dict,
-        sbi_sectors_dict_full,
-        sbi_sectors_dom_gen,
-        sbi_sectors_dom_age,
-        sbi_sectors_keywords_gen_dom,
-        sbi_sectors_keywords_age_dom,
-        sbi_sectors_keywords_full_dom,
-        trans_keyword_list
-    ) = get_sbi_sectors_list()
+    # (
+    #     sbi_english_keyword_list,
+    #     sbi_english_keyword_dict,
+    #     sbi_sectors_dict,
+    #     sbi_sectors_dict_full,
+    #     sbi_sectors_dom_gen,
+    #     sbi_sectors_dom_age,
+    #     sbi_sectors_keywords_gen_dom,
+    #     sbi_sectors_keywords_age_dom,
+    #     sbi_sectors_keywords_full_dom,
+    #     trans_keyword_list
+    # ) = get_sbi_sectors_list()
 
     return {
         'language': language,
@@ -1261,21 +1261,21 @@ def get_args(
         'file_save_format': file_save_format,
         'file_save_format_backup': file_save_format_backup,
         'image_save_format': image_save_format,
-        'keywords_list': keywords_list,
-        'keywords_sector': keywords_sector,
-        'keywords_womenvocc': keywords_womenvocc,
-        'keywords_menvocc': keywords_menvocc,
-        'keywords_genvsect': keywords_genvsect,
-        'keywords_oldvocc': keywords_oldvocc,
-        'keywords_youngvocc': keywords_youngvocc,
-        'keywords_agevsect': keywords_agevsect,
-        'sbi_english_keyword_list': sbi_english_keyword_list,
-        'sbi_english_keyword_dict': sbi_english_keyword_dict,
-        'sbi_sectors_dict': sbi_sectors_dict,
-        'sbi_sectors_dict_full': sbi_sectors_dict_full,
-        'sbi_sectors_dom_gen': sbi_sectors_dom_gen,
-        'sbi_sectors_dom_age': sbi_sectors_dom_age,
-        'trans_keyword_list': trans_keyword_list,
+        # 'keywords_list': keywords_list,
+        # 'keywords_sector': keywords_sector,
+        # 'keywords_womenvocc': keywords_womenvocc,
+        # 'keywords_menvocc': keywords_menvocc,
+        # 'keywords_genvsect': keywords_genvsect,
+        # 'keywords_oldvocc': keywords_oldvocc,
+        # 'keywords_youngvocc': keywords_youngvocc,
+        # 'keywords_agevsect': keywords_agevsect,
+        # 'sbi_english_keyword_list': sbi_english_keyword_list,
+        # 'sbi_english_keyword_dict': sbi_english_keyword_dict,
+        # 'sbi_sectors_dict': sbi_sectors_dict,
+        # 'sbi_sectors_dict_full': sbi_sectors_dict_full,
+        # 'sbi_sectors_dom_gen': sbi_sectors_dom_gen,
+        # 'sbi_sectors_dom_age': sbi_sectors_dom_age,
+        # 'trans_keyword_list': trans_keyword_list,
     }
 
 

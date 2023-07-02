@@ -1,8 +1,7 @@
 from functools import partial
-from typing import Union, List
+from typing import List, Union
 
 import numpy as np
-
 from statannotations.utils import check_is_in
 
 try:

@@ -1,9 +1,7 @@
 from typing import Union
 
 import numpy as np
-
-from statannotations.stats.ComparisonsCorrection import \
-    ComparisonsCorrection
+from statannotations.stats.ComparisonsCorrection import ComparisonsCorrection
 from statannotations.stats.StatResult import StatResult
 from statannotations.stats.StatTest import StatTest
 

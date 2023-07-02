@@ -1,7 +1,7 @@
 import warnings
 from numbers import Number
-import numpy as np
 
+import numpy as np
 from statannotations.utils import raise_expected_got
 
 
