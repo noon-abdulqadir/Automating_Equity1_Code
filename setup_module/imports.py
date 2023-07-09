@@ -192,7 +192,7 @@ try:
     )
     from IPython.core.interactiveshell import InteractiveShell
     from IPython.display import HTML, Image, Markdown, display
-    from ipywidgets import FloatSlider, interactive
+    from ipywidgets import interact, interactive, fixed, interact_manual, FloatSlider
     from joblib import parallel_backend
     from matplotlib.animation import FuncAnimation
     from mpl_toolkits.mplot3d import Axes3D
@@ -256,7 +256,7 @@ try:
         make_classification,
         make_regression,
     )
-    from sklearn.decomposition import PCA, TruncatedSVD
+    from sklearn.decomposition import PCA, FactorAnalysis, TruncatedSVD
     from sklearn.dummy import DummyClassifier
     from sklearn.ensemble import (
         AdaBoostClassifier,
