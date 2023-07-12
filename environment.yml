@@ -47,6 +47,7 @@ dependencies:
       - cfgv==3.3.1
       - chardet==3.0.4
       - charset-normalizer==3.2.0
+      - chromedriver-autoinstaller==0.4.1
       - click==8.1.4
       - cmaes==0.9.1
       - colorlog==6.7.0
@@ -55,6 +56,7 @@ dependencies:
       - contourpy==1.1.0
       - cycler==0.11.0
       - cymem==2.0.7
+      - cython==0.29.36
       - datasets==2.13.1
       - debugpy==1.6.7
       - decorator==5.1.1
@@ -165,8 +167,9 @@ dependencies:
       - pydantic==1.10.11
       - pydantic-core==2.1.2
       - pygments==2.15.1
+      - pyhamcrest==2.0.4
       - pylint==2.17.4
-      - pyparsing==3.1.0
+      - pyparsing==3.0.9
       - pyrsistent==0.19.3
       - pysocks==1.7.1
       - python-dateutil==2.8.2
