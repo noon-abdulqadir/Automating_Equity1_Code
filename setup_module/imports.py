@@ -192,7 +192,7 @@ try:
     )
     from IPython.core.interactiveshell import InteractiveShell
     from IPython.display import HTML, Image, Markdown, display
-    from ipywidgets import interact, interactive, fixed, interact_manual, FloatSlider
+    from ipywidgets import FloatSlider, fixed, interact, interact_manual, interactive
     from joblib import parallel_backend
     from matplotlib.animation import FuncAnimation
     from mpl_toolkits.mplot3d import Axes3D
@@ -236,6 +236,7 @@ try:
         NoAlertPresentException,
         NoSuchElementException,
         TimeoutException,
+        WebDriverException,
     )
     from selenium.webdriver import ActionChains, Chrome
     from selenium.webdriver.chrome.options import Options
