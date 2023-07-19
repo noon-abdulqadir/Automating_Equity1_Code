@@ -28,7 +28,7 @@ if code_dir_name not in str(Path.cwd()).split('/')[-1]:
             if code_dir is not None:
                 break
 else:
-    code_dir = Path.cwd()
+    code_dir = str(Path.cwd())
 sys.path.append(code_dir)
 
 # %load_ext autoreload
@@ -37,8 +37,8 @@ sys.path.append(code_dir)
 # %%
 from dotenv.main import load_dotenv  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 
-envrc_path = Path.cwd().parents[0].joinpath('.envrc')
-load_dotenv(dotenv_path=envrc_path)
+env_path = Path(code_dir).joinpath('.envrc')
+load_dotenv(dotenv_path=env_path)
 conda_env_name = os.environ.get('CONDA_ENV_NAME')
 conda_env_path = os.environ.get('CONDA_ENV_PATH')
 set_conda = False
@@ -229,6 +229,7 @@ try:
         stats,
         ttest_ind,
     )
+    from selenium import webdriver
     from selenium.common.exceptions import *
     from selenium.common.exceptions import (
         ElementClickInterceptedException,
@@ -432,6 +433,7 @@ try:
         is_ray_available,
     )
     from webdriver_manager.chrome import ChromeDriverManager
+    from webdriver_manager.core.utils import ChromeType
     from xgboost import XGBClassifier
 
 except ImportError as error:

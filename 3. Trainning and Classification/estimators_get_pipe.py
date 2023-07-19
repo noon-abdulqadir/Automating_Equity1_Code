@@ -21,7 +21,7 @@ if code_dir_name not in str(Path.cwd()).split('/')[-1]:
             if code_dir is not None:
                 break
 else:
-    code_dir = Path.cwd()
+    code_dir = str(Path.cwd())
 sys.path.append(code_dir)
 
 # %load_ext autoreload
@@ -670,7 +670,7 @@ transformers_pipe = {
     #     'model': GPTNeoXForSequenceClassification,
     # },
     # 'LlamaForSequenceClassification': {
-    #     'model_name': 'openlm-research/open_llama_13b',
+    #     'model_name': 'meta-llama/Llama-2-7b',
     #     'config': LlamaConfig,
     #     'tokenizer': LlamaTokenizerFast,
     #     'model': LlamaForSequenceClassification,
