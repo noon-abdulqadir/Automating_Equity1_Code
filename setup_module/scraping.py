@@ -408,20 +408,11 @@ def get_driver(
     #     print('No proxy browsing enabled.')
     #     pass
 
-    try:
-        driver = webdriver.Chrome(
-            executable_path=select_driver(),
-            options=options,
-            desired_capabilities=caps,
-            # service_args=[f'--verbose", "--log-path={MyWriter.LOGS_PATH}'],
-        )
-    except Exception as e:
-        driver = webdriver.Chrome(
-            service=Service(ChromeDriverManager().install()),
-            options=options,
-            desired_capabilities=caps,
-            # service_args=[f'--verbose", "--log-path={MyWriter.LOGS_PATH}'],
-        )
+    driver = webdriver.Chrome(
+        options=options,
+        desired_capabilities=caps,
+        # service_args=[f'--verbose", "--log-path={MyWriter.LOGS_PATH}'],
+    )
     # http = urllib3.PoolManager(num_pools=500)
     warnings.filterwarnings(
         'ignore', message='Connection pool is full, discarding connection: 127.0.0.1'

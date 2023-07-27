@@ -432,8 +432,6 @@ try:
         is_optuna_available,
         is_ray_available,
     )
-    from webdriver_manager.chrome import ChromeDriverManager
-    from webdriver_manager.core.utils import ChromeType
     from xgboost import XGBClassifier
 
 except ImportError as error:
