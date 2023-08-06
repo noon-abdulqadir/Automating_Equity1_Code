@@ -247,6 +247,7 @@ try:
     from selenium.webdriver.common.keys import Keys
     from selenium.webdriver.support import expected_conditions as EC
     from selenium.webdriver.support.ui import Select, WebDriverWait
+    from skimpy import skim
     from sklearn import feature_selection, linear_model, metrics, set_config, svm, utils
     from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
     from sklearn.calibration import CalibratedClassifierCV, CalibrationDisplay
@@ -373,6 +374,7 @@ try:
         has_fit_parameter,
     )
     from spacy.matcher import Matcher
+    from summarytools import dfSummary, tabset
     from statsmodels.formula.api import ols
     from statsmodels.graphics.factorplots import interaction_plot
     from statsmodels.iolib.summary2 import summary_col
