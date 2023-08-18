@@ -239,9 +239,11 @@ try:
         TimeoutException,
         WebDriverException,
     )
-    from selenium.webdriver import ActionChains, Chrome
+    from selenium.webdriver import ActionChains, Chrome, ChromiumEdge
     from selenium.webdriver.chrome.options import Options
     from selenium.webdriver.chrome.service import Service
+    from selenium.webdriver.chromium.options import ChromiumOptions
+    from selenium.webdriver.chromium.service import ChromiumService
     from selenium.webdriver.common.by import By
     from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
     from selenium.webdriver.common.keys import Keys
