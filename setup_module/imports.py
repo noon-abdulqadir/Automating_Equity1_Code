@@ -657,7 +657,7 @@ hyperparameter_tuning = True
 best_trial_args = ['num_train_epochs', 'learning_rate', 'weight_decay', 'warmup_steps',]
 training_args_dict = {
     'seed': random_state,
-    'resume_from_checkpoint': False,
+    'resume_from_checkpoint': True,
     'overwrite_output_dir': True,
     'logging_steps': 500,
     'evaluation_strategy': 'steps',
