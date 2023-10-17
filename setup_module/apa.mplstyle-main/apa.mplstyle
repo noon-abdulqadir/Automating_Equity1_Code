@@ -37,6 +37,8 @@ axes.grid:          False
 axes.labelweight:   bold
 axes.titleweight:   bold
 
+hatch.linewidth:    1.0
+
 errorbar.capsize:   10
 
 savefig.format:     svg
