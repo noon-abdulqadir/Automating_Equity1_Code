@@ -35,6 +35,61 @@ sys.path.append(code_dir)
 from setup_module.imports import *
 from setup_module.scraping import *
 
+import evaluate
+from accelerate import Accelerator
+
+from transformers import (
+    AdamW,
+    AutoConfig,
+    AutoModel,
+    AutoModelForSequenceClassification,
+    AutoModelForTokenClassification,
+    AutoTokenizer,
+    BertConfig,
+    BertForPreTraining,
+    BertForSequenceClassification,
+    BertModel,
+    BertTokenizer,
+    BertTokenizerFast,
+    BitsAndBytesConfig,
+    DistilBertForSequenceClassification,
+    DistilBertTokenizerFast,
+    EarlyStoppingCallback,
+    GPT2Config,
+    GPT2ForSequenceClassification,
+    GPT2Model,
+    GPT2TokenizerFast,
+    GPTJConfig,
+    GPTJForSequenceClassification,
+    GPTJModel,
+    GPTNeoXConfig,
+    GPTNeoXForSequenceClassification,
+    GPTNeoXTokenizerFast,
+    LlamaConfig,
+    LlamaForSequenceClassification,
+    LlamaTokenizer,
+    LlamaTokenizerFast,
+    MegatronBertForSequenceClassification,
+    OpenAIGPTConfig,
+    OpenAIGPTForSequenceClassification,
+    OpenAIGPTTokenizerFast,
+    TextClassificationPipeline,
+    TFGPTJForSequenceClassification,
+    TFGPTJModel,
+    TokenClassificationPipeline,
+    Trainer,
+    TrainingArguments,
+    get_linear_schedule_with_warmup,
+    pipeline,
+)
+from transformers.integrations import (
+    TensorBoardCallback,
+    is_optuna_available,
+    is_ray_available,
+)
+accelerator = Accelerator()
+
+
 warnings.filterwarnings('ignore', category=DeprecationWarning)
 
 

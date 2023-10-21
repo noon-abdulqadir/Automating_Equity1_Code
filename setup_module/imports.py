@@ -108,7 +108,7 @@ try:
 
     import cbsodata
     import en_core_web_sm
-    import evaluate
+    # import evaluate
     import gensim
     import gensim.downloader as gensim_api
     import imblearn
@@ -153,7 +153,7 @@ try:
     import xgboost as xgb
     import xlsxwriter
     import yaml
-    from accelerate import Accelerator
+    # from accelerate import Accelerator
     from bs4 import BeautifulSoup
     from dotenv.main import load_dotenv
     from gensim import corpora, models
@@ -387,55 +387,55 @@ try:
     from textblob import TextBlob, Word
     from textblob.en.inflect import pluralize, singularize
     from tqdm.contrib.itertools import product as tqdm_product
-    from transformers import (
-        AdamW,
-        AutoConfig,
-        AutoModel,
-        AutoModelForSequenceClassification,
-        AutoModelForTokenClassification,
-        AutoTokenizer,
-        BertConfig,
-        BertForPreTraining,
-        BertForSequenceClassification,
-        BertModel,
-        BertTokenizer,
-        BertTokenizerFast,
-        BitsAndBytesConfig,
-        DistilBertForSequenceClassification,
-        DistilBertTokenizerFast,
-        EarlyStoppingCallback,
-        GPT2Config,
-        GPT2ForSequenceClassification,
-        GPT2Model,
-        GPT2TokenizerFast,
-        GPTJConfig,
-        GPTJForSequenceClassification,
-        GPTJModel,
-        GPTNeoXConfig,
-        GPTNeoXForSequenceClassification,
-        GPTNeoXTokenizerFast,
-        LlamaConfig,
-        LlamaForSequenceClassification,
-        LlamaTokenizer,
-        LlamaTokenizerFast,
-        MegatronBertForSequenceClassification,
-        OpenAIGPTConfig,
-        OpenAIGPTForSequenceClassification,
-        OpenAIGPTTokenizerFast,
-        TextClassificationPipeline,
-        TFGPTJForSequenceClassification,
-        TFGPTJModel,
-        TokenClassificationPipeline,
-        Trainer,
-        TrainingArguments,
-        get_linear_schedule_with_warmup,
-        pipeline,
-    )
-    from transformers.integrations import (
-        TensorBoardCallback,
-        is_optuna_available,
-        is_ray_available,
-    )
+    # from transformers import (
+    #     AdamW,
+    #     AutoConfig,
+    #     AutoModel,
+    #     AutoModelForSequenceClassification,
+    #     AutoModelForTokenClassification,
+    #     AutoTokenizer,
+    #     BertConfig,
+    #     BertForPreTraining,
+    #     BertForSequenceClassification,
+    #     BertModel,
+    #     BertTokenizer,
+    #     BertTokenizerFast,
+    #     BitsAndBytesConfig,
+    #     DistilBertForSequenceClassification,
+    #     DistilBertTokenizerFast,
+    #     EarlyStoppingCallback,
+    #     GPT2Config,
+    #     GPT2ForSequenceClassification,
+    #     GPT2Model,
+    #     GPT2TokenizerFast,
+    #     GPTJConfig,
+    #     GPTJForSequenceClassification,
+    #     GPTJModel,
+    #     GPTNeoXConfig,
+    #     GPTNeoXForSequenceClassification,
+    #     GPTNeoXTokenizerFast,
+    #     LlamaConfig,
+    #     LlamaForSequenceClassification,
+    #     LlamaTokenizer,
+    #     LlamaTokenizerFast,
+    #     MegatronBertForSequenceClassification,
+    #     OpenAIGPTConfig,
+    #     OpenAIGPTForSequenceClassification,
+    #     OpenAIGPTTokenizerFast,
+    #     TextClassificationPipeline,
+    #     TFGPTJForSequenceClassification,
+    #     TFGPTJModel,
+    #     TokenClassificationPipeline,
+    #     Trainer,
+    #     TrainingArguments,
+    #     get_linear_schedule_with_warmup,
+    #     pipeline,
+    # )
+    # from transformers.integrations import (
+    #     TensorBoardCallback,
+    #     is_optuna_available,
+    #     is_ray_available,
+    # )
     from xgboost import XGBClassifier
 
 except ImportError as error:
@@ -646,7 +646,7 @@ torch.manual_seed(random_state)
 cores = multiprocessing.cpu_count()
 torch.Generator(device_name).manual_seed(random_state)
 cores = multiprocessing.cpu_count()
-accelerator = Accelerator()
+# accelerator = Accelerator()
 torch.autograd.set_detect_anomaly(True)
 os.environ.get('TOKENIZERS_PARALLELISM')
 os.environ.get('PYTORCH_MPS_HIGH_WATERMARK_RATIO')
@@ -809,6 +809,10 @@ ivs_all = [
     'Age_Younger_n',
     'Age_Older_% per Sector',
     'Age_Younger_% per Sector',
+    'Interaction_Female_Older_% per Sector',
+    'Interaction_Female_Younger_% per Sector',
+    'Interaction_Male_Older_% per Sector',
+    'Interaction_Male_Younger_% per Sector',
 ]
 ivs_cat_and_perc = [
     'Gender',
@@ -829,6 +833,22 @@ ivs_dummy_and_perc = [
     'Age_Younger',
     'Age_Older_% per Sector',
     'Age_Younger_% per Sector',
+]
+ivs_dummy_perc_and_perc_interactions = [
+    'Gender_Female',
+    'Gender_Mixed',
+    'Gender_Male',
+    'Gender_Female_% per Sector',
+    'Gender_Male_% per Sector',
+    'Age_Older',
+    'Age_Mixed',
+    'Age_Younger',
+    'Age_Older_% per Sector',
+    'Age_Younger_% per Sector',
+    'Interaction_Female_Older_% per Sector',
+    'Interaction_Female_Younger_% per Sector',
+    'Interaction_Male_Older_% per Sector',
+    'Interaction_Male_Younger_% per Sector',
 ]
 ivs_gender_dummy_and_perc = [
     'Gender_Female',
@@ -873,6 +893,22 @@ ivs_perc = [
     'Gender_Male_% per Sector',
     'Age_Older_% per Sector',
     'Age_Younger_% per Sector',
+]
+ivs_perc_interactions = [
+    'Interaction_Female_Older_% per Sector',
+    'Interaction_Female_Younger_% per Sector',
+    'Interaction_Male_Older_% per Sector',
+    'Interaction_Male_Younger_% per Sector',
+]
+ivs_perc_and_perc_interactions = [
+    'Gender_Female_% per Sector',
+    'Gender_Male_% per Sector',
+    'Age_Older_% per Sector',
+    'Age_Younger_% per Sector',
+    'Interaction_Female_Older_% per Sector',
+    'Interaction_Female_Younger_% per Sector',
+    'Interaction_Male_Older_% per Sector',
+    'Interaction_Male_Younger_% per Sector',
 ]
 ivs_gender_perc = [
     'Gender_Female_% per Sector',
@@ -1020,6 +1056,10 @@ def get_df_info(df, ivs_all=None):
             'Age_Younger_n',
             'Age_Older_% per Sector',
             'Age_Younger_% per Sector',
+            'Interaction_Female_Older_% per Sector',
+            'Interaction_Female_Younger_% per Sector',
+            'Interaction_Male_Older_% per Sector',
+            'Interaction_Male_Younger_% per Sector',
         ]
     # Print Info
     print('\nDF INFO:\n')
