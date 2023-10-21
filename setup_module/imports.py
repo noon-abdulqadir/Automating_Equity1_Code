@@ -975,23 +975,50 @@ gender_order = ['Female', 'Mixed Gender', 'Male']
 age_order = ['Older', 'Mixed Age', 'Younger']
 platform_order = ['LinkedIn', 'Indeed', 'Glassdoor']
 ivs_dict = {'Gender': gender_order, 'Age': age_order}
-# Models dict
-sm_models = {
-    'Logistic': sm.Logit,
-    'OLS': sm.OLS,
-}
-# DVs dict
-dvs_for_analysis = {
-    'binary': ['Categorical Warmth and Competence', dvs],
-    'probability': ['Probability Warmth and Competence', dvs_prob],
-    'binary and probability': ['Categorical and Probability Warmth and Competence', dvs_all],
-}
-# IVs dict
-ivs_for_analysis = {
-    'categories': ['Categorical Gender and Age', ivs_dummy],
-    'percentages': ['PPS Gender and Age', ivs_perc],
-    'categories and percentages': ['Categorical and PPS Gender and Age', ivs_dummy_and_perc],
-}
+# # Models dict
+# sm_models = {
+#     'Logistic': sm.Logit,
+#     'OLS': sm.OLS,
+# }
+# # DVs dict for analysis
+# dvs_for_analysis = {
+#     'probability': ['Probability Warmth and Competence', dvs_prob],
+#     'binary': ['Categorical Warmth and Competence', dvs],
+#     'binary and probability': ['Categorical and Probability Warmth and Competence', dvs_all],
+# }
+
+# # Make extra IV dicts
+# ivs_dummy_for_analysis = [iv for iv in ivs_dummy if 'Mixed' not in iv]
+# ivs_dummy_and_perc_for_analysis = [iv for iv in ivs_dummy_and_perc if 'Mixed' not in iv]
+# ivs_dummy_perc_and_perc_interactions_for_analysis = [iv for iv in ivs_dummy_perc_and_perc_interactions if 'Mixed' not in iv]
+
+# # IVs dict for analysis
+# ivs_for_analysis = {
+#     'categories, percentages, and interactions': [
+#         'Categorical, PPS, and PPS Interactions Gender and Age',
+#         ivs_dummy_perc_and_perc_interactions_for_analysis
+#     ],
+#     'categories and percentages': [
+#         'Categorical and PPS Gender and Age',
+#         ivs_dummy_and_perc_for_analysis
+#     ],
+#     'percentages and interactions': [
+#         'PPS and PPS Interactions',
+#         ivs_perc_and_perc_interactions
+#     ],
+#     'categories': [
+#         'Categorical Gender and Age',
+#         ivs_dummy_for_analysis
+#     ],
+#     'percentages': [
+#         'PPS Gender and Age',
+#         ivs_perc
+#     ],
+#     'interactions': [
+#         'PPS Interactions',
+#         ivs_perc_interactions
+#     ],
+# }
 cat_list = [
     'Job ID',
     'Gender',
