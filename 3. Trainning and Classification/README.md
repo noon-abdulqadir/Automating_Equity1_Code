@@ -3,7 +3,7 @@ This directory contains python script to train and evaluate classifiers using cl
 * All data are stored in the data directory under the final dfs directory. You can find the data in:
   - [data](../data) &rarr; [final dfs](../data/final%20dfs/)
   - Cleaned and preprocessed manually annotated job ads data (df_manual) is stored in the data directory. You can find the data in:
-    - [data](../data) &rarr; [final dfs](../data/final%20dfs/) &rarr; [df_manual_for_training.pkl](../data/final%20dfs/df_manual_for_training.pkl)
+    - [data](../data) &rarr; [final dfs](../data/final%20dfs/) &rarr; [df_manual_for_analysis.pkl](../data/final%20dfs/df_manual_for_analysis.pkl)
   - Unclassified cleaned and preprocessed job ads data (df_jobs) is stored in the scraping directory. You can find the data in:
       - [data](../data) &rarr; [final dfs](../data/final%20dfs/) &rarr; [df_jobs_for_classification.pkl](../data/final%20dfs/df_jobs_for_classification.pkl)
   - Classified (not cleaned) job ads data (df_jobs) is stored in the scraping directory. You can find the data in:
@@ -16,3 +16,9 @@ This directory contains python script to train and evaluate classifiers using cl
   - Tables: [data](../data) &rarr; [output tables](../data/output%20tables)
 
 ***Note that classifiers are imported from [estimators_get_pipe.py](./estimators_get_pipe.py) in this directory and imports and some functions are imported from [setup_module](../setup_module) directory.***
+
+***Figure***
+
+*Two-stage procedure for automated content analysis*
+
+![Methods Flowchart](../data/plots/Methods_Flowchart_Two.svg)

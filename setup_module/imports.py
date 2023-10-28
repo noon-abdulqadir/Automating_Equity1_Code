@@ -270,6 +270,7 @@ try:
         ExtraTreesClassifier,
         GradientBoostingClassifier,
         RandomForestClassifier,
+        RandomForestRegressor,
         StackingClassifier,
         StackingRegressor,
         VotingClassifier,
@@ -1035,7 +1036,7 @@ cat_list = [
 ]
 controls = [
         '% Sector per Workforce',
-        'Job Description num_words',
+        'Job Description spacy_sentencized_num_words',
         'English Requirement in Job Ad_Yes', 'Dutch Requirement in Job Ad_Yes',
         # Main controls = [:4], Extra controls = [4:]
         # 'Platform_Indeed', 'Platform_Glassdoor',
@@ -1043,9 +1044,9 @@ controls = [
         # 'Platform_LinkedIn',
         # 'English Requirement in Job Ad', 'Dutch Requirement in Job Ad',
         # 'Platform',
-        # 'Job Description num_unique_words',
-        # 'Job Description num_chars',
-        # 'Job Description num_chars_no_whitespact_and_punt',
+        # 'Job Description_num_unique_words',
+        # 'Job Description_num_chars',
+        # 'Job Description_num_chars_no_whitespact_and_punt',
         # 'Industry', 'Sector_n',
 ]
 
@@ -1145,17 +1146,17 @@ def get_word_num_and_frequency(row, text_col):
 
     with open(f'{data_dir}punctuations.txt', 'rb') as f:
         custom_punct_chars = pickle.load(f)
-    row['Job Description num_words'] = len(str(row[text_col]).split())
-    row['Job Description num_unique_words'] = len(set(str(row[text_col]).split()))
-    row['Job Description num_chars'] = len(str(row[text_col]))
-    row['Job Description num_chars_no_whitespact_and_punt'] = len(
+    row[f'{text_col}_num_words'] = len(str(row[text_col]).split())
+    row[f'{text_col}_num_unique_words'] = len(set(str(row[text_col]).split()))
+    row[f'{text_col}_num_chars'] = len(str(row[text_col]))
+    row[f'{text_col}_num_chars_no_whitespact_and_punt'] = len(
         [
             c
             for c in str(row[text_col])
             if c not in custom_punct_chars and c not in list(string.punctuation) and c in list(string.printable) and c not in list(string.whitespace) and c != ' '
         ]
     )
-    row['Job Description num_punctuations'] = len(
+    row[f'{text_col}_num_punctuations'] = len(
         [
             c
             for c in str(row[text_col])
@@ -1164,7 +1165,6 @@ def get_word_num_and_frequency(row, text_col):
     )
 
     return row
-
 
 
 # %%
