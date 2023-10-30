@@ -320,8 +320,11 @@ try:
         log_loss,
         make_scorer,
         matthews_corrcoef,
+        mean_absolute_error,
+        mean_squared_error,
         precision_recall_curve,
         precision_score,
+        r2_score,
         recall_score,
         roc_auc_score,
     )
