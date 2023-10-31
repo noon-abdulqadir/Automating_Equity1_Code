@@ -386,6 +386,7 @@ try:
     from statsmodels.iolib.summary2 import summary_col
     from statsmodels.multivariate.multivariate_ols import _MultivariateOLS
     from statsmodels.regression.linear_model import RegressionResults
+    from statsmodels.sandbox.regression.gmm import IV2SLS
     from statsmodels.stats.diagnostic import het_white
     from statsmodels.stats.outliers_influence import variance_inflation_factor
     from textblob import TextBlob, Word
