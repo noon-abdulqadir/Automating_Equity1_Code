@@ -47,28 +47,31 @@ def get_corrs(lhs, rhs):
 # make formula for IV regression
 def make_formula_endog_exog_instrument(regressor, control, IVs, var, type, data):
     regressor_ = regressor.replace('%', '').replace(' ', '_')
-    control_ = [c.replace('%', '').replace(' ', '_') for c in control]
-    IVs_ = [i.replace('%', '').replace(' ', '_') for i in IVs]
-    var_ = var.replace('%', '').replace(' ', '_')
+    control_ = " + ".join([c.replace('%', '').replace(' ', '_') for c in control])
+    IVs_ = " + ".join([i.replace('%', '').replace(' ', '_') for i in IVs])
+    if isinstance(var, str):
+        var_ = var.replace('%', '').replace(' ', '_')
+    else:
+        var_ = " + ".join([v.replace('%', '').replace(' ', '_') for v in var])
 
     if control:
         if type == 'XZ':
-            formula_str = f'{regressor_} ~ {" + ".join(IVs_)}'
+            formula_str = f'{regressor_} ~ {IVs_}'
             endog_names = regressor
             exog_names = IVs
             instrument_names = None
         elif type == 'YX':
-            formula_str = f'{var_} ~ {regressor_} + {" + ".join(control_)}'
+            formula_str = f'{var_} ~ {regressor_} + {control_}'
             endog_names = var
             exog_names = [regressor] + control
             instrument_names = None
         elif type == 'all':
-            formula_str = f'{var_} ~ {regressor_} + {" + ".join(control_)} | {" + ".join(IVs_)} + {" + ".join(control_)}'
+            formula_str = f'{var_} ~ {regressor_} + {control_} | {IVs_} + {control_}'
             endog_names = var
             exog_names = [regressor] + control
             instrument_names = IVs + control
     elif type == 'XZ':
-        formula_str = f'{regressor_} ~ {" + ".join(IVs_)}'
+        formula_str = f'{regressor_} ~ {IVs_}'
         endog_names = regressor
         exog_names = IVs
         instrument_names = None
@@ -77,7 +80,7 @@ def make_formula_endog_exog_instrument(regressor, control, IVs, var, type, data)
         endog_names = var
         exog_names = regressor
     elif type == 'all':
-        formula_str = f'{var_} ~ {regressor_} | {" + ".join(IVs_)}'
+        formula_str = f'{var_} ~ {regressor_} | {IVs_}'
         endog_names = var
         exog_names = regressor
         instrument_names = IVs
@@ -185,7 +188,7 @@ def perform_2sls_estimation(data_unlabel_new, regressor, var, control, IVs, fami
     if family.__class__.__name__ == 'Gaussian' and family.link.__class__.__name__ == 'Identity':
         (
             formula_data, formula_str, ols_model, endog_names, endog, exog_names, exog, instrument_names, instrument, constant
-        ) = make_formula(
+        ) = make_formula_endog_exog_instrument(
             regressor, controls, IVs, var, 'all', data_unlabel_new
         )
         model_IV = IV2SLS(endog=endog, exog=constant, instrument=instrument).fit()
