@@ -60,13 +60,13 @@ def get_corrs(lhs, rhs):
 # %%
 # make formula for IV regression
 def make_formula_endog_exog_instrument(regressor, control, IVs, var, type, data):
-    regressor_ = regressor.replace('%', '').replace(' ', '_')
-    control_ = " + ".join([c.replace('%', '').replace(' ', '_') for c in control])
-    IVs_ = " + ".join([i.replace('%', '').replace(' ', '_') for i in IVs])
+    regressor_ = regressor.replace('%', 'percentage').replace(' ', '_')
+    control_ = " + ".join([c.replace('%', 'percentage').replace(' ', '_') for c in control])
+    IVs_ = " + ".join([i.replace('%', 'percentage').replace(' ', '_') for i in IVs])
     if isinstance(var, str):
-        var_ = var.replace('%', '').replace(' ', '_')
+        var_ = var.replace('%', 'percentage').replace(' ', '_')
     else:
-        var_ = " + ".join([v.replace('%', '').replace(' ', '_') for v in var])
+        var_ = " + ".join([v.replace('%', 'percentage').replace(' ', '_') for v in var])
 
     if control:
         if type == 'XZ':
@@ -105,7 +105,7 @@ def make_formula_endog_exog_instrument(regressor, control, IVs, var, type, data)
     constant = sm.add_constant(exog)
 
     formula_data = data.copy()
-    formula_data.columns = formula_data.columns.str.replace('%', '').str.replace(' ', '_')
+    formula_data.columns = formula_data.columns.str.replace('%', 'percentage').str.replace(' ', '_')
 
     try:
         ols_model = smf.ols(formula=formula_str, data=formula_data)
@@ -160,7 +160,7 @@ def IIVCreate_Valid(col, data_test, data_unlabel, regressor, candidates):
 def IIVSelect_Strong(data_unlabel_new, regressor, candidates):
     # Create a formula for the regression model
     formula_data = data_unlabel.copy()
-    formula_data.columns = formula_data.columns.str.replace('%', '').str.replace(' ', '_')
+    formula_data.columns = formula_data.columns.str.replace('%', 'percentage').str.replace(' ', '_')
     formula_str = f'{regressor.replace("%", "").replace(" ", "_")} ~ {" + ".join([c.replace("%", "").replace(" ", "_") for c in candidates])}'
     formula = sm.formula.ols(formula_str, data=formula_data)
 
@@ -228,7 +228,7 @@ def IIVSelect(col, data_test, data_unlabel, ntree, regressor, select_method):
 # Function to select strong IVs using Lasso
 def lasso_select_strong(data_unlabel, regressor, candidates):
     formula_data = data_unlabel.copy()
-    formula_data.columns = formula_data.columns.str.replace('%', '').str.replace(' ', '_')
+    formula_data.columns = formula_data.columns.str.replace('%', 'percentage').str.replace(' ', '_')
     if len(candidates) != 0:
         formula_str = f'{regressor.replace("%", "").replace(" ", "_")} ~ {" + ".join([c.replace("%", "").replace(" ", "_") for c in candidates])}'
         y = formula_data[regressor.replace("%", "").replace(" ", "_")]
@@ -278,6 +278,10 @@ def lasso_select(col, data_test, data_unlabel, ntree, regressor, iterative):
         IV_valid = lasso_select_valid(col, data_test, regressor, candidates)
         IVs = lasso_select_strong(data_unlabel, regressor, IV_valid)
         while len(IVs) != len(candidates):
+            print('-'*20)
+            print('Iterating...')
+            print(f'{len(IVs)} IVs selected')
+            print(f'{len(candidates) - len(IVs)} IVs remaining')
             candidates = IVs
             IV_valid = lasso_select_valid(col, data_test, regressor, candidates)
             IVs = lasso_select_strong(data_unlabel, regressor, IV_valid)
@@ -306,7 +310,7 @@ def perform_2sls_estimation(data_unlabel_new, regressor, var, control, IVs, fami
         ) = make_formula_endog_exog_instrument(
             regressor, control, IVs, var, 'all', data_unlabel_new
         )
-        model_IV = IV2SLS(endog=endog, exog=constant, instrument=instrument).fit()
+        model_IV = IV2SLS(endog=endog, exog=constant, instrument=instrument)
     else:
         print('Only Gaussian family implemented.')
     return model_IV
@@ -377,8 +381,9 @@ def forest_iv(col, data_test, data_unlabel, var, control, ntree, model_unbias, f
 
         if len(IVs) != 0:
             model_IV = perform_2sls_estimation(data_unlabel_new, regressor, var, control, IVs, family)
-            beta_IV = model_IV.params
-            vcov_IV = model_IV.cov_params()
+            results_IV = model_IV.fit()
+            beta_IV = results_IV.params
+            vcov_IV = results_IV.cov_params()
             se_IV = np.sqrt(np.diag(vcov_IV))
             convergence = 0
             H_stats = hotelling(col, beta_IV, vcov_IV, model_unbias)
@@ -389,4 +394,4 @@ def forest_iv(col, data_test, data_unlabel, var, control, ntree, model_unbias, f
                                             [f'se_{i}' for i in range(0, len(se_IV))] +
                                             ['Hotelling', 'Convergence', 'pp_abs_before', 'pe_abs_before', 'pp_abs_after', 'pe_abs_after'])
 
-    return output, results if diagnostic else results.iloc[:, :-4]
+    return results_IV, output, results if diagnostic else results.iloc[:, :-4]
