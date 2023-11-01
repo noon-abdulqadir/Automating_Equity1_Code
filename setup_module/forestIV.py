@@ -358,7 +358,7 @@ def forest_iv(col, data_test, data_unlabel, var, control, ntree, model_unbias, f
         iterative = True
     if diagnostic is None:
         diagnostic = True
-    result = []
+    results = []
 
     for i in tqdm.tqdm(range(0, ntree)):
         regressor = f'{col}_tree_{i}'
@@ -383,10 +383,10 @@ def forest_iv(col, data_test, data_unlabel, var, control, ntree, model_unbias, f
             convergence = 0
             H_stats = hotelling(col, beta_IV, vcov_IV, model_unbias)
             correlations = output['correlations']
-            result.append([*beta_IV, *se_IV, H_stats, convergence, *correlations])
+            results.append([*beta_IV, *se_IV, H_stats, convergence, *correlations])
 
-    result = pd.DataFrame(result, columns=[f'beta_{i}' for i in range(0, len(beta_IV))] +
+    results = pd.DataFrame(results, columns=[f'beta_{i}' for i in range(0, len(beta_IV))] +
                                             [f'se_{i}' for i in range(0, len(se_IV))] +
                                             ['Hotelling', 'Convergence', 'pp_abs_before', 'pe_abs_before', 'pp_abs_after', 'pe_abs_after'])
 
-    return result if diagnostic else result.iloc[:, :-4]
+    return output, results if diagnostic else results.iloc[:, :-4]
