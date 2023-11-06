@@ -713,6 +713,12 @@ transformers_pipe = {
         'tokenizer': OpenAIGPTTokenizerFast,
         'model': OpenAIGPTForSequenceClassification,
     },
+    # 'FlanT5ForSequenceClassification': {
+    #     'model_name': 'google/flan-t5-base',
+    #     'config': AutoConfig,
+    #     'tokenizer': AutoTokenizer,
+    #     'model': AutoModelForSequenceClassification,
+    # },
     # 'GPTJForSequenceClassification': {
     #     'model_name': 'EleutherAI/gpt-j-6b',
     #     'config': GPTJConfig,

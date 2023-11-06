@@ -60,15 +60,23 @@ def get_corrs(lhs, rhs):
 # %%
 # make formula for IV regression
 def make_formula_endog_exog_instrument(regressor, control, IVs, var, type, data):
-    regressor_ = regressor.replace('%', 'percentage').replace(' ', '_')
-    control_ = " + ".join([c.replace('%', 'percentage').replace(' ', '_') for c in control])
-    IVs_ = " + ".join([i.replace('%', 'percentage').replace(' ', '_') for i in IVs])
-    if isinstance(var, str):
-        var_ = var.replace('%', 'percentage').replace(' ', '_')
+    replace_arg = lambda x: x.replace('%', 'percentage').replace(' ', '_')
+    regressor_ = replace_arg(regressor)
+    if len(control) > 0:
+        if isinstance(control, str):
+            control_ = replace_arg(control)
+        else:
+            control_ = " + ".join([replace_arg(c) for c in control])
+    if isinstance(IVs, str):
+        IVs_ = replace_arg(IVs)
     else:
-        var_ = " + ".join([v.replace('%', 'percentage').replace(' ', '_') for v in var])
+        IVs_ = " + ".join([replace_arg(i) for i in IVs])
+    if isinstance(var, str):
+        var_ = replace_arg(var)
+    else:
+        var_ = " + ".join([replace_arg(v) for v in var])
 
-    if control:
+    if len(control) > 0:
         if type == 'XZ':
             formula_str = f'{regressor_} ~ {IVs_}'
             endog_names = regressor
@@ -105,7 +113,7 @@ def make_formula_endog_exog_instrument(regressor, control, IVs, var, type, data)
     constant = sm.add_constant(exog)
 
     formula_data = data.copy()
-    formula_data.columns = formula_data.columns.str.replace('%', 'percentage').str.replace(' ', '_')
+    formula_data = formula_data.rename(columns=replace_arg)
 
     try:
         ols_model = smf.ols(formula=formula_str, data=formula_data)
@@ -158,18 +166,19 @@ def IIVCreate_Valid(col, data_test, data_unlabel, regressor, candidates):
 # regressor: name of the endogenous tree
 # candidates: candidate IVs as a character vector of variable names
 def IIVSelect_Strong(data_unlabel_new, regressor, candidates):
+    replace_arg = lambda x: x.replace('%', 'percentage').replace(' ', '_')
     # Create a formula for the regression model
     formula_data = data_unlabel.copy()
-    formula_data.columns = formula_data.columns.str.replace('%', 'percentage').str.replace(' ', '_')
-    formula_str = f'{regressor.replace("%", "").replace(" ", "_")} ~ {" + ".join([c.replace("%", "").replace(" ", "_") for c in candidates])}'
+    formula_data = formula_data.rename(columns=replace_arg)
+    formula_str = f'{replace_arg(regressor)} ~ {" + ".join([replace_arg(c) for c in candidates])}'
     formula = sm.formula.ols(formula_str, data=formula_data)
 
     # Fit a Lasso regression model
     lasso_model = Lasso(alpha=0.1)
-    lasso_model.fit(formula_data[[c.replace("%", "").replace(" ", "_") for c in candidates]], formula_data[regressor.replace("%", "").replace(" ", "_")])
+    lasso_model.fit(formula_data[[replace_arg(c) for c in candidates]], formula_data[replace_arg(regressor)])
 
     return [
-        [c.replace("%", "").replace(" ", "_") for c in candidates][i]
+        [replace_arg(c) for c in candidates][i]
         for i, coef in enumerate(lasso_model.coef_)
         if coef != 0
     ]
@@ -227,12 +236,13 @@ def IIVSelect(col, data_test, data_unlabel, ntree, regressor, select_method):
 # candidates: candidate IVs as a character vector of variable names
 # Function to select strong IVs using Lasso
 def lasso_select_strong(data_unlabel, regressor, candidates):
+    replace_arg = lambda x: x.replace('%', 'percentage').replace(' ', '_')
     formula_data = data_unlabel.copy()
-    formula_data.columns = formula_data.columns.str.replace('%', 'percentage').str.replace(' ', '_')
+    formula_data = formula_data.rename(columns=replace_arg)
     if len(candidates) != 0:
-        formula_str = f'{regressor.replace("%", "").replace(" ", "_")} ~ {" + ".join([c.replace("%", "").replace(" ", "_") for c in candidates])}'
-        y = formula_data[regressor.replace("%", "").replace(" ", "_")]
-        X = formula_data[[c.replace("%", "").replace(" ", "_") for c in candidates]]
+        formula_str = f'{replace_arg(regressor)} ~ {" + ".join([replace_arg(c) for c in candidates])}'
+        y = formula_data[replace_arg(regressor)]
+        X = formula_data[[replace_arg(c) for c in candidates]]
 
         lasso = LassoCV(cv=5)
         lasso.fit(X, y)
@@ -332,7 +342,7 @@ def perform_2sls_estimation(data_unlabel_new, regressor, var, control, IVs, fami
 #' @param select_method method of IV selection. One of "optimal" (LASSO based), "top3", and "PCA".
 #' @return ForestIV estimation results
 # ForestIV Main Function (Python implementation)
-def forest_iv(col, data_test, data_unlabel, var, control, ntree, model_unbias, family=None, select_method=None, method=None, iterative=None, diagnostic=None):
+def forest_iv(col, data_test, data_unlabel, var, ntree, model_unbias, control=None, family=None, select_method=None, method=None, iterative=None, diagnostic=None):
     """ForestIV Main Function
     This function implements the main ForestIV approach.
 
@@ -352,6 +362,8 @@ def forest_iv(col, data_test, data_unlabel, var, control, ntree, model_unbias, f
         ForestIV estimation results
     """
 
+    if control is None:
+        control = []
     if family is None:
         family = sm.families.Gaussian(link=sm.families.links.Identity())
     if select_method is None:
@@ -394,4 +406,4 @@ def forest_iv(col, data_test, data_unlabel, var, control, ntree, model_unbias, f
                                             [f'se_{i}' for i in range(0, len(se_IV))] +
                                             ['Hotelling', 'Convergence', 'pp_abs_before', 'pe_abs_before', 'pp_abs_after', 'pe_abs_after'])
 
-    return results_IV, output, results if diagnostic else results.iloc[:, :-4]
+    return results if diagnostic else results.iloc[:, :-4]

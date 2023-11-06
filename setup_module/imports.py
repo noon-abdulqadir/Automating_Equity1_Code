@@ -389,6 +389,11 @@ try:
     from statsmodels.sandbox.regression.gmm import IV2SLS
     from statsmodels.stats.diagnostic import het_white
     from statsmodels.stats.outliers_influence import variance_inflation_factor
+    from torcheval.metrics.functional.classification import (
+        binary_accuracy,
+        binary_recall,
+        binary_precision,
+    )
     from textblob import TextBlob, Word
     from textblob.en.inflect import pluralize, singularize
     from tqdm.contrib.itertools import product as tqdm_product
