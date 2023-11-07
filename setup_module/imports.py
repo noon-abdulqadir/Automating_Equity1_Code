@@ -663,6 +663,8 @@ os.environ.get('PYTORCH_MPS_HIGH_WATERMARK_RATIO')
 os.environ.get('TRANSFORMERS_CACHE')
 openai_token = os.environ['OPENAI_API_KEY']
 huggingface_token = os.environ['HUGGINGFACE_API_KEY']
+skip_fitted_estimators = True
+evaluate_estimator_on_concat = False
 hyperparameter_tuning = True
 best_trial_args = ['num_train_epochs', 'learning_rate', 'weight_decay', 'warmup_steps',]
 training_args_dict = {
