@@ -166,6 +166,8 @@ quantization_config_dict = {
     'load_in_8bit': True,
     'llm_int8_skip_modules': ['lm_head'],
 }
+skip_fitted_estimators = True
+evaluate_estimator_on_concat = False
 hyperparameter_tuning = True
 
 

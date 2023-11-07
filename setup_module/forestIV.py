@@ -405,5 +405,7 @@ def forest_iv(col, data_test, data_unlabel, var, ntree, model_unbias, control=No
     results = pd.DataFrame(results, columns=[f'beta_{i}' for i in range(0, len(beta_IV))] +
                                             [f'se_{i}' for i in range(0, len(se_IV))] +
                                             ['Hotelling', 'Convergence', 'pp_abs_before', 'pe_abs_before', 'pp_abs_after', 'pe_abs_after'])
+    if not diagnostic:
+        results = results.iloc[:, :-4]
 
-    return results if diagnostic else results.iloc[:, :-4]
+    return results_IV, output, results
