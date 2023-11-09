@@ -1,7 +1,13 @@
+import os  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+import sys  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+sys.path.append(str(Path.cwd().parents[0])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+sys.path.append(str(Path.cwd().parents[1])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+
 from typing import Callable
 
 from scipy import stats
-from statannotations.stats.StatResult import StatResult
+from setup_module.statannotations_fork.stats.StatResult import StatResult
 
 
 # Also example for how to add other functions

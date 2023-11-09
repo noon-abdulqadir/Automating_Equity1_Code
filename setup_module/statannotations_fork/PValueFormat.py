@@ -1,6 +1,12 @@
-from statannotations.format_annotations import pval_annotation_text, simple_text
-from statannotations.stats.StatResult import StatResult
-from statannotations.utils import (
+import os  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+import sys  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+sys.path.append(str(Path.cwd().parents[0])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+sys.path.append(str(Path.cwd().parents[1])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+
+from setup_module.statannotations_fork.format_annotations import pval_annotation_text, simple_text
+from setup_module.statannotations_fork.stats.StatResult import StatResult
+from setup_module.statannotations_fork.utils import (
     DEFAULT,
     InvalidParametersError,
     check_valid_text_format,

@@ -1,8 +1,14 @@
+import os # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+import sys # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+sys.path.append(str(Path.cwd().parents[0]))
+sys.path.append(str(Path.cwd().parents[1])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+
 import warnings
 from numbers import Number
 
 import numpy as np
-from statannotations.utils import raise_expected_got
+from setup_module.statannotations_fork.utils import raise_expected_got
 
 
 def check_pvalues(p_values):

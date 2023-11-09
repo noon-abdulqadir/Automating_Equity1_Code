@@ -1,9 +1,15 @@
+import os  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+import sys  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+sys.path.append(str(Path.cwd().parents[0])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+sys.path.append(str(Path.cwd().parents[1])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+
 from operator import itemgetter
 from typing import List
 
 import numpy as np
 import pandas as pd
-from statannotations.stats.StatResult import StatResult
+from setup_module.statannotations_fork.stats.StatResult import StatResult
 
 
 def pval_annotation_text(result: List[StatResult],

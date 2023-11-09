@@ -110,7 +110,6 @@ def make_formula_endog_exog_instrument(regressor, control, IVs, var, type, data)
     endog = data[endog_names]
     exog = data[exog_names]
     instrument = data[instrument_names]
-    constant = sm.add_constant(exog)
 
     formula_data = data.copy()
     formula_data = formula_data.rename(columns=replace_arg)
@@ -120,7 +119,7 @@ def make_formula_endog_exog_instrument(regressor, control, IVs, var, type, data)
     except:
         ols_model = sm.OLS(endog=endog, exog=exog, data=data)
 
-    return formula_data, formula_str, ols_model, endog_names, endog, exog_names, exog, instrument_names, instrument, constant
+    return formula_data, formula_str, ols_model, endog_names, endog, exog_names, exog, instrument_names, instrument
 
 # %%
 #### Functions to create valid IVs from imperfect IVs for EnsembleIV approach ####
@@ -316,11 +315,11 @@ def lasso_select(col, data_test, data_unlabel, ntree, regressor, iterative):
 def perform_2sls_estimation(data_unlabel_new, regressor, var, control, IVs, family):
     if family.__class__.__name__ == 'Gaussian' and family.link.__class__.__name__ == 'Identity':
         (
-            formula_data, formula_str, ols_model, endog_names, endog, exog_names, exog, instrument_names, instrument, constant
+            formula_data, formula_str, ols_model, endog_names, endog, exog_names, exog, instrument_names, instrument
         ) = make_formula_endog_exog_instrument(
             regressor, control, IVs, var, 'all', data_unlabel_new
         )
-        model_IV = IV2SLS(endog=endog, exog=constant, instrument=instrument)
+        model_IV = IV2SLS(endog=endog, exog=exog, instrument=instrument)
     else:
         print('Only Gaussian family implemented.')
     return model_IV

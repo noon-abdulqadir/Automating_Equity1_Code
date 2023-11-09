@@ -795,12 +795,16 @@ embedding_libraries_list = ['spacy', 'nltk', 'gensim']
 dvs = [
     'Warmth', 'Competence',
 ]
+dvs_predicted = [f'{dv}_predicted' for dv in dvs]
 dvs_prob = [
     'Warmth_Probability', 'Competence_Probability',
 ]
+dvs_prob_predicted = [f'{dv}_predicted' for dv in dvs_prob]
 dvs_all = [
     'Warmth', 'Competence', 'Warmth_Probability', 'Competence_Probability',
 ]
+dvs_all_predicted = [f'{dv}_predicted' for dv in dvs_all]
+dvs_combined = dvs_all + dvs_predicted
 ivs = ['Gender', 'Age']
 ivs_all = [
     'Gender',
@@ -1177,6 +1181,260 @@ def get_word_num_and_frequency(row, text_col):
 
     return row
 
+# %%
+# Function to write full regressions reports to excel
+def save_df_full_summary_excel(
+    df_full_summary,
+    title,
+    text_to_add_list,
+    file_save_path,
+    sheet_name=None,
+    startrow=None,
+    startcol=None,
+):
+    if sheet_name is None:
+        sheet_name = 'All'
+    if startrow is None:
+        startrow = 1
+    if startcol is None:
+        startcol = 1
+
+    # Define last rows and cols locs
+    header_range = 1
+    endrow = startrow + header_range + df_full_summary.shape[0]
+    endcol = startcol + df_full_summary.shape[1]
+
+    # Remove NAs
+    df_full_summary = df_full_summary.fillna('')
+
+    # Write
+    writer = pd.ExcelWriter(f'{file_save_path}.xlsx')
+    df_full_summary.to_excel(writer, sheet_name=sheet_name, merge_cells=True, startrow=startrow, startcol=startcol)
+    workbook  = writer.book
+    worksheet = writer.sheets[sheet_name]
+    worksheet.set_column(startrow, 1, None, None, {'hidden': True}) # hide the index column
+
+    # Title
+    worksheet.merge_range(1, startcol, 1, endcol, title, workbook.add_format({'italic': True, 'font_name': 'Times New Roman', 'font_size': 12, 'font_color': 'black', 'align': 'left', 'top': True, 'bottom': True, 'left': False, 'right': False}))
+
+    # Main body
+    body_max_row_idx, body_max_col_idx = df_full_summary.shape
+
+    for c, r in tqdm_product(range(body_max_col_idx), range(body_max_row_idx)):
+        row_to_write = startrow + header_range + r
+        col_to_write = startcol + 1 + c # 1 is for index
+        body_formats = {'num_format': '0.00', 'font_name': 'Times New Roman', 'font_size': 12, 'font_color': 'black', 'align': 'center', 'text_wrap': True, 'left': False, 'right': False}
+
+        if r == 0:
+            body_formats |= {'top': True, 'bottom': True, 'left': False, 'right': False}
+            worksheet.set_column(col_to_write, col_to_write, 10)
+
+        if r == body_max_row_idx-1:
+            body_formats |= {'bottom': True}
+
+        if c == 0:
+            body_formats |= {'align': 'left'}
+            worksheet.set_column(col_to_write, col_to_write, 15)
+
+        worksheet.write(row_to_write, col_to_write, df_full_summary.iloc[r, c], workbook.add_format(body_formats))
+
+    # Add Note
+    note_format = {'italic': True, 'font_name': 'Times New Roman', 'font_size': 10, 'font_color': 'black', 'align': 'left', 'left': False, 'right': False}
+    worksheet.merge_range(endrow, startcol, endrow, endcol, 'Note.', workbook.add_format(note_format))
+    # Add text
+    for i, text in enumerate(text_to_add_list):
+        worksheet.merge_range(endrow + 1 + i , startcol, endrow + 1 + i, endcol, text, workbook.add_format(note_format))
+
+    writer.close()
+
+# %%
+# Function to make full regression report
+def make_full_report(
+    results, dv, analysis_type, model_name, dvs_name, ivs_name, ivs_type, df_name,
+    regression_info_dict=None, regressor_order=None, text_to_add_list=None, title=None, model_names=None
+):
+    '''
+    Make a full report for a regression analysis.
+    results: statsmodels regression results object or list of results objects
+    dv: str, dependent variable name
+    '''
+
+    if regression_info_dict is None:
+        # Regression info dict
+        regression_info_dict = {
+            'Model Name': lambda x: f'{x.model.__class__.__name__}',
+            'N': lambda x: f'{int(x.nobs):d}',
+            'R-squared': lambda x: f'{x.rsquared:.5f}',
+            'R-squared Adj.': lambda x: f'{x.rsquared_adj:.5f}',
+            'Log-Likelihood': lambda x: f'{x.llf:.5f}',
+            'Pseudo R2': lambda x: f'{x.prsquared:.5f}',
+            'F': lambda x: f'{x.fvalue:.5f}',
+            'F (p-value)': lambda x: f'{x.f_pvalue:.5f}',
+            'df_model': lambda x: f'{x.df_model:.0f}',
+            'df_total': lambda x: f'{x.df_resid + x.df_model + 1:.0f}',
+            'df_resid': lambda x: f'{x.df_resid:.0f}',
+            'AIC': lambda x: f'{x.aic:.5f}',
+            'BIC': lambda x: f'{x.bic:.5f}',
+            'ICC': lambda x: f'{x.rsquared / (x.rsquared + (x.nobs - 1) * x.mse_resid):.5f}',
+            'RMSE': lambda x: f'{x.mse_resid ** 0.5:.5f}',
+            'RMSE (std)': lambda x: f'{x.mse_resid ** 0.5 / x.model.endog.std():.5f}',
+            'Omnibus': lambda x: f'{sms.omni_normtest(x.resid).statistic:.5f}',
+            'Omnibus (p-value)': lambda x: f'{sms.omni_normtest(x.resid).pvalue:.5f}',
+            'Skew': lambda x: f'{sms.jarque_bera(x.resid)[-2]:.5f}',
+            'Kurtosis': lambda x: f'{sms.jarque_bera(x.resid)[-1]:.5f}',
+            'Jarque-Bera (JB)': lambda x: f'{sms.jarque_bera(x.resid)[0]:.5f}',
+            'Jarque-Bera (p-value)': lambda x: f'{sms.jarque_bera(x.resid)[1]:.5f}',
+            'Unstandardized Coefficent B (b)': lambda x: f'{x.params[0]:.5f}',
+            'Standard Error (SE)': lambda x: f'{x.bse[0]:.5f}',
+            'Standardized Coefficient b* (β)': lambda x: f'{x.params[0] / x.model.endog.std():.5f}',
+            't': lambda x: f'{x.tvalues[0]:.5f}',
+            't (p-value)': lambda x: f'{x.pvalues[0]:.5f}',
+            '95% CI': lambda x: f'{x.conf_int().iloc[0, 1]:.5f} - {x.conf_int().iloc[0, 1]:.5f}',
+            # 'Summary': lambda x: f'{x.summary()}',
+            # 'F (p-value - FDR)': lambda x: f'{x.f_pvalue_fdr:.5f}',
+            # 'F (p-value - Bonferroni)': lambda x: f'{x.f_pvalue_bonf:.5f}',
+            # 't (p-value - FDR)': lambda x: f'{x.pvalues_fdr[1]:.5f}',
+            # 't (p-value - Bonferroni)': lambda x: f'{x.pvalues_bonf[1]:.5f}',
+        }
+        if isinstance(results, list):
+            results_to_check = results[0]
+        else:
+            results_to_check = results
+        if all('const' in x for x in zip(results_to_check.params.index, results_to_check.bse.index, results_to_check.tvalues.index, results_to_check.pvalues.index)):
+            regression_info_dict = regression_info_dict | {
+                'Intercept': lambda x: f'{x.params["const"]:.5f}',
+                'Intercept (std)': lambda x: f'{x.bse["const"]:.5f}',
+                'Intercept t': lambda x: f'{x.tvalues["const"]:.5f}',
+                'Intercept t (p-value)': lambda x: f'{x.pvalues["const"]:.5f}',
+                'Intercept (95% CI)': lambda x: f'{x.conf_int().loc["const"][0]:.5f} - {x.conf_int().loc["const"][1]:.5f}',
+            }
+    if model_names is None:
+        if isinstance(results, list):
+            model_names = [
+                f'{results_to_check.model.endog_names.split("_")[0] if "_" in results_to_check.model.endog_names else results_to_check.model.endog_names} Model {i}'
+                for i in range(len(results))
+            ]
+            model_names[0] = model_names[0].replace('Model 0', 'Full Model')
+        else:
+            model_names = [
+                f'{results.model.endog_names.split("_")[0] if "_" in results.model.endog_names else results.model.endog_names}'
+            ]
+
+    order_type = 'unordered' if regressor_order is None else 'ordered'
+    if text_to_add_list is None:
+        text_to_add_list = []
+        if regressor_order is not None:
+            text_to_add_list.append('Models are ordered by independent variable type.')
+
+        else:
+            text_to_add_list.append('Models are ordered by coefficient size, largest to smallest.')
+
+    if title is None:
+        title = f'{model_name} {analysis_type}: {dvs_name} x {ivs_name}'
+
+    try:
+        # Statsmodels summary_col
+        full_summary = summary_col(
+            results,
+            stars=True,
+            info_dict=regression_info_dict,
+            regressor_order=regressor_order,
+            float_format='%0.3f',
+            model_names=model_names,
+        )
+        if isinstance(results, list) and len(results) > 4:
+            full_summary.tables[0][full_summary.tables[0].filter(regex='Full Model').columns[0]].loc['Unstandardized Coefficent B (b)': '95% CI'] = ''
+
+        # Add title and notes
+        full_summary.add_title(title)
+        text_to_add_list.extend(full_summary.extra_txt)
+        for text in text_to_add_list:
+            full_summary.add_text(text)
+        # Save
+        save_name = f'{table_save_path}{model_name} {df_name} - ALL {dv} {order_type} {analysis_type} on {ivs_type}'
+        df_full_summary = pd.read_html(full_summary.as_html())[0]
+        df_full_summary.to_csv(f'{save_name}.csv')
+        df_full_summary.style.to_latex(f'{save_name}.tex', hrules=True)
+        save_df_full_summary_excel(df_full_summary, title, text_to_add_list, save_name)
+
+        return full_summary
+    except IndexError as e:
+        print(f'Making full report for {model_names[0]} due to the following error: {e}')
+        return None
+
+# %%
+# Function to get regression standardized coefficients
+def get_standardized_coefficients(results):
+
+    # # Get standardized regression coefficients
+    # std = np.asarray(constant.std(0))
+
+    # if 'const' in results.params and 'const' in constant:
+    #     std[0] = 1
+    # tt = results.t_test(np.diag(std))
+    # tt.c_names = results.model.exog_names
+
+    # t-test
+    std = results.model.exog.std(0)
+    if 'const' in results.params:
+        std[0] = 1
+    tt = results.t_test(np.diag(std))
+    if results.model.__class__.__name__ == 'MixedLM' or 'Group Var' in results.model.exog_names:
+        offset = slice(None, -1)
+        tt.c_names = results.model.exog_names[offset]
+    else:
+        offset = slice(None, None)
+        tt.c_names = results.model.exog_names
+
+    # Make df with standardized and unstandardized coefficients
+    df_std_coef = pd.DataFrame(
+        {
+            'coef': results.params[offset].apply(lambda x: f'{x:.5f}'),
+            'std err': results.bse[offset].apply(lambda x: f'{x:.5f}'),
+            'std coef': (results.params[offset] / results.model.exog[offset].std(axis=0)).apply(lambda x: f'{x:.5f}'),
+            't': results.tvalues[offset].apply(lambda x: f'{x:.5f}'),
+            'P>|t|': results.pvalues[offset].apply(lambda x: f'{x:.5f}'),
+            '[0.025': results.conf_int()[0][offset].apply(lambda x: f'{x:.5f}'),
+            '0.975]': results.conf_int()[1][offset].apply(lambda x: f'{x:.5f}'),
+        }
+    )
+    # if 'Group Var' in df_std_coef.index:
+    #     df_std_coef = df_std_coef.drop('Group Var', axis='index')
+    # # Add standardized coefficients and other data from t-test
+    # df_std_coef['std coef'] = tt.effect
+    # df_std_coef['std err'] = tt.sd
+    # df_std_coef['t'] = tt.statistic
+    # df_std_coef['P>|t|'] = tt.pvalue
+    # df_std_coef['[0.025'] = tt.conf_int()[:, 0]
+    # df_std_coef['0.975]'] = tt.conf_int()[:, 1]
+    # df_std_coef['var'] = [names[i] for i in range(len(results.model.exog_names))]
+    # df_std_coef = df_std_coef.sort_values('std coef', ascending=False)
+    df_std_coef = df_std_coef.reset_index().rename(columns={'index': 'var'})
+    df_std_coef = df_std_coef.rename(
+        columns={
+            'var': 'Variable',
+            'coef': 'Unstandardized Coefficent B (b)',
+            'std err': 'Standard Error',
+            'std coef':'Standardized Coefficient b* (β)',
+            't': 't-value',
+            'P>|t|': 'p-value',
+            '[0.025': '95% CI Lower',
+            '0.975]': '95% CI Upper'
+        }
+    )
+    # Reorder columns
+    df_std_coef = df_std_coef[[
+        'Variable',
+        'Unstandardized Coefficent B (b)',
+        'Standard Error',
+        'Standardized Coefficient b* (β)',
+        't-value',
+        'p-value',
+        '95% CI Lower',
+        '95% CI Upper'
+    ]]
+
+    return tt, df_std_coef
 
 # %%
 # Fix Keywords
