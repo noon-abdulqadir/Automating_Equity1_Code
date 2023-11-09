@@ -2159,7 +2159,7 @@ def open_and_clean_excel(
     dest_path=validate_path(f'{args["content_analysis_dir"]}')
 
     for lst in EXCEL_PATHS.values():
-        lst[:] = list(set(lst))
+        lst = list(set(lst))
     if len(EXCEL_PATHS) < 5:
         if args['print_enabled'] is True:
             print(

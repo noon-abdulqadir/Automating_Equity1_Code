@@ -1,3 +1,9 @@
+import os  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+import sys  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+sys.path.append(str(Path.cwd().parents[0])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+sys.path.append(str(Path.cwd().parents[1])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+
 import warnings
 from typing import List, Optional, Union
 
@@ -7,25 +13,25 @@ import numpy as np
 import seaborn as sns
 from matplotlib import lines
 from matplotlib.font_manager import FontProperties
-from statannotations._Plotter import _Plotter, _SeabornPlotter
-from statannotations.Annotation import Annotation
-from statannotations.PValueFormat import (
+from setup_module.statannotations_fork._Plotter import _Plotter, _SeabornPlotter
+from setup_module.statannotations_fork.Annotation import Annotation
+from setup_module.statannotations_fork.PValueFormat import (
     CONFIGURABLE_PARAMETERS as PVALUE_CONFIGURABLE_PARAMETERS,
 )
-from statannotations.PValueFormat import PValueFormat
-from statannotations.stats.ComparisonsCorrection import (
+from setup_module.statannotations_fork.PValueFormat import PValueFormat
+from setup_module.statannotations_fork.stats.ComparisonsCorrection import (
     get_validated_comparisons_correction,
 )
-from statannotations.stats.StatResult import StatResult
-from statannotations.stats.StatTest import StatTest
-from statannotations.stats.test import IMPLEMENTED_TESTS, apply_test
-from statannotations.stats.utils import (
+from setup_module.statannotations_fork.stats.StatResult import StatResult
+from setup_module.statannotations_fork.stats.StatTest import StatTest
+from setup_module.statannotations_fork.stats.test import IMPLEMENTED_TESTS, apply_test
+from setup_module.statannotations_fork.stats.utils import (
     check_alpha,
     check_num_comparisons,
     check_pvalues,
     get_num_comparisons,
 )
-from statannotations.utils import (
+from setup_module.statannotations_fork.utils import (
     InvalidParametersError,
     check_is_in,
     empty_dict_if_none,

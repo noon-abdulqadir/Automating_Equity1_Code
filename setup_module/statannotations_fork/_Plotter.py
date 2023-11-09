@@ -1,3 +1,9 @@
+import os  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+import sys  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+sys.path.append(str(Path.cwd().parents[0])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+sys.path.append(str(Path.cwd().parents[1])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+
 import itertools
 import warnings
 
@@ -7,8 +13,8 @@ import seaborn as sns
 from matplotlib import lines
 from matplotlib.collections import PathCollection
 from matplotlib.patches import Rectangle
-from statannotations._GroupsPositions import _GroupsPositions
-from statannotations.utils import (
+from setup_module.statannotations_fork._GroupsPositions import _GroupsPositions
+from setup_module.statannotations_fork.utils import (
     check_is_in,
     check_not_none,
     check_order_in_data,
@@ -122,31 +128,33 @@ class _SeabornPlotter(_Plotter):
 
         if plot == 'boxplot':
             plotter = sns.categorical._BoxPlotter(
-
-                x, y, hue, data, order, hue_order,
+                data=data, x=x, y=y, hue=hue, order=order, hue_order=hue_order,
                 orient=plot_params.get('orient'),
                 width=plot_params.get('width', 0.8),
                 dodge=True,
                 fliersize=plot_params.get('fliersize', 5),
                 linewidth=plot_params.get('linewidth'),
-                saturation=.75, color=None, palette=None)
+                saturation=.75, color=None, palette=None
+            )
 
         elif plot == 'swarmplot':
             plotter = sns.categorical._SwarmPlotter(
-                x, y, hue, data, order, hue_order,
+                data=data, x=x, y=y, hue=hue, order=order, hue_order=hue_order,
                 orient=plot_params.get('orient'),
-                dodge=True, color=None, palette=None)
+                dodge=True, color=None, palette=None
+            )
 
         elif plot == 'stripplot':
             plotter = sns.categorical._StripPlotter(
-                x, y, hue, data, order, hue_order,
+                data=data, x=x, y=y, hue=hue, order=order, hue_order=hue_order,
                 jitter=plot_params.get('jitter', True),
                 orient=plot_params.get('orient'),
-                dodge=True, color=None, palette=None)
+                dodge=True, color=None, palette=None
+            )
 
         elif plot == 'barplot':
             plotter = sns.categorical._BarPlotter(
-                x, y, hue, data, order, hue_order,
+                data=data, x=x, y=y, hue=hue, order=order, hue_order=hue_order,
                 estimator=plot_params.get('estimator', np.mean),
                 ci=plot_params.get('ci', 95),
                 n_boot=plot_params.get('nboot', 1000),
@@ -156,11 +164,12 @@ class _SeabornPlotter(_Plotter):
                 color=None, palette=None, saturation=.75,
                 errcolor='.26', errwidth=plot_params.get('errwidth'),
                 capsize=None,
-                dodge=True)
+                dodge=True
+            )
 
         elif plot == 'violinplot':
             plotter = sns.categorical._ViolinPlotter(
-                x, y, hue, data, order, hue_order,
+                data=data, x=x, y=y, hue=hue, order=order, hue_order=hue_order,
                 bw=plot_params.get('bw', 'scott'),
                 cut=plot_params.get('cut', 2),
                 scale=plot_params.get('scale', 'area'),
@@ -171,7 +180,8 @@ class _SeabornPlotter(_Plotter):
                 split=plot_params.get('split', False),
                 dodge=True, orient=plot_params.get('orient'),
                 linewidth=plot_params.get('linewidth'), color=None,
-                palette=None, saturation=.75)
+                palette=None, saturation=.75
+            )
 
         else:
             raise NotImplementedError(

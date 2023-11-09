@@ -153,7 +153,7 @@ def summary_cont(group1, conf = 0.95, decimals = 4):
                                 inplace= True)
 
 
-    elif type(group1) == pandas.core.groupby.DataFrameGroupBy :
+    elif type(group1) == pandas.core.groupby.DataFrameGroupBy:
 
         # There has to be a better way to get the lower and upper CI limits
         # in the groupby table. Until then, this works :/
@@ -176,7 +176,7 @@ def summary_cont(group1, conf = 0.95, decimals = 4):
             return u_ci
 
         table = group1.agg(['count', numpy.mean, numpy.std,
-                            pandas.DataFrame.sem, l_ci, u_ci])
+                            scipy.stats.sem, l_ci, u_ci])
 
         table.rename(columns = {'count': 'N', 'mean': 'Mean', 'std': 'SD',
                                 'sem': 'SE', 'l_ci' : f'{conf_level} Conf.', 'u_ci' : 'Interval'}, inplace= True)

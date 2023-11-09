@@ -1,8 +1,14 @@
+import os  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+import sys  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+sys.path.append(str(Path.cwd().parents[0])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+sys.path.append(str(Path.cwd().parents[1])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+
 from functools import partial
 from typing import List, Union
 
 import numpy as np
-from statannotations.utils import check_is_in
+from setup_module.statannotations_fork.utils import check_is_in
 
 try:
     from statsmodels.stats.multitest import multipletests

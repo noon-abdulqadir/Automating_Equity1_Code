@@ -1,12 +1,18 @@
+import os  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+import sys  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+from pathlib import Path  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+sys.path.append(str(Path.cwd().parents[0])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+sys.path.append(str(Path.cwd().parents[1])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
+
 from typing import Union
 
 import numpy as np
-from statannotations.stats.ComparisonsCorrection import (
+from setup_module.statannotations_fork.stats.ComparisonsCorrection import (
     ComparisonsCorrection,
     get_validated_comparisons_correction,
 )
-from statannotations.stats.StatResult import StatResult
-from statannotations.stats.StatTest import StatTest
+from setup_module.statannotations_fork.stats.StatResult import StatResult
+from setup_module.statannotations_fork.stats.StatTest import StatTest
 
 IMPLEMENTED_TESTS = ['t-test_ind', 't-test_welch', 't-test_paired',
                      'Mann-Whitney', 'Mann-Whitney-gt', 'Mann-Whitney-ls',
