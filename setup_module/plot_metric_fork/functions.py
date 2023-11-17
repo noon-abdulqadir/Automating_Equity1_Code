@@ -62,6 +62,24 @@ class BinaryClassification:
     """
 
     ### Parameters definition ###
+    # __param_precision_recall_curve = {'threshold': None,
+    #                                   'plot_threshold': True,
+    #                                   'beta': 1,
+    #                                   'linewidth': 2,
+    #                                   'fscore_iso': [0.2, 0.4, 0.6, 0.8],
+    #                                   'iso_alpha': 0.7,
+    #                                   'y_text_margin': 0.03,
+    #                                   'x_text_margin': 0.2,
+    #                                   'c_pr_curve': 'black',
+    #                                   'c_mean_prec': 'red',
+    #                                   'c_thresh': 'black',
+    #                                   'c_f1_iso': 'grey',
+    #                                   'c_thresh_point': 'red',
+    #                                   'ls_pr_curve': '-',
+    #                                   'ls_mean_prec': '--',
+    #                                   'ls_thresh': ':',
+    #                                   'ls_fscore_iso': ':',
+    #                                   'marker_pr_curve': None}
     __param_precision_recall_curve = {'threshold': None,
                                       'plot_threshold': True,
                                       'beta': 1,
@@ -71,10 +89,10 @@ class BinaryClassification:
                                       'y_text_margin': 0.03,
                                       'x_text_margin': 0.2,
                                       'c_pr_curve': 'black',
-                                      'c_mean_prec': 'red',
+                                      'c_mean_prec': 'black',
                                       'c_thresh': 'black',
                                       'c_f1_iso': 'grey',
-                                      'c_thresh_point': 'red',
+                                      'c_thresh_point': 'black',
                                       'ls_pr_curve': '-',
                                       'ls_mean_prec': '--',
                                       'ls_thresh': ':',
@@ -84,17 +102,30 @@ class BinaryClassification:
     __param_confusion_matrix = {'threshold': None,
                                 'normalize': False,
                                 'title': 'Confusion matrix',
-                                'cmap': plt.cm.Reds,
+                                'cmap': plt.cm.Grays,
                                 'colorbar': True,
                                 'label_rotation': 45}
 
+    # __param_roc_curve = {'threshold': None,
+    #                      'plot_threshold': True,
+    #                      'linewidth': 2,
+    #                      'y_text_margin': 0.05,
+    #                      'x_text_margin': 0.2,
+    #                      'c_roc_curve': 'black',
+    #                      'c_random_guess': 'red',
+    #                      'c_thresh_lines': 'black',
+    #                      'ls_roc_curve': '-',
+    #                      'ls_thresh_lines': ':',
+    #                      'ls_random_guess': '--',
+    #                      'title': 'Receiver Operating Characteristic',
+    #                      'loc_legend': 'lower right'}
     __param_roc_curve = {'threshold': None,
                          'plot_threshold': True,
                          'linewidth': 2,
                          'y_text_margin': 0.05,
                          'x_text_margin': 0.2,
                          'c_roc_curve': 'black',
-                         'c_random_guess': 'red',
+                         'c_random_guess': 'black',
                          'c_thresh_lines': 'black',
                          'ls_roc_curve': '-',
                          'ls_thresh_lines': ':',
@@ -102,6 +133,20 @@ class BinaryClassification:
                          'title': 'Receiver Operating Characteristic',
                          'loc_legend': 'lower right'}
 
+    # __param_class_distribution = {'threshold': None,
+    #                               'display_prediction': True,
+    #                               'alpha': .5,
+    #                               'jitter': .3,
+    #                               'pal_colors': None,
+    #                               'display_violin': True,
+    #                               'c_violin': 'white',
+    #                               'strip_marker_size': 4,
+    #                               'strip_lw_edge': None,
+    #                               'strip_c_edge': None,
+    #                               'ls_thresh_line': ':',
+    #                               'c_thresh_line': 'red',
+    #                               'lw_thresh_line': 2,
+    #                               'title': None}
     __param_class_distribution = {'threshold': None,
                                   'display_prediction': True,
                                   'alpha': .5,
@@ -113,7 +158,7 @@ class BinaryClassification:
                                   'strip_lw_edge': None,
                                   'strip_c_edge': None,
                                   'ls_thresh_line': ':',
-                                  'c_thresh_line': 'red',
+                                  'c_thresh_line': 'black',
                                   'lw_thresh_line': 2,
                                   'title': None}
 
@@ -129,23 +174,27 @@ class BinaryClassification:
                          'plot_recall': True,
                          'plot_prec': True,
                          'plot_fscore_max': True,
-                         'c_recall_line': 'green',
+                        #  'c_recall_line': 'green',
+                         'c_recall_line': 'black',
                          'lw_recall_line': 2,
                          'ls_recall_line': '-',
                          'label_recall': 'Recall',
                          'marker_recall': '',
-                         'c_prec_line ': 'blue',
+                        #  'c_prec_line ': 'blue',
+                         'c_prec_line ': 'black',
                          'lw_prec_line': 2,
                          'ls_prec_line': '-',
                          'label_prec': 'Precision',
                          'marker_prec': '',
-                         'c_fscr_line ': 'red',
+                        #  'c_fscr_line ': 'red',
+                         'c_fscr_line ': 'black',
                          'lw_fscr_line': 2,
                          'ls_fscr_line': '-',
                          'label_fscr': None,
                          'marker_fscr': '',
                          'marker_fscore_max': 'o',
-                         'c_fscore_max': 'red',
+                        #  'c_fscore_max': 'red',
+                         'c_fscore_max': 'black',
                          'markersize_fscore_max': 5,
                          'plot_threshold': True,
                          'c_thresh_line': 'black',
@@ -203,7 +252,7 @@ class BinaryClassification:
         else:
             return param_dict
 
-    def plot_confusion_matrix(self, threshold=None, normalize=False, title='Confusion matrix', cmap=plt.cm.Reds,
+    def plot_confusion_matrix(self, threshold=None, normalize=False, title='Confusion matrix', cmap=plt.cm.Grays,
                               colorbar=True, label_rotation=45):
         """
         Plots the confusion matrix.
@@ -216,7 +265,7 @@ class BinaryClassification:
             Set to True to normalize matrix and make matrix coefficient between 0 and 1.
         title : string, default="Confusion matrix",
             Set title of the plot.
-        cmap : colormap, default=plt.cm.Reds
+        cmap : colormap, default=plt.cm.Grays
             Colormap of the matrix. See https://matplotlib.org/examples/color/colormaps_reference.html to find all
             available colormap.
         colorbar : bool, default=True
@@ -268,8 +317,12 @@ class BinaryClassification:
 
         return cm
 
+    # def plot_roc_curve(self, threshold=None, plot_threshold=True, linewidth=2, y_text_margin=0.05, x_text_margin=0.2,
+    #                    c_roc_curve='black', c_random_guess='red', c_thresh_lines='black', ls_roc_curve='-',
+    #                    ls_thresh_lines=':', ls_random_guess='--', title='Receiver Operating Characteristic',
+    #                    loc_legend='lower right'):
     def plot_roc_curve(self, threshold=None, plot_threshold=True, linewidth=2, y_text_margin=0.05, x_text_margin=0.2,
-                       c_roc_curve='black', c_random_guess='red', c_thresh_lines='black', ls_roc_curve='-',
+                       c_roc_curve='black', c_random_guess='black', c_thresh_lines='black', ls_roc_curve='-',
                        ls_thresh_lines=':', ls_random_guess='--', title='Receiver Operating Characteristic',
                        loc_legend='lower right'):
         """
@@ -413,10 +466,16 @@ class BinaryClassification:
 
         return fpr, tpr, thresh, roc_auc
 
+    # def plot_precision_recall_curve(self, threshold=None, plot_threshold=True, beta=1, linewidth=2,
+    #                                 fscore_iso=[0.2, 0.4, 0.6, 0.8], iso_alpha=0.7, y_text_margin=0.03,
+    #                                 x_text_margin=0.2, c_pr_curve='black', c_mean_prec='red', c_thresh_lines='black',
+    #                                 c_f1_iso='grey', c_thresh_point='red', ls_pr_curve='-', ls_mean_prec='--',
+    #                                 ls_thresh=':', ls_fscore_iso=':', marker_pr_curve=None,
+    #                                 title='Precision and Recall Curve'):
     def plot_precision_recall_curve(self, threshold=None, plot_threshold=True, beta=1, linewidth=2,
                                     fscore_iso=[0.2, 0.4, 0.6, 0.8], iso_alpha=0.7, y_text_margin=0.03,
-                                    x_text_margin=0.2, c_pr_curve='black', c_mean_prec='red', c_thresh_lines='black',
-                                    c_f1_iso='grey', c_thresh_point='red', ls_pr_curve='-', ls_mean_prec='--',
+                                    x_text_margin=0.2, c_pr_curve='black', c_mean_prec='black', c_thresh_lines='black',
+                                    c_f1_iso='grey', c_thresh_point='black', ls_pr_curve='-', ls_mean_prec='--',
                                     ls_thresh=':', ls_fscore_iso=':', marker_pr_curve=None,
                                     title='Precision and Recall Curve'):
         """
@@ -584,9 +643,13 @@ class BinaryClassification:
 
         return prec, recall, thresh
 
+    # def plot_class_distribution(self, threshold=None, display_prediction=True, alpha=.5, jitter=.3, pal_colors=None,
+    #                             display_violin=True, c_violin='white', strip_marker_size=4, strip_lw_edge=None,
+    #                             strip_c_edge=None, ls_thresh_line=':', c_thresh_line='red', lw_thresh_line=2,
+    #                             title=None):
     def plot_class_distribution(self, threshold=None, display_prediction=True, alpha=.5, jitter=.3, pal_colors=None,
                                 display_violin=True, c_violin='white', strip_marker_size=4, strip_lw_edge=None,
-                                strip_c_edge=None, ls_thresh_line=':', c_thresh_line='red', lw_thresh_line=2,
+                                strip_c_edge=None, ls_thresh_line=':', c_thresh_line='black', lw_thresh_line=2,
                                 title=None):
         """
         Plot distribution of the predictions for each classes.
@@ -696,8 +759,10 @@ class BinaryClassification:
         pred_df.columns = ['True Class', 'Predicted Proba', 'Predicted Type', 'Predicted Class']
         return pred_df
 
+    # def plot_score_distribution(self, threshold=None, plot_hist_TN=True, kde_ksw_TN={'shade': True},
+    #                             label_TN='True Negative', c_TN_curve='green'):
     def plot_score_distribution(self, threshold=None, plot_hist_TN=True, kde_ksw_TN={'shade': True},
-                                label_TN='True Negative', c_TN_curve='green'):
+                                label_TN='True Negative', c_TN_curve='black'):
         if threshold is None:
             t = self.threshold
         else:
@@ -743,14 +808,25 @@ class BinaryClassification:
         plt.title('Distribution of predicted probability')
         plt.xlim(0, 1)
 
+    # def plot_threshold(self, threshold=None, beta=1, title=None,
+    #                    annotation=True, bbox_dict=None, bbox=True, arrow_dict=None, arrow=True,
+    #                    plot_fscore=True, plot_recall=True, plot_prec=True, plot_fscore_max=True,
+    #                    c_recall_line='green', lw_recall_line=2, ls_recall_line='-', label_recall='Recall',
+    #                    marker_recall='',
+    #                    c_prec_line='blue', lw_prec_line=2, ls_prec_line='-', label_prec='Precision', marker_prec='',
+    #                    c_fscr_line='red', lw_fscr_line=2, ls_fscr_line='-', label_fscr=None, marker_fscr='',
+    #                    marker_fscore_max='o', c_fscore_max='red', markersize_fscore_max=5,
+    #                    plot_threshold=True, c_thresh_line='black', lw_thresh_line=2, ls_thresh_line='--',
+    #                    plot_best_threshold=True, c_bestthresh_line='black', lw_bestthresh_line=1,
+    #                    ls_bestthresh_line=':'):
     def plot_threshold(self, threshold=None, beta=1, title=None,
                        annotation=True, bbox_dict=None, bbox=True, arrow_dict=None, arrow=True,
                        plot_fscore=True, plot_recall=True, plot_prec=True, plot_fscore_max=True,
-                       c_recall_line='green', lw_recall_line=2, ls_recall_line='-', label_recall='Recall',
+                       c_recall_line='black', lw_recall_line=2, ls_recall_line='-', label_recall='Recall',
                        marker_recall='',
-                       c_prec_line='blue', lw_prec_line=2, ls_prec_line='-', label_prec='Precision', marker_prec='',
-                       c_fscr_line='red', lw_fscr_line=2, ls_fscr_line='-', label_fscr=None, marker_fscr='',
-                       marker_fscore_max='o', c_fscore_max='red', markersize_fscore_max=5,
+                       c_prec_line='black', lw_prec_line=2, ls_prec_line='-', label_prec='Precision', marker_prec='',
+                       c_fscr_line='black', lw_fscr_line=2, ls_fscr_line='-', label_fscr=None, marker_fscr='',
+                       marker_fscore_max='o', c_fscore_max='black', markersize_fscore_max=5,
                        plot_threshold=True, c_thresh_line='black', lw_thresh_line=2, ls_thresh_line='--',
                        plot_best_threshold=True, c_bestthresh_line='black', lw_bestthresh_line=1,
                        ls_bestthresh_line=':'):
@@ -1083,7 +1159,7 @@ class MultiClassClassification:
         plt.title('Receiver operating characteristic for multi-class (One-Vs-All')
         plt.legend(loc='lower right')
 
-    def plot_confusion_matrix(self, normalize=False, title='Confusion matrix', cmap=plt.cm.Reds):
+    def plot_confusion_matrix(self, normalize=False, title='Confusion matrix', cmap=plt.cm.Grays):
         """
         This function prints and plots the confusion matrix.
         Normalization can be applied by setting `normalize=True`.

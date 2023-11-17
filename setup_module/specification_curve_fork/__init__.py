@@ -343,7 +343,7 @@ class SpecificationCurve:
 
 # [docs]
     def plot(
-        self, save_path=None, pretty_plots: bool = True, preferred_spec: List[None] = [], show_plot: bool = True, plot_title=None, return_fig: bool = False, text_to_add: Union[str, List[str]] = []
+        self, save_path=None, pretty_plots: bool = True, preferred_spec: List[None] = [], show_plot: bool = True, plot_title=None, return_fig: bool = False, text_to_add: Union[str, List[str]] = [], matplotlib_style: str = 'ggplot'
     ) -> None:
         """Makes plots of fitted specification curve.
 
@@ -355,7 +355,11 @@ class SpecificationCurve:
             plot_title (_type_, optional): title of the plot. Defaults to None.
             return_fig (bool, optional): whether to return the figure. Defaults to False.
             text_to_add (Union[str, List[str]], optional): text to add to the plot. Defaults to [].
+            matplotlib_style (str, optional): matplotlib style. Defaults to 'ggplot'.
         """
+
+        plt.style.use(matplotlib_style)
+
         if pretty_plots:
             _pretty_plots()
         # Set up blocks for showing what effects are included
@@ -442,11 +446,11 @@ class SpecificationCurve:
         # self.df_r['coeff_pvals'] = self.df_r.apply(
         #     lambda row: row['pvalues'][row['x_exog']], axis=1
         # )
-        self.df_r.loc[self.df_r['coeff_pvals'] < 0.05, 'color_coeff'] = 'blue'
+        self.df_r.loc[self.df_r['coeff_pvals'] < 0.05, 'color_coeff'] = 'C0'
         red_condition = (self.df_r['Coefficient'] < 0) & (
             self.df_r['coeff_pvals'] < 0.05
         )
-        self.df_r.loc[red_condition, 'color_coeff'] = 'red'
+        self.df_r.loc[red_condition, 'color_coeff'] = 'C5'
         for color in self.df_r['color_coeff'].unique():
             slice_df_r = self.df_r.loc[self.df_r['color_coeff'] == color]
             a = (
