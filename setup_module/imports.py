@@ -1050,8 +1050,8 @@ cat_list = [
     'Dutch Requirement in Sentence'
 ]
 controls = [
-        '% Sector per Workforce',
-        'Job Description spacy_sentencized_num_words',
+        'Job Description spacy_sentencized_num_words', '% Sector per Workforce',
+        'Sector Job Advertisement Count', 'Keywords Count',
         'English Requirement in Job Ad_Yes', 'Dutch Requirement in Job Ad_Yes',
         # Main controls = [:4], Extra controls = [4:]
         # 'Platform_Indeed', 'Platform_Glassdoor',
