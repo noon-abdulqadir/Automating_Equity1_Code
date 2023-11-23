@@ -100,6 +100,7 @@ try:
     import unicodedata
     import warnings
     from collections import Counter, defaultdict
+    from cluestar import plot_text
     from io import StringIO
     from random import randrange
     from subprocess import call
@@ -176,6 +177,7 @@ try:
     from gensim.test.utils import common_texts, datapath, get_tmpfile
     from gensim.utils import save_as_line_sentence, simple_preprocess
     from googletrans import Translator
+    from html2image import Html2Image
     from imblearn.combine import SMOTEENN, SMOTETomek
     from imblearn.datasets import make_imbalance
     from imblearn.metrics import (
@@ -792,6 +794,11 @@ alpha = np.float64(0.050)
 normality_tests_labels = ['Statistic', 'p-value']
 ngrams_list=[1, 2, 3, 123]
 embedding_libraries_list = ['spacy', 'nltk', 'gensim']
+
+
+with open(f'{data_dir}warmth_competence_words.json', 'r') as f:
+    warmth_competence_words = json.load(f)
+
 dvs = [
     'Warmth', 'Competence',
 ]
@@ -1562,7 +1569,3 @@ keyword_trans_dict = {
 with open(f'{code_dir}/1. Scraping/CBS/Data/keyword_trans_dict.txt', 'w') as f:
     json.dump(keyword_trans_dict, f)
 
-# %%
-
-# with open(f'{code_dir}/1. Scraping/CBS/Data/keyword_trans_dict.txt', 'w') as f:
-#     json.dump(keyword_trans_dict, f)
