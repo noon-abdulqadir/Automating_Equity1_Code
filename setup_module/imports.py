@@ -795,7 +795,6 @@ normality_tests_labels = ['Statistic', 'p-value']
 ngrams_list=[1, 2, 3, 123]
 embedding_libraries_list = ['spacy', 'nltk', 'gensim']
 
-
 with open(f'{data_dir}warmth_competence_words.json', 'r') as f:
     warmth_competence_words = json.load(f)
 
