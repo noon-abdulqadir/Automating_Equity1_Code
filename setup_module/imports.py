@@ -151,6 +151,7 @@ try:
     import tqdm.auto as tqdm_auto
     import transformers
     import urllib3
+    import urllib
     import xgboost as xgb
     import xlsxwriter
     import yaml
@@ -622,7 +623,7 @@ metrics_dict = {
     'Recall': np.nan,
     'F1-score': np.nan,
     'Matthews Correlation Coefficient': np.nan,
-    'Brier score': np.nan,
+    'Brier Score': np.nan,
     'Fowlkes–Mallows Index': np.nan,
     'R2 Score': np.nan,
     'ROC': np.nan,
@@ -713,6 +714,7 @@ mpl.rcParams['text.usetex'] = False
 mpl.rc('font', **font)
 plt.style.use('tableau-colorblind10')
 plt.rc('font', **font)
+plt.rcParams['font.family'] = font['family']
 colorblind_hex_colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 cmap_colorblind = mpl.colors.LinearSegmentedColormap.from_list(name='cmap_colorblind', colors=colorblind_hex_colors)
 with contextlib.suppress(ValueError):
@@ -1395,13 +1397,13 @@ def get_standardized_coefficients(results):
     # Make df with standardized and unstandardized coefficients
     df_std_coef = pd.DataFrame(
         {
-            'coef': results.params[offset].apply(lambda x: f'{x:.5f}'),
-            'std err': results.bse[offset].apply(lambda x: f'{x:.5f}'),
-            'std coef': (results.params[offset] / results.model.exog[offset].std(axis=0)).apply(lambda x: f'{x:.5f}'),
-            't': results.tvalues[offset].apply(lambda x: f'{x:.5f}'),
-            'P>|t|': results.pvalues[offset].apply(lambda x: f'{x:.5f}'),
-            '[0.025': results.conf_int()[0][offset].apply(lambda x: f'{x:.5f}'),
-            '0.975]': results.conf_int()[1][offset].apply(lambda x: f'{x:.5f}'),
+            'coef': results.params[offset].progress_apply(lambda x: f'{x:.5f}'),
+            'std err': results.bse[offset].progress_apply(lambda x: f'{x:.5f}'),
+            'std coef': (results.params[offset] / results.model.exog[offset].std(axis=0))progress_apply(lambda x: f'{x:.5f}'),
+            't': results.tvalues[offset].progress_apply(lambda x: f'{x:.5f}'),
+            'P>|t|': results.pvalues[offset].progress_apply(lambda x: f'{x:.5f}'),
+            '[0.025': results.conf_int()[0][offset].progress_apply(lambda x: f'{x:.5f}'),
+            '0.975]': results.conf_int()[1][offset].progress_apply(lambda x: f'{x:.5f}'),
         }
     )
     # if 'Group Var' in df_std_coef.index:
