@@ -102,7 +102,7 @@ class BinaryClassification:
     __param_confusion_matrix = {'threshold': None,
                                 'normalize': False,
                                 'title': 'Confusion matrix',
-                                'cmap': plt.cm.Grays,
+                                'cmap': plt.cm.Greys,
                                 'colorbar': True,
                                 'label_rotation': 45}
 
@@ -212,7 +212,14 @@ class BinaryClassification:
         self.threshold = threshold
         sns.set_style(seaborn_style)
         if matplotlib_style is not None:
-            plt.style.use('ggplot')
+            plt.style.use('tableau-colorblind10')
+            font = {
+                'family': 'Times New Roman',
+                'weight': 'normal',
+                'size': 10
+            }
+            plt.rc('font', **font)
+            plt.rcParams['font.family'] = font['family']
 
     def get_function_parameters(self, function, as_df=False):
         """
@@ -231,15 +238,15 @@ class BinaryClassification:
             Dictionnary containing parameters for the given function and their default value.
         """
 
-        if function.__name__ is 'plot_precision_recall_curve':
+        if function.__name__ == 'plot_precision_recall_curve':
             param_dict = self.__param_precision_recall_curve
-        elif function.__name__ is 'plot_confusion_matrix':
+        elif function.__name__ == 'plot_confusion_matrix':
             param_dict = self.__param_confusion_matrix
-        elif function.__name__ is 'plot_roc_curve':
+        elif function.__name__ == 'plot_roc_curve':
             param_dict = self.__param_roc_curve
-        elif function.__name__ is 'plot_class_distribution':
+        elif function.__name__ == 'plot_class_distribution':
             param_dict = self.__param_class_distribution
-        elif function.__name__ is 'plot_threshold':
+        elif function.__name__ == 'plot_threshold':
             param_dict = self.__param_threshold
         else:
             print('Wrong function given, following functions are available : ')
@@ -252,7 +259,7 @@ class BinaryClassification:
         else:
             return param_dict
 
-    def plot_confusion_matrix(self, threshold=None, normalize=False, title='Confusion matrix', cmap=plt.cm.Grays,
+    def plot_confusion_matrix(self, threshold=None, normalize=False, title='Confusion matrix', cmap=plt.cm.Greys,
                               colorbar=True, label_rotation=45):
         """
         Plots the confusion matrix.
@@ -265,7 +272,7 @@ class BinaryClassification:
             Set to True to normalize matrix and make matrix coefficient between 0 and 1.
         title : string, default="Confusion matrix",
             Set title of the plot.
-        cmap : colormap, default=plt.cm.Grays
+        cmap : colormap, default=plt.cm.Greys
             Colormap of the matrix. See https://matplotlib.org/examples/color/colormaps_reference.html to find all
             available colormap.
         colorbar : bool, default=True
@@ -1159,7 +1166,7 @@ class MultiClassClassification:
         plt.title('Receiver operating characteristic for multi-class (One-Vs-All')
         plt.legend(loc='lower right')
 
-    def plot_confusion_matrix(self, normalize=False, title='Confusion matrix', cmap=plt.cm.Grays):
+    def plot_confusion_matrix(self, normalize=False, title='Confusion matrix', cmap=plt.cm.Greys):
         """
         This function prints and plots the confusion matrix.
         Normalization can be applied by setting `normalize=True`.

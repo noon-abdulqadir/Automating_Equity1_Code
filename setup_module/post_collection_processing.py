@@ -235,7 +235,7 @@ def fix_broken_linkedin_files(glob_path):
 #     args=get_args(),
 # ) -> pd.DataFrame:
 
-#     df_jobs.columns = df_jobs.columns.to_series().apply(lambda x: x.strip())
+#     df_jobs.columns = df_jobs.columns.to_series()progress_apply(lambda x: x.strip())
 #     df_jobs.dropna(axis='index', how='all', inplace=True)
 #     df_jobs.dropna(axis='columns', how='all', inplace=True)
 #     df_jobs.drop(
@@ -248,7 +248,7 @@ def fix_broken_linkedin_files(glob_path):
 #         inplace=True,
 #         errors='ignore',
 #     )
-#     df_jobs[int_variable] = df_jobs[int_variable].apply(lambda x: str(x).lower().strip())
+#     df_jobs[int_variable] = df_jobs[int_variable].progress_apply(lambda x: str(x).lower().strip())
 
 #     if reset is True:
 #         df_jobs = set_gender_age_sects_lang(df_jobs, str_variable=str_variable, id_dict_new=id_dict_new)
@@ -267,7 +267,7 @@ def fix_broken_linkedin_files(glob_path):
 # #             df_jobs[str_variable]
 # #             .swifter.progress_bar(args['print_enabled'])
 # #             .progress_bar(args['print_enabled'])
-# #             .apply(lambda x: isinstance(x, str))
+# #             progress_apply(lambda x: isinstance(x, str))
 # #         )
 # #         & (df_jobs[str_variable] != -1)
 # #         & (df_jobs[str_variable] != '-1')
@@ -316,7 +316,7 @@ def fix_broken_linkedin_files(glob_path):
 
 #     # df_jobs['Language'] = language
 #     try:
-#         df_jobs['Language'] = df_jobs[str_variable].swifter.progress_bar(args['print_enabled']).apply(detect_language_helper)
+#         df_jobs['Language'] = df_jobs[str_variable].swifter.progress_bar(args['print_enabled'])progress_apply(detect_language_helper)
 
 #     except Exception as e:
 #         if args['print_enabled'] is True:
@@ -663,12 +663,12 @@ def set_sector_and_percentage(
         df_jobs.drop(columns=['Sector'], inplace=True)
     for sect, sect_dict in sector_vs_job_id_dict.items():
         for keyword, job_ids in sect_dict.items():
-            df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin([str(i) for i in job_ids]), 'Sector'] = str(sect).lower().strip()
+            df_jobs.loc[df_jobs['Job ID'].astype(str)progress_apply(lambda x: x.lower().strip()).isin([str(i) for i in job_ids]), 'Sector'] = str(sect).lower().strip()
     # if 'Search Keyword' in df_jobs.columns:
     #     if df_jobs['Sector'].isnull().values.any() or df_jobs['Sector'].isnull().sum() > 0 or df_jobs['Sector'].isna().values.any() or df_jobs['Sector'].isna().sum() > 0:
     #         df_sectors = get_sector_df_from_cbs()
     #         for idx, row in df_sectors.iterrows():
-    #             if isinstance(row[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')], list) and df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin([str(i) for i in row[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')]]):
+    #             if isinstance(row[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')], list) and df_jobs['Job ID'].astype(str)progress_apply(lambda x: x.lower().strip()).isin([str(i) for i in row[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Keywords')]]):
     #                     print(row[('SBI Sector Titles', 'Industry class / branch (SIC2008)', 'Sector Name')])
 
     print('Setting sector code and percentages.')
@@ -701,10 +701,10 @@ def set_sector_and_percentage(
 
 #     for index, row in df_jobs.iterrows():
 #         if row['Sector'] in [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']:
-#             df_jobs.loc[(df_jobs['Job ID'].astype(str).apply(lambda x: x.strip().lower()).isin([i.strip().lower() for i in job_ids if isinstance (i, str)])) | (df_jobs['Search Keyword'].astype(str).apply(lambda x: x.strip().lower()) == keyword.strip().lower()), 'Sector'] = sect.capitalize()
+#             df_jobs.loc[(df_jobs['Job ID'].astype(str)progress_apply(lambda x: x.strip().lower()).isin([i.strip().lower() for i in job_ids if isinstance (i, str)])) | (df_jobs['Search Keyword'].astype(str)progress_apply(lambda x: x.strip().lower()) == keyword.strip().lower()), 'Sector'] = sect.capitalize()
 #             for index, row in df_jobs.iterrows():
 #                 if row['Sector'] in [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']:
-#                     df_jobs.loc[(df_jobs['Search Keyword'].astype(str).apply(lambda x: x.strip().lower()) == keyword.strip().lower()), 'Sector'] = sect.capitalize()
+#                     df_jobs.loc[(df_jobs['Search Keyword'].astype(str)progress_apply(lambda x: x.strip().lower()) == keyword.strip().lower()), 'Sector'] = sect.capitalize()
 #                     if row['Sector'] in [None, 'None', '', ' ', [], -1, '-1', 0, '0', 'nan', np.nan, 'Nan']:
 #                         trans_keyword_list.append(keyword.strip().lower())
 #                         trans_keyword_list = save_trans_keyword_list(trans_keyword_list)
@@ -746,19 +746,19 @@ def set_gender_age(
     print('Setting gender.')
     try:
         for sect, cat in sbi_sectors_dom_gen.items():
-            df_jobs.loc[df_jobs['Sector'].astype(str).apply(lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Gender'] = str(cat)
+            df_jobs.loc[df_jobs['Sector'].astype(str)progress_apply(lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Gender'] = str(cat)
     except Exception as e:
         for cat in ['Mixed Gender', 'Male', 'Female']:
-            df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin([str(i) for i in job_id_dict[cat]]), 'Gender'] = str(cat)
+            df_jobs.loc[df_jobs['Job ID'].astype(str)progress_apply(lambda x: x.lower().strip()).isin([str(i) for i in job_id_dict[cat]]), 'Gender'] = str(cat)
 
     # Age
     print('Setting age.')
     try:
         for sect, cat in sbi_sectors_dom_age.items():
-            df_jobs.loc[df_jobs['Sector'].astype(str).apply(lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Age'] = str(cat)
+            df_jobs.loc[df_jobs['Sector'].astype(str)progress_apply(lambda x: x.lower().strip()) == str(sect).lower().strip(), 'Age'] = str(cat)
     except Exception as e:
         for cat in ['Mixed Age', 'Young', 'Older']:
-            df_jobs.loc[df_jobs['Job ID'].astype(str).apply(lambda x: x.lower().strip()).isin([str(i) for i in job_id_dict[cat]]), 'Age'] = str(cat)
+            df_jobs.loc[df_jobs['Job ID'].astype(str)progress_apply(lambda x: x.lower().strip()).isin([str(i) for i in job_id_dict[cat]]), 'Age'] = str(cat)
 
     print('Categorizing gender and age')
     df_jobs = categorize_df_gender_age(df_jobs)
@@ -1466,7 +1466,7 @@ def split_df_jobs_to_df_sent(
         **{
             lst_col: df_for_analysis[lst_col]
             .swifter.progress_bar(args['print_enabled'])
-            .apply(lambda x: sent_tokenize(x))
+            progress_apply(lambda x: sent_tokenize(x))
         }
     )
     df_final = pd.DataFrame(
@@ -2251,7 +2251,7 @@ def open_and_clean_excel(
                             df_coder['Coder ID'] = k
                     df_coder[f'OG_{str_variable} ID'] = df_coder.index + 1
                     df_coder = df_coder.fillna(0)
-                    df_coder[str_variable] = df_coder[str_variable].apply(lambda sentence: sentence.strip().lower().replace('[^\w\s]', ''))
+                    df_coder[str_variable] = df_coder[str_variable].progress_apply(lambda sentence: sentence.strip().lower().replace('[^\w\s]', ''))
                     if df_coder[str_variable].isna().sum() > 0:
                         if args['print_enabled'] is True:
                             print(
@@ -2277,7 +2277,7 @@ def open_and_clean_excel(
             df_concat_coder_all.loc[:, cal_columns] = (
                 df_concat_coder_all.loc[:, cal_columns]
                 .swifter.progress_bar(args['print_enabled'])
-                .apply(pd.to_numeric, downcast='integer', errors='coerce')
+                progress_apply(pd.to_numeric, downcast='integer', errors='coerce')
             )
             df_concat_coder_all = clean_df(df_concat_coder_all, str_variable=str_variable, reset=reset)
             df_concat_coder_all.index = range(df_concat_coder_all.shape[0])
