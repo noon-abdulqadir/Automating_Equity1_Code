@@ -1399,7 +1399,7 @@ def get_standardized_coefficients(results):
         {
             'coef': results.params[offset].progress_apply(lambda x: f'{x:.5f}'),
             'std err': results.bse[offset].progress_apply(lambda x: f'{x:.5f}'),
-            'std coef': (results.params[offset] / results.model.exog[offset].std(axis=0))progress_apply(lambda x: f'{x:.5f}'),
+            'std coef': (results.params[offset] / results.model.exog[offset].std(axis=0)).progress_apply(lambda x: f'{x:.5f}'),
             't': results.tvalues[offset].progress_apply(lambda x: f'{x:.5f}'),
             'P>|t|': results.pvalues[offset].progress_apply(lambda x: f'{x:.5f}'),
             '[0.025': results.conf_int()[0][offset].progress_apply(lambda x: f'{x:.5f}'),
