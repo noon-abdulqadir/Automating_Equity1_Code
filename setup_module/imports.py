@@ -1086,6 +1086,23 @@ controls = [
 
 # %%
 # Commonly used functions
+def show_and_close_plots(plt):
+    plt.rc('font', **font)
+    plt.rcParams['font.family'] = font['family']
+    plt.show()
+    plt.clf()
+    plt.cla()
+    plt.close()
+
+# %%
+def close_plots(plt):
+    plt.rc('font', **font)
+    plt.rcParams['font.family'] = font['family']
+    plt.clf()
+    plt.cla()
+    plt.close()
+
+# %%
 def get_df_info(df, ivs_all=None):
     if ivs_all is None:
         ivs_all = [
