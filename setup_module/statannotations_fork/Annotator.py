@@ -1,9 +1,36 @@
+# %%
 import os  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 import sys  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 from pathlib import Path  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
-sys.path.append(str(Path.cwd().parents[0])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
-sys.path.append(str(Path.cwd().parents[1])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 
+mod = sys.modules[__name__]
+
+code_dir = None
+code_dir_name = 'Code'
+unwanted_subdir_name = 'Analysis'
+
+if code_dir_name not in str(Path.cwd()).split('/')[-1]:
+    for _ in range(5):
+
+        parent_path = str(Path.cwd().parents[_]).split('/')[-1]
+
+        if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
+
+            code_dir = str(Path.cwd().parents[_])
+
+            if code_dir is not None:
+                break
+else:
+    code_dir = str(Path.cwd())
+sys.path.append(code_dir)
+if 'setup_module' not in sys.path:
+    sys.path.append(f'{code_dir}/setup_module')
+sys.path = list(set(sys.path))
+
+# %load_ext autoreload
+# %autoreload 2
+
+# %%
 import warnings
 from typing import List, Optional, Union
 
@@ -13,25 +40,25 @@ import numpy as np
 import seaborn as sns
 from matplotlib import lines
 from matplotlib.font_manager import FontProperties
-from setup_module.statannotations_fork._Plotter import _Plotter, _SeabornPlotter
-from setup_module.statannotations_fork.Annotation import Annotation
-from setup_module.statannotations_fork.PValueFormat import (
+from statannotations_fork._Plotter import _Plotter, _SeabornPlotter
+from statannotations_fork.Annotation import Annotation
+from statannotations_fork.PValueFormat import (
     CONFIGURABLE_PARAMETERS as PVALUE_CONFIGURABLE_PARAMETERS,
 )
-from setup_module.statannotations_fork.PValueFormat import PValueFormat
-from setup_module.statannotations_fork.stats.ComparisonsCorrection import (
+from statannotations_fork.PValueFormat import PValueFormat
+from statannotations_fork.stats.ComparisonsCorrection import (
     get_validated_comparisons_correction,
 )
-from setup_module.statannotations_fork.stats.StatResult import StatResult
-from setup_module.statannotations_fork.stats.StatTest import StatTest
-from setup_module.statannotations_fork.stats.test import IMPLEMENTED_TESTS, apply_test
-from setup_module.statannotations_fork.stats.utils import (
+from statannotations_fork.stats.StatResult import StatResult
+from statannotations_fork.stats.StatTest import StatTest
+from statannotations_fork.stats.test import IMPLEMENTED_TESTS, apply_test
+from statannotations_fork.stats.utils import (
     check_alpha,
     check_num_comparisons,
     check_pvalues,
     get_num_comparisons,
 )
-from setup_module.statannotations_fork.utils import (
+from statannotations_fork.utils import (
     InvalidParametersError,
     check_is_in,
     empty_dict_if_none,

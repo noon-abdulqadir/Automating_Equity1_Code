@@ -1,9 +1,36 @@
+# %%
 import os  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 import sys  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 from pathlib import Path  # type:ignore # isort:skip # fmt:skip # noqa # nopep8
-sys.path.append(str(Path.cwd().parents[0])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
-sys.path.append(str(Path.cwd().parents[1])) # type:ignore # isort:skip # fmt:skip # noqa # nopep8
 
+mod = sys.modules[__name__]
+
+code_dir = None
+code_dir_name = 'Code'
+unwanted_subdir_name = 'Analysis'
+
+if code_dir_name not in str(Path.cwd()).split('/')[-1]:
+    for _ in range(5):
+
+        parent_path = str(Path.cwd().parents[_]).split('/')[-1]
+
+        if (code_dir_name in parent_path) and (unwanted_subdir_name not in parent_path):
+
+            code_dir = str(Path.cwd().parents[_])
+
+            if code_dir is not None:
+                break
+else:
+    code_dir = str(Path.cwd())
+sys.path.append(code_dir)
+if 'setup_module' not in sys.path:
+    sys.path.append(f'{code_dir}/setup_module')
+sys.path = list(set(sys.path))
+
+# %load_ext autoreload
+# %autoreload 2
+
+# %%
 import itertools
 import warnings
 
@@ -13,8 +40,8 @@ import seaborn as sns
 from matplotlib import lines
 from matplotlib.collections import PathCollection
 from matplotlib.patches import Rectangle
-from setup_module.statannotations_fork._GroupsPositions import _GroupsPositions
-from setup_module.statannotations_fork.utils import (
+from statannotations_fork._GroupsPositions import _GroupsPositions
+from statannotations_fork.utils import (
     check_is_in,
     check_not_none,
     check_order_in_data,
