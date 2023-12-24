@@ -198,6 +198,7 @@ try:
     from ipywidgets import FloatSlider, fixed, interact, interact_manual, interactive
     from joblib import parallel_backend
     from matplotlib.animation import FuncAnimation
+    from matplotlib_inline.backend_inline import set_matplotlib_formats
     from mpl_toolkits.mplot3d import Axes3D
     from nltk import (
         WordNetLemmatizer,
@@ -712,6 +713,7 @@ font = {
 mpl.style.use(f'{code_dir}/setup_module/apa.mplstyle-main/apa.mplstyle')
 mpl.rcParams['text.usetex'] = False
 mpl.rc('font', **font)
+set_matplotlib_formats('png')
 plt.style.use('tableau-colorblind10')
 plt.rc('font', **font)
 plt.rcParams['font.family'] = font['family']
