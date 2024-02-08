@@ -98,9 +98,9 @@ try:
     import time
     import typing
     import unicodedata
+    import urllib
     import warnings
     from collections import Counter, defaultdict
-    from cluestar import plot_text
     from io import StringIO
     from random import randrange
     from subprocess import call
@@ -109,6 +109,7 @@ try:
 
     import cbsodata
     import en_core_web_sm
+
     # import evaluate
     import gensim
     import gensim.downloader as gensim_api
@@ -134,6 +135,7 @@ try:
     import seaborn as sns
     import selenium.webdriver as webdriver
     import selenium.webdriver.support.ui as ui
+    import shap
     import simpledorff
     import sklearn
     import sklearn as sk
@@ -151,12 +153,13 @@ try:
     import tqdm.auto as tqdm_auto
     import transformers
     import urllib3
-    import urllib
     import xgboost as xgb
     import xlsxwriter
     import yaml
+
     # from accelerate import Accelerator
     from bs4 import BeautifulSoup
+    from cluestar import plot_text
     from dotenv.main import load_dotenv
     from gensim import corpora, models
     from gensim.corpora import Dictionary
@@ -193,6 +196,7 @@ try:
         RandomUnderSampler,
         TomekLinks,
     )
+    from IPython.core.display import HTML
     from IPython.core.interactiveshell import InteractiveShell
     from IPython.display import HTML, Image, Markdown, display
     from ipywidgets import FloatSlider, fixed, interact, interact_manual, interactive
@@ -384,7 +388,6 @@ try:
         has_fit_parameter,
     )
     from spacy.matcher import Matcher
-    from summarytools import dfSummary, tabset
     from statsmodels.formula.api import ols
     from statsmodels.graphics.factorplots import interaction_plot
     from statsmodels.iolib.summary2 import summary_col
@@ -393,14 +396,16 @@ try:
     from statsmodels.sandbox.regression.gmm import IV2SLS
     from statsmodels.stats.diagnostic import het_white
     from statsmodels.stats.outliers_influence import variance_inflation_factor
-    from torcheval.metrics.functional.classification import (
-        binary_accuracy,
-        binary_recall,
-        binary_precision,
-    )
+    from summarytools import dfSummary, tabset
     from textblob import TextBlob, Word
     from textblob.en.inflect import pluralize, singularize
+    from torcheval.metrics.functional.classification import (
+        binary_accuracy,
+        binary_precision,
+        binary_recall,
+    )
     from tqdm.contrib.itertools import product as tqdm_product
+
     # from transformers import (
     #     AdamW,
     #     AutoConfig,
@@ -419,7 +424,7 @@ try:
     #     DistilBertTokenizerFast,
     #     EarlyStoppingCallback,
     #     GPT2Config,
-    #     GPT2ForSequenceClassification,
+    #     GPT3forSequenceClassification,
     #     GPT2Model,
     #     GPT2TokenizerFast,
     #     GPTJConfig,
@@ -740,7 +745,7 @@ pd.set_option('display.max_columns', None)
 pd.set_option('display.width', 5000)
 pd.set_option('display.colheader_justify', 'center')
 pd.set_option('display.precision', 3)
-pd.set_option('display.float_format', '{:.2f}'.format)
+pd.set_option('display.float_format', '{:.3f}'.format)
 warnings.filterwarnings('ignore')
 
 # Display variables
@@ -793,6 +798,13 @@ pattern = re.compile(f'{pattern_1} | {pattern_2} | {pattern_3}', re.VERBOSE)
 
 dutch_requirement_pattern = r'[Dd]utch [Pp]referred | [Dd]utch [Re]quired | [Dd]utch [Ll]anguage |[Pp]roficient in [Dd]utch |[Ss]peak [Dd]utch | [Kk]now [Dd]utch | [Ff]luent in [Dd]utch | [Dd]utch [Nn]ative | * [Dd]utch [Ll]evel | [Dd]utch [Ss]peaking | [Dd]utch [Ss]peaker | [iI]deally [Dd]utch'
 english_requirement_pattern = r'[Ee]nglish [Pp]referred | [Ee]nglish [Re]quired | [Ee]nglish [Ll]anguage |[Pp]roficient in [Ee]nglish |[Ss]peak [Ee]nglish | [Kk]now [Ee]nglish | [Ff]luent in [Ee]nglish | [Ee]nglish [Nn]ative | * [Ee]nglish [Ll]evel | [Ee]nglish [Ss]peaking | [Ee]nglish [Ss]peaker | [iI]deally [Ee]nglish'
+
+example_sentences = {
+    'warmth_example_sentence': 'As a senior member of the team, fostering collaboration and encouraging best practices in ways of working and knowledge sharing.',
+    'competence_example_sentence': 'The IT security team works closely together with the Risk Management department on the topics Information Security and Privacy.',
+    'both_warmth_and_competence_example_sentence': 'Acquiring deep knowledge of IQVIA data sources, acting as an advisor to other members of the consulting team',
+    'neither_warmth_nor_competence_example_sentence': 'The role is open for candidates based in remote locations in the Region Europe.'
+}
 
 alpha = np.float64(0.050)
 normality_tests_labels = ['Statistic', 'p-value']
@@ -1149,9 +1161,9 @@ def get_df_info(df, ivs_all=None):
             print(f'Max {iv} value: {df[iv].max().round(3).astype(float)}')
             with contextlib.suppress(Exception):
                 print('-'*20)
-                print(f'{iv} Mean: {df[iv].mean().round(2).astype(float)}')
+                print(f'{iv} Mean: {df[iv].mean().round(3).astype(float)}')
                 print('-'*20)
-                print(f'{iv} Standard Deviation: {df[iv].std().round(2).astype(float)}')
+                print(f'{iv} Standard Deviation: {df[iv].std().round(3).astype(float)}')
         except Exception:
             print(f'{iv} not available.')
 
@@ -1289,39 +1301,39 @@ def make_full_report(
     if regression_info_dict is None:
         # Regression info dict
         regression_info_dict = {
-            'F': lambda x: f'{x.fvalue:.2f}',
-            'F (p-value)': lambda x: f'{x.f_pvalue:.2f}',
+            'F': lambda x: f'{x.fvalue:.3f}',
+            'F (p-value)': lambda x: f'{x.f_pvalue:.3f}',
             'df_model': lambda x: f'{x.df_model:.0f}',
             'df_resid': lambda x: f'{x.df_resid:.0f}',
             'df_total': lambda x: f'{x.df_resid + x.df_model + 1:.0f}',
-            'R-squared': lambda x: f'{x.rsquared:.2f}',
-            'R-squared Adj.': lambda x: f'{x.rsquared_adj:.2f}',
-            'Unstandardized Coefficent B (b)': lambda x: f'{x.params[0]:.2f}',
-            'Standard Error (SE)': lambda x: f'{x.bse[0]:.2f}',
-            'Standardized Coefficient b* (β)': lambda x: f'{x.params[0] / x.model.endog.std():.2f}',
-            't': lambda x: f'{x.tvalues[0]:.2f}',
-            't (p-value)': lambda x: f'{x.pvalues[0]:.2f}',
-            '95% CI': lambda x: f'{x.conf_int().iloc[0, 1]:.2f} - {x.conf_int().iloc[0, 1]:.2f}',
-            'Log-Likelihood': lambda x: f'{x.llf:.2f}',
-            'Pseudo R2': lambda x: f'{x.prsquared:.2f}',
-            'AIC': lambda x: f'{x.aic:.2f}',
-            'BIC': lambda x: f'{x.bic:.2f}',
-            'ICC': lambda x: f'{x.rsquared / (x.rsquared + (x.nobs - 1) * x.mse_resid):.2f}',
-            'RMSE': lambda x: f'{x.mse_resid ** 0.5:.2f}',
-            'RMSE (std)': lambda x: f'{x.mse_resid ** 0.5 / x.model.endog.std():.2f}',
-            'Omnibus': lambda x: f'{sms.omni_normtest(x.resid).statistic:.2f}',
-            'Omnibus (p-value)': lambda x: f'{sms.omni_normtest(x.resid).pvalue:.2f}',
-            'Skew': lambda x: f'{sms.jarque_bera(x.resid)[-2]:.2f}',
-            'Kurtosis': lambda x: f'{sms.jarque_bera(x.resid)[-1]:.2f}',
-            'Jarque-Bera (JB)': lambda x: f'{sms.jarque_bera(x.resid)[0]:.2f}',
-            'Jarque-Bera (p-value)': lambda x: f'{sms.jarque_bera(x.resid)[1]:.2f}',
+            'R-squared': lambda x: f'{x.rsquared:.3f}',
+            'R-squared Adj.': lambda x: f'{x.rsquared_adj:.3f}',
+            'Unstandardized Coefficent B (b)': lambda x: f'{x.params[0]:.3f}',
+            'Standard Error (SE)': lambda x: f'{x.bse[0]:.3f}',
+            'Standardized Coefficient b* (β)': lambda x: f'{x.params[0] / x.model.endog.std():.3f}',
+            't': lambda x: f'{x.tvalues[0]:.3f}',
+            't (p-value)': lambda x: f'{x.pvalues[0]:.3f}',
+            '95% CI': lambda x: f'{x.conf_int().iloc[0, 1]:.3f} - {x.conf_int().iloc[0, 1]:.3f}',
+            'Log-Likelihood': lambda x: f'{x.llf:.3f}',
+            'Pseudo R2': lambda x: f'{x.prsquared:.3f}',
+            'AIC': lambda x: f'{x.aic:.3f}',
+            'BIC': lambda x: f'{x.bic:.3f}',
+            'ICC': lambda x: f'{x.rsquared / (x.rsquared + (x.nobs - 1) * x.mse_resid):.3f}',
+            'RMSE': lambda x: f'{x.mse_resid ** 0.5:.3f}',
+            'RMSE (std)': lambda x: f'{x.mse_resid ** 0.5 / x.model.endog.std():.3f}',
+            'Omnibus': lambda x: f'{sms.omni_normtest(x.resid).statistic:.3f}',
+            'Omnibus (p-value)': lambda x: f'{sms.omni_normtest(x.resid).pvalue:.3f}',
+            'Skew': lambda x: f'{sms.jarque_bera(x.resid)[-2]:.3f}',
+            'Kurtosis': lambda x: f'{sms.jarque_bera(x.resid)[-1]:.3f}',
+            'Jarque-Bera (JB)': lambda x: f'{sms.jarque_bera(x.resid)[0]:.3f}',
+            'Jarque-Bera (p-value)': lambda x: f'{sms.jarque_bera(x.resid)[1]:.3f}',
             'Model Name': lambda x: f'{x.model.__class__.__name__}',
             'N': lambda x: f'{int(x.nobs):d}',
             # 'Summary': lambda x: f'{x.summary()}',
-            # 'F (p-value - FDR)': lambda x: f'{x.f_pvalue_fdr:.2f}',
-            # 'F (p-value - Bonferroni)': lambda x: f'{x.f_pvalue_bonf:.2f}',
-            # 't (p-value - FDR)': lambda x: f'{x.pvalues_fdr[1]:.2f}',
-            # 't (p-value - Bonferroni)': lambda x: f'{x.pvalues_bonf[1]:.2f}',
+            # 'F (p-value - FDR)': lambda x: f'{x.f_pvalue_fdr:.3f}',
+            # 'F (p-value - Bonferroni)': lambda x: f'{x.f_pvalue_bonf:.3f}',
+            # 't (p-value - FDR)': lambda x: f'{x.pvalues_fdr[1]:.3f}',
+            # 't (p-value - Bonferroni)': lambda x: f'{x.pvalues_bonf[1]:.3f}',
         }
         if isinstance(results, list):
             results_to_check = results[0]
@@ -1366,7 +1378,7 @@ def make_full_report(
             stars=True,
             info_dict=regression_info_dict,
             regressor_order=regressor_order,
-            float_format='%0.2f',
+            float_format='%0.3f',
             model_names=model_names,
         )
         if isinstance(results, list) and len(results) > 4:

@@ -12,3 +12,5 @@ This directory contains python script to clean and preprocess scraped data for b
   - [df_jobs_for_analysis.pkl](../data/final%20dfs/df_jobs_for_analysis.pkl)
 
 ***Note that imports and some functions are imported from [setup_module](../setup_module) directory.***
+
+***Codebook:*** To view the codebook, [click here](../Tables/Codebook.md) or navigate to the markdown file titled ```Codebook.md``` under the directory titled Tables.

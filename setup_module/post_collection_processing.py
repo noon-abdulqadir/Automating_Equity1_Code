@@ -431,9 +431,9 @@ def df_gender_age_info(
             print(f'{iv} Percentages:\n{df[f"{iv}"].value_counts(normalize=True).mul(100).round(1).astype(float)}')
             try:
                 print('-'*20)
-                print(f'{iv} Mean: {df[f"{iv}"].mean().round(2).astype(float)}')
+                print(f'{iv} Mean: {df[f"{iv}"].mean().round(3).astype(float)}')
                 print('-'*20)
-                print(f'{iv} Standard Deviation: {df[f"{iv}"].std().round(2).astype(float)}')
+                print(f'{iv} Standard Deviation: {df[f"{iv}"].std().round(3).astype(float)}')
             except Exception:
                 pass
         except Exception:
@@ -462,9 +462,9 @@ def df_warm_comp_info(
                     print('-'*20)
                     print(f'{dv} Percentages:\n{df[f"{dv}"].value_counts(normalize=True).mul(100).round(1).astype(float)}')
                     print('-'*20)
-                    print(f'{dv} Means: {df[f"{dv}"].mean().round(2).astype(float)}')
+                    print(f'{dv} Means: {df[f"{dv}"].mean().round(3).astype(float)}')
                     print('-'*20)
-                    print(f'{dv} Standard Deviation: {df[f"{dv}"].std().round(2).astype(float)}')
+                    print(f'{dv} Standard Deviation: {df[f"{dv}"].std().round(3).astype(float)}')
                 except Exception:
                     print(f'{dv} not available.')
 
@@ -799,7 +799,7 @@ def load_merge_dict_df(
     if is_non_zero_file(save_path + df_file_name.lower()) is True:
         if args['print_enabled'] is True:
             print(
-                f'A DF with the name "{df_file_name.lower()}" already exists at {save_path}.\nNew data will be appended to the file.'
+                f'A DF with the name "{df_file_name.lower()}" already exists.\nNew data will be appended to the file.'
             )
         df_old_jobs = pd.read_csv(save_path + df_file_name.lower())
         if not df_old_jobs.empty:
@@ -818,7 +818,7 @@ def load_merge_dict_df(
     if is_non_zero_file(save_path + json_file_name.lower()) is True:
         if args['print_enabled'] is True:
             print(
-                f'A list of dicts with the name "{json_file_name.lower()}" already exists at {save_path}.\nNew data will be appended to this file.'
+                f'A list of dicts with the name "{json_file_name.lower()}" already exists.\nNew data will be appended to this file.'
             )
         with open(save_path + json_file_name, encoding='utf8') as f:
             old_jobs = json.load(f)

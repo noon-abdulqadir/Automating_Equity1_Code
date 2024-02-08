@@ -34,7 +34,6 @@ from setup_module.imports import *  # type:ignore # isort:skip # fmt:skip # noqa
 # %%
 import evaluate
 from accelerate import Accelerator
-
 from transformers import (
     AdamW,
     AutoConfig,
@@ -84,6 +83,7 @@ from transformers.integrations import (
     is_optuna_available,
     is_ray_available,
 )
+
 accelerator = Accelerator()
 
 
@@ -511,7 +511,7 @@ mlpc = make_pipe_list(mlpc_, mlpc_params)
 
 # Classifiers List
 classifier_ignore_list = [
-    svc, et, bnb, gnb, ptron,
+    svc, et, bnb, gnb, ptron, #svm, mlpc, pa, gbc
 ]
 classifiers_list_all = [
     dummy, nb, knn, lr, dt, rf, svm, svc, xgb, mlpc, pa, ptron, sgd, gbc, et, bnb, gnb,

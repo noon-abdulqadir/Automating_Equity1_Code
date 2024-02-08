@@ -206,7 +206,7 @@ def summary_cat(group1, ascending= False):
         table.rename('Count', inplace= True)
         table = pandas.DataFrame(table)
 
-        table['Percent'] = ((table['Count']/table['Count'].sum()) * 100).round(2)
+        table['Percent'] = ((table['Count']/table['Count'].sum()) * 100).round(3)
 
         if ascending == False:
             table.sort_values(by= 'Count', ascending= False, inplace= True)
@@ -234,7 +234,7 @@ def summary_cat(group1, ascending= False):
                 table.rename('Count', inplace= True)
                 table = pandas.DataFrame(table)
 
-                table['Percent'] = ((table['Count']/table['Count'].sum()) * 100).round(2)
+                table['Percent'] = ((table['Count']/table['Count'].sum()) * 100).round(3)
 
                 if ascending == False:
                     table.sort_values(by= 'Count', ascending= False, inplace= True)
@@ -254,7 +254,7 @@ def summary_cat(group1, ascending= False):
                 table_c.rename('Count', inplace= True)
                 table_c = pandas.DataFrame(table_c)
 
-                table_c['Percent'] = ((table_c['Count']/table_c['Count'].sum()) * 100).round(2)
+                table_c['Percent'] = ((table_c['Count']/table_c['Count'].sum()) * 100).round(3)
 
                 if ascending == False:
                     table_c.sort_values(by= 'Count', ascending= False, inplace= True)
@@ -299,7 +299,7 @@ def codebook(data):
 
             print(f' Number of Obs.: {data.size} \n',
                   f'Number of missing obs.: {data.size - data.count()} \n',
-                  f'Percent missing: {((data.size - data.count()) / data.size * 100).round(2)} \n',
+                  f'Percent missing: {((data.size - data.count()) / data.size * 100).round(3)} \n',
                   f'Number of unique values: {data.nunique()} \n')
 
             print(f' Range: [{data.min()}, {data.max()}] \n',
@@ -327,7 +327,7 @@ def codebook(data):
 
             print(f' Number of Obs.: {data.size} \n',
                   f'Number of missing obs.: {data.size - data.count()} \n',
-                  f'Percent missing: {((data.size - data.count()) / data.size * 100).round(2)} \n',
+                  f'Percent missing: {((data.size - data.count()) / data.size * 100).round(3)} \n',
                   f'Number of unique values: {data.nunique()} \n')
 
             print(f' Data Values and Counts: \n \n',
@@ -342,7 +342,7 @@ def codebook(data):
 
             print(f' Number of Obs.: {data.size} \n',
                   f'Number of missing obs.: {data.size - data.count()} \n',
-                  f'Percent missing: {((data.size - data.count()) / data.size * 100).round(2)} \n',
+                  f'Percent missing: {((data.size - data.count()) / data.size * 100).round(3)} \n',
                   f'Number of unique values: {data.nunique()} \n')
 
             print(f' Range: [{data.min()}, {data.max()}]')
@@ -375,7 +375,7 @@ def codebook(data):
 
                 print(f' Number of Obs.: {data[col].size} \n',
                       f'Number of missing obs.: {data[col].size - data[col].count()} \n',
-                      f'Percent missing: {((data[col].size - data[col].count()) / data[col].size * 100).round(2)} \n',
+                      f'Percent missing: {((data[col].size - data[col].count()) / data[col].size * 100).round(3)} \n',
                       f'Number of unique values: {data[col].nunique()} \n')
 
                 print(f' Range: [{data[col].min()}, {data[col].max()}] \n',
@@ -403,7 +403,7 @@ def codebook(data):
 
                 print(f' Number of Obs.: {data[col].size} \n',
                       f'Number of missing obs.: {data[col].size - data[col].count()} \n',
-                      f'Percent missing: {((data[col].size - data[col].count()) / data[col].size * 100).round(2)} \n',
+                      f'Percent missing: {((data[col].size - data[col].count()) / data[col].size * 100).round(3)} \n',
                       f'Number of unique values: {data[col].nunique()} \n')
 
                 print(f' Data Values and Counts: \n \n',
@@ -418,7 +418,7 @@ def codebook(data):
 
                 print(f' Number of Obs.: {data[col].size} \n',
                       f'Number of missing obs.: {data[col].size - data[col].count()} \n',
-                      f'Percent missing: {((data[col].size - data[col].count()) / data[col].size * 100).round(2)} \n',
+                      f'Percent missing: {((data[col].size - data[col].count()) / data[col].size * 100).round(3)} \n',
                       f'Number of unique values: {data[col].nunique()} \n')
 
                 print(f' Range: [{data[col].min()}, {data[col].max()}]')

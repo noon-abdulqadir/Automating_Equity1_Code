@@ -42,7 +42,7 @@ library(reticulate)
 
 ## ----Set.Python, message=TRUE, warning=FALSE, paged.print=TRUE----------------
 ## Set Python
-code_dir <- '/Users/nyxinsane/Library/CloudStorage/OneDrive-UvA/Automating Equity/Study 1/Study1_Code'
+code_dir <- ''
 # setwd("..")
 # code_dir <- getwd()
 reticulate::use_condaenv('/opt/homebrew/Caskroom/miniforge/base/envs/study1')
