@@ -1,12 +1,12 @@
 This repository contains the code and data for the paper Bias in Candidate Sourcing Communication. Every directory contains a README.md file explaining the contents. Please start at directory: [1. Scraping](./1.%20Scraping/)
 
-***ISIC Sectors and keywords:*** To view the included ISIC Sectors and relevant keywords, [click here](Tables/Sector%20names,%20keywords,%20and%20keyword%20counts.md) or navigate to the markdown file titled ```Sector names, keywords, and keyword counts.md``` under the directory titled Tables.
+***ISIC Sectors and keywords:*** To view the included ISIC Sectors and relevant keywords, [click here](Sector%20Keywords,%20Codebook,%20and%20Classification%20Metrics/Sector%20names,%20keywords,%20and%20keyword%20counts.md) or navigate to the markdown file titled ```Sector names, keywords, and keyword counts.md``` under the directory titled ```Sector Keywords, Codebook, and Classification Metrics```.
 
-***Codebook:*** To view the codebook, [click here](Tables/Codebook.md) or navigate to the markdown file titled ```Codebook.md``` under the directory titled Tables.
+***Codebook:*** To view the codebook, [click here](Sector%20Keywords,%20Codebook,%20and%20Classification%20Metrics/Codebook.md) or navigate to the markdown file titled ```Codebook.md``` under the directory titled Tables.
 
-***Warmth-related frames classification metrics:*** To view warmth-related framing classification metrics, [click here](Tables/Warmth-related%20Frames%20Classification%20Metrics.md) or navigate to the markdown file titled ```Warmth-related Frames Classification Metrics.md``` under the directory titled Tables.
+***Warmth-related frames classification metrics:*** To view warmth-related framing classification metrics, [click here](Sector%20Keywords,%20Codebook,%20and%20Classification%20Metrics/Warmth-related%20Frames%20Classification%20Metrics.md) or navigate to the markdown file titled ```Warmth-related Frames Classification Metrics.md``` under the directory titled ```Sector Keywords, Codebook, and Classification Metrics```.
 
-***Competence-related frames classification metrics:*** To view competence-related framing classification metrics, [click here](Tables/Competence-related%20Frames%20Classification%20Metrics.md) or navigate to the markdown file titled ```Competence-related Frames Classification Metrics.md``` under the directory titled Tables.
+***Competence-related frames classification metrics:*** To view competence-related framing classification metrics, [click here](Sector%20Keywords,%20Codebook,%20and%20Classification%20Metrics/Competence-related%20Frames%20Classification%20Metrics.md) or navigate to the markdown file titled ```Competence-related Frames Classification Metrics.md``` under the directory titled ```Sector Keywords, Codebook, and Classification Metrics```.
 
 ***Note that some functions are imported from [setup_module](./setup_module) directory.***
 

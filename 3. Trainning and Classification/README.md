@@ -17,9 +17,9 @@ This directory contains python script to train and evaluate classifiers using cl
 
 ***Note that classifiers are imported from [estimators_get_pipe.py](./estimators_get_pipe.py) in this directory and imports and some functions are imported from [setup_module](../setup_module) directory.***
 
-***Warmth-related frames classification metrics:*** To view warmth-related framing classification metrics, [click here](../Tables/Warmth-related%20Frames%20Classification%20Metrics.md) or navigate to the markdown file titled ```Warmth-related Frames Classification Metrics.md``` under the directory titled Tables.
+***Warmth-related frames classification metrics:*** To view warmth-related framing classification metrics, [click here](../Sector%20Keywords,%20Codebook,%20and%20Classification%20Metrics/Warmth-related%20Frames%20Classification%20Metrics.md) or navigate to the markdown file titled ```Warmth-related Frames Classification Metrics.md``` under the directory titled Tables.
 
-***Competence-related frames classification metrics:*** To view competence-related framing classification metrics, [click here](../Tables/Competence-related%20Frames%20Classification%20Metrics.md) or navigate to the markdown file titled ```Competence-related Frames Classification Metrics.md``` under the directory titled Tables.
+***Competence-related frames classification metrics:*** To view competence-related framing classification metrics, [click here](../Sector%20Keywords,%20Codebook,%20and%20Classification%20Metrics/Competence-related%20Frames%20Classification%20Metrics.md) or navigate to the markdown file titled ```Competence-related Frames Classification Metrics.md``` under the directory titled ```Sector Keywords, Codebook, and Classification Metrics```.
 
 ***Figure***
 

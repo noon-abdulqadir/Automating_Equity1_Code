@@ -13,4 +13,4 @@ This directory contains python script to clean and preprocess scraped data for b
 
 ***Note that imports and some functions are imported from [setup_module](../setup_module) directory.***
 
-***Codebook:*** To view the codebook, [click here](../Tables/Codebook.md) or navigate to the markdown file titled ```Codebook.md``` under the directory titled Tables.
+***Codebook:*** To view the codebook, [click here](../Sector%20Keywords,%20Codebook,%20and%20Classification%20Metrics/Codebook.md) or navigate to the markdown file titled ```Codebook.md``` under the directory titled ```Sector Keywords, Codebook, and Classification Metrics```.
