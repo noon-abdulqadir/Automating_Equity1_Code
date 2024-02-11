@@ -6,7 +6,7 @@ As coder, you will receive a text file containing job advertisement texts along 
 
 Make special note of the lists of words attached to the end of this codebook titled "Table 1" and "Table 2". These words can help you identify the terms in a sentence that may convey warmth and/or competence. Although the tables can be helpful, please use your discretion as well in determining the right coding.
 
-## Description of units of analysis
+## Description of units
 
 Here you can find some guidelines on how to identify each of the units.
 
