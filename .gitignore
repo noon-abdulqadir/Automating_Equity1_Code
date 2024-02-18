@@ -228,12 +228,13 @@ Automating_Equity1_Code.Rproj
 2. Cleaning and Preprocessing/Coding Material/*
 5. Typesetting/tables_and_figs
 5. Typesetting/tables_and_figs/*
+setup_module/WebDriver/
 /data
 data/
 data/*
-setup_module/WebDriver/
+/docs
+docs/
+docs/*
 OLD *
 /OLD
 /OLD/*
-setup_module/llama-main/
-setup_module/llama-main
