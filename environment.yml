@@ -153,7 +153,7 @@ dependencies:
       - defusedxml==0.7.1
       - dill==0.3.6
       - distlib==0.3.6
-      - en-core-web-sm==3.6.0
+      # - en-core-web-sm==3.6.0
       - entrypoints==0.4
       - et-xmlfile==1.1.0
       - evaluate==0.4.0
@@ -256,7 +256,7 @@ dependencies:
       - pickleshare==0.7.5
       - pillow==10.1.0
       - pingouin==0.5.3
-      - pip==23.3.2
+      - pip==24.0
       - platformdirs==3.8.1
       - pre-commit==3.3.3
       - preshed==3.0.8

@@ -109,8 +109,8 @@ try:
 
     import cbsodata
     import en_core_web_sm
+    import evaluate
 
-    # import evaluate
     import gensim
     import gensim.downloader as gensim_api
     import imblearn
@@ -151,13 +151,10 @@ try:
     import torch.nn.functional as F
     import tqdm
     import tqdm.auto as tqdm_auto
-    import transformers
     import urllib3
     import xgboost as xgb
     import xlsxwriter
     import yaml
-
-    # from accelerate import Accelerator
     from bs4 import BeautifulSoup
     from cluestar import plot_text
     from dotenv.main import load_dotenv
@@ -405,56 +402,6 @@ try:
         binary_recall,
     )
     from tqdm.contrib.itertools import product as tqdm_product
-
-    # from transformers import (
-    #     AdamW,
-    #     AutoConfig,
-    #     AutoModel,
-    #     AutoModelForSequenceClassification,
-    #     AutoModelForTokenClassification,
-    #     AutoTokenizer,
-    #     BertConfig,
-    #     BertForPreTraining,
-    #     BertForSequenceClassification,
-    #     BertModel,
-    #     BertTokenizer,
-    #     BertTokenizerFast,
-    #     BitsAndBytesConfig,
-    #     DistilBertForSequenceClassification,
-    #     DistilBertTokenizerFast,
-    #     EarlyStoppingCallback,
-    #     GPT2Config,
-    #     GPT3forSequenceClassification,
-    #     GPT2Model,
-    #     GPT2TokenizerFast,
-    #     GPTJConfig,
-    #     GPTJForSequenceClassification,
-    #     GPTJModel,
-    #     GPTNeoXConfig,
-    #     GPTNeoXForSequenceClassification,
-    #     GPTNeoXTokenizerFast,
-    #     LlamaConfig,
-    #     LlamaForSequenceClassification,
-    #     LlamaTokenizer,
-    #     LlamaTokenizerFast,
-    #     MegatronBertForSequenceClassification,
-    #     OpenAIGPTConfig,
-    #     OpenAIGPTForSequenceClassification,
-    #     OpenAIGPTTokenizerFast,
-    #     TextClassificationPipeline,
-    #     TFGPTJForSequenceClassification,
-    #     TFGPTJModel,
-    #     TokenClassificationPipeline,
-    #     Trainer,
-    #     TrainingArguments,
-    #     get_linear_schedule_with_warmup,
-    #     pipeline,
-    # )
-    # from transformers.integrations import (
-    #     TensorBoardCallback,
-    #     is_optuna_available,
-    #     is_ray_available,
-    # )
     from xgboost import XGBClassifier
 
 except ImportError as error:

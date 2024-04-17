@@ -34,6 +34,7 @@ from setup_module.imports import *  # type:ignore # isort:skip # fmt:skip # noqa
 # %%
 import evaluate
 from accelerate import Accelerator
+import transformers
 from transformers import (
     AdamW,
     AutoConfig,
