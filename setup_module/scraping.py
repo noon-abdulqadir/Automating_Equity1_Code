@@ -1190,7 +1190,7 @@ def get_args(
     gender_ratio=20,
     file_save_format='pkl',
     file_save_format_backup='csv',
-    image_save_format='eps',
+    image_save_format='png',
 ):
     parent_dir = validate_path(
         f'{data_save_path}content analysis + ids + sectors/')

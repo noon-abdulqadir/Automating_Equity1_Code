@@ -226,9 +226,11 @@ Automating_Equity1_Code.Rproj
 !1. Scraping/CBS/Found Data/SBI_ALL_NACE_REV2.csv
 1. Scraping/Coding Material/*
 2. Cleaning and Preprocessing/Coding Material/*
+3. Trainning and Classification/6. check_inflation_and_make_instrumental_variables.ipynb
 5. Typesetting/tables_and_figs
 5. Typesetting/tables_and_figs/*
 setup_module/WebDriver/
+setup_module/forestIV.py
 /data
 data/
 data/*
