@@ -110,7 +110,6 @@ try:
     import cbsodata
     import en_core_web_sm
     import evaluate
-
     import gensim
     import gensim.downloader as gensim_api
     import imblearn
@@ -621,7 +620,8 @@ openai_token = os.environ['OPENAI_API_KEY']
 huggingface_token = os.environ['HUGGINGFACE_API_KEY']
 skip_fitted_estimators = True
 evaluate_estimator_on_concat = False
-hyperparameter_tuning = True
+hyperparameter_tuning = False
+shap.initjs()
 best_trial_args = ['num_train_epochs', 'learning_rate', 'weight_decay', 'warmup_steps',]
 training_args_dict = {
     'seed': random_state,

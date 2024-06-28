@@ -169,7 +169,8 @@ quantization_config_dict = {
 }
 skip_fitted_estimators = True
 evaluate_estimator_on_concat = False
-hyperparameter_tuning = True
+hyperparameter_tuning = False
+shap.initjs()
 
 
 # %% [markdown]
