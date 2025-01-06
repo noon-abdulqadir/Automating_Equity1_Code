@@ -959,7 +959,7 @@ ivs_age_dummy = [
 gender_order = ['Female', 'Mixed Gender', 'Male']
 age_order = ['Older', 'Mixed Age', 'Younger']
 platform_order = ['LinkedIn', 'Indeed', 'Glassdoor']
-ivs_dict = {'Gender': gender_order, 'Age': age_order}
+ivs_dict: dict[str, list[str]] = {'Gender': gender_order, 'Age': age_order}
 # # Models dict
 # sm_models = {
 #     'Logistic': sm.Logit,

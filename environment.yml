@@ -87,6 +87,7 @@ dependencies:
   - pysocks=1.7.1=pyha2e5f31_6
   - python=3.10.11=h3ba56d0_0_cpython
   - python_abi=3.10=3_cp310
+  - pytz=2024.2=pyhd8ed1ab_1
   - pyyaml=6.0=py310h8e9501a_5
   - r-base=4.3.0=hb14bfe5_0
   - readline=8.2=h92ec313_1
@@ -154,7 +155,7 @@ dependencies:
       - defusedxml==0.7.1
       - dill==0.3.6
       - distlib==0.3.6
-      - en-core-web-sm==3.6.0
+      # - en-core-web-sm==3.6.0
       - entrypoints==0.4
       - et-xmlfile==1.1.0
       - evaluate==0.4.0
@@ -276,7 +277,6 @@ dependencies:
       - python-dateutil==2.8.2
       - python-dotenv==1.0.0
       - python-json-logger==2.0.7
-      - pytz==2023.3
       - pyzmq==25.1.0
       - qtconsole==5.4.3
       - qtpy==2.3.1
@@ -351,4 +351,4 @@ dependencies:
       - xgboost==1.7.6
       - xxhash==3.2.0
       - yarl==1.9.2
-prefix: /opt/homebrew/Caskroom/mambaforge/base/envs/Automating_Equity1
+prefix: /opt/homebrew/Caskroom/miniforge/base/envs/Automating_Equity1
