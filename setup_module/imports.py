@@ -1064,6 +1064,16 @@ def close_plots(plt):
     plt.close()
 
 # %%
+def shorten_file_path(file_path: str, max_length: int = 260) -> str:
+
+    if len(file_path) > max_length:
+        parent_dir, file_name = os.path.split(file_path)
+        while len(parent_dir) + len(file_name) > max_length:
+            file_name = file_name[:-1]
+        return os.path.join(parent_dir, file_name)
+    return file_path
+
+# %%
 def get_df_info(df, ivs_all=None):
     if ivs_all is None:
         ivs_all = [
@@ -1337,7 +1347,7 @@ def make_full_report(
         for text in text_to_add_list:
             full_summary.add_text(text)
         # Save
-        save_name = f'{table_save_path}{model_name} {df_name} - ALL {dv} {order_type} {analysis_type} on {ivs_type}'
+        save_name = shorten_file_path(f'{table_save_path}{model_name} {df_name} - ALL {dv} {order_type} {analysis_type} on {ivs_type}')
         df_full_summary = pd.read_html(full_summary.as_html())[0]
         df_full_summary.to_csv(f'{save_name}.csv')
         df_full_summary.style.to_latex(f'{save_name}.tex', hrules=True)
