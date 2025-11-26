@@ -574,7 +574,7 @@ class SpecificationCurve:
             ax.set_xlim(-wid, len(df_spec.columns))
         plt.tight_layout()
         if save_path is not None:
-            plt.savefig(save_path, dpi=300)
+            plt.savefig(save_path, dpi=1000)
         if show_plot:
             plt.show()
         if return_fig:
