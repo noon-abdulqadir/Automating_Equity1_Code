@@ -65,348 +65,342 @@ if set_conda:
                     except Exception:
                         os.system(f'{conda_env_path}/bin/pip install {lib}')
 
-try:
-    import argparse
-    import ast
-    import collections
-    import contextlib
-    import copy
-    import csv
-    import datetime
-    import functools
-    import gc
-    import glob
-    import importlib
-    import inspect
-    import itertools
-    import json
-    import logging
-    import logging.handlers
-    import math
-    import multiprocessing
-    import operator
-    import pathlib
-    import pickle
-    import platform
-    import pprint
-    import random
-    import shutil
-    import socket
-    import string
-    import subprocess
-    import tempfile
-    import time
-    import typing
-    import unicodedata
-    import urllib
-    import warnings
-    from collections import Counter, defaultdict
-    from io import StringIO
-    from random import randrange
-    from subprocess import call
-    from threading import Thread
-    from typing import Dict, List, Optional, Set, Tuple
+# try:
+import argparse
+import ast
+import collections
+import contextlib
+import copy
+import csv
+import datetime
+import functools
+import gc
+import glob
+import importlib
+import inspect
+import itertools
+import json
+import logging
+import logging.handlers
+import math
+import multiprocessing
+import operator
+import pathlib
+import pickle
+import platform
+import pprint
+import random
+import shutil
+import socket
+import string
+import subprocess
+import tempfile
+import time
+import typing
+import unicodedata
+import urllib
+import warnings
+from collections import Counter, defaultdict
+from io import StringIO
+from random import randrange
+from subprocess import call
+from threading import Thread
+from typing import Dict, List, Optional, Set, Tuple
 
-    import cbsodata
-    import en_core_web_sm
-    import evaluate
-    import gensim
-    import gensim.downloader as gensim_api
-    import imblearn
-    import IPython
-    import IPython.core
-    import joblib
-    import lxml
-    import matplotlib as mpl
-    import matplotlib.gridspec as gridspec
-    import matplotlib.image as img
-    import matplotlib.pyplot as plt
-    import nltk
-    import nltk.data
-    import numpy as np
-    import openpyxl
-    import optuna
-    import pandas as pd
-    import pingouin as pg
-    import regex as re
-    import requests
-    import scipy
-    import seaborn as sns
-    import selenium.webdriver as webdriver
-    import selenium.webdriver.support.ui as ui
-    import shap
-    import simpledorff
-    import sklearn
-    import sklearn as sk
-    import spacy
-    import statsmodels
-    import statsmodels.api as sm
-    import statsmodels.formula.api as smf
-    import statsmodels.regression.mixed_linear_model as sm_mlm
-    import statsmodels.stats.api as sms
-    import textblob
-    import torch
-    import torch.nn as nn
-    import torch.nn.functional as F
-    import tqdm
-    import tqdm.auto as tqdm_auto
-    import urllib3
-    import xgboost as xgb
-    import xlsxwriter
-    import yaml
-    from bs4 import BeautifulSoup
-    from cluestar import plot_text
-    from dotenv.main import load_dotenv
-    from gensim import corpora, models
-    from gensim.corpora import Dictionary
-    from gensim.models import (
-        CoherenceModel,
-        FastText,
-        KeyedVectors,
-        TfidfModel,
-        Word2Vec,
-    )
-    from gensim.models.doc2vec import Doc2Vec, TaggedDocument
-    from gensim.models.phrases import ENGLISH_CONNECTOR_WORDS, Phraser, Phrases
-    from gensim.parsing.preprocessing import preprocess_string, remove_stopwords
-    from gensim.similarities import (
-        SoftCosineSimilarity,
-        SparseTermSimilarityMatrix,
-        WordEmbeddingSimilarityIndex,
-    )
-    from gensim.test.utils import common_texts, datapath, get_tmpfile
-    from gensim.utils import save_as_line_sentence, simple_preprocess
-    from googletrans import Translator
-    from html2image import Html2Image
-    from imblearn.combine import SMOTEENN, SMOTETomek
-    from imblearn.datasets import make_imbalance
-    from imblearn.metrics import (
-        classification_report_imbalanced,
-        geometric_mean_score,
-        make_index_balanced_accuracy,
-    )
-    from imblearn.over_sampling import SMOTE, SMOTENC, RandomOverSampler
-    from imblearn.under_sampling import (
-        EditedNearestNeighbours,
-        NearMiss,
-        RandomUnderSampler,
-        TomekLinks,
-    )
-    from IPython.core.display import HTML
-    from IPython.core.interactiveshell import InteractiveShell
-    from IPython.display import HTML, Image, Markdown, display
-    from ipywidgets import FloatSlider, fixed, interact, interact_manual, interactive
-    from joblib import parallel_backend
-    from matplotlib.animation import FuncAnimation
-    from matplotlib_inline.backend_inline import set_matplotlib_formats
-    from mpl_toolkits.mplot3d import Axes3D
-    from nltk import (
-        WordNetLemmatizer,
-        agreement,
-        bigrams,
-        pos_tag,
-        regexp_tokenize,
-        sent_tokenize,
-        trigrams,
-        word_tokenize,
-        wordpunct_tokenize,
-    )
-    from nltk.corpus import abc
-    from nltk.corpus import stopwords
-    from nltk.corpus import stopwords as sw
-    from nltk.corpus import wordnet
-    from nltk.corpus import wordnet as wn
-    from nltk.sentiment.vader import SentimentIntensityAnalyzer
-    from nltk.stem import LancasterStemmer, PorterStemmer, SnowballStemmer
-    from nltk.tokenize import WordPunctTokenizer
-    from pandas.api.types import is_numeric_dtype, is_object_dtype, is_string_dtype
-    from scipy import spatial, stats
-    from scipy.special import softmax
-    from scipy.stats import (
-        anderson,
-        chi2_contingency,
-        f_oneway,
-        levene,
-        mannwhitneyu,
-        normaltest,
-        shapiro,
-        stats,
-        ttest_ind,
-    )
-    from selenium import webdriver
-    from selenium.common.exceptions import *
-    from selenium.common.exceptions import (
-        ElementClickInterceptedException,
-        ElementNotVisibleException,
-        NoAlertPresentException,
-        NoSuchElementException,
-        TimeoutException,
-        WebDriverException,
-    )
-    from selenium.webdriver import ActionChains, Chrome, ChromiumEdge
-    from selenium.webdriver.chrome.options import Options
-    from selenium.webdriver.chrome.service import Service
-    from selenium.webdriver.chromium.options import ChromiumOptions
-    from selenium.webdriver.chromium.service import ChromiumService
-    from selenium.webdriver.common.by import By
-    from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-    from selenium.webdriver.common.keys import Keys
-    from selenium.webdriver.support import expected_conditions as EC
-    from selenium.webdriver.support.ui import Select, WebDriverWait
-    from skimpy import skim
-    from sklearn import feature_selection, linear_model, metrics, set_config, svm, utils
-    from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
-    from sklearn.calibration import CalibratedClassifierCV, CalibrationDisplay
-    from sklearn.cluster import KMeans
-    from sklearn.compose import ColumnTransformer
-    from sklearn.datasets import (
-        load_files,
-        load_iris,
-        make_classification,
-        make_regression,
-    )
-    from sklearn.decomposition import PCA, FactorAnalysis, TruncatedSVD
-    from sklearn.dummy import DummyClassifier
-    from sklearn.ensemble import (
-        AdaBoostClassifier,
-        BaggingClassifier,
-        BaggingRegressor,
-        ExtraTreesClassifier,
-        GradientBoostingClassifier,
-        RandomForestClassifier,
-        RandomForestRegressor,
-        StackingClassifier,
-        StackingRegressor,
-        VotingClassifier,
-        VotingRegressor,
-    )
-    from sklearn.experimental import enable_halving_search_cv
-    from sklearn.feature_extraction.text import (
-        CountVectorizer,
-        FeatureHasher,
-        TfidfVectorizer,
-    )
-    from sklearn.feature_selection import (
-        SelectFdr,
-        SelectFpr,
-        SelectFromModel,
-        SelectFwe,
-        SelectKBest,
-        SelectPercentile,
-        chi2,
-        f_classif,
-        f_regression,
-        mutual_info_classif,
-        mutual_info_regression,
-    )
-    from sklearn.impute import SimpleImputer
-    from sklearn.kernel_ridge import KernelRidge
-    from sklearn.linear_model import (
-        Lasso,
-        LassoCV,
-        LogisticRegression,
-        PassiveAggressiveClassifier,
-        Perceptron,
-        SGDClassifier,
-    )
-    from sklearn.manifold import TSNE
-    from sklearn.metrics import (
-        ConfusionMatrixDisplay,
-        accuracy_score,
-        average_precision_score,
-        balanced_accuracy_score,
-        brier_score_loss,
-        classification_report,
-        cohen_kappa_score,
-        confusion_matrix,
-        f1_score,
-        fowlkes_mallows_score,
-        log_loss,
-        make_scorer,
-        matthews_corrcoef,
-        mean_absolute_error,
-        mean_squared_error,
-        precision_recall_curve,
-        precision_score,
-        r2_score,
-        recall_score,
-        roc_auc_score,
-    )
-    from sklearn.metrics.pairwise import cosine_similarity
-    from sklearn.model_selection import (
-        GridSearchCV,
-        HalvingGridSearchCV,
-        HalvingRandomSearchCV,
-        KFold,
-        LeaveOneOut,
-        PredefinedSplit,
-        RandomizedSearchCV,
-        RepeatedStratifiedKFold,
-        ShuffleSplit,
-        StratifiedKFold,
-        StratifiedShuffleSplit,
-        cross_val_score,
-        cross_validate,
-        learning_curve,
-        train_test_split,
-        validation_curve,
-    )
-    from sklearn.multiclass import OneVsOneClassifier, OneVsRestClassifier
-    from sklearn.multioutput import MultiOutputClassifier
-    from sklearn.naive_bayes import BernoulliNB, GaussianNB, MultinomialNB
-    from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
-    from sklearn.neural_network import MLPClassifier, MLPRegressor
-    from sklearn.pipeline import FeatureUnion, Pipeline, make_pipeline
-    from sklearn.preprocessing import (
-        Binarizer,
-        FunctionTransformer,
-        LabelBinarizer,
-        LabelEncoder,
-        MinMaxScaler,
-        OneHotEncoder,
-        StandardScaler,
-        scale,
-    )
-    from sklearn.svm import SVC, LinearSVC
-    from sklearn.tree import DecisionTreeClassifier
-    from sklearn.utils import (
-        check_array,
-        check_consistent_length,
-        check_random_state,
-        check_X_y,
-    )
-    from sklearn.utils.class_weight import compute_class_weight
-    from sklearn.utils.estimator_checks import check_estimator
-    from sklearn.utils.metaestimators import available_if
-    from sklearn.utils.validation import (
-        check_is_fitted,
-        column_or_1d,
-        has_fit_parameter,
-    )
-    from spacy.matcher import Matcher
-    from statsmodels.formula.api import ols
-    from statsmodels.graphics.factorplots import interaction_plot
-    from statsmodels.iolib.summary2 import summary_col
-    from statsmodels.multivariate.multivariate_ols import _MultivariateOLS
-    from statsmodels.regression.linear_model import RegressionResults
-    from statsmodels.sandbox.regression.gmm import IV2SLS
-    from statsmodels.stats.diagnostic import het_white
-    from statsmodels.stats.outliers_influence import variance_inflation_factor
-    from summarytools import dfSummary, tabset
-    from textblob import TextBlob, Word
-    from textblob.en.inflect import pluralize, singularize
-    from torcheval.metrics.functional.classification import (
-        binary_accuracy,
-        binary_precision,
-        binary_recall,
-    )
-    from tqdm.contrib.itertools import product as tqdm_product
-    from xgboost import XGBClassifier
+import cbsodata
+import en_core_web_sm
+import evaluate
 
-except ImportError as error:
-    module_name = str(error).split('named')[1]
-    print(f'The library {module_name} is not installed. Installing now.')
-    # !conda install --channel apple --yes {module_name}
+# import gensim
+# import gensim.downloader as gensim_api
+import imblearn
+import IPython
+import IPython.core
+import joblib
+import lxml
+import matplotlib as mpl
+import matplotlib.gridspec as gridspec
+import matplotlib.image as img
+import matplotlib.pyplot as plt
+import nltk
+import nltk.data
+import numpy as np
+import openpyxl
+import optuna
+import pandas as pd
+import pingouin as pg
+import regex as re
+import requests
+import scipy
+import seaborn as sns
+import selenium.webdriver as webdriver
+import selenium.webdriver.support.ui as ui
+
+# import shap
+import simpledorff
+import sklearn
+import sklearn as sk
+import spacy
+import statsmodels
+import statsmodels.api as sm
+import statsmodels.formula.api as smf
+import statsmodels.regression.mixed_linear_model as sm_mlm
+import statsmodels.stats.api as sms
+import textblob
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+import tqdm
+import tqdm.auto as tqdm_auto
+import urllib3
+import xgboost as xgb
+import xlsxwriter
+import yaml
+from bs4 import BeautifulSoup
+from cluestar import plot_text
+from dotenv.main import load_dotenv
+
+# from gensim import corpora, models
+# from gensim.corpora import Dictionary
+# from gensim.models import (
+#     CoherenceModel,
+#     FastText,
+#     KeyedVectors,
+#     TfidfModel,
+#     Word2Vec,
+# )
+# from gensim.models.doc2vec import Doc2Vec, TaggedDocument
+# from gensim.models.phrases import ENGLISH_CONNECTOR_WORDS, Phraser, Phrases
+# from gensim.parsing.preprocessing import preprocess_string, remove_stopwords
+# from gensim.similarities import (
+#     SoftCosineSimilarity,
+#     SparseTermSimilarityMatrix,
+#     WordEmbeddingSimilarityIndex,
+# )
+# from gensim.test.utils import common_texts, datapath, get_tmpfile
+# from gensim.utils import save_as_line_sentence, simple_preprocess
+from googletrans import Translator
+from html2image import Html2Image
+from imblearn.combine import SMOTEENN, SMOTETomek
+from imblearn.datasets import make_imbalance
+from imblearn.metrics import (
+    classification_report_imbalanced,
+    geometric_mean_score,
+    make_index_balanced_accuracy,
+)
+from imblearn.over_sampling import SMOTE, SMOTENC, RandomOverSampler
+from imblearn.under_sampling import (
+    EditedNearestNeighbours,
+    NearMiss,
+    RandomUnderSampler,
+    TomekLinks,
+)
+from IPython.core.display import HTML
+from IPython.core.interactiveshell import InteractiveShell
+from IPython.display import HTML, Image, Markdown, display
+from ipywidgets import FloatSlider, fixed, interact, interact_manual, interactive
+from joblib import parallel_backend
+from matplotlib.animation import FuncAnimation
+from matplotlib_inline.backend_inline import set_matplotlib_formats
+from mpl_toolkits.mplot3d import Axes3D
+from nltk import (
+    WordNetLemmatizer,
+    agreement,
+    bigrams,
+    pos_tag,
+    regexp_tokenize,
+    sent_tokenize,
+    trigrams,
+    word_tokenize,
+    wordpunct_tokenize,
+)
+from nltk.corpus import abc
+from nltk.corpus import stopwords
+from nltk.corpus import stopwords as sw
+from nltk.corpus import wordnet
+from nltk.corpus import wordnet as wn
+from nltk.sentiment.vader import SentimentIntensityAnalyzer
+from nltk.stem import LancasterStemmer, PorterStemmer, SnowballStemmer
+from nltk.tokenize import WordPunctTokenizer
+from pandas.api.types import is_numeric_dtype, is_object_dtype, is_string_dtype
+from scipy import spatial, stats
+from scipy.special import softmax
+from scipy.stats import (
+    anderson,
+    chi2_contingency,
+    f_oneway,
+    levene,
+    mannwhitneyu,
+    normaltest,
+    shapiro,
+    stats,
+    ttest_ind,
+)
+from selenium import webdriver
+from selenium.common.exceptions import *
+from selenium.common.exceptions import (
+    ElementClickInterceptedException,
+    ElementNotVisibleException,
+    NoAlertPresentException,
+    NoSuchElementException,
+    TimeoutException,
+    WebDriverException,
+)
+from selenium.webdriver import ActionChains, Chrome, ChromiumEdge
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.chromium.options import ChromiumOptions
+from selenium.webdriver.chromium.service import ChromiumService
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import Select, WebDriverWait
+from skimpy import skim
+from sklearn import feature_selection, linear_model, metrics, set_config, svm, utils
+from sklearn.base import BaseEstimator, ClassifierMixin, TransformerMixin
+from sklearn.calibration import CalibratedClassifierCV, CalibrationDisplay
+from sklearn.cluster import KMeans
+from sklearn.compose import ColumnTransformer
+from sklearn.datasets import load_files, load_iris, make_classification, make_regression
+from sklearn.decomposition import PCA, FactorAnalysis, TruncatedSVD
+from sklearn.dummy import DummyClassifier
+from sklearn.ensemble import (
+    AdaBoostClassifier,
+    BaggingClassifier,
+    BaggingRegressor,
+    ExtraTreesClassifier,
+    GradientBoostingClassifier,
+    RandomForestClassifier,
+    RandomForestRegressor,
+    StackingClassifier,
+    StackingRegressor,
+    VotingClassifier,
+    VotingRegressor,
+)
+from sklearn.experimental import enable_halving_search_cv
+from sklearn.feature_extraction.text import (
+    CountVectorizer,
+    FeatureHasher,
+    TfidfVectorizer,
+)
+from sklearn.feature_selection import (
+    SelectFdr,
+    SelectFpr,
+    SelectFromModel,
+    SelectFwe,
+    SelectKBest,
+    SelectPercentile,
+    chi2,
+    f_classif,
+    f_regression,
+    mutual_info_classif,
+    mutual_info_regression,
+)
+from sklearn.impute import SimpleImputer
+from sklearn.kernel_ridge import KernelRidge
+from sklearn.linear_model import (
+    Lasso,
+    LassoCV,
+    LogisticRegression,
+    PassiveAggressiveClassifier,
+    Perceptron,
+    SGDClassifier,
+)
+from sklearn.manifold import TSNE
+from sklearn.metrics import (
+    ConfusionMatrixDisplay,
+    accuracy_score,
+    average_precision_score,
+    balanced_accuracy_score,
+    brier_score_loss,
+    classification_report,
+    cohen_kappa_score,
+    confusion_matrix,
+    f1_score,
+    fowlkes_mallows_score,
+    log_loss,
+    make_scorer,
+    matthews_corrcoef,
+    mean_absolute_error,
+    mean_squared_error,
+    precision_recall_curve,
+    precision_score,
+    r2_score,
+    recall_score,
+    roc_auc_score,
+)
+from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.model_selection import (
+    GridSearchCV,
+    HalvingGridSearchCV,
+    HalvingRandomSearchCV,
+    KFold,
+    LeaveOneOut,
+    PredefinedSplit,
+    RandomizedSearchCV,
+    RepeatedStratifiedKFold,
+    ShuffleSplit,
+    StratifiedKFold,
+    StratifiedShuffleSplit,
+    cross_val_score,
+    cross_validate,
+    learning_curve,
+    train_test_split,
+    validation_curve,
+)
+from sklearn.multiclass import OneVsOneClassifier, OneVsRestClassifier
+from sklearn.multioutput import MultiOutputClassifier
+from sklearn.naive_bayes import BernoulliNB, GaussianNB, MultinomialNB
+from sklearn.neighbors import KNeighborsClassifier, KNeighborsRegressor
+from sklearn.neural_network import MLPClassifier, MLPRegressor
+from sklearn.pipeline import FeatureUnion, Pipeline, make_pipeline
+from sklearn.preprocessing import (
+    Binarizer,
+    FunctionTransformer,
+    LabelBinarizer,
+    LabelEncoder,
+    MinMaxScaler,
+    OneHotEncoder,
+    StandardScaler,
+    scale,
+)
+from sklearn.svm import SVC, LinearSVC
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.utils import (
+    check_array,
+    check_consistent_length,
+    check_random_state,
+    check_X_y,
+)
+from sklearn.utils.class_weight import compute_class_weight
+from sklearn.utils.estimator_checks import check_estimator
+from sklearn.utils.metaestimators import available_if
+from sklearn.utils.validation import check_is_fitted, column_or_1d, has_fit_parameter
+from spacy.matcher import Matcher
+from statsmodels.formula.api import ols
+from statsmodels.graphics.factorplots import interaction_plot
+from statsmodels.iolib.summary2 import summary_col
+from statsmodels.multivariate.multivariate_ols import _MultivariateOLS
+from statsmodels.regression.linear_model import RegressionResults
+from statsmodels.sandbox.regression.gmm import IV2SLS
+from statsmodels.stats.diagnostic import het_white
+from statsmodels.stats.outliers_influence import variance_inflation_factor
+from summarytools import dfSummary, tabset
+from textblob import TextBlob, Word
+from textblob.en.inflect import pluralize, singularize
+from torcheval.metrics.functional.classification import (
+    binary_accuracy,
+    binary_precision,
+    binary_recall,
+)
+from tqdm.contrib.itertools import product as tqdm_product
+from xgboost import XGBClassifier
+
+# except ImportError as error:
+#     module_name = str(error).split('named')[1]
+#     print(f'The library {module_name} is not installed. Installing now.')
+#     # !conda install --channel apple --yes {module_name}
 
 # from icecream import ic
 # import bokeh
@@ -525,15 +519,15 @@ nlp = spacy.load('en_core_web_sm')
 # nlp = en_core_web_sm.load()
 # nlp = spacy.load('en_core_web_trf')
 
-# Gensim
-gensim_path = f'{str(llm_path)}gensim/'
-if not os.path.exists(nltk_path):
-    os.mkdir(gensim_path)
-gensim_api.base_dir = os.path.dirname(gensim_path)
-gensim_api.BASE_DIR = os.path.dirname(gensim_path)
-gensim_api.GENSIM_DATA_DIR = os.path.dirname(gensim_path)
-glove_path = f'{gensim_path}glove/'
-fasttext_path = os.path.abspath(f'{gensim_path}fasttext-wiki-news-subwords-300')
+# # Gensim
+# gensim_path = f'{str(llm_path)}gensim/'
+# if not os.path.exists(nltk_path):
+#     os.mkdir(gensim_path)
+# gensim_api.base_dir = os.path.dirname(gensim_path)
+# gensim_api.BASE_DIR = os.path.dirname(gensim_path)
+# gensim_api.GENSIM_DATA_DIR = os.path.dirname(gensim_path)
+# glove_path = f'{gensim_path}glove/'
+# fasttext_path = os.path.abspath(f'{gensim_path}fasttext-wiki-news-subwords-300')
 
 # Classification
 # Model variables
@@ -602,7 +596,7 @@ cpu_counts = torch.multiprocessing.cpu_count()
 device = torch.device('mps') if torch.has_mps and torch.backends.mps.is_built() and torch.backends.mps.is_available(
 ) else torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
 device_name = str(device.type)
-print(f'Using {device_name.upper()}')
+# print(f'Using {device_name.upper()}')
 # Set random seed
 random_state = 42
 random.seed(random_state)
@@ -621,7 +615,7 @@ huggingface_token = os.environ['HUGGINGFACE_API_KEY']
 skip_fitted_estimators = True
 evaluate_estimator_on_concat = False
 hyperparameter_tuning = False
-shap.initjs()
+# shap.initjs()
 best_trial_args = ['num_train_epochs', 'learning_rate', 'weight_decay', 'warmup_steps',]
 training_args_dict = {
     'seed': random_state,
