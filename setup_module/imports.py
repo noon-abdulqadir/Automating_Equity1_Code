@@ -150,8 +150,7 @@ import textblob
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import tqdm
-import tqdm.auto as tqdm_auto
+import tqdm.auto as tqdm
 import urllib3
 import xgboost as xgb
 import xlsxwriter
