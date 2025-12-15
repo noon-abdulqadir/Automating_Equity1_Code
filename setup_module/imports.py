@@ -1258,7 +1258,7 @@ def make_full_report(
             'df_total': lambda x: f'{x.df_resid + x.df_model + 1:.0f}',
             'R-squared': lambda x: f'{x.rsquared:.3f}',
             'R-squared Adj.': lambda x: f'{x.rsquared_adj:.3f}',
-            'Unstandardized Coefficent B (b)': lambda x: f'{x.params[0]:.3f}',
+            'Unstandardized Coefficient B (b)': lambda x: f'{x.params[0]:.3f}',
             'Standard Error (SE)': lambda x: f'{x.bse[0]:.3f}',
             'Standardized Coefficient b* (β)': lambda x: f'{x.params[0] / x.model.endog.std():.3f}',
             't': lambda x: f'{x.tvalues[0]:.3f}',
@@ -1332,7 +1332,7 @@ def make_full_report(
             model_names=model_names,
         )
         if isinstance(results, list) and len(results) > 4:
-            full_summary.tables[0][full_summary.tables[0].filter(regex='Full Model').columns[0]].loc['Unstandardized Coefficent B (b)': '95% CI'] = ''
+            full_summary.tables[0][full_summary.tables[0].filter(regex='Full Model').columns[0]].loc['Unstandardized Coefficient B (b)': '95% CI'] = ''
 
         # Add title and notes
         full_summary.add_title(title)
@@ -1402,7 +1402,7 @@ def get_standardized_coefficients(results):
     df_std_coef = df_std_coef.rename(
         columns={
             'var': 'Variable',
-            'coef': 'Unstandardized Coefficent B (b)',
+            'coef': 'Unstandardized Coefficient B (b)',
             'std err': 'Standard Error',
             'std coef':'Standardized Coefficient b* (β)',
             't': 't-value',
@@ -1414,7 +1414,7 @@ def get_standardized_coefficients(results):
     # Reorder columns
     df_std_coef = df_std_coef[[
         'Variable',
-        'Unstandardized Coefficent B (b)',
+        'Unstandardized Coefficient B (b)',
         'Standard Error',
         'Standardized Coefficient b* (β)',
         't-value',
